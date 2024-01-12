@@ -7,7 +7,7 @@ function Notification() {
       <PopoverTrigger className="flex items-center">
         <Bell size={20} /> Notifications
       </PopoverTrigger>
-      <PopoverContent>Place content for the popover here.</PopoverContent>
+      <PopoverContent>Place content for the popover here!</PopoverContent>
     </Popover>
   )
 }
