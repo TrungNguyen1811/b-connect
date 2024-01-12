@@ -1,5 +1,6 @@
 import React from 'react'
-import { Header } from '../header'
+import Footer from '../../components/footer'
+import Header from 'src/components/header'
 
 export const getNoneLayout = (page: React.ReactElement) => page
 
@@ -8,6 +9,7 @@ export const getDefaultLayout = (page: React.ReactElement) => {
     <div className="h-min-screen">
       <Header />
       {page}
+      <Footer />
     </div>
   )
 }
