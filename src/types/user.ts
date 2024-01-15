@@ -2,13 +2,15 @@ export interface User {
   _id?: string
   email: string
   fullName: string
-  role?: 'ADMIN' | 'SUPER_ADMIN' | 'USER'
+  role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'SELLER'
   phone?: string
   avatar?: string
   address?: string | null
   username: string
   password: string
   passwordAttempt?: number
+  blocked?: boolean
+  blockedDate?: Date
   salt?: string
   createdAt?: Date
   updatedAt?: Date
@@ -16,6 +18,7 @@ export interface User {
 
 export enum ROLE {
   ADMIN = 'ADMIN',
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  USER = 'USER',
+  MANAGER = 'MANAGER',
+  SELLER = 'SELLER',
+  CUSTOMER = 'CUSTOMER',
 }

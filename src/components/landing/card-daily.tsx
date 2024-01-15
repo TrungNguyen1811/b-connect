@@ -10,17 +10,20 @@ type Props = { book: IBook }
 function BookDaily({ book }: Props) {
   // Hàm để render icon dựa trên giá trị rating
   const renderRatingIcon = () => {
-    if (book.rating) {
-      const rating = Math.round(book.rating) // Làm tròn giá trị rating nếu cần
+    if (book.reviews && book.reviews.length > 0) {
+      const totalRating = book.reviews.reduce((sum, review) => sum + review.rating, 0)
+      const averageRating = Math.round(totalRating / book.reviews.length)
+
       const icons = []
 
-      for (let i = 0; i < rating; i++) {
+      for (let i = 0; i < averageRating; i++) {
         icons.push(<Star key={i} size={10} className="mr-1" />)
       }
 
       return <div className="flex">{icons}</div>
     }
-    return null
+
+    return <div>No reviews yet</div>
   }
 
   return (

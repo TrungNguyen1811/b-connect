@@ -81,7 +81,7 @@ function AuthPreview({ className, ...prosp }: Props) {
   }, [logout, navigate])
 
   const AdminSection = React.useMemo(() => {
-    if (user?.role === ROLE.USER) {
+    if (user?.role === ROLE.CUSTOMER) {
       return <></>
     }
     return (

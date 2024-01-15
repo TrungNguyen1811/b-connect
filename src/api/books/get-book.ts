@@ -14,6 +14,9 @@ export function getBookById(id: string) {
       category: 'book',
     }),
     price: faker.number.int(),
+    author: faker.lorem.words(),
+    title: faker.lorem.words(),
+    status: 'NEW',
   }
 
   return new Promise<IBook>((resolve) => {
@@ -37,6 +40,8 @@ export function getManyBooks() {
     }),
     price: faker.number.int(1000000),
     author: faker.lorem.word(),
+    title: faker.lorem.words(),
+    status: 'NEW',
     // sale: {
     //   _id: faker.string.uuid(),
     //   img: faker.image.urlLoremFlickr({
