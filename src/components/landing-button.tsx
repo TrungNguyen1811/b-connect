@@ -7,7 +7,7 @@ function LandingButton() {
     navigate('/')
   }
   return (
-    <div className={cn('m-10 text-center text-8xl font-extrabold')} onClick={onClick}>
+    <div className={cn('m-10 text-center text-4xl font-extrabold')} onClick={onClick}>
       BConnect
     </div>
   )

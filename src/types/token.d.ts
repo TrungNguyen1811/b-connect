@@ -6,4 +6,4 @@ export type IToken = {
   accessToken: string
   refreshToken: string
 }
-export type ITokenReponse = IResponse<IToken>
+export type ITokenResponse = IResponse<IToken>

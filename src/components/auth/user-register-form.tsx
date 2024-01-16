@@ -7,6 +7,8 @@ import { Input } from '../ui/input'
 import { Loader } from 'lucide-react'
 import { RegisterSchema } from 'src/pages/(auth)/register/validation'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { signUpApi } from 'src/api/apis/auth/sign-up'
+import { toast } from '../ui/use-toast'
 
 type FormData = z.infer<typeof RegisterSchema>
 function RegisterForm() {
@@ -15,34 +17,34 @@ function RegisterForm() {
     defaultValues: {},
   })
   const [isLoading, setIsLoading] = React.useState(false)
-  //   const onSubmit = async (data: FormData) => {
-  //     setIsLoading(true)
-  //     await signUpApi(data, (err) => {
-  //       if (err) {
-  //         toast({
-  //           title: 'Error',
-  //           description: err.response?.data.message,
-  //           variant: 'destructive',
-  //         })
-  //         return
-  //       }
-  //       toast({
-  //         title: 'Success',
-  //         description: 'Register successfully',
-  //         variant: 'success',
-  //       })
-  //     })
-  //     setIsLoading(false)
-  //   }
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true)
+    await signUpApi(data, (err) => {
+      if (err) {
+        toast({
+          title: 'Error',
+          description: err.response?.data.message,
+          variant: 'destructive',
+        })
+        return
+      }
+      toast({
+        title: 'Success',
+        description: 'Register successfully',
+        variant: 'success',
+      })
+    })
+    setIsLoading(false)
+  }
 
   useEffect(() => {
     form.formState.errors && console.log(form.formState.errors)
   }, [form.formState.errors])
   return (
-    <div className="container relative mx-auto mt-5 flex items-center justify-center ">
+    <div className="container relative mx-auto flex items-center justify-center ">
       <Form {...form}>
-        {/* <form onSubmit={form.handleSubmit(onSubmit)} className="my-12 grid grid-cols-1 gap-8 md:grid-cols-2"> */}
-        <form className="md:grid-cols my-12 mt-0 grid grid-cols-1 gap-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="md:grid-cols my-12 mt-0 grid grid-cols-1 gap-8">
+          {/* <form className="md:grid-cols my-12 mt-0 grid grid-cols-1 gap-8"> */}
           <div className="mx-auto w-full max-w-sm space-y-4">
             <div className="flex gap-2">
               <FormField

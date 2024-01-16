@@ -22,11 +22,11 @@ function LoginPage() {
       <LandingButton />
       <div>
         <div
-          className={`container ${isRightPanelActive ? 'left-panel-active' : ''} ${
+          className={`container h-[26rem] ${isRightPanelActive ? 'left-panel-active' : ''} ${
             isLeftPanelActive ? 'right-panel-active' : ''
           }`}
         >
-          <div className="form-container sign-in-container mb-3 ml-36 mt-3">
+          <div className="form-container sign-in-container mb-3 ml-36">
             <UserAuthForm />
           </div>
           <div className="form-container sign-up-container">
