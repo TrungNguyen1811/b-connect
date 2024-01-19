@@ -167,6 +167,23 @@ const CarouselContent2 = React.forwardRef<HTMLDivElement, React.HTMLAttributes<H
 )
 CarouselContent2.displayName = 'CarouselContent2'
 
+const CarouselContent3 = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const { carouselRef, orientation } = useCarousel()
+
+    return (
+      <div ref={carouselRef} className="h-full w-full overflow-hidden">
+        <div
+          ref={ref}
+          className={cn('flex', orientation === 'horizontal' ? '-ml-4' : '-mt-4 flex-col', className)}
+          {...props}
+        />
+      </div>
+    )
+  },
+)
+CarouselContent3.displayName = 'CarouselContent3'
+
 const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const { orientation } = useCarousel()
@@ -240,4 +257,13 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
 )
 CarouselNext.displayName = 'CarouselNext'
 
-export { type CarouselApi, Carousel, CarouselContent, CarouselContent2, CarouselItem, CarouselPrevious, CarouselNext }
+export {
+  type CarouselApi,
+  Carousel,
+  CarouselContent,
+  CarouselContent2,
+  CarouselContent3,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+}
