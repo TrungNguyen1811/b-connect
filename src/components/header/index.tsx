@@ -1,13 +1,13 @@
 import React from 'react'
 import { Search } from 'lucide-react'
 import { Input } from '../ui/input'
-import AddToCart from '../add-to-cart'
+import AddToCart from '../cart/add-to-cart'
 import { Link } from 'react-router-dom'
 import Navigation from './nav'
 
 function Header() {
   return (
-    <div className="sticky left-0 top-0 z-10 w-full flex-col items-center justify-between border bg-slate-50 md:px-12">
+    <div className="left-0 top-0 z-10 w-full flex-col items-center justify-between border bg-slate-50 md:px-12">
       <Navigation />
       <div className="flex justify-evenly py-4">
         <div className="flex">

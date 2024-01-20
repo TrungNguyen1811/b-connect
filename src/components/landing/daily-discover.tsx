@@ -12,9 +12,13 @@ import { Button } from '../ui/button'
 function DailyDiscover() {
   const navigate = useNavigate()
 
-  const { data } = useQuery<IResponse<IBook[]>, AxiosError>([], () => getManyBooks(), {
-    keepPreviousData: true,
-  })
+  const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
+    ['getManyBooks'], // Provide a unique key for this query
+    () => getManyBooks({}), // Pass an empty object as the argument
+    {
+      keepPreviousData: true,
+    },
+  )
 
   const [displayedBooks, setDisplayedBooks] = useState(40)
 

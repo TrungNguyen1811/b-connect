@@ -1,10 +1,10 @@
 import { IBook } from './books'
 
 export interface ICart {
-  book?: IBook
-  _id: string
+  _id?: string
   bookId?: IBook['_id']
   quantity: number
+  price?: number
   creatAt?: Date
   updateAt?: Date
 }

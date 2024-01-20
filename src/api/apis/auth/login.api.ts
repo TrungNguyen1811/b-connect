@@ -11,7 +11,7 @@ async function loginApi(
 ) {
   return await axiosClient
     .post<ITokenResponse>(
-      '/auth/login',
+      '/api/SignIn',
       {
         username: username,
         password: password,

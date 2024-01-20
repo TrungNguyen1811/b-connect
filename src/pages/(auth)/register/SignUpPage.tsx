@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { UserAuthForm } from 'src/components/auth/user-auth-form'
 import RegisterForm from 'src/components/auth/user-register-form'
-import LandingButton from 'src/components/landing-button'
+import LandingButton from 'src/components/landing/landing-button'
 
 function SignUpPage() {
   const [isRightPanelActive, setRightPanelActive] = useState(false)

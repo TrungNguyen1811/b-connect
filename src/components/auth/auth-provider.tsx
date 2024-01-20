@@ -1,6 +1,6 @@
 import { addSeconds } from 'date-fns/addSeconds'
 import { createContext, useEffect, useState } from 'react'
-import { User } from '../types'
+import { User } from '../../types'
 import { IToken } from 'src/types/token'
 
 export type LoginProps = {
