@@ -119,20 +119,20 @@ function BookDetailPage() {
     ]
   }, [book, pathname])
 
-  const renderReviewRating = useCallback((rating: number) => {
-    switch (rating) {
-      case 5:
-        return <p className=" text-orange-500">Excellent</p>
-      case 4:
-        return <p className=" text-orange-500">Greate</p>
-      case 3:
-        return <p className=" text-orange-500">Good</p>
-      case 2:
-        return <p className=" text-orange-500">Bad</p>
-      case 1:
-        return <p className=" text-orange-500">No worth</p>
-    }
-  }, [])
+  // const renderReviewRating = useCallback((rating: number) => {
+  //   switch (rating) {
+  //     case 5:
+  //       return <p className=" text-orange-500">Excellent</p>
+  //     case 4:
+  //       return <p className=" text-orange-500">Greate</p>
+  //     case 3:
+  //       return <p className=" text-orange-500">Good</p>
+  //     case 2:
+  //       return <p className=" text-orange-500">Bad</p>
+  //     case 1:
+  //       return <p className=" text-orange-500">No worth</p>
+  //   }
+  // }, [])
 
   const renderReviewer = React.useCallback(
     ({ user_id, rating, updatedAt }: IReview) => (
@@ -162,7 +162,7 @@ function BookDetailPage() {
         </div>
       </div>
     ),
-    [renderReviewRating],
+    [],
   )
 
   const id = useId()
@@ -375,7 +375,7 @@ function BookDetailPage() {
                     onChange={(value: number) => setValue('rating', value)}
                     // isDisabled={isAddReview}
                   />
-                  {renderReviewRating(watch('rating'))}
+                  {/* {renderReviewRating(watch('rating'))} */}
                 </div>
               </div>
               <div>
