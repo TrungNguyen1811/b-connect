@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { IBreadcrumb } from './type'
 import { cn } from 'src/lib/utils'
 import { ChevronRight } from 'lucide-react'
+import { Icons } from '../icon/icon'
 
 type Props = {
   items: Array<IBreadcrumb>
@@ -26,11 +27,11 @@ type BreadCrumbItemProps = {
 } & React.HTMLAttributes<HTMLLIElement>
 function BreadCrumbItem({ item, className, isLast, ...props }: BreadCrumbItemProps) {
   delete props.children
-  //   const Icon = React.useMemo(() => {
-  //     const { icon } = item
-  //     if (!icon) return null
-  //     return icon
-  //   }, [item])
+  const Icon = React.useMemo(() => {
+    const { icon } = item
+    if (!icon) return null
+    return Icons[icon]
+  }, [item])
   return (
     <li className={cn('inline-flex items-center', className)} {...props}>
       <Link
@@ -43,7 +44,7 @@ function BreadCrumbItem({ item, className, isLast, ...props }: BreadCrumbItemPro
           },
         )}
       >
-        {/* {Icon && <Icon />} */}
+        {Icon && <Icon className="mr-1" size={16} />}
         {item.label}
       </Link>
       {isLast || <ChevronRight className="ml-1 inline-block" />}

@@ -28,6 +28,7 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@smastrom/react-rating": "^1.4.0",
     "@tanstack/react-query": "^4.29.3",
     "@transmart/cli": "^0.2.4",
     "axios": "^1.6.5",

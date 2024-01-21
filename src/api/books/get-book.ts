@@ -14,11 +14,37 @@ export function getBookById(id: string) {
       width: 100,
       category: 'book',
     }),
-    price: faker.number.int(),
+    price: faker.number.int({ min: 10, max: 1000000 }),
     author: faker.lorem.words(),
     title: faker.lorem.words(),
     status: 'NEW',
-    genres: Math.random() < 0.5 ? 'popular' : 'best', // Randomly assign 'popular' or 'best'
+    genres: Math.random() < 0.5 ? 'popular' : 'best',
+    category: [
+      {
+        _id: faker.string.uuid(),
+        name: faker.lorem.word({ length: 4, strategy: 'shortest' }),
+      },
+    ],
+
+    reviews: [
+      {
+        _id: faker.string.uuid(),
+        product_id: faker.string.uuid(),
+        user_id: {
+          _id: faker.string.uuid(),
+          email: faker.internet.email(),
+          avatar: faker.image.avatar(),
+          fullName: faker.lorem.words(),
+        },
+        title: faker.lorem.sentence(),
+        details: faker.lorem.paragraph(),
+        rating: faker.number.int({ min: 1, max: 5 }),
+        voteCount: faker.number.int({ min: 1, max: 5 }),
+        status: faker.lorem.words(),
+        createdAt: faker.date.recent().toISOString(),
+        updatedAt: faker.date.recent().toISOString(),
+      },
+    ],
   }
 
   return new Promise<IBook>((resolve) => {
@@ -47,7 +73,7 @@ export function getManyBooks(params: GetManyBooksParams) {
       width: 100,
       category: 'book',
     }),
-    price: faker.number.int(1000000),
+    price: faker.number.int({ min: 10, max: 1000000 }),
     author: faker.lorem.word(),
     title: faker.lorem.words(),
     status: 'NEW',
@@ -56,6 +82,26 @@ export function getManyBooks(params: GetManyBooksParams) {
       {
         _id: faker.string.uuid(),
         name: faker.lorem.word({ length: 4, strategy: 'shortest' }),
+      },
+    ],
+
+    reviews: [
+      {
+        _id: faker.string.uuid(),
+        product_id: faker.string.uuid(),
+        user_id: {
+          _id: faker.string.uuid(),
+          email: faker.internet.email(),
+          avatar: faker.image.avatar(),
+          fullName: faker.lorem.words(),
+        },
+        title: faker.lorem.sentence(),
+        details: faker.lorem.paragraph(),
+        rating: faker.number.int({ min: 1, max: 5 }),
+        voteCount: faker.number.int({ min: 1, max: 5 }),
+        status: faker.lorem.words(),
+        createdAt: faker.date.recent().toISOString(),
+        updatedAt: faker.date.recent().toISOString(),
       },
     ],
   }))

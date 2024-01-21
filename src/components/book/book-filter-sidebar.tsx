@@ -127,7 +127,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
                   NEW
                 </SelectItem>
                 <SelectItem className="hover:bg-accent" value="OLD">
-                  OlD
+                  OLD
                 </SelectItem>
               </SelectContent>
             </Select>

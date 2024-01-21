@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { ShoppingCartIcon } from 'lucide-react'
-import useOrderCart from 'src/hooks/useOrderCart'
+import { useOrderCart } from 'src/hooks/useOrderCart'
 import { IBook } from 'src/types/books'
 import { getBookById } from 'src/api/books/get-book'
+import { formatPrice } from 'src/lib/utils'
 
 function AddToCart() {
   const [open, setOpen] = useState(false)
@@ -71,12 +72,14 @@ function AddToCart() {
                         <div>
                           <p className="text-sm text-gray-500">
                             <span className="font-semibold text-gray-900">{book?.name || 'Book Name Not Found'}</span>
-                            <span className="font-semibold text-gray-900">{book?.author || 'Author Not Found'}</span>
+                            <p className="text-sm text-gray-500">
+                              x <span className="font-semibold text-gray-900">{cart.quantity}</span>
+                            </p>
                           </p>
                         </div>
                         <div>
                           <p className="text-sm text-gray-500">
-                            x <span className="font-semibold text-gray-900">{cart.quantity}</span>
+                            <span className="font-semibold text-gray-900">{formatPrice(cart.price)}</span>
                           </p>
                         </div>
                       </li>

@@ -26,7 +26,7 @@ function LoginPage() {
             isLeftPanelActive ? 'right-panel-active' : ''
           }`}
         >
-          <div className="form-container sign-in-container mb-3 ml-36">
+          <div className="form-container sign-in-container mb-3">
             <UserAuthForm />
           </div>
           <div className="form-container sign-up-container">

@@ -26,12 +26,12 @@ export interface IReview {
   _id: string
   product_id: string
   user_id: Pick<User, '_id' | 'email' | 'avatar' | 'fullName'>
-  title: string
-  details: string
-  rating: number
-  voteCount: number
-  status: string
-  purchasesVerify: string
-  createdAt: string
-  updatedAt: string
+  title?: string
+  details?: string
+  rating?: number
+  voteCount?: number
+  status?: string
+  purchasesVerify?: string
+  createdAt?: string
+  updatedAt?: string
 }

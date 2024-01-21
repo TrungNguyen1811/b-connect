@@ -89,7 +89,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }
 
   return (
-    <div className={cn('ml-10 mt-10 grid w-[50%] gap-6', className)} {...props}>
+    <div className={cn('ml-6 mt-10 grid w-[50%] gap-6', className)} {...props}>
       <div className="mb-5 flex flex-col items-start justify-start p-0">
         <p className="opacity-50">LOGIN</p>
         <h4 className="text-4xl font-extrabold">Welcome back</h4>

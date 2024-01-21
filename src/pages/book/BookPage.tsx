@@ -27,11 +27,13 @@ function BookPage() {
         label: 'Home',
         key: 'home',
         href: '/',
+        icon: 'home',
       },
       {
         key: 'books',
         label: 'Books',
         href: '/books',
+        icon: 'book',
       },
     ]
   }, [])
@@ -54,16 +56,6 @@ function BookPage() {
       return <Book key={book._id} book={book} />
     })
   }, [data?.data, isLoading])
-
-  // const { addToCart } = useOrderCart()
-  // const onRentAll = React.useCallback(() => {
-  //   const bookIds = data?.data.map((book) => book._id)
-  //   if (bookIds) {
-  //     bookIds.forEach((bookId) => {
-  //       addToCart(bookId as string)
-  //     })
-  //   }
-  // }, [addToCart, data?.data])
 
   const totalPage = React.useMemo(() => {
     return data?._pagination?.totalPage || 1
@@ -133,6 +125,3 @@ function BookPage() {
   )
 }
 export default BookPage
-// function useOrderCart(): { addToCart: any } {
-//   throw new Error('Function not implemented.')
-// }

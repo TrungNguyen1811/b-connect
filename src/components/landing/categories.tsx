@@ -35,7 +35,7 @@ function Categories() {
     if (evenCategories != null)
       return evenCategories.map((category, index) => (
         <div key={index}>
-          <div className="flex space-x-4 pb-4 pr-4">
+          <div className="flex lg:space-x-4 lg:pb-4 lg:pr-4">
             <Category category={category} />
           </div>
         </div>
@@ -47,7 +47,7 @@ function Categories() {
     if (oddCategories != null)
       return oddCategories.map((category, index) => (
         <div key={index}>
-          <div className="flex space-x-4 pb-4 pr-4">
+          <div className="flex lg:space-x-4 lg:pb-4 lg:pr-4">
             <Category category={category} />
           </div>
         </div>
@@ -71,7 +71,7 @@ function Categories() {
           <Separator />
           <div className="relative mt-5">
             <ScrollArea>
-              <div className="flex flex-wrap pb-4">
+              <div className="flex flex-wrap lg:pb-4">
                 <div className="flex">{renderEvenCategories}</div>
                 <div className="flex">{renderOddCategories}</div>
               </div>

@@ -63,11 +63,31 @@
 //   }
 // }
 
-// export default useOrderCart
-import { useState, useEffect } from 'react'
+// export default useOrderCart// useOrderCart.js
+
+import React, { createContext, useContext, useState, useEffect } from 'react'
 import { ICart } from 'src/types'
 
-const useOrderCart = () => {
+export interface ContextType {
+  cartItems: ICart[]
+  addToCart: (_id: string) => void
+  decreaseToCart: (_id: string) => void
+  removeFromCart: (_id: string) => void
+  clearCart: () => void
+}
+
+export const OrderCartContext = createContext<ContextType | undefined>(undefined)
+
+export const useOrderCart = (): ContextType => {
+  const context = useContext(OrderCartContext)
+
+  if (!context) {
+    throw new Error('useOrderCart must be used within an OrderCartProvider')
+  }
+  return context
+}
+
+export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
   const [cartItems, setCartItems] = useState<ICart[]>([])
 
   useEffect(() => {
@@ -115,13 +135,13 @@ const useOrderCart = () => {
     setCartItems([])
   }
 
-  return {
+  const contextValue = {
     cartItems,
     addToCart,
     decreaseToCart,
     removeFromCart,
     clearCart,
   }
-}
 
-export default useOrderCart
+  return <OrderCartContext.Provider value={contextValue}>{children}</OrderCartContext.Provider>
+}
