@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { IBreadcrumb } from './type'
 import { cn } from 'src/lib/utils'
 import { ChevronRight } from 'lucide-react'
-import { Icons } from '../icon/icon'
+import { Icons } from '../icons/icon'
 
 type Props = {
   items: Array<IBreadcrumb>
