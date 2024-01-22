@@ -12,7 +12,7 @@ module.exports = {
     },
     extend: {
       screens: {
-        xs: '420px', // Adjust the value as needed
+        xs: '375px', // Adjust the value as needed
       },
       colors: {
         border: 'hsl(var(--border))',

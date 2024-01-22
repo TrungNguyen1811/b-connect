@@ -138,7 +138,7 @@ function BookDetailPage() {
     ({ user_id, rating, updatedAt }: IReview) => (
       <div className="flex w-full items-center gap-3">
         <Avatar>
-          <AvatarImage src={user_id.avatar} alt={`${user_id.email}`} />
+          <AvatarImage width={'50rem'} src={user_id.avatar} alt={`${user_id.email}`} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="flex flex-1 justify-between gap-4">

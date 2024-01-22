@@ -27,7 +27,7 @@ function Book({ book }: Props) {
   return (
     <div>
       <Link to={`/books/${book._id}`} key={book._id}>
-        <Card className="w-[100%]">
+        <Card className="xs:w-[6rem] lg:w-[16rem]">
           <CardTitle className="aspect-[1] flex-col overflow-clip rounded-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
               src={book.image}

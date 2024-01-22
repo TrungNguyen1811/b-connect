@@ -50,6 +50,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         token = data!
       }
     })
+    navigate('/')
 
     if (!error) {
       await profileApi(token!.accessToken, (err, user) => {
@@ -72,7 +73,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             user,
             token,
           })
-          navigate('/login')
+          navigate('/')
         }
       })
     }
@@ -99,7 +100,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

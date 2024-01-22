@@ -5,6 +5,7 @@ const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
 const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
+const ViewCart = React.lazy(() => import('src/pages/cart/view-cart'))
 
 const AuthLayout = React.lazy(() => import('src/pages/layout/AuthLayout'))
 const LoginPage = React.lazy(() => import('src/pages/(auth)/login/SignInPage'))
@@ -31,6 +32,10 @@ export const ROUTES = createBrowserRouter([
           }
         },
         element: <BookDetailPage />,
+      },
+      {
+        path: 'view-cart',
+        element: <ViewCart />,
       },
     ],
   },

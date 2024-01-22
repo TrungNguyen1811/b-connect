@@ -45,7 +45,7 @@ export function getAllCategories(): Promise<ICategory[]> {
 export function getManyCategories() {
   // TODO: Replace this with an actual API call
 
-  const categories: ICategory[] = Array.from({ length: 20 }, () => ({
+  const categories: ICategory[] = Array.from({ length: 16 }, () => ({
     _id: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
     name: faker.lorem.sentence(),

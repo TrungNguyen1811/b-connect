@@ -39,7 +39,7 @@ function AddToCart() {
   }, [cartItems])
 
   const onViewCart = () => {
-    navigate('/viewcart')
+    navigate('/view-cart')
   }
 
   return (

@@ -11,10 +11,13 @@ function Header() {
       <Navigation />
       <div className="flex justify-evenly py-4">
         <div className="flex items-center">
-          <Link to={'/'} className=" text-black-100 mr-4 cursor-pointer justify-center text-2xl font-extrabold">
+          <Link
+            to={'/'}
+            className="text-black-100 mr-4 cursor-pointer justify-center font-extrabold xs:text-2xl lg:text-3xl"
+          >
             BConnect
           </Link>
-          <Link to={'/'} className="text-black-100 cursor-pointer text-2xl font-extrabold">
+          <Link to={'/'} className="text-black-100 cursor-pointer font-extrabold xs:text-2xl lg:text-3xl">
             BSocial
           </Link>
         </div>

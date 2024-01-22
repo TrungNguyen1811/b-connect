@@ -6,7 +6,7 @@ import { IErrorResponse } from 'src/types/response'
 type ISignup = z.infer<typeof RegisterSchema>
 async function signUpApi(data: ISignup, callback: (error: AxiosError<IErrorResponse> | null) => void) {
   return await axiosClient
-    .post('/api/SignUp', {
+    .post('/Account/SignUp', {
       ...data,
     })
     .then((err) => {

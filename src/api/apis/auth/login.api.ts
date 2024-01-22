@@ -6,18 +6,18 @@ import { z } from 'zod'
 
 type ILoginSchema = z.infer<typeof LoginSchema>
 async function loginApi(
-  { username: username, password }: ILoginSchema,
+  { email: email, password }: ILoginSchema,
   callback: (error: AxiosError | null, result: IToken | null) => void,
 ) {
   return await axiosClient
     .post<ITokenResponse>(
-      '/api/SignIn',
+      'Account/SignIn',
       {
-        username: username,
+        email: email,
         password: password,
       },
       {
-        withCredentials: true,
+        withCredentials: false,
       },
     )
     .then((err) => {
