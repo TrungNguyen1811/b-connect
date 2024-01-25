@@ -11,7 +11,7 @@ function BookDaily({ book }: Props) {
   // Hàm để render icon dựa trên giá trị rating
   const renderRatingIcon = () => {
     if (book.reviews && book.reviews.length > 0) {
-      const totalRating = book.reviews.reduce((sum, review) => sum + review.rating, 0)
+      const totalRating = book.reviews.reduce((sum, review) => sum + (review.rating ?? 0), 0)
       const averageRating = Math.round(totalRating / book.reviews.length)
 
       const icons = []
@@ -28,22 +28,22 @@ function BookDaily({ book }: Props) {
 
   return (
     <Link to={'/'} key={book._id}>
-      <Card className="w-56 hover:scale-105">
+      <Card className="w-[100%] hover:scale-105">
         <CardTitle className="aspect-[1] flex-col overflow-clip rounded-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
           <img
             src={book.image}
             alt={book.name}
             className="aspect-[1] object-contain transition-all duration-300"
-            width={'224'}
+            style={{ width: '100%' }}
           />
         </CardTitle>
-        <CardContent className="p-2 text-lg">
+        <CardContent className="p-0 lg:p-2 lg:text-lg">
           <strong>{book.name}</strong>
         </CardContent>
-        <CardDescription className="p-0 pl-2">{renderRatingIcon()}</CardDescription>
-        <CardFooter className="flex flex-row place-content-between p-2">
-          <p className="text-red-500">{formatPrice(book.price)}</p>
-          <p className="text-xs text-gray-500">10k sold</p>
+        <CardDescription className="p-0 lg:pl-2">{renderRatingIcon()}</CardDescription>
+        <CardFooter className="flex flex-row place-content-between lg:p-2">
+          <p className="text-xs text-red-500 lg:text-base">{formatPrice(book.price)}</p>
+          <p className="lg:text-md text-xss text-gray-500">10k sold</p>
         </CardFooter>
       </Card>
     </Link>

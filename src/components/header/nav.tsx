@@ -11,7 +11,7 @@ function Navigation() {
         <NavLink className={'nav-link'} to={'/'}>
           Seller Center
         </NavLink>
-        <NavLink className={'nav-link'} to={'/'}>
+        <NavLink className={'hidden-on-mobile nav-link'} to={'/'}>
           Follow us on
         </NavLink>
         <div className="ml-1 flex items-center">

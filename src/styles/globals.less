@@ -58,6 +58,44 @@
     @apply bg-background text-foreground;
   }
 
+  @media (width <= 576px) {
+    .hidden-on-mobile {
+      display: none;
+    }
+
+    .text-xs {
+      font-size: 0.5rem /* 8px */;
+      line-height: 0.75rem /* 12px */;
+    }
+
+    .text-xss {
+      font-size: 0.4rem /* 8px */;
+      line-height: 0.7rem /* 12px */;
+    }
+
+    .overlay-container {
+      display: none;
+    }
+  }
+
+  // mobile
+  /* stylelint-disable-next-line block-no-empty */
+  @media (width >= 576px) {
+    .text-logo {
+      text-size-adjust: 1.25rem;
+    }
+  }
+
+  // ipad
+  /* stylelint-disable-next-line block-no-empty */
+  @media (width >= 768px) {
+  }
+
+  // desktops
+  /* stylelint-disable-next-line block-no-empty */
+  @media (width >= 1200px) {
+  }
+
   .nav-link:not(:first-child)::before {
     content: '|';
     height: 0.9375rem;

@@ -15,21 +15,23 @@ export interface IBook {
   createdAt?: Date
   updatedAt?: Date
   status: 'NEW' | 'OLD'
+  genres: 'popular' | 'best'
 }
 export enum BOOK_STATUS {
   NEW = 'NEW',
   OLD = 'OLD',
 }
+
 export interface IReview {
   _id: string
   product_id: string
-  user_id: Pick<User, '_id' | 'email' | 'avatar' | 'fullName'>
-  title: string
-  details: string
-  rating: number
-  voteCount: number
-  status: string
-  purchasesVerify: string
-  createdAt: string
-  updatedAt: string
+  user_id: Pick<User, 'userId' | 'email' | 'avatar' | 'fullName'>
+  title?: string
+  details?: string
+  rating?: number
+  voteCount?: number
+  status?: string
+  purchasesVerify?: string
+  createdAt?: string
+  updatedAt?: string
 }

@@ -35,7 +35,7 @@ const LanguageSelector = () => {
         <PopoverTrigger>
           <div className="flex items-center gap-1 fill-black text-black">
             <Languages size={18} />
-            {currentLanguage && getLocaleDisplayName(currentLanguage)}
+            <p className="hidden-on-mobile">{currentLanguage && getLocaleDisplayName(currentLanguage)}</p>
             <ChevronDown size={12} />
           </div>
         </PopoverTrigger>

@@ -1,10 +1,15 @@
 import { IBook } from './books'
+import { User } from './user'
 
 export interface ICart {
-  book?: IBook
-  _id: string
-  bookId?: IBook['_id']
+  _id?: string
+  bookId: IBook['_id']
+  bookName?: IBook['name']
   quantity: number
+  userId?: User['userId']
+  price?: number
+  status?: string
   creatAt?: Date
   updateAt?: Date
+  ExpriedDate?: Date
 }

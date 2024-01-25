@@ -1,41 +1,45 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 // import { useOrderCart } from '@/hooks/useOrderCart'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { ShoppingCartIcon } from 'lucide-react'
+import { useOrderCart } from 'src/hooks/useOrderCart'
+import { IBook } from 'src/types/books'
+import { getBookById } from 'src/api/books/get-book'
+import { formatPrice } from 'src/lib/utils'
 
 function AddToCart() {
   const [open, setOpen] = useState(false)
   const maxOrdersToShow = 5
 
   const navigate = useNavigate()
-  // const { cartItems } = useOrderCart()
-  // const [bookData, setBookData] = useState<IBook[]>([])
-  // const [totalQuantity, setTotalQuantity] = useState(0)
+  const { cartItems } = useOrderCart()
+  const [bookData, setBookData] = useState<IBook[]>([])
+  const [totalQuantity, setTotalQuantity] = useState(0)
 
-  // useEffect(() => {
-  //   if (cartItems && cartItems.length > 0) {
-  //     const promises = cartItems.map((cart) => getBookById(cart.bookId as string))
+  useEffect(() => {
+    if (cartItems && cartItems.length > 0) {
+      const promises = cartItems.map((cart) => getBookById(cart.bookId as string))
 
-  //     Promise.all(promises)
-  //       .then((bookDataArray) => {
-  //         setBookData(bookDataArray)
-  //         // Tính tổng số lượng sách trong giỏ hàng
-  //         const quantitySum = cartItems.reduce((total, cart) => total + cart.quantity, 0)
-  //         setTotalQuantity(quantitySum)
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error fetching book data:', error)
-  //       })
-  //   } else {
-  //     // Nếu giỏ hàng trống, đặt tổng số lượng sách là 0
-  //     setTotalQuantity(0)
-  //   }
-  // }, [cartItems])
+      Promise.all(promises)
+        .then((bookDataArray) => {
+          setBookData(bookDataArray)
+          // Tính tổng số lượng sách trong giỏ hàng
+          const quantitySum = cartItems.reduce((total, cart) => total + cart.quantity, 0)
+          setTotalQuantity(quantitySum)
+        })
+        .catch((error) => {
+          console.error('Error fetching book data:', error)
+        })
+    } else {
+      // Nếu giỏ hàng trống, đặt tổng số lượng sách là 0
+      setTotalQuantity(0)
+    }
+  }, [cartItems])
 
   const onViewCart = () => {
-    navigate('/viewcart')
+    navigate('/view-cart')
   }
 
   return (
@@ -45,20 +49,20 @@ function AddToCart() {
           <Button variant={'outline'} onClick={() => setOpen(!open)} className="px-2">
             <span className="sr-only">New orders added</span>
             <ShoppingCartIcon />
-            {/* {totalQuantity > 0 && (
+            {totalQuantity > 0 && (
               <span className="absolute -right-1 -top-1 rounded-full bg-red-500 px-1.5 py-0.5 text-xs text-white">
                 {totalQuantity}
               </span>
-            )} */}
+            )}
           </Button>
         </HoverCardTrigger>
 
         <HoverCardContent>
-          <div className="flex h-full w-full flex-col py-6 shadow-xl">
+          <div className="flex h-full w-full flex-col py-2 ">
             <div className="px-4 sm:px-6">
               <h2 className="text-lg font-medium text-gray-900">New orders added</h2>
             </div>
-            {/* <div className="mt-6 px-4 sm:px-6">
+            <div className="mt-6 px-4 sm:px-6">
               <ul className="space-y-4">
                 {cartItems && bookData && bookData.length > 0 ? (
                   cartItems.slice(0, maxOrdersToShow).map((cart, index) => {
@@ -68,12 +72,14 @@ function AddToCart() {
                         <div>
                           <p className="text-sm text-gray-500">
                             <span className="font-semibold text-gray-900">{book?.name || 'Book Name Not Found'}</span>
-                            <span className="font-semibold text-gray-900">{book?.author || 'Author Not Found'}</span>
+                            <p className="text-sm text-gray-500">
+                              x <span className="font-semibold text-gray-900">{cart.quantity}</span>
+                            </p>
                           </p>
                         </div>
                         <div>
                           <p className="text-sm text-gray-500">
-                            x <span className="font-semibold text-gray-900">{cart.quantity}</span>
+                            <span className="font-semibold text-gray-900">{formatPrice(cart.price)}</span>
                           </p>
                         </div>
                       </li>
@@ -96,7 +102,7 @@ function AddToCart() {
                   </div>
                 </li>
               </ul>
-            </div> */}
+            </div>
           </div>
         </HoverCardContent>
       </HoverCard>

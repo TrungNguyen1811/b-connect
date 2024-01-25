@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { UserAuthForm } from 'src/components/auth/user-auth-form'
 import RegisterForm from 'src/components/auth/user-register-form'
-import LandingButton from 'src/components/landing-button'
+import LandingButton from 'src/components/landing/landing-button'
 
 function LoginPage() {
   const [isRightPanelActive, setRightPanelActive] = useState(false)
@@ -26,7 +26,7 @@ function LoginPage() {
             isLeftPanelActive ? 'right-panel-active' : ''
           }`}
         >
-          <div className="form-container sign-in-container mb-3 ml-36">
+          <div className="form-container sign-in-container mb-3">
             <UserAuthForm />
           </div>
           <div className="form-container sign-up-container">

@@ -162,7 +162,9 @@ function AuthPreview({ className, ...prosp }: Props) {
       {user ? (
         <div className="flex items-center justify-between gap-2">{renderUserDropdown}</div>
       ) : (
-        <Button onClick={onLogin}>Login</Button>
+        <div>
+          <Button onClick={onLogin}>Login</Button>
+        </div>
       )}
     </div>
   )

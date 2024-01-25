@@ -12,17 +12,21 @@ import { Button } from '../ui/button'
 function DailyDiscover() {
   const navigate = useNavigate()
 
-  const { data } = useQuery<IResponse<IBook[]>, AxiosError>([], () => getManyBooks(), {
-    keepPreviousData: true,
-  })
+  const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
+    ['getManyBooks'], // Provide a unique key for this query
+    () => getManyBooks({}), // Pass an empty object as the argument
+    {
+      keepPreviousData: true,
+    },
+  )
 
   const [displayedBooks, setDisplayedBooks] = useState(40)
 
   const handleSeeMoreClick = () => {
-    if (displayedBooks > 60) {
+    if (displayedBooks > 56) {
       navigate('/daily_discover?pageNumber=2')
     }
-    setDisplayedBooks((prevCount) => prevCount + 10)
+    setDisplayedBooks((prevCount) => prevCount + 8)
   }
 
   const renderBooks = React.useMemo(() => {
@@ -46,7 +50,7 @@ function DailyDiscover() {
             <h2 className="text-2xl text-red-600">DAILY DISCOVER</h2>
           </div>
           <div className="mb-8 flex w-full gap-2">
-            <section key="main.section.books" className="grid flex-1 grid-cols-5 gap-5">
+            <section key="main.section.books" className="grid flex-1 grid-cols-4 gap-4">
               {renderBooks}
             </section>
           </div>

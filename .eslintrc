@@ -32,5 +32,7 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "unused-imports/no-unused-imports": "warn",
     "react/prop-types": "off"
+    
   }
+  
 }

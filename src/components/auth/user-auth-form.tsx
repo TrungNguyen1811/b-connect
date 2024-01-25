@@ -12,7 +12,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
-import { IToken } from 'src/types/token'
 import { AxiosError } from 'axios'
 import { loginApi } from 'src/api/apis/auth/login.api'
 import { toast } from '../ui/use-toast'
@@ -36,7 +35,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
 
-    let token: IToken
+    let token: string
     let error: AxiosError | null = null
     await loginApi(data, (err, data) => {
       if (err) {
@@ -52,7 +51,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     })
 
     if (!error) {
-      await profileApi(token!.accessToken, (err, user) => {
+      await profileApi(token!, (err, user) => {
         if (err) {
           toast({
             title: err.message,
@@ -72,7 +71,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             user,
             token,
           })
-          navigate('/login')
+          navigate('/')
         }
       })
     }
@@ -89,7 +88,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }
 
   return (
-    <div className={cn('ml-10 mt-10 grid w-[50%] gap-6', className)} {...props}>
+    <div className={cn('ml-6 mt-10 grid w-[50%] gap-6', className)} {...props}>
       <div className="mb-5 flex flex-col items-start justify-start p-0">
         <p className="opacity-50">LOGIN</p>
         <h4 className="text-4xl font-extrabold">Welcome back</h4>
@@ -99,7 +98,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

@@ -11,9 +11,16 @@ import { Separator } from '../ui/separator'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 
 function TopBook() {
-  const { data } = useQuery<IResponse<IBook[]>, AxiosError>([], () => getManyBooks(), {
-    keepPreviousData: true,
-  })
+  const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
+    ['Top'],
+    () =>
+      getManyBooks({
+        genres: 'popular',
+      }),
+    {
+      keepPreviousData: true,
+    },
+  )
 
   const renderBooks = useMemo(() => {
     return data?.data.map((book, index) => (
