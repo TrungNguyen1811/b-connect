@@ -39,7 +39,7 @@ function InfoAccount() {
           name="avatar"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="mb-2">Avatar</FormLabel>
+              <FormLabel className="mb-2">Avatar User</FormLabel>
               <FormControl>
                 <Input type="file" accept="image/*" {...field} />
               </FormControl>
