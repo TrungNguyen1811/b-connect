@@ -12,7 +12,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
-import { IToken } from 'src/types/token'
 import { AxiosError } from 'axios'
 import { loginApi } from 'src/api/apis/auth/login.api'
 import { toast } from '../ui/use-toast'
@@ -36,7 +35,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
 
-    let token: IToken
+    let token: string
     let error: AxiosError | null = null
     await loginApi(data, (err, data) => {
       if (err) {
@@ -50,10 +49,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         token = data!
       }
     })
-    navigate('/')
 
     if (!error) {
-      await profileApi(token!.accessToken, (err, user) => {
+      await profileApi(token!, (err, user) => {
         if (err) {
           toast({
             title: err.message,

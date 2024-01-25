@@ -1,72 +1,6 @@
-// // useOrderCart.ts
-// import { useState, useEffect } from 'react'
-// import axios from 'axios'
-// import { ICart } from 'src/types'
-// import { authAxiosClient } from 'src/lib/axios'
-
-// const useOrderCart = () => {
-//   const [products, setProducts] = useState<ICart[]>([])
-//   const [cart, setCart] = useState<ICart[]>([])
-
-//   useEffect(() => {
-//     // Fetch products from your API endpoint
-//     authAxiosClient
-//       .get('/products')
-//       .then((response) => setProducts(response.data))
-//       .catch((error) => console.error('Error fetching products:', error))
-
-//     // Fetch cart from cookie when component mounts
-//     // const savedCart = JSON.parse(document.cookie)
-//     // if (savedCart && Array.isArray(savedCart)) {
-//     //   setCart(savedCart)
-//     // }
-//   }, [])
-
-//   const addToCart = (productId: string) => {
-//     // Fetch product details from your API endpoint
-//     authAxiosClient
-//       .get(`/products/${productId}`)
-//       .then((response) => {
-//         const product = response.data
-//         const existingItem = cart.find((item) => item.bookId === product.id)
-
-//         if (existingItem) {
-//           existingItem.quantity += 1
-//           setCart([...cart])
-//         } else {
-//           const newItem: ICart = { bookId: productId, quantity: 1 }
-//           const updatedCart: ICart[] = [...cart, newItem]
-//           setCart(updatedCart)
-
-//           // Set the updated cart data as a cookie
-//           // document.cookie = `cart=${JSON.stringify(updatedCart)}; path=/`
-
-//           // Send the updated cart data to the server
-//           // saveCartToDatabase(updatedCart)
-//         }
-//       })
-//       .catch((error) => console.error('Error fetching product details:', error))
-//   }
-
-//   // const saveCartToDatabase = (cartData: ICart[]) => {
-//   //   // Send the cart data to the server
-//   //   axios
-//   //     .post('/api/add-products-to-cart', cartData)
-//   //     .then((response) => console.log('Cart saved to database:', response.data))
-//   //     .catch((error) => console.error('Error saving cart to database:', error))
-//   // }
-
-//   return {
-//     products,
-//     cart,
-//     addToCart,
-//   }
-// }
-
-// export default useOrderCart// useOrderCart.js
-
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { ICart } from 'src/types'
+import { useAuth } from './useAuth'
 
 export interface ContextType {
   cartItems: ICart[]
@@ -89,23 +23,30 @@ export const useOrderCart = (): ContextType => {
 
 export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
   const [cartItems, setCartItems] = useState<ICart[]>([])
+  const { user } = useAuth()
+  const userId: string = user?.userId as string
 
   useEffect(() => {
-    const storedCartItems = document.cookie.split('; ').find((row) => row.startsWith('cartItems='))
+    // Retrieve cart items from cookies
+    const storedCartItems = document.cookie.split('; ').find((row) => row.startsWith(`cartItems_${userId}=`))
+    console.log(storedCartItems)
 
     if (storedCartItems) {
       try {
         const cartItemsArray = JSON.parse(storedCartItems.split('=')[1] || '[]')
         setCartItems(cartItemsArray)
       } catch (error) {
-        // Handle parsing error if needed
+        console.log('lỗi')
       }
     }
-  }, [])
+  }, [userId])
 
   useEffect(() => {
-    document.cookie = `cartItems=${JSON.stringify(cartItems)}; path=/`
-  }, [cartItems])
+    // Save cart items to cookies
+    document.cookie = `cartItems_${userId}=${JSON.stringify(cartItems)}; path=/`
+    // Optionally, save to the server using postCartApi(cartItems)
+    // saveCartToDatabase(cartItems, userId)
+  }, [cartItems, userId])
 
   const addToCart = (_id: string) => {
     const existingItem = cartItems.find((item) => item.bookId === _id)
@@ -117,6 +58,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     } else {
       setCartItems((prevItems) => [...prevItems, { bookId: _id, quantity: 1, _id: new Date().toISOString() }])
     }
+    // saveCartState()
   }
 
   const decreaseToCart = (_id: string) => {
@@ -125,16 +67,32 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
         item.bookId === _id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item,
       ),
     )
+    // saveCartState()
   }
 
   const removeFromCart = (_id: string) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.bookId !== _id))
+    // saveCartState()
   }
 
   const clearCart = () => {
     setCartItems([])
+    // saveCartState()
   }
+  // const saveCartToDatabase = async (cartData: ICart[], userId: string) => {
+  //   try {
+  //     const saveCartResponse = await postCartApi(cartData)
+  //     console.log('Cart saved to database:', saveCartResponse.data)
+  //   } catch (error) {
+  //     console.error('Error saving cart to database:', error)
+  //   }
+  // }
 
+  // const saveCartState = () => {
+  //   // Save cart data to both cookie and server
+  //   document.cookie = `cartItems_${userId}=${JSON.stringify(cartItems)}; path=/`
+  //   saveCartToDatabase(cartItems, userId)
+  // }
   const contextValue = {
     cartItems,
     addToCart,

@@ -18,7 +18,7 @@ const authAxiosClient = axios.create({
 
 authAxiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken')
+    const token = localStorage.getItem('token')
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token
     }
@@ -29,31 +29,31 @@ authAxiosClient.interceptors.request.use(
   },
 )
 
-authAxiosClient.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  async (error) => {
-    const originalRequest = error.config
+// authAxiosClient.interceptors.response.use(
+//   (response) => {
+//     return response
+//   },
+//   async (error) => {
+//     const originalRequest = error.config
 
-    if (error.response?.status === 401 && originalRequest.url !== BASED_URL + '/auth/refresh-token') {
-      try {
-        const { data, status } = await axiosClient.post('/auth/refresh', undefined, { withCredentials: true })
-        if (status === 200 || status === 201) {
-          localStorage.setItem('accessToken', data.data.accessToken)
-          return authAxiosClient(originalRequest)
-        }
+//     if (error.response?.status === 401 && originalRequest.url !== BASED_URL + '/auth/refresh-token') {
+//       try {
+//         const { data, status } = await axiosClient.post('/auth/refresh', undefined, { withCredentials: true })
+//         if (status === 200 || status === 201) {
+//           localStorage.setItem('accessToken', data.data.accessToken)
+//           return authAxiosClient(originalRequest)
+//         }
 
-        throw new Error('Refresh token failed')
-      } catch (er) {
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('user')
-        localStorage.removeItem('expiresIn')
-        window.location.href = '/login'
-      }
-    }
-    return Promise.reject(error)
-  },
-)
+//         throw new Error('Refresh token failed')
+//       } catch (er) {
+//         localStorage.removeItem('accessToken')
+//         localStorage.removeItem('user')
+//         localStorage.removeItem('expiresIn')
+//         window.location.href = '/login'
+//       }
+//     }
+//     return Promise.reject(error)
+//   },
+// )
 
 export { authAxiosClient, axiosClient }

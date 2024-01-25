@@ -77,7 +77,7 @@ function RegisterForm() {
               />
             </div>
 
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <FormField
                 control={form.control}
                 name="fullName"
@@ -106,7 +106,7 @@ function RegisterForm() {
                   </FormItem>
                 )}
               />
-            </div>
+            </div> */}
 
             <FormField
               control={form.control}

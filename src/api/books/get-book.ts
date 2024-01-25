@@ -31,7 +31,7 @@ export function getBookById(id: string) {
         _id: faker.string.uuid(),
         product_id: faker.string.uuid(),
         user_id: {
-          _id: faker.string.uuid(),
+          userId: faker.string.uuid(),
           email: faker.internet.email(),
           avatar: faker.image.avatar(),
           fullName: faker.lorem.words(),

@@ -25,7 +25,7 @@ export enum BOOK_STATUS {
 export interface IReview {
   _id: string
   product_id: string
-  user_id: Pick<User, '_id' | 'email' | 'avatar' | 'fullName'>
+  user_id: Pick<User, 'userId' | 'email' | 'avatar' | 'fullName'>
   title?: string
   details?: string
   rating?: number

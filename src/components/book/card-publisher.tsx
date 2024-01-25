@@ -9,7 +9,7 @@ function Publisher({ user }: Props) {
   const renderPublisher = React.useMemo(() => {
     if (user?.role === 'SELLER') {
       return (
-        <Link to={'/'} key={user._id}>
+        <Link to={'/'} key={user.userId}>
           <Card className="my-0.5 w-36">
             <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-200 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
               <img
@@ -27,7 +27,7 @@ function Publisher({ user }: Props) {
     } else {
       return null // You need to provide a return value for the case where user.role !== 'SELLER'
     }
-  }, [user?.role, user._id, user.username])
+  }, [user?.role, user.userId, user.username])
 
   return <div>{renderPublisher}</div>
 }

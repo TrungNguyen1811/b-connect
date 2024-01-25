@@ -5,7 +5,7 @@ import { IProfileResponse } from 'src/types/user-response'
 
 async function profileApi(token: string, callback: (error: AxiosError | null, result: User | null) => void) {
   return await authAxiosClient
-    .get<IProfileResponse>('/user/profile', {
+    .get('/Account/get-user-profile', {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -13,7 +13,7 @@ async function profileApi(token: string, callback: (error: AxiosError | null, re
     })
     .then((err) => {
       if (err.status === 200) {
-        callback(null, err.data.data)
+        callback(null, err.data)
       }
     })
     .catch((error) => {

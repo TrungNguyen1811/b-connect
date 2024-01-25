@@ -6,7 +6,7 @@ import { User } from 'src/types/user'
 export function getUserById(id: string) {
   // TODO: Replace this with an actual API call
   const user: User = {
-    _id: faker.string.uuid(),
+    userId: faker.string.uuid(),
     username: faker.lorem.words(),
     avatar: faker.image.urlLoremFlickr({
       height: 100,

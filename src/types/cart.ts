@@ -6,7 +6,7 @@ export interface ICart {
   bookId: IBook['_id']
   bookName?: IBook['name']
   quantity: number
-  userId?: User['_id']
+  userId?: User['userId']
   price?: number
   status?: string
   creatAt?: Date
