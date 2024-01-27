@@ -1,15 +1,14 @@
 import { IBook } from './books'
-import { User } from './user'
 
 export interface ICart {
-  _id?: string
-  bookId: IBook['_id']
-  bookName?: IBook['name']
+  cartId?: string
+  productId: IBook['_id']
+  // bookName?: IBook['name']
   quantity: number
-  userId?: User['userId']
-  price?: number
-  status?: string
-  creatAt?: Date
-  updateAt?: Date
-  ExpriedDate?: Date
+  // userId?: User['userId']
+  // price?: number
+  // status?: string
+  // creatAt?: Date
+  // updateAt?: Date
+  // ExpriedDate?: Date
 }

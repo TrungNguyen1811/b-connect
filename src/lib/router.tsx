@@ -11,6 +11,13 @@ const AuthLayout = React.lazy(() => import('src/pages/layout/AuthLayout'))
 const LoginPage = React.lazy(() => import('src/pages/(auth)/login/SignInPage'))
 const SignUpPage = React.lazy(() => import('src/pages/(auth)/register/SignUpPage'))
 
+const AdminLayout = React.lazy(() => import('src/pages/layout/AdminLayout'))
+const DashboardPage = React.lazy(() => import('src/pages/admin/DashBoardPage'))
+
+const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
+const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
+const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
+
 export const ROUTES = createBrowserRouter([
   {
     element: <MainLayout />,
@@ -36,6 +43,28 @@ export const ROUTES = createBrowserRouter([
       {
         path: 'view-cart',
         element: <ViewCart />,
+      },
+      {
+        element: <UserLayout />,
+        children: [
+          {
+            path: 'user/account/profile',
+            element: <InfoAccount />,
+          },
+          {
+            path: 'user/account/password',
+            element: <ChangePassword />,
+          },
+        ],
+      },
+      {
+        element: <AdminLayout />,
+        children: [
+          {
+            path: '/admin/dashboard',
+            element: <DashboardPage />,
+          },
+        ],
       },
     ],
   },

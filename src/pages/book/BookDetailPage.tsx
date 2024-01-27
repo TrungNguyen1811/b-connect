@@ -76,7 +76,7 @@ function BookDetailPage() {
 
   const bookInCartAmount = useMemo(() => {
     if (!book) return 0
-    const bookInCart = cartItems.find((item) => item.bookId === book._id)
+    const bookInCart = cartItems.find((item) => item.productId === book._id)
     return bookInCart?.quantity || 0
   }, [book, cartItems])
 
