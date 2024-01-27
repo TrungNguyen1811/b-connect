@@ -19,36 +19,6 @@ export default function CartPage() {
   async function getData(): Promise<ICart[]> {
     // Fetch data from your API here.
     return [
-      {
-        _id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-        quantity: 12,
-        bookId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-      },
-      {
-        _id: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-        quantity: 12,
-        bookId: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-      },
-      {
-        _id: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-        quantity: 12,
-        bookId: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-      },
-      {
-        _id: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-        quantity: 12,
-        bookId: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-      },
-      {
-        _id: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-        quantity: 12,
-        bookId: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-      },
-      {
-        _id: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-        quantity: 12,
-        bookId: '4fa85f64-5717-4562-b3fc-2c963f66afa6',
-      },
       // ...
     ]
   }

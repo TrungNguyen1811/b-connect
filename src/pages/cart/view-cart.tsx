@@ -60,7 +60,7 @@ function ViewCart({ className, ...props }: Props) {
             <div className="start-shopping mt-4">
               <Link className="flex items-center text-blue-500" to="/">
                 <ArrowLeftIcon />
-                <span>Start Renting</span>
+                <span>Start Buying</span>
               </Link>
             </div>
           </div>

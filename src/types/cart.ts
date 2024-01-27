@@ -2,8 +2,8 @@ import { IBook } from './books'
 import { User } from './user'
 
 export interface ICart {
-  _id?: string
-  bookId: IBook['_id']
+  cartId?: string
+  productId: IBook['_id']
   bookName?: IBook['name']
   quantity: number
   userId?: User['userId']

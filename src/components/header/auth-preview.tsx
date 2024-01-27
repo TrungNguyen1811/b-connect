@@ -115,7 +115,10 @@ function AuthPreview({ className, ...prosp }: Props) {
       <DropdownMenu>
         <DropdownMenuTrigger className="user-profile flex items-center justify-start gap-2">
           <Avatar>
-            <AvatarImage src={user.avatar} alt={user.fullName} />
+            <AvatarImage
+              src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
+              alt={user.fullName}
+            />
             <AvatarFallback>{getLabelByFullname(user.fullName)}</AvatarFallback>
           </Avatar>
           <div className="text-start">
@@ -125,7 +128,7 @@ function AuthPreview({ className, ...prosp }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuSeparator />
-          <Link to="/profile">
+          <Link to="/user/account/profile">
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
               Profile

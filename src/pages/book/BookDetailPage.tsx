@@ -1,4 +1,3 @@
-import { Avatar } from '@radix-ui/react-avatar'
 import { format, parseISO } from 'date-fns'
 import { Plus, Star } from 'lucide-react'
 import { Rating } from '@smastrom/react-rating'
@@ -12,7 +11,7 @@ import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import Book from 'src/components/landing/card-book'
 import MetaData from 'src/components/metadata'
-import { AvatarFallback, AvatarImage } from 'src/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from 'src/components/ui/avatar'
 import { Button } from 'src/components/ui/button'
 import { Card, CardContent } from 'src/components/ui/card'
 import { Carousel, CarouselContent3, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
@@ -76,7 +75,7 @@ function BookDetailPage() {
 
   const bookInCartAmount = useMemo(() => {
     if (!book) return 0
-    const bookInCart = cartItems.find((item) => item.bookId === book._id)
+    const bookInCart = cartItems.find((item) => item.productId === book._id)
     return bookInCart?.quantity || 0
   }, [book, cartItems])
 

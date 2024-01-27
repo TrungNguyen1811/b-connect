@@ -20,7 +20,7 @@ function AddToCart() {
 
   useEffect(() => {
     if (cartItems && cartItems.length > 0) {
-      const promises = cartItems.map((cart) => getBookById(cart.bookId as string))
+      const promises = cartItems.map((cart) => getBookById(cart.productId as string))
 
       Promise.all(promises)
         .then((bookDataArray) => {
@@ -68,7 +68,7 @@ function AddToCart() {
                   cartItems.slice(0, maxOrdersToShow).map((cart, index) => {
                     const book = bookData[index]
                     return (
-                      <li key={cart.bookId} className="flex flex-row items-center space-x-4 py-2">
+                      <li key={cart.productId} className="flex flex-row items-center space-x-4 py-2">
                         <div>
                           <p className="text-sm text-gray-500">
                             <span className="font-semibold text-gray-900">{book?.name || 'Book Name Not Found'}</span>

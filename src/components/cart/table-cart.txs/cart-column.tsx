@@ -14,11 +14,11 @@ import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/check-box'
 export const columns: ColumnDef<ICart>[] = [
   {
-    accessorKey: 'bookId',
+    accessorKey: 'productId',
     header: () => <div className="text-left">BookId</div>,
     cell: ({ getValue }) => {
-      const bookId: string = getValue() as string
-      return <div className="text-left font-medium">{bookId}</div>
+      const productId: string = getValue() as string
+      return <div className="text-left font-medium">{productId}</div>
     },
   },
   // {
@@ -50,7 +50,9 @@ export const columns: ColumnDef<ICart>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(cart.bookId)}>Copy Book ID</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(cart.productId)}>
+              Copy Book ID
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Remove</DropdownMenuItem>
             <DropdownMenuItem>View Book details</DropdownMenuItem>

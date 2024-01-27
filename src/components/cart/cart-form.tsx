@@ -21,16 +21,16 @@ function CartForm() {
   })
 
   const { cartItems, addToCart, decreaseToCart, removeFromCart, clearCart } = useOrderCart()
-  const handleAddToCart = (bookId: string) => {
-    addToCart(bookId)
+  const handleAddToCart = (productId: string) => {
+    addToCart(productId)
   }
 
-  const handleDecreaseToCart = (bookId: string) => {
-    decreaseToCart(bookId)
+  const handleDecreaseToCart = (productId: string) => {
+    decreaseToCart(productId)
   }
 
-  const handleRemoveFromCart = (bookId: string) => {
-    removeFromCart(bookId)
+  const handleRemoveFromCart = (productId: string) => {
+    removeFromCart(productId)
   }
 
   const onClearCart = React.useCallback(() => {
@@ -41,8 +41,8 @@ function CartForm() {
   useEffect(() => {
     if (cartItems && cartItems.length > 0) {
       const promises = cartItems
-        .filter((cart) => typeof cart.bookId === 'string')
-        .map((cart) => getBookById(cart.bookId as string)) // Cast to string
+        .filter((cart) => typeof cart.productId === 'string')
+        .map((cart) => getBookById(cart.productId as string)) // Cast to string
 
       Promise.all(promises)
         .then((bookDataArray) => {

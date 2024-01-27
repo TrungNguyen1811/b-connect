@@ -19,7 +19,10 @@
   "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
-      "typescript": true
+      "typescript": true,
+      "node": {
+        "paths": ["src"]
+      }
     }
   },
   "plugins": ["unused-imports", "react", "@typescript-eslint", "import", "prettier"],
