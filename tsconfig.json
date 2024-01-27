@@ -24,7 +24,8 @@
     "rootDir": ".",
     "jsx": "react-jsx",
     "paths": {
-      "src/*": ["./src/*"]
+      "src/*": ["./src/*"],
+      "radix-ui/react-select": ["relative/path/to/module"]
     },
     "types": ["vite/client", "node"]
   },

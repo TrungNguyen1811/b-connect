@@ -16,8 +16,7 @@ import {
   UserCircle,
 } from 'lucide-react'
 import { NavItem } from 'src/types/NavItem'
-import { Avatar } from '@radix-ui/react-avatar'
-import { AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarImage } from '../ui/avatar'
 import { useAuth } from 'src/hooks/useAuth'
 import { Link } from 'react-router-dom'
 

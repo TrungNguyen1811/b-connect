@@ -57,15 +57,6 @@ export const ROUTES = createBrowserRouter([
           },
         ],
       },
-      {
-        element: <AdminLayout />,
-        children: [
-          {
-            path: '/admin/dashboard',
-            element: <DashboardPage />,
-          },
-        ],
-      },
     ],
   },
   {
@@ -78,6 +69,15 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/register',
         element: <SignUpPage />,
+      },
+    ],
+  },
+  {
+    element: <AdminLayout />,
+    children: [
+      {
+        path: '/admin/dashboard',
+        element: <DashboardPage />,
       },
     ],
   },
