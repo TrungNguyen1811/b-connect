@@ -93,7 +93,8 @@ function InfoAccount() {
       <Separator />
       <div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="">
+          {/* <form onSubmit={form.handleSubmit(onSubmit)} className=""> */}
+          <form className="">
             <ResizablePanelGroup direction="horizontal" className="max-w-6xl rounded-lg border">
               <ResizablePanel defaultSize={60}>
                 <div className="flex h-[500px] flex-col p-6">
