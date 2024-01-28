@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import Footer from 'src/components/footer'
-import Header from 'src/components/header'
+import Header from 'src/components/header/header'
 import MetaData from 'src/components/metadata'
 import TailwindIndicator from 'src/components/tailwind-indicator'
 

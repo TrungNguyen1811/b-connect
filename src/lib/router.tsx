@@ -14,6 +14,10 @@ const SignUpPage = React.lazy(() => import('src/pages/(auth)/register/SignUpPage
 const AdminLayout = React.lazy(() => import('src/pages/layout/AdminLayout'))
 const DashboardPage = React.lazy(() => import('src/pages/admin/DashBoardPage'))
 
+const ManagerLayout = React.lazy(() => import('src/pages/layout/ManagerLayout'))
+
+const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
+
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
@@ -77,6 +81,26 @@ export const ROUTES = createBrowserRouter([
     children: [
       {
         path: '/admin/dashboard',
+        element: <DashboardPage />,
+      },
+    ],
+  },
+  {
+    path: '/seller',
+    element: <SellerLayout />,
+    children: [
+      {
+        path: '/seller/dashboard',
+        element: <DashboardPage />,
+      },
+    ],
+  },
+  {
+    path: '/manager',
+    element: <ManagerLayout />,
+    children: [
+      {
+        path: '/manager/dashboard',
         element: <DashboardPage />,
       },
     ],

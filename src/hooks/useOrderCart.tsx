@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { ICart } from 'src/types'
 import { useAuth } from './useAuth'
-import { toast } from 'src/components/ui/use-toast'
-import { postCartApi } from 'src/api/cart/post-cart'
 
 export interface ContextType {
   cartItems: ICart[]
@@ -47,32 +45,32 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     document.cookie = `cartItems_${userId}=${JSON.stringify(cartItems)}; path=/`
   }, [cartItems, userId])
 
-  useEffect(() => {
-    // Save to the database on logout
-    const handleLogout = async () => {
-      await saveCartToDatabase(cartItems)
-      // Optionally, clear the local cart state
-      // setCartItems([])
-    }
+  // useEffect(() => {
+  //   // Save to the database on logout
+  //   const handleLogout = async () => {
+  //     await saveCartToDatabase(cartItems)
+  //     // Optionally, clear the local cart state
+  //     // setCartItems([])
+  //   }
 
-    if (!logout) {
-      toast({
-        title: 'Not yet save to database',
-      }) // Call the logout function
-    } else {
-      handleLogout()
-    }
-  }, [logout, cartItems, userId])
+  //   if (!logout) {
+  //     toast({
+  //       title: 'Not yet save to database',
+  //     }) // Call the logout function
+  //   } else {
+  //     handleLogout()
+  //   }
+  // }, [logout, cartItems, userId])
 
-  const saveCartToDatabase = async (cartData: ICart[]) => {
-    // Your logic to save cart data to the database
-    try {
-      await postCartApi(cartData)
-      console.log('Cart saved to the database.')
-    } catch (error) {
-      console.error('Error saving cart to the database:', error)
-    }
-  }
+  // const saveCartToDatabase = async (cartData: ICart[]) => {
+  //   // Your logic to save cart data to the database
+  //   try {
+  //     await postCartApi(cartData)
+  //     console.log('Cart saved to the database.')
+  //   } catch (error) {
+  //     console.error('Error saving cart to the database:', error)
+  //   }
+  // }
 
   const addToCart = (_id: string) => {
     const existingItem = cartItems.find((item) => item.productId === _id)
