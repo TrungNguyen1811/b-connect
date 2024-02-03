@@ -7,7 +7,7 @@ import { User } from 'src/types'
 import { AxiosError } from 'axios'
 import { ChevronRight } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
-import { getManyUsers } from 'src/api/user/get-all-user'
+import { getManyUsers } from 'src/api/user/get-user'
 import Publisher from './card-publisher'
 
 function Publishers() {

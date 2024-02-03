@@ -1,9 +1,9 @@
-import { ICart } from 'src/types'
 import { authAxiosClient } from '../../lib/axios'
+import { DataCart } from 'src/hooks/useOrderCart'
 
-async function postCartApi(postCartApi: ICart[]) {
+async function postCartApi(dataCart: DataCart) {
   return await authAxiosClient
-    .post('/Cart/add-products-to-cart', postCartApi, {})
+    .post('/Cart/add-products-to-cart', dataCart, {})
     .then((response) => {
       if (response.status === 201) {
         return response.data

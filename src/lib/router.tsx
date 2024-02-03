@@ -13,6 +13,7 @@ const SignUpPage = React.lazy(() => import('src/pages/(auth)/register/SignUpPage
 
 const AdminLayout = React.lazy(() => import('src/pages/layout/AdminLayout'))
 const DashboardPage = React.lazy(() => import('src/pages/admin/DashBoardPage'))
+const UserManagerPage = React.lazy(() => import('src/pages/admin/User/UserManage'))
 
 const ManagerLayout = React.lazy(() => import('src/pages/layout/ManagerLayout'))
 
@@ -82,6 +83,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/admin/dashboard',
         element: <DashboardPage />,
+      },
+      {
+        path: 'admin/manage/user',
+        element: <UserManagerPage />,
       },
     ],
   },
