@@ -100,6 +100,11 @@ function BookPage() {
                         page,
                       }))
                     }}
+                    onFirstPage={() => {
+                      setBookState(() => ({
+                        page: 0,
+                      }))
+                    }}
                     onPreviousPage={() => {
                       setBookState((prev) => ({
                         ...prev,
@@ -112,6 +117,11 @@ function BookPage() {
                         ...prev,
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         page: prev.page! + 1,
+                      }))
+                    }}
+                    onLastPage={() => {
+                      setBookState(() => ({
+                        page: totalPage - 1,
                       }))
                     }}
                   />

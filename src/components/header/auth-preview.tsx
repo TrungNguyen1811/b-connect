@@ -39,7 +39,7 @@ export const ADMIN_SECTION_ITEMS: {
     icon: 'dashboard',
   },
   {
-    to: '/admin/user',
+    to: '/admin/manage/user',
     title: 'Users',
     icon: 'user',
   },
