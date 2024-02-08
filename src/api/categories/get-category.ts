@@ -62,3 +62,13 @@ export function getManyCategories() {
     setTimeout(() => resolve(response), 1000)
   })
 }
+import { axiosClient } from 'src/lib/axios'
+import { IQueryPagination, IQuerySearch } from 'src/types/requests'
+
+export async function getAllCategory(params: Partial<IQueryPagination & IQuerySearch>) {
+  return axiosClient
+    .get('/category/', {
+      params,
+    })
+    .then((res) => res.data)
+}

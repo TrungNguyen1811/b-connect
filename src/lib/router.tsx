@@ -14,6 +14,8 @@ const SignUpPage = React.lazy(() => import('src/pages/(auth)/register/SignUpPage
 const AdminLayout = React.lazy(() => import('src/pages/layout/AdminLayout'))
 const DashboardPage = React.lazy(() => import('src/pages/admin/DashBoardPage'))
 const UserManagerPage = React.lazy(() => import('src/pages/admin/User/UserManage'))
+const CreateUserPage = React.lazy(() => import('src/pages/admin/User/CreateUserPage'))
+const CategoryManagerPage = React.lazy(() => import('src/pages/admin/Category/CategoryManage'))
 
 const ManagerLayout = React.lazy(() => import('src/pages/layout/ManagerLayout'))
 
@@ -81,12 +83,20 @@ export const ROUTES = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       {
-        path: '/admin/dashboard',
+        path: '/admin',
         element: <DashboardPage />,
       },
       {
         path: 'admin/manage/user',
         element: <UserManagerPage />,
+      },
+      {
+        path: 'admin/manage/user/create',
+        element: <CreateUserPage />,
+      },
+      {
+        path: 'admin/manage/category',
+        element: <CategoryManagerPage />,
       },
     ],
   },
