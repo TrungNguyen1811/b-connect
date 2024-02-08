@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Separator } from '../ui/separator'
 import { useQuery } from '@tanstack/react-query'
@@ -7,13 +7,26 @@ import { User } from 'src/types'
 import { AxiosError } from 'axios'
 import { ChevronRight } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
-import { getManyUsers } from 'src/api/user/get-all-user'
 import Publisher from './card-publisher'
+import { getAllUser } from 'src/api/user/get-all-user'
+import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
+import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
 function Publishers() {
-  const { data } = useQuery<IResponse<User[]>, AxiosError>([], () => getManyUsers(), {
-    keepPreviousData: true,
+  const [queries, setQueries] = useState<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
+  >({
+    page: 0,
+    perPage: 10,
   })
+  const { data } = useQuery<IResponse<User[]>, AxiosError>(
+    [...API_GET_ALL_USER_QUERY_KEYS, queries],
+    () => getAllUser(queries),
+    {
+      keepPreviousData: true,
+    },
+  )
 
   const evenPublisher = React.useMemo(() => {
     return data?.data.filter((_, index) => index % 2 === 0)

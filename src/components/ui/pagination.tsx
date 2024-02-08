@@ -1,14 +1,16 @@
 import React from 'react'
 import { Button } from './button'
 import { cn } from 'src/lib/utils'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeftToLineIcon, ArrowRightToLineIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 
 type Props = {
   currentPage: number
   totalPage: number
   onPageChange: (page: number) => void
+  onFirstPage: () => void
   onPreviousPage: () => void
   onNextPage: () => void
+  onLastPage: () => void
   itemRender?: (page: number) => React.ReactNode
   hideOnSinglePage?: boolean
   total?: number
@@ -18,8 +20,10 @@ function Pagination({
   currentPage,
   totalPage,
   onPageChange,
+  onFirstPage,
   onPreviousPage,
   onNextPage,
+  onLastPage,
   itemRender,
   hideOnSinglePage = false,
   className,
@@ -89,15 +93,22 @@ function Pagination({
 
   const canPreviousPage = currentPage === 1
   const canNextPage = currentPage === totalPage
-
+  const canFirstPage = currentPage === 1
+  const canLastPage = currentPage === totalPage - 1
   return (
     <div className={cn('space-x-3', className)} {...props}>
+      <Button aria-label="Go to last page" variant="outline" onClick={onFirstPage} disabled={canFirstPage}>
+        <ArrowLeftToLineIcon className="h-4 w-4" aria-hidden="true" />
+      </Button>
       <Button variant={'outline'} className="px-2" onClick={onPreviousPage} disabled={canPreviousPage}>
         <ChevronLeft className="h-4 w-4" />
       </Button>
       {renderItems}
       <Button disabled={canNextPage} variant={'outline'} onClick={onNextPage} className="px-2">
         <ChevronRight className="h-4 w-4" />
+      </Button>
+      <Button aria-label="Go to last page" variant="outline" onClick={onLastPage} disabled={canLastPage}>
+        <ArrowRightToLineIcon className="h-4 w-4" aria-hidden="true" />
       </Button>
     </div>
   )

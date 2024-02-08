@@ -1,9 +1,9 @@
+import { User } from 'src/types/user'
 import { authAxiosClient } from '../../lib/axios'
-import { DataCart } from 'src/hooks/useOrderCart'
 
-async function postCartApi(dataCart: DataCart) {
+async function postUserApi(userData: User) {
   return await authAxiosClient
-    .post('/Cart/add-products-to-cart', dataCart, {})
+    .post('/user', userData, {})
     .then((response) => {
       if (response.status === 201) {
         return response.data
@@ -18,4 +18,4 @@ async function postCartApi(dataCart: DataCart) {
     })
 }
 
-export { postCartApi }
+export { postUserApi }

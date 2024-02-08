@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import { User } from 'src/types/user'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +8,10 @@ import {
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
 import { Edit, MoreHorizontal } from 'lucide-react'
+import { ICategory } from 'src/types'
 
 interface CellActionProps {
-  data: User
+  data: ICategory
 }
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   // const [loading, setLoading] = useState(false)
@@ -31,24 +31,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem onClick={() => navigate(`/admin/dashboard/user/${data.userId}`)}>
+          <DropdownMenuItem onClick={() => navigate(`/admin/category/${data._id}`)}>
             <Edit className="mr-2 h-4 w-4" /> Detail
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div className="flex gap-2 ">
-              {data.blocked ? (
-                data.userId ? (
-                  <div>Unban</div>
-                ) : // <UnBanUserApi userId={data.userId} />
-                null
-              ) : data.userId ? (
-                <div>Ban</div>
-              ) : // <BanUserApi userId={data.userId} />
-              null}
-            </div>{' '}
+            <div className="flex gap-2 "></div>
           </DropdownMenuItem>
           {/* <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> {data.blocked ? 'Unban' : 'Ban'}
           </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>

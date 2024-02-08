@@ -21,4 +21,5 @@ export enum ROLE {
   MANAGER = 'MANAGER',
   SELLER = 'SELLER',
   CUSTOMER = 'CUSTOMER',
+  BASEUSER = 'BaseUser',
 }

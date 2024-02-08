@@ -1,18 +1,18 @@
 import { Button } from 'src/components/ui/button'
-import { columns } from './column'
-import { useUserTable } from './useUserTable'
 import { DataTable } from 'src/components/ui/data-table'
-import { UserTableToolbar } from './toolbar'
 import React from 'react'
 import Pagination from 'src/components/ui/pagination'
 import TableSizeSelector from 'src/components/ui/table-size-selector'
 import { Skeleton } from 'src/components/ui/skeleton'
+import { useCategoryTable } from './useCategoryTable'
+import { CategoryTableToolbar } from './toolbar'
+import { columns } from './column'
 
-function UserTable() {
-  const { isError, isLoading, table, error, refetch, data, tableStates } = useUserTable(columns)
+function CategoryTable() {
+  const { isError, isLoading, table, error, refetch, data, tableStates } = useCategoryTable(columns)
   const renderHeader = React.useMemo(() => {
     return (
-      <UserTableToolbar
+      <CategoryTableToolbar
         table={table}
         queries={{
           page: tableStates.pagination.pageIndex + 1,
@@ -21,12 +21,6 @@ function UserTable() {
         }}
         setSearchQuery={(value) => {
           table.setGlobalFilter(value.search)
-          table.setColumnFilters(() => [
-            {
-              id: 'role',
-              value: value.role,
-            },
-          ])
         }}
       />
     )
@@ -85,4 +79,4 @@ function UserTable() {
     </div>
   )
 }
-export default UserTable
+export default CategoryTable
