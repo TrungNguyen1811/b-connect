@@ -124,6 +124,9 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     )
   }
 
+  // const removeFromCart = (_id: string) => {
+  //   setCartItems((prevItems) => prevItems.filter((item) => item.productId !== _id))
+  // }
   const removeFromCart = (_id: string) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.productId !== _id))
   }

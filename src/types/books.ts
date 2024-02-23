@@ -1,4 +1,5 @@
 import { ICategory } from './categories'
+import { IInventory } from './inventory'
 import { User } from './user'
 
 export interface IBook {
@@ -10,6 +11,7 @@ export interface IBook {
   title: string
   description: string
   price: number
+  inventory?: IInventory[]
   category?: ICategory[]
   reviews?: IReview[]
   createdAt?: Date

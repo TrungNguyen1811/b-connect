@@ -2,7 +2,7 @@ export interface User {
   userId?: string
   email?: string
   fullName?: string
-  role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'SELLER'
+  role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'SELLER' | 'BASEUSER'
   phone?: string
   avatar?: string
   address?: string | null

@@ -1,6 +1,7 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { getBookById } from 'src/api/books/get-book'
+import { CheckOutPage } from 'src/components/cart-test/checkout'
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
@@ -50,6 +51,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: 'view-cart',
         element: <ViewCart />,
+      },
+      {
+        path: 'checkout/:id',
+        element: <CheckOutPage />,
       },
       {
         element: <UserLayout />,

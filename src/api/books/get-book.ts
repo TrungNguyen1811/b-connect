@@ -26,6 +26,14 @@ export function getBookById(id: string) {
       },
     ],
 
+    inventory: [
+      {
+        bookId: id,
+        sellerId: Math.random() < 0.5 ? '1' : '2',
+        quantity: faker.number.int({ min: 10, max: 1000000 }),
+      },
+    ],
+
     reviews: [
       {
         _id: faker.string.uuid(),

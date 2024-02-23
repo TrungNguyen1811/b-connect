@@ -1,7 +1,7 @@
 import React from 'react'
 import { Search } from 'lucide-react'
 import { Input } from '../ui/input'
-import AddToCart from '../cart/add-to-cart'
+import AddToCart from '../cart-test/add-to-cart'
 import { Link } from 'react-router-dom'
 import Navigation from './nav'
 
