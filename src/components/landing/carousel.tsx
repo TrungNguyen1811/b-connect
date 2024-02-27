@@ -13,7 +13,7 @@ import Autoplay from 'embla-carousel-autoplay'
 
 export default function CarouselDemo() {
   return (
-    <div className=" bg-orange-100 xs:h-[10rem] lg:h-full">
+    <div className=" xs:h-[10rem] bg-orange-100 lg:h-full">
       <div className="flex h-full p-4 lg:ml-[5rem]">
         <div className="h-full w-[50%]">
           <Carousel
@@ -29,7 +29,7 @@ export default function CarouselDemo() {
               {Array.from({ length: 5 }).map((_, index) => (
                 <CarouselItem key={index} className=" basis-1/9">
                   <Card>
-                    <CardContent className=" flex aspect-square items-center justify-center p-6 xs:h-[8rem] xs:w-[12rem] lg:h-[17rem] lg:w-[44rem]">
+                    <CardContent className=" xs:h-[8rem] xs:w-[12rem] flex aspect-square items-center justify-center p-6 lg:h-[17rem] lg:w-[44rem]">
                       <span className="text-4xl font-semibold">{index + 1}</span>
                     </CardContent>
                   </Card>
@@ -40,7 +40,7 @@ export default function CarouselDemo() {
             <CarouselNext />
           </Carousel>
         </div>
-        <div className="h-full xs:w-[50%] lg:w-[42%]">
+        <div className="xs:w-[50%] h-full lg:w-[42%]">
           <Carousel
             plugins={[
               Autoplay({
@@ -59,7 +59,7 @@ export default function CarouselDemo() {
                 <CarouselItem key={index} className="m-0 p-1 md:basis-1">
                   <div className="lg:w-[36rem]">
                     <Card>
-                      <CardContent className="flex items-center justify-center p-5 xs:h-[3.5rem] lg:h-[8rem]">
+                      <CardContent className="xs:h-[3.5rem] flex items-center justify-center p-5 lg:h-[8rem]">
                         <span className="text-3xl font-semibold">{index + 1}</span>
                       </CardContent>
                     </Card>

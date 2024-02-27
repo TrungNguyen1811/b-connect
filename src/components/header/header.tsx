@@ -1,7 +1,7 @@
 import React from 'react'
 import { Search } from 'lucide-react'
 import { Input } from '../ui/input'
-import AddToCart from '../cart-test/add-to-cart'
+import AddToCart from '../cart/add-to-cart'
 import { Link } from 'react-router-dom'
 import Navigation from './nav'
 
@@ -13,11 +13,11 @@ function Header() {
         <div className="flex items-center">
           <Link
             to={'/'}
-            className="text-black-100 mr-4 cursor-pointer justify-center font-extrabold xs:text-2xl lg:text-3xl"
+            className="text-black-100 xs:text-2xl mr-4 cursor-pointer justify-center font-extrabold lg:text-3xl"
           >
             BConnect
           </Link>
-          <Link to={'/'} className="text-black-100 cursor-pointer font-extrabold xs:text-2xl lg:text-3xl">
+          <Link to={'/'} className="text-black-100 xs:text-2xl cursor-pointer font-extrabold lg:text-3xl">
             BSocial
           </Link>
         </div>

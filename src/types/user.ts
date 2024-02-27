@@ -1,3 +1,5 @@
+import { IInterested } from './interested'
+
 export interface User {
   userId?: string
   email?: string
@@ -12,6 +14,7 @@ export interface User {
   blocked?: boolean
   blockedDate?: Date
   salt?: string
+  interested?: IInterested[]
   createdAt?: Date
   updatedAt?: Date
 }

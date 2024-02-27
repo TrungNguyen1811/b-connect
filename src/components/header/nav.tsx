@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom'
 import { Facebook, Instagram } from 'lucide-react'
-import Notification from './notification'
+import Notification from '../nofication/notification'
 import Help from './help'
-import AuthPreview from './auth-preview'
+import AuthPreview from '../auth-preview/auth-preview'
 import { LanguageSelector } from '../language-selector'
 function Navigation() {
   return (

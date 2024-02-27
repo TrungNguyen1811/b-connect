@@ -1,7 +1,10 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { getBookById } from 'src/api/books/get-book'
-import { CheckOutPage } from 'src/components/cart-test/checkout'
+import { CreateBlog } from 'src/components/blog/create-blog'
+import { CheckOutPage } from 'src/components/cart/checkout'
+import { LandingBlog } from 'src/pages/landing/landing-blog'
+import { BlogLayout } from 'src/pages/layout/BlogLayout'
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
@@ -124,5 +127,18 @@ export const ROUTES = createBrowserRouter([
         element: <DashboardPage />,
       },
     ],
+  },
+  {
+    element: <BlogLayout />,
+    children: [
+      {
+        path: '/blog',
+        element: <LandingBlog />,
+      },
+    ],
+  },
+  {
+    path: '/blog/create-post',
+    element: <CreateBlog />,
   },
 ])

@@ -12,7 +12,7 @@ export default function Header() {
         <div className="hidden lg:block">
           <Link
             to={lowercasedPath}
-            className="text-black-100 mr-4 cursor-pointer justify-center font-extrabold xs:text-2xl lg:text-3xl"
+            className="text-black-100 xs:text-2xl mr-4 cursor-pointer justify-center font-extrabold lg:text-3xl"
           >
             BConnect
           </Link>
