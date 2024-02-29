@@ -22,7 +22,7 @@ async function postBlogApi(
   return await authAxiosClient
     .post('/blog', data, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
       },
     })
     .then((response) => {

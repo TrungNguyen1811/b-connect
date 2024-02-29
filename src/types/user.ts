@@ -5,7 +5,7 @@ export interface User {
   email?: string
   fullName?: string
   role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'SELLER' | 'BASEUSER'
-  phone?: string
+  phone?: number
   avatar?: string
   address?: string | null
   username: string
@@ -15,6 +15,7 @@ export interface User {
   blockedDate?: Date
   salt?: string
   interested?: IInterested[]
+  bio?: string
   createdAt?: Date
   updatedAt?: Date
 }

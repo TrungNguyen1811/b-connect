@@ -32,7 +32,7 @@ import { postBlogApi } from 'src/api/blog/post-blog'
 
 type FormData = z.infer<typeof createBlogSchema>
 
-export function CreateBlog() {
+export default function CreateBlog() {
   const form = useForm<FormData>({
     resolver: zodResolver(createBlogSchema),
   })
@@ -116,7 +116,7 @@ export function CreateBlog() {
       image: data.image,
       content: JSON.stringify(content),
     }
-    console.log('Form data:', data.image)
+    console.log('Form data:', dataBlog)
 
     // console.log('Form data:', dataBlog)
     postBlog.mutate(dataBlog)
@@ -202,6 +202,16 @@ export function CreateBlog() {
                   onChange={(selectedOptions: any) => {
                     const selectedValues = selectedOptions.map((option: any) => option.value)
                     setSelectedCategories(selectedValues)
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const target = e.target as HTMLInputElement
+                      if (target.value) {
+                        const newCategory = { value: target.value, label: target.value }
+                        setSelectedCategories([...selectedCategories, target.value])
+                        target.value = '' // Xóa giá trị trường nhập sau khi thêm vào danh sách đã chọn
+                      }
+                    }
                   }}
                   isMulti
                   placeholder="Add categories"

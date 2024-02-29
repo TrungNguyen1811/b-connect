@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IMenuItem } from '../breadcrumb'
 import MenuSideBar from '../menu-items/menu-item'
 import { FacebookIcon, GithubIcon, InstagramIcon, SettingsIcon, TwitterIcon, Youtube } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useAuth } from 'src/hooks/useAuth'
+import { getCategoryById } from 'src/api/categories/get-category'
 
 export function Menu() {
   const menu = React.useMemo<IMenuItem[]>(() => {
@@ -97,6 +99,26 @@ export function Menu() {
   }
 
   const Interested = () => {
+    const { user } = useAuth()
+    const [categoryNames, setCategoryNames] = useState<string[]>([])
+
+    useEffect(() => {
+      const fetchCategoryNames = async () => {
+        const names: string[] = []
+        for (const interest of user?.interested || []) {
+          for (const category of interest.category_id) {
+            const name = await getCategoryById(category.name)
+            if (name) {
+              names.push(name.name)
+            }
+          }
+        }
+        setCategoryNames(names)
+      }
+
+      fetchCategoryNames()
+    }, [user])
+
     return (
       <div className="flex flex-col">
         <div className="flex flex-row justify-between">
@@ -105,7 +127,18 @@ export function Menu() {
             <SettingsIcon />
           </Link>
         </div>
-        <div></div>
+        <div className="flex max-h-[16rem] flex-col overflow-y-auto">
+          <ul className="list-none">
+            {categoryNames.map((name) => (
+              <li
+                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-slate-300"
+                key={name}
+              >
+                <Link to={`c/${name}`}>{name}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     )
   }

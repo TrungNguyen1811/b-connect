@@ -1,15 +1,15 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
+import { getBlogById } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
-import { CreateBlog } from 'src/components/blog/create-blog'
-import { CheckOutPage } from 'src/components/cart/checkout'
-import { LandingBlog } from 'src/pages/landing/landing-blog'
-import { BlogLayout } from 'src/pages/layout/BlogLayout'
+import BlogDetail from 'src/components/blog/post-detail'
+import ReadingList from 'src/components/blog/reading-list'
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
 const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
 const ViewCart = React.lazy(() => import('src/pages/cart/view-cart'))
+const CheckOutPage = React.lazy(() => import('src/components/cart/checkout'))
 
 const AuthLayout = React.lazy(() => import('src/pages/layout/AuthLayout'))
 const LoginPage = React.lazy(() => import('src/pages/(auth)/login/SignInPage'))
@@ -28,6 +28,11 @@ const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
+
+const LandingBlog = React.lazy(() => import('src/pages/landing/landing-blog'))
+const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
+const ProfileUser = React.lazy(() => import('src/pages/profile/profileUserBlog'))
+const CreateBlog = React.lazy(() => import('src/components/blog/create-blog'))
 
 export const ROUTES = createBrowserRouter([
   {
@@ -134,6 +139,24 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/blog',
         element: <LandingBlog />,
+      },
+      {
+        path: '/blog/profile',
+        element: <ProfileUser />,
+      },
+      {
+        path: 'blog/:id',
+        loader: async ({ params }) => {
+          const blog = await getBlogById(params.id as string)
+          return {
+            blog,
+          }
+        },
+        element: <BlogDetail />,
+      },
+      {
+        path: '/blog/reading-list',
+        element: <ReadingList />,
       },
     ],
   },

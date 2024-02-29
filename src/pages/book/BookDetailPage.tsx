@@ -167,7 +167,7 @@ function BookDetailPage() {
   const id = useId()
 
   // const { mutateAsync, isLoading: isAddReview } = useMutation({
-  //   mutationFn: postBookReview,
+  // mutationFn: postBookReview,
   //   onSuccess: (_, { data: { comment, rating } }) => {
   //     if (!book) return
 

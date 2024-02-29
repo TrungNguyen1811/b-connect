@@ -42,7 +42,7 @@ export function AuthPreviewBlog({ className, ...prosp }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuSeparator />
-          <Link to="/profile">
+          <Link to="/blog/profile">
             <DropdownMenuItem>
               <div className="hover-underline-animation hover:hover-underline-animation flex flex-col">
                 {user.fullName}
@@ -61,7 +61,7 @@ export function AuthPreviewBlog({ className, ...prosp }: Props) {
               Create Post
             </DropdownMenuItem>
           </Link>
-          <Link to="/reading-list">
+          <Link to="/blog/reading-list">
             <DropdownMenuItem className="hover-underline-animation hover:hover-underline-animation  w-full">
               Reading list
             </DropdownMenuItem>

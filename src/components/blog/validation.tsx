@@ -1,13 +1,5 @@
 import { z } from 'zod'
 
-interface contentBlog {
-  id: string
-  type: string
-  children: {
-    text: string
-  }[]
-}
-
 const contentSchema = z.object({
   id: z.string(),
   type: z.string(),

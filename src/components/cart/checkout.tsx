@@ -22,7 +22,7 @@ import { getCheckoutUrlApi } from 'src/api/getCheckoutURL'
 
 type FormData = z.infer<typeof CartSchema>
 
-export function CheckOutPage() {
+export default function CheckOutPage() {
   const form = useForm<FormData>({
     resolver: zodResolver(CartSchema),
   })
