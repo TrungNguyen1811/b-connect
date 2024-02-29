@@ -1,13 +1,33 @@
-import { Avatar } from '@radix-ui/react-avatar'
-import { BookHeartIcon, MessageSquareDotIcon, StickyNoteIcon } from 'lucide-react'
-import React from 'react'
-import MetaData from 'src/components/metadata'
-import { AvatarImage } from 'src/components/ui/avatar'
-import { Button } from 'src/components/ui/button'
+import { IBlogg } from 'src/types/blog'
+import { IResponse } from 'src/types/response'
 import { useAuth } from 'src/hooks/useAuth'
+import { getBlogsByUserId } from 'src/api/blog/get-blog'
+import React, { useEffect, useState } from 'react'
+import { AvatarImage } from 'src/components/ui/avatar'
+import { Avatar } from '@radix-ui/react-avatar'
+import { Button } from 'src/components/ui/button'
+import { BookHeartIcon, MessageSquareDotIcon, StickyNoteIcon } from 'lucide-react'
+import MetaData from 'src/components/metadata'
+import Post from 'src/components/blog/post'
 
 function ProfileUser() {
   const { user } = useAuth()
+
+  const [blogs, setBlogs] = useState<IResponse<IBlogg[]> | null>(null)
+
+  useEffect(() => {
+    const getAllBlog = async () => {
+      if (!user || user.userId === undefined) {
+        return
+      }
+
+      const allBlogData = await getBlogsByUserId(user.userId)
+
+      setBlogs(allBlogData)
+    }
+
+    getAllBlog()
+  }, [user])
 
   return (
     <div>
@@ -22,11 +42,11 @@ function ProfileUser() {
                   <Avatar className="">
                     <AvatarImage
                       src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-                      alt={user?.fullName}
+                      alt={user?.fullName || ''}
                       className="absolute left-[44rem] top-20 z-10 h-32 w-32 rounded-[50%] p-2"
                     />
                   </Avatar>
-                  <div className="absolute left-[16rem] top-36 h-[18rem] w-[64rem] rounded-md border-2 bg-slate-50">
+                  <div className="absolute left-[16rem] top-36 h-[18rem] w-[63rem] rounded-md border-2 bg-slate-50">
                     <div className="right-0 flex flex-row items-center justify-center pt-16">
                       <p className="ml-20 text-xl font-semibold">{user?.username}</p>{' '}
                       <Button className="ml-5">Follow</Button>
@@ -49,7 +69,7 @@ function ProfileUser() {
             </div>
           </div>
           <div className="mx-[16rem] flex flex-row">
-            <div className="mr-5 w-1/3 rounded-md border-2 bg-slate-50">
+            <div className="mr-5 mt-2 max-h-40 w-1/3 rounded-md border-2 bg-slate-50">
               <div className="m-4">
                 <div className="flex flex-row p-2">
                   <StickyNoteIcon /> <p className="pl-1">31 posts published</p>
@@ -64,11 +84,18 @@ function ProfileUser() {
                 </div>
               </div>
             </div>
-            <main className="h-full w-full rounded-md border-2 bg-slate-50">haha</main>
+            <main className="h-full w-full rounded-md">
+              {blogs?.data.map((blog, index) => (
+                <div className="my-4 mt-2" key={index}>
+                  {blog?._id && <Post id={blog._id} />}
+                </div>
+              ))}
+            </main>
           </div>
         </main>
       </div>
     </div>
   )
 }
+
 export default ProfileUser

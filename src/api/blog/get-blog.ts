@@ -109,3 +109,34 @@ export function getManyBlogBooks() {
     setTimeout(() => resolve(response), 1000)
   })
 }
+
+export function getBlogsByUserId(id: string) {
+  // TODO: Replace this with an actual API call
+
+  const blogs: IBlogg[] = Array.from({ length: 100 }, () => ({
+    _id: faker.string.uuid(),
+    userId: id,
+    title: faker.lorem.words(),
+    image: faker.image.urlLoremFlickr({
+      height: 100,
+      width: 100,
+    }),
+    content: fakeContent,
+    category: [
+      {
+        _id: faker.string.uuid(),
+        name: faker.lorem.word({ length: 10, strategy: 'shortest' }),
+      },
+    ],
+    like: fakeLikeArray,
+    comments: fakeCommentArray,
+    date: faker.date.recent().toISOString(),
+  }))
+
+  const response: IResponse<IBlogg[]> = {
+    data: blogs,
+  }
+  return new Promise<IResponse<IBlogg[]>>((resolve) => {
+    setTimeout(() => resolve(response), 1000)
+  })
+}

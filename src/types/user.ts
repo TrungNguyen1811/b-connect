@@ -1,3 +1,4 @@
+import { IBlogg } from './blog'
 import { IInterested } from './interested'
 
 export interface User {
@@ -15,6 +16,7 @@ export interface User {
   blockedDate?: Date
   salt?: string
   interested?: IInterested[]
+  blog?: IBlogg[]
   bio?: string
   createdAt?: Date
   updatedAt?: Date

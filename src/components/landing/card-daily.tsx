@@ -27,7 +27,7 @@ function BookDaily({ book }: Props) {
   }
 
   return (
-    <Link to={'/'} key={book._id}>
+    <Link to={`/books/${book._id}`} key={book._id}>
       <Card className="w-[100%] hover:scale-105">
         <CardTitle className="aspect-[1] flex-col overflow-clip rounded-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
           <img
