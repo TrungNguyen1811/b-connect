@@ -100,3 +100,32 @@ export function getManyBooks(params: GetManyBooksParams) {
     setTimeout(() => resolve(response), 1000)
   })
 }
+
+export function getUserByUserName(username: string) {
+  // TODO: Replace this with an actual API call
+  const user: User = {
+    userId: faker.string.uuid(),
+    email: faker.lorem.paragraphs(),
+    fullName: faker.lorem.words(),
+    role: 'ADMIN' || 'MANAGER' || 'CUSTOMER' || 'SELLER' || 'BASEUSER',
+    phone: faker.number.int({ min: 10000000, max: 100000000 }),
+    avatar: faker.image.urlLoremFlickr({
+      height: 100,
+      width: 100,
+    }),
+    address: faker.lorem.words(),
+    username: username,
+    interested: [
+      {
+        _id: faker.string.uuid(),
+        category_id: faker.helpers.arrayElements<ICategory>(categories, { min: 2, max: 4 }),
+        user_id: faker.string.uuid(),
+      },
+    ],
+  }
+
+  return new Promise<User>((resolve) => {
+    setTimeout(() => resolve(user), 1000)
+  })
+  // return authAxiosClient.get(`/book/${id}`);
+}

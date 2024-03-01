@@ -18,6 +18,7 @@ export interface User {
   interested?: IInterested[]
   blog?: IBlogg[]
   bio?: string
+  url?: string
   createdAt?: Date
   updatedAt?: Date
 }

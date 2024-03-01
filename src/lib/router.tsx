@@ -4,6 +4,7 @@ import { getBlogById } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import BlogDetail from 'src/components/blog/post-detail'
 import ReadingList from 'src/components/blog/reading-list'
+import DailyDiscover from 'src/pages/e-comerce/DailyDiscover'
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
@@ -29,9 +30,10 @@ const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
 
-const LandingBlog = React.lazy(() => import('src/pages/landing/landing-blog'))
+const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/profileUserBlog'))
+const UpdateProfile = React.lazy(() => import('src/components/blog/update-profile'))
 const CreateBlog = React.lazy(() => import('src/components/blog/create-blog'))
 
 export const ROUTES = createBrowserRouter([
@@ -41,6 +43,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/',
         element: <LandingPage />,
+      },
+      {
+        path: '/daily_discover',
+        element: <DailyDiscover />,
       },
       {
         path: 'books',
@@ -141,11 +147,15 @@ export const ROUTES = createBrowserRouter([
         element: <LandingBlog />,
       },
       {
-        path: '/blog/profile',
+        path: '/blog/profile/:username',
         element: <ProfileUser />,
       },
       {
-        path: 'blog/:id',
+        path: '/blog/setting/profile',
+        element: <UpdateProfile />,
+      },
+      {
+        path: '/blog/:id',
         loader: async ({ params }) => {
           const blog = await getBlogById(params.id as string)
           return {

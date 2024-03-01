@@ -7,7 +7,7 @@ import { IBlogg } from 'src/types/blog'
 import { AvatarImage } from '../ui/avatar'
 import { Separator } from '../ui/separator'
 import { BookMarkedIcon, MessageCircleIcon } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Post(id: any) {
   const [users, setUser] = useState<User>()
@@ -48,47 +48,49 @@ function Post(id: any) {
 
   return (
     <div className="max-h-[37rem] w-full rounded-md border-2 bg-slate-50">
-      <div className="w-full rounded-md">
-        <img src={blog?.image} className="max-h-[24rem] w-full rounded-t-md" />
-      </div>
-      <div className="m-4">
-        <div className="flex flex-row">
-          <Avatar>
-            <AvatarImage src={users?.avatar} className="h-10 w-10 rounded-[50%]" />
-          </Avatar>
-          <div className="ml-2 flex flex-col">
-            <p className="font-semibold">{users?.username}</p>
-            <p className="text-xs font-light">{blog?.date}</p>
+      <Link to={`/blog/${blog?._id}`}>
+        <div className="w-full rounded-md">
+          <img src={blog?.image} className="max-h-[18rem] w-full rounded-t-md" />
+        </div>
+        <div className="m-4">
+          <div className="flex flex-row">
+            <Avatar>
+              <AvatarImage src={users?.avatar} className="h-10 w-10 rounded-[50%]" />
+            </Avatar>
+            <div className="ml-2 flex flex-col">
+              <p className="font-semibold">{users?.username}</p>
+              <p className="text-xs font-light">{blog?.date}</p>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <p className="my-2 ml-12 text-2xl font-extrabold">{blog?.title}</p>
+            <p className="mb-2 ml-12 flex flex-row text-sm">
+              Category:
+              {blog?.category.map((cat, index) => (
+                <React.Fragment key={index}>
+                  <div className="text-sm">{cat.name}</div>
+                  {index < blog.category.length - 1 && <span>, </span>}
+                </React.Fragment>
+              ))}
+            </p>
+          </div>
+          <Separator />
+          <div className="flex flex-row items-center justify-between">
+            <button
+              className="ml-12  flex flex-row items-center text-sm font-light"
+              onClick={() => navigate(`/blog/${blog?._id}`)}
+            >
+              <MessageCircleIcon size={20} className="mr-1" /> Add Comment
+            </button>
+            <div
+              className="m-2 rounded-sm p-1 hover:bg-gray-300"
+              onClick={isSaved ? unsaveFromReadingList : saveToReadingList}
+            >
+              <BookMarkedIcon size={20} className={isSaved ? ' text-orange-400 ' : ''} />
+            </div>
           </div>
         </div>
-        <div className="flex flex-col">
-          <p className="my-2 ml-12 text-3xl font-extrabold">{blog?.title}</p>
-          <p className="mb-2 ml-12 flex flex-row text-sm">
-            Category:
-            {blog?.category.map((cat, index) => (
-              <React.Fragment key={index}>
-                <div className="text-sm">{cat.name}</div>
-                {index < blog.category.length - 1 && <span>, </span>}
-              </React.Fragment>
-            ))}
-          </p>
-        </div>
-        <Separator />
-        <div className="flex flex-row items-center justify-between">
-          <button
-            className="mb-2 ml-12 mt-4 flex flex-row items-center text-sm font-light"
-            onClick={() => navigate(`/blog/${blog?._id}`)}
-          >
-            <MessageCircleIcon size={20} className="mr-1" /> Add Comment
-          </button>
-          <div
-            className="m-2 rounded-sm p-2 hover:bg-gray-300"
-            onClick={isSaved ? unsaveFromReadingList : saveToReadingList}
-          >
-            <BookMarkedIcon size={20} className={isSaved ? ' text-orange-400 ' : ''} />
-          </div>
-        </div>
-      </div>
+      </Link>
     </div>
   )
 }
