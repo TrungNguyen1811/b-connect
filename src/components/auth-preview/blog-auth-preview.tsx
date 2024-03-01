@@ -51,7 +51,7 @@ export function AuthPreviewBlog({ className, ...prosp }: Props) {
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
-          <Link to="/dashboard">
+          <Link to="/blog/dashboard">
             <DropdownMenuItem className=" hover-underline-animation hover:hover-underline-animation w-full">
               Dashboard
             </DropdownMenuItem>

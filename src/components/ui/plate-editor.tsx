@@ -102,7 +102,7 @@ import { withPlaceholders } from '../plate-ui/placeholder'
 import { withDraggables } from '../plate-ui/with-draggables'
 import { EmojiCombobox } from '../plate-ui/emoji-combobox'
 import { TooltipProvider } from '../plate-ui/tooltip'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 const plugins = createPlugins(
   [
@@ -317,16 +317,16 @@ type PlateEditorProps = {
 }
 
 export function PlateEditor({ setContentValue, content }: PlateEditorProps) {
-  const [debugValue, setDebugValue] = useState<Value>(initialValue)
-  // console.log(debugValue)
+  const [debugValue, setDebugValue] = useState<Value>(content)
+  console.log('e', content)
 
-  const getContentValue = () => {
+  const getContentValue = useCallback(() => {
     return debugValue
-  }
+  }, [debugValue])
 
   useEffect(() => {
     setContentValue(getContentValue())
-  }, [debugValue, setContentValue])
+  }, [debugValue, setContentValue, getContentValue])
 
   return (
     <TooltipProvider>

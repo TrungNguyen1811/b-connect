@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import SearchInput from '../ui/search-input'
+import SearchInput from '../../components/ui/search-input'
 import { useAuth } from 'src/hooks/useAuth'
 import { getReadingListFaker } from 'src/api/blog/save-reading-list'
 import { IBlogg, IReadingList } from 'src/types/blog'
 import { getBlogById } from 'src/api/blog/get-blog'
-import SavedPostsList from './list-reading-list'
+import SavedPostsList from '../../components/blog/list-reading-list'
 import { Link } from 'react-router-dom'
 import { getCategoryById } from 'src/api/categories/get-category'
 

@@ -2,8 +2,9 @@ import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { getBlogById } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
-import BlogDetail from 'src/components/blog/post-detail'
-import ReadingList from 'src/components/blog/reading-list'
+import BlogDetail from 'src/pages/blog/post-detail'
+import ReadingList from 'src/pages/blog/reading-list'
+import UpdateBlog from 'src/pages/blog/update-post'
 import DailyDiscover from 'src/pages/e-comerce/DailyDiscover'
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -33,8 +34,9 @@ const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword
 const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/profileUserBlog'))
-const UpdateProfile = React.lazy(() => import('src/components/blog/update-profile'))
-const CreateBlog = React.lazy(() => import('src/components/blog/create-blog'))
+const UpdateProfile = React.lazy(() => import('src/pages/blog/update-profile'))
+const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard'))
+const CreateBlog = React.lazy(() => import('src/pages/blog/create-blog'))
 
 export const ROUTES = createBrowserRouter([
   {
@@ -155,6 +157,10 @@ export const ROUTES = createBrowserRouter([
         element: <UpdateProfile />,
       },
       {
+        path: '/blog/dashboard',
+        element: <DashboardBlog />,
+      },
+      {
         path: '/blog/:id',
         loader: async ({ params }) => {
           const blog = await getBlogById(params.id as string)
@@ -173,5 +179,9 @@ export const ROUTES = createBrowserRouter([
   {
     path: '/blog/create-post',
     element: <CreateBlog />,
+  },
+  {
+    path: `/blog/:id/edit`,
+    element: <UpdateBlog />,
   },
 ])

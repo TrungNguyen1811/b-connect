@@ -1,6 +1,13 @@
 import { ICategory } from './categories'
 import { IComment } from './comment'
 import { User } from './user'
+
+export interface InitialValueItem {
+  id: string
+  type: string
+  children: { text: string }[]
+}
+
 export interface IContentBlog {
   id: string
   type: string
@@ -33,7 +40,7 @@ export interface IBlogg {
   category: ICategory[]
   comments?: IComment[]
   like?: ILiked[]
-  image?: string
+  image?: any
   content: string
   title: string
   date?: string
