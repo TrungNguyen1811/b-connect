@@ -13,10 +13,10 @@ function SellerLayout() {
     <div>
       <Header />
       <div className="flex flex-row">
-        <div className="fixed">
+        <div className="relative">
           <SidebarSeller />
         </div>
-        <div className="ml-72">
+        <div className="">
           <Outlet />
         </div>
       </div>

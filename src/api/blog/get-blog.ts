@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { IResponse } from 'src/types/response'
 import { IBlogg } from 'src/types/blog'
 import { ICategory } from 'src/types/categories'
+import axios from 'axios'
 
 const fakeContentArray = Array.from({ length: 7 }, () => ({
   id: faker.string.uuid(),
@@ -13,13 +14,13 @@ const fakeContentArray = Array.from({ length: 7 }, () => ({
 const fakeContent = JSON.stringify(fakeContentArray)
 
 const createCategory = (): ICategory => ({
-  _id: faker.string.uuid(),
+  categoryId: faker.string.uuid(),
   name: faker.lorem.word({ length: 4, strategy: 'shortest' }),
 })
 
 const fakeCommentArray: {
-  _id: string
-  user_id: {
+  commentId: string
+  userId: {
     userId: string
     email: string
     avatar: string
@@ -28,8 +29,8 @@ const fakeCommentArray: {
   comment: string
   createdAt: string
 }[] = Array.from({ length: 10 }, () => ({
-  _id: faker.string.uuid(),
-  user_id: {
+  commentId: faker.string.uuid(),
+  userId: {
     userId: faker.string.uuid(),
     email: faker.lorem.word({ length: 10, strategy: 'shortest' }),
     avatar: faker.image.urlLoremFlickr({
@@ -61,14 +62,6 @@ export function getBlogById(id: string) {
       width: 100,
     }),
     content: fakeContent,
-    category: [
-      {
-        _id: faker.string.uuid(),
-        name: faker.lorem.word({ length: 10, strategy: 'shortest' }),
-      },
-    ],
-    like: fakeLikeArray,
-    comments: fakeCommentArray,
     date: faker.date.recent().toISOString(),
   }
 
@@ -170,4 +163,8 @@ export function getBlogActive(number: number) {
   return new Promise<IResponse<IBlogg[]>>((resolve) => {
     setTimeout(() => resolve(response), 1000)
   })
+}
+
+export async function getInterestedByUserId(userId: string): Promise<ICategory[]> {
+  return axios.get(`/blog/interested/${userId}`).then((res) => res.data)
 }

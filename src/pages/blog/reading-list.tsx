@@ -6,7 +6,6 @@ import { IBlogg, IReadingList } from 'src/types/blog'
 import { getBlogById } from 'src/api/blog/get-blog'
 import SavedPostsList from '../../components/blog/list-reading-list'
 import { Link } from 'react-router-dom'
-import { getCategoryById } from 'src/api/categories/get-category'
 
 function ReadingList() {
   const { user } = useAuth()
@@ -71,22 +70,22 @@ function ReadingList() {
     const { user } = useAuth()
     const [categoryNames, setCategoryNames] = useState<string[]>([])
 
-    useEffect(() => {
-      const fetchCategoryNames = async () => {
-        const names: string[] = []
-        for (const interest of user?.interested || []) {
-          for (const category of interest.category_id) {
-            const name = await getCategoryById(category.name)
-            if (name) {
-              names.push(name.name)
-            }
-          }
-        }
-        setCategoryNames(names)
-      }
+    // useEffect(() => {
+    //   const fetchCategoryNames = async () => {
+    //     const names: string[] = []
+    //     for (const interest of user?.interested || []) {
+    //       for (const category of interest.category_id) {
+    //         const name = await getCategoryById(category.name)
+    //         if (name) {
+    //           names.push(name.name)
+    //         }
+    //       }
+    //     }
+    //     setCategoryNames(names)
+    //   }
 
-      fetchCategoryNames()
-    }, [user])
+    //   fetchCategoryNames()
+    // }, [user])
 
     return (
       <div className="flex flex-col">

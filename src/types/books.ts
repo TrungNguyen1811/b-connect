@@ -3,21 +3,22 @@ import { IInventory } from './inventory'
 import { User } from './user'
 
 export interface IBook {
-  isAvailable?: boolean | undefined
-  _id: string
+  productId: string
   name: string
-  author: string
-  image: string
-  title: string
+  author?: string
+  image?: string
   description: string
   price: number
-  inventory?: IInventory[]
-  category?: ICategory[]
-  reviews?: IReview[]
-  createdAt?: Date
-  updatedAt?: Date
+  quantity: number
+  inventoryId?: IInventory['sellerId']
+  category?: ICategory['categoryId']
+  reviews?: IReview['reviewId']
+  ratingId?: string
+  isAvailable?: boolean | undefined
   status: 'NEW' | 'OLD'
   genres: 'popular' | 'best'
+  createdDate?: Date
+  publishDate?: Date
 }
 export enum BOOK_STATUS {
   NEW = 'NEW',
@@ -25,9 +26,9 @@ export enum BOOK_STATUS {
 }
 
 export interface IReview {
-  _id: string
-  product_id: string
-  user_id: Pick<User, 'userId' | 'email' | 'avatar' | 'fullName'>
+  reviewId: string
+  productId: string
+  userId: Pick<User, 'userId' | 'email' | 'avatar' | 'fullName'>
   title?: string
   details?: string
   rating?: number

@@ -101,3 +101,22 @@ async function postDeleteBlogById(blog_id: string) {
 }
 
 export { postDeleteBlogById }
+
+async function unFollowingFromInterested(categoryId: string) {
+  return await axiosClient
+    .post(`/blog/unFollowingCategory/${categoryId}`, {})
+    .then((response) => {
+      if (response.status === 201) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { unFollowingFromInterested }

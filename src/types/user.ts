@@ -15,7 +15,7 @@ export interface User {
   blocked?: boolean
   blockedDate?: Date
   salt?: string
-  interested?: IInterested[]
+  interested?: IInterested['userId']
   blog?: IBlogg[]
   bio?: string
   url?: string

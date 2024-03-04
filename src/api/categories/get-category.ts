@@ -6,7 +6,7 @@ import { ICategory } from 'src/types'
 export function getCategoryById(id: string) {
   // TODO: Replace this with an actual API call
   const category: ICategory = {
-    _id: faker.string.uuid(),
+    categoryId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
     name: faker.lorem.word(),
     img: faker.image.urlLoremFlickr({
@@ -25,7 +25,7 @@ export function getAllCategories(): Promise<ICategory[]> {
   // TODO: Replace this with an actual API call
 
   const categories: ICategory[] = Array.from({ length: 20 }, () => ({
-    _id: faker.string.uuid(),
+    categoryId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
     name: faker.lorem.sentence(),
     img: faker.image.urlLoremFlickr({
@@ -46,7 +46,7 @@ export function getManyCategories() {
   // TODO: Replace this with an actual API call
 
   const categories: ICategory[] = Array.from({ length: 20 }, () => ({
-    _id: faker.string.uuid(),
+    categoryId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
     name: faker.lorem.sentence(),
     img: faker.image.urlLoremFlickr({

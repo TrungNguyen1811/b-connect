@@ -46,13 +46,13 @@ function DashboardBlog() {
       </div>
       <div className="mx-4 flex flex-row">
         <nav className="mr-3 w-1/4">
-          <Link to={'/'} className="">
+          <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm bg-white px-2 py-1">
               <p className="w-full font-semibold">Post</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
             </div>
           </Link>
-          <Link to={'/'} className=" ">
+          <Link to={'/blog/dashboard/following_categories'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Following Category</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>

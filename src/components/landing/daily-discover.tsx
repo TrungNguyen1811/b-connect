@@ -14,7 +14,7 @@ function DailyDiscover() {
 
   const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
     ['getManyBooks'], // Provide a unique key for this query
-    () => getManyBooks({}), // Pass an empty object as the argument
+    () => getManyBooks(), // Pass an empty object as the argument
     {
       keepPreviousData: true,
     },
@@ -39,7 +39,7 @@ function DailyDiscover() {
     }
 
     return data?.data.slice(0, displayedBooks).map((book) => (
-      <div key={book._id}>
+      <div key={book.productId}>
         <BookDaily book={book} />
       </div>
     ))

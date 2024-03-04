@@ -13,6 +13,6 @@ const contentSchema = z.object({
 export const createBlogSchema = z.object({
   image: z.any(),
   title: z.string(),
-  // category: z.string(),
-  // content: contentSchema.array(),
+  category: z.string(),
+  content: z.any(),
 })

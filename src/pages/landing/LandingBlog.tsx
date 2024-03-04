@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { getManyBlogBooks } from 'src/api/blog/get-blog'
+import { useState } from 'react'
 import Post from 'src/components/blog/post'
 import { Active } from 'src/components/landing-blog/active'
 import { Menu } from 'src/components/landing-blog/menu'
@@ -11,26 +10,26 @@ export default function LandingBlog() {
   const { user } = useAuth()
   const [blogs, setBlogs] = useState<IResponse<IBlogg[]> | null>(null)
 
-  useEffect(() => {
-    const getAllBlogFollowOnCategory = async () => {
-      const allBlogData = await getManyBlogBooks()
+  // useEffect(() => {
+  //   const getAllBlogFollowOnCategory = async () => {
+  //     const allBlogData = await getManyBlogBooks()
 
-      if (!user?.interested) {
-        setBlogs(allBlogData)
-        return
-      }
+  //     if (!user?.interested) {
+  //       setBlogs(allBlogData)
+  //       return
+  //     }
 
-      const filteredBlogs = allBlogData.data.filter((blog) => {
-        return user?.interested?.every((interest) => {
-          return blog.category.some((cat) => interest.category_id.some((category) => category._id === cat._id))
-        })
-      })
+  //     const filteredBlogs = allBlogData.data.filter((blog) => {
+  //       return user?.interested?.every((interest) => {
+  //         return blog.category.some((cat) => interest.category_id.some((category) => category._id === cat._id))
+  //       })
+  //     })
 
-      setBlogs({ data: filteredBlogs })
-    }
+  //     setBlogs({ data: filteredBlogs })
+  //   }
 
-    getAllBlogFollowOnCategory()
-  }, [user])
+  //   getAllBlogFollowOnCategory()
+  // }, [user])
 
   if (!blogs) {
     return <div>Loading...</div>

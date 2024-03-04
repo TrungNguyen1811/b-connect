@@ -13,7 +13,7 @@ import Autoplay from 'embla-carousel-autoplay'
 
 export default function CarouselDemo() {
   return (
-    <div className=" xs:h-[10rem] bg-orange-100 lg:h-full">
+    <div className="bg-orange-100 sm:h-[10rem]  md:h-full lg:h-full">
       <div className="flex h-full p-4 lg:ml-[5rem]">
         <div className="h-full w-[50%]">
           <Carousel
@@ -40,7 +40,7 @@ export default function CarouselDemo() {
             <CarouselNext />
           </Carousel>
         </div>
-        <div className="xs:w-[50%] h-full lg:w-[42%]">
+        <div className="xs:w-[50%] h-full lg:w-[50%]">
           <Carousel
             plugins={[
               Autoplay({
@@ -57,7 +57,7 @@ export default function CarouselDemo() {
             <CarouselContent2 className="m-0.6 xs:h-[2rem] lg:h-[17rem]">
               {Array.from({ length: 5 }).map((_, index) => (
                 <CarouselItem key={index} className="m-0 p-1 md:basis-1">
-                  <div className="lg:w-[36rem]">
+                  <div className="lg:w-[38rem]">
                     <Card>
                       <CardContent className="xs:h-[3.5rem] flex items-center justify-center p-5 lg:h-[8rem]">
                         <span className="text-3xl font-semibold">{index + 1}</span>

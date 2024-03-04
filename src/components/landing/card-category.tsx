@@ -4,7 +4,7 @@ import { ICategory } from 'src/types'
 type Props = { category: ICategory }
 function Category({ category }: Props) {
   return (
-    <Link to={'/'} key={category._id}>
+    <Link to={'/'} key={category.categoryId}>
       <Card className="my-0.5 w-[100%]">
         <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-200 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
           <img

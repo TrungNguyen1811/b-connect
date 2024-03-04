@@ -34,16 +34,7 @@ import { getBlogById } from 'src/api/blog/get-blog'
 type FormData = z.infer<typeof createBlogSchema>
 
 export default function UpdateBlog() {
-  const form = useForm<FormData>({
-    resolver: zodResolver(createBlogSchema),
-  })
-  const navigate = useNavigate()
-  const param = useParams()
-  const id: string = param['id'] as string
-
   const [blogData, setBlogData] = useState<IBlogg | null>(null)
-  const [image, setImage] = useState(blogData?.image || '')
-
   const initialValue = [
     {
       id: '1',
@@ -52,6 +43,18 @@ export default function UpdateBlog() {
     },
   ]
   const [content, setContent] = useState<Value>(initialValue)
+  const form = useForm<FormData>({
+    resolver: zodResolver(createBlogSchema),
+    defaultValues: {
+      image: blogData?.image || '',
+      title: blogData?.title || '',
+      category: blogData?.categoryId || '',
+      content: content || '',
+    },
+  })
+  const navigate = useNavigate()
+  const param = useParams()
+  const id: string = param['id'] as string
 
   useEffect(() => {
     if (blogData?.content) {
@@ -95,9 +98,9 @@ export default function UpdateBlog() {
     getAllCategories()
       .then((category: ICategory[]) => {
         if (category) {
-          const validCategories = category.filter((cat) => cat._id !== undefined)
+          const validCategories = category.filter((cat) => cat.categoryId !== undefined)
           const categoryOptions: Options[] = validCategories.map((cat) => ({
-            value: cat._id!,
+            value: cat.categoryId!,
             label: cat.name,
           }))
           setOptions(categoryOptions)
@@ -208,6 +211,7 @@ export default function UpdateBlog() {
                           className="w-[27rem]"
                           type="file"
                           onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                          defaultValue={form.getValues('image')}
                         />
                       </FormControl>
                     </FormItem>
@@ -222,6 +226,7 @@ export default function UpdateBlog() {
                         {...field}
                         className="sm:text3-xl focus-visible my-2 h-16 border-none font-bold outline-none hover:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-ring md:text-4xl lg:text-5xl"
                         placeholder="New a post title here..."
+                        defaultValue={blogData?.title}
                       />
                     </FormControl>
                   )}
@@ -241,7 +246,7 @@ export default function UpdateBlog() {
                       if (target.value) {
                         const newCategory = { value: target.value, label: target.value }
                         setSelectedCategories([...selectedCategories, target.value])
-                        target.value = '' // Xóa giá trị trường nhập sau khi thêm vào danh sách đã chọn
+                        target.value = ''
                       }
                     }
                   }}

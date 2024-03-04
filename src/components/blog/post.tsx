@@ -66,12 +66,12 @@ function Post(id: any) {
             <p className="my-2 ml-12 text-2xl font-extrabold">{blog?.title}</p>
             <p className="mb-2 ml-12 flex flex-row text-sm">
               Category:
-              {blog?.category.map((cat, index) => (
+              {/* {blog?.map((cat, index) => (
                 <React.Fragment key={index}>
                   <div className="text-sm">{cat.name}</div>
                   {index < blog.category.length - 1 && <span>, </span>}
                 </React.Fragment>
-              ))}
+              ))} */}
             </p>
           </div>
           <Separator />

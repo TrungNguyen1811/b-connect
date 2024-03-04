@@ -3,9 +3,10 @@ import { User } from './user'
 
 export interface ICart {
   cartId?: string
-  productId: IBook['_id']
+  productId: IBook['productId']
   bookName?: IBook['name']
   quantity: number
+  stock: number
   userId?: User['userId']
   price?: number
   status?: string

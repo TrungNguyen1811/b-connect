@@ -1,5 +1,3 @@
-import { ICategory } from './categories'
-import { IComment } from './comment'
 import { User } from './user'
 
 export interface InitialValueItem {
@@ -37,9 +35,9 @@ export interface IBlog {
 export interface IBlogg {
   _id?: string
   userId?: User['userId']
-  category: ICategory[]
-  comments?: IComment[]
-  like?: ILiked[]
+  categoryId?: string
+  commentsId?: string
+  likeId?: string
   image?: any
   content: string
   title: string

@@ -2,6 +2,7 @@ import { IBook } from './books'
 
 export interface IInventory {
   sellerId: string
+  sellerName: string
   quantity: number
-  bookId: IBook['_id']
+  bookId: IBook['productId']
 }

@@ -36,6 +36,7 @@ const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/profileUserBlog'))
 const UpdateProfile = React.lazy(() => import('src/pages/blog/update-profile'))
 const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard'))
+const FollowingCategory = React.lazy(() => import('src/pages/blog/following-category'))
 const CreateBlog = React.lazy(() => import('src/pages/blog/create-blog'))
 
 export const ROUTES = createBrowserRouter([
@@ -159,6 +160,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/blog/dashboard',
         element: <DashboardBlog />,
+      },
+      {
+        path: '/blog/dashboard/following_categories',
+        element: <FollowingCategory />,
       },
       {
         path: '/blog/:id',

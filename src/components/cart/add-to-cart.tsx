@@ -17,15 +17,13 @@ function AddToCart() {
   const { cartItems } = useOrderCart()
   const [bookData, setBookData] = useState<IBook[]>([])
   const [totalQuantity, setTotalQuantity] = useState(0)
-
+  console.log(cartItems)
   useEffect(() => {
     if (cartItems && cartItems.length > 0) {
-      const promises = cartItems.map((cart) => getBookById(cart.productId as string))
-
+      const promises = cartItems.map((cart, index) => getBookById(cart.productId as string))
       Promise.all(promises)
         .then((bookDataArray) => {
           setBookData(bookDataArray)
-          // Tính tổng số lượng sách trong giỏ hàng
           const quantitySum = cartItems.reduce((total, cart) => total + cart.quantity, 0)
           setTotalQuantity(quantitySum)
         })

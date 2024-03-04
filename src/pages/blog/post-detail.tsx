@@ -81,35 +81,35 @@ function BlogDetail() {
 
   const [totalLikes, setTotalLikes] = useState(0)
 
-  useEffect(() => {
-    let likesCount = 0
+  // useEffect(() => {
+  //   let likesCount = 0
 
-    if (blog && blog.like) {
-      for (const liked of blog.like) {
-        if (liked._id) {
-          likesCount += 1
-        }
-      }
-    }
+  //   if (blog && blog.like) {
+  //     for (const liked of blog.like) {
+  //       if (liked._id) {
+  //         likesCount += 1
+  //       }
+  //     }
+  //   }
 
-    setTotalLikes(likesCount)
-  }, [blog])
+  //   setTotalLikes(likesCount)
+  // }, [blog])
 
   const [totalComment, setTotalComment] = useState(0)
 
-  useEffect(() => {
-    let commentsCount = 0
+  // useEffect(() => {
+  //   let commentsCount = 0
 
-    if (blog && blog.comments) {
-      for (const comments of blog.comments) {
-        if (comments._id) {
-          commentsCount += 1
-        }
-      }
-    }
+  //   if (blog && blog.comments) {
+  //     for (const comments of blog.comments) {
+  //       if (comments.commentId) {
+  //         commentsCount += 1
+  //       }
+  //     }
+  //   }
 
-    setTotalComment(commentsCount)
-  }, [blog])
+  //   setTotalComment(commentsCount)
+  // }, [blog])
 
   const [commentText, setCommentText] = useState('')
 
@@ -154,17 +154,17 @@ function BlogDetail() {
   console.log(blog?.content)
 
   const renderCommenter = React.useCallback(
-    ({ user_id, comment, createdAt }: IComment) => (
+    ({ userId, comment, createdAt }: IComment) => (
       <div className="flex flex-row items-start justify-start">
         <div className="mr-4">
           <Avatar>
-            <AvatarImage src={user_id.avatar} className="h-10 w-10 rounded-[50%]" />
+            <AvatarImage src={userId.avatar} className="h-10 w-10 rounded-[50%]" />
           </Avatar>
         </div>
         <div className="flex w-full flex-col">
           <div className=" border-1 w-9/10 flex flex-col rounded-md border">
             <div className="my-2 ml-4 flex flex-row items-center">
-              <p className="mr-2 text-lg font-bold">{user_id.fullName}</p>
+              <p className="mr-2 text-lg font-bold">{userId.fullName}</p>
               <p className="text-sm font-light">{createdAt}</p>
             </div>
             <div>
@@ -186,29 +186,29 @@ function BlogDetail() {
     [],
   )
 
-  const renderComments = React.useMemo(() => {
-    return blog?.comments?.map((cmt) => (
-      <div key={cmt._id} className="mb-2 w-full">
-        {renderCommenter(cmt)}
-      </div>
-    ))
-  }, [blog?.comments, renderCommenter])
+  // const renderComments = React.useMemo(() => {
+  //   return blog?.comments?.map((cmt) => (
+  //     <div key={cmt.comment} className="mb-2 w-full">
+  //       {renderCommenter(cmt)}
+  //     </div>
+  //   ))
+  // }, [blog?.comments, renderCommenter])
 
-  const addComment = useCallback(
-    (comment: IComment) => {
-      if (!blog?.comments) {
-        return
-      }
+  // const addComment = useCallback(
+  //   (comment: IComment) => {
+  //     if (!blog?.comments) {
+  //       return
+  //     }
 
-      const updatedBlog: IBlogg = {
-        ...blog,
-        comments: [...blog.comments, comment],
-      }
+  //     const updatedBlog: IBlogg = {
+  //       ...blog,
+  //       comments: [...blog.comments, comment],
+  //     }
 
-      setBlog(updatedBlog)
-    },
-    [blog],
-  )
+  //     setBlog(updatedBlog)
+  //   },
+  //   [blog],
+  // )
 
   const id = useId()
 
@@ -217,19 +217,19 @@ function BlogDetail() {
     onSuccess: (_, { data: { comment } }) => {
       if (!blog) return
 
-      addComment({
-        _id: id,
-        user_id: {
-          userId: '',
-          email: '',
-          fullName: '',
-          avatar: '',
-          ...user.user,
-        },
-        comment,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      })
+      // addComment({
+      //   commentId: id,
+      //   userId: {
+      //     userId: '',
+      //     email: '',
+      //     fullName: '',
+      //     avatar: '',
+      //     ...user.user,
+      //   },
+      //   comment,
+      //   createdAt: new Date().toISOString(),
+      //   updatedAt: new Date().toISOString(),
+      // })
     },
   })
 
@@ -311,12 +311,12 @@ function BlogDetail() {
                 <p className="my-4 text-5xl font-extrabold">{blog?.title}</p>
                 <p className="mb-2 flex flex-row text-sm">
                   Category:
-                  {blog?.category.map((cat, index) => (
+                  {/* {blog?.category.map((cat, index) => (
                     <React.Fragment key={index}>
                       <div className="text-sm">{cat.name}</div>
                       {index < blog.category.length - 1 && <span>, </span>}
                     </React.Fragment>
-                  ))}
+                  ))} */}
                 </p>
               </div>
               <div className="pt-4">
@@ -363,7 +363,7 @@ function BlogDetail() {
                     )}
                   </div>
                 </div>
-                <div className="my-4 space-y-8">{renderComments}</div>
+                {/* <div className="my-4 space-y-8">{renderComments}</div> */}
               </div>
             </div>
           </div>

@@ -39,7 +39,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     else
       return categories.map<IComboboxData>((ct) => ({
         label: ct.name,
-        value: ct._id || '',
+        value: ct.categoryId || '',
       }))
   }, [categories])
 

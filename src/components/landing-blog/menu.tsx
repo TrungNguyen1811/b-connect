@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { IMenuItem } from '../breadcrumb'
 import MenuSideBar from '../menu-items/menu-item'
 import { FacebookIcon, GithubIcon, InstagramIcon, SettingsIcon, TwitterIcon, Youtube } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
-import { getCategoryById } from 'src/api/categories/get-category'
 
 export function Menu() {
   const menu = React.useMemo<IMenuItem[]>(() => {
@@ -102,22 +101,22 @@ export function Menu() {
     const { user } = useAuth()
     const [categoryNames, setCategoryNames] = useState<string[]>([])
 
-    useEffect(() => {
-      const fetchCategoryNames = async () => {
-        const names: string[] = []
-        for (const interest of user?.interested || []) {
-          for (const category of interest.category_id) {
-            const name = await getCategoryById(category.name)
-            if (name) {
-              names.push(name.name)
-            }
-          }
-        }
-        setCategoryNames(names)
-      }
+    // useEffect(() => {
+    //   const fetchCategoryNames = async () => {
+    //     const names: string[] = []
+    //     for (const interest of user?.interested || []) {
+    //       for (const category of interest.category_id) {
+    //         const name = await getCategoryById(category.name)
+    //         if (name) {
+    //           names.push(name.name)
+    //         }
+    //       }
+    //     }
+    //     setCategoryNames(names)
+    //   }
 
-      fetchCategoryNames()
-    }, [user])
+    //   fetchCategoryNames()
+    // }, [user])
 
     return (
       <div className="flex flex-col">

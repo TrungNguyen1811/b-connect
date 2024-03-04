@@ -16,7 +16,6 @@ function Blog(id: any) {
   useEffect(() => {
     const fetchBlogAndUser = async () => {
       const blogData = await getBlogById('1')
-
       setBlog(blogData)
 
       const userData = await getUserByIdFaker('blog.userId as string')
@@ -28,23 +27,27 @@ function Blog(id: any) {
 
   return (
     <div className="w-full rounded-md border-2 bg-slate-50">
-      <div className="m-4">
-        <div className="flex flex-col">
+      <div className="m-4 flex flex-row items-center justify-between">
+        <div className="flex w-1/2 flex-col">
           <Link to={`/blog/${blog?._id}`}>
-            <p className="my-2 ml-12 text-2xl font-extrabold">{blog?.title}</p>
+            <p className="my-2 font-extrabold">{blog?.title}</p>
           </Link>
-          <p>Published: {blog?.date}</p>
-        </div>
-        <div className="flex flex-row items-center justify-between">
-          <p className="ml-12  flex flex-row items-center text-sm font-light">
-            <MessageCircleIcon size={20} className="mr-1" /> {blog?.like?.length}
-          </p>
-          <p className="ml-12  flex flex-row items-center text-sm font-light">
-            <MessageCircleIcon size={20} className="mr-1" /> {blog?.comments?.length}
+          <p className="text-sm font-light">
+            <strong>Published:</strong> {blog?.date}
           </p>
         </div>
-        <div className="flex flex-row items-center justify-between">
-          <button onClick={() => navigate(`/blog/${blog?._id}/edit`)}>Edit</button>
+        <div className="flex w-1/4  flex-row items-center justify-end">
+          <p className="ml-12  flex flex-row items-center text-sm font-light">
+            <MessageCircleIcon size={20} className="mr-1" /> {} 10
+          </p>
+          <p className="ml-12  flex flex-row items-center text-sm font-light">
+            <MessageCircleIcon size={20} className="mr-1" /> {} 7
+          </p>
+        </div>
+        <div className="flex w-1/4 flex-row items-center justify-end">
+          <button className="mr-5" onClick={() => navigate(`/blog/${blog?._id}/edit`)}>
+            Edit
+          </button>
           <button onClick={() => postDeleteBlogById(blog?._id as string)}>Delete</button>
         </div>
       </div>

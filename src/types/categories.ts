@@ -1,5 +1,5 @@
 export interface ICategory {
-  _id?: string
+  categoryId?: string
   name: string
   img?: string
   description?: string

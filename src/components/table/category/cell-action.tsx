@@ -31,7 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem onClick={() => navigate(`/admin/category/${data._id}`)}>
+          <DropdownMenuItem onClick={() => navigate(`/admin/category/${data.categoryId}`)}>
             <Edit className="mr-2 h-4 w-4" /> Detail
           </DropdownMenuItem>
           <DropdownMenuItem>

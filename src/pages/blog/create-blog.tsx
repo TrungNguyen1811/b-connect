@@ -53,9 +53,9 @@ export default function CreateBlog() {
       .then((category: ICategory[]) => {
         if (category) {
           // setCategories(category)
-          const validCategories = category.filter((cat) => cat._id !== undefined)
+          const validCategories = category.filter((cat) => cat.categoryId !== undefined)
           const categoryOptions: Options[] = validCategories.map((cat) => ({
-            value: cat._id!,
+            value: cat.categoryId!,
             label: cat.name,
           }))
           setOptions(categoryOptions)
