@@ -2,6 +2,7 @@
 // import { getAllCategory } from 'src/api/categories/get-category'
 // import Interested from 'src/components/blog/category-manage'
 // import { Button } from 'src/components/ui/button'
+// import { Input } from 'src/components/ui/input'
 // import { ICategory } from 'src/types'
 
 // function CategoryList() {
@@ -22,8 +23,9 @@
 
 //   return (
 //     <div className="mx-28">
-//       <div className="mb-4 flex flex-col">
+//       <div className="mb-4 flex flex-row">
 //         <p className="p-4 text-3xl font-bold">Categories</p>
+//         <Input className="w-72" name={'search'} placeholder="Search by Category Name" />
 //       </div>
 //       <div className="h-full w-full">
 //         {categories ? (
