@@ -2,6 +2,7 @@ import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { getBlogById } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
+import CategoryList from 'src/pages/blog/category-list'
 import BlogDetail from 'src/pages/blog/post-detail'
 import ReadingList from 'src/pages/blog/reading-list'
 import UpdateBlog from 'src/pages/blog/update-post'
@@ -165,6 +166,11 @@ export const ROUTES = createBrowserRouter([
         path: '/blog/dashboard/following_categories',
         element: <FollowingCategory />,
       },
+      {
+        path: '/blog/categories',
+        element: <CategoryList />,
+      },
+
       {
         path: '/blog/:id',
         loader: async ({ params }) => {

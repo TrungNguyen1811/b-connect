@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { getInterestedByUserId } from 'src/api/blog/get-blog'
 import Interested from 'src/components/blog/category-manage'
 import { Button } from 'src/components/ui/button'
@@ -9,7 +9,7 @@ import { ICategory } from 'src/types'
 function FollowingCategory() {
   const { user } = useAuth()
   const [categories, setCategories] = useState<ICategory[]>()
-
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,7 +61,9 @@ function FollowingCategory() {
               <p className="text-lg">
                 This is where you can manage your categories, but you are not interested in any categories yet.
               </p>
-              <Button className="text-md mx-8 my-6 p-6">Add more categories which you are interested in</Button>
+              <Button onClick={() => navigate('/blog/categories')} className="text-md mx-8 my-6 p-6">
+                Add more categories which you are interested in
+              </Button>
             </div>
           )}
         </div>
