@@ -29,19 +29,31 @@ interface IChangePassword {
   confirmPassword: string
   newPassword: string
 }
-const formSchemaPassword = z.object({
-  oldPassword: z.string(),
-  confirmPassword: z.string(),
-  newPassword: z.string(),
-})
+const formSchemaPassword = z
+  .object({
+    oldPassword: z.string(),
+    newPassword: z.string(),
+    confirmPassword: z.string(),
+  })
+  .superRefine(({ newPassword, confirmPassword }, ctx) => {
+    if (confirmPassword !== newPassword) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+      })
+    }
+  })
+
 type FormData = z.infer<typeof formSchema>
+type FormPassWordData = z.infer<typeof formSchemaPassword>
 
 function UpdateProfile() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [userDetail, setUserDetail] = useState<User | undefined>(undefined)
 
-  const form = useForm({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: userDetail?.username || '',
@@ -111,7 +123,7 @@ function UpdateProfile() {
     updatedUser(updatedData)
   }
 
-  const formPassword = useForm({
+  const formPassword = useForm<FormPassWordData>({
     resolver: zodResolver(formSchemaPassword),
   })
 
