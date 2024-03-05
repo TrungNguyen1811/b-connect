@@ -6,7 +6,7 @@ function Notification() {
     <Popover>
       <PopoverTrigger className="flex items-center">
         <Bell size={20} />
-        <p className="hidden-on-mobile">Notifications</p>
+        <p className="hidden-on-mobile hidden-on-tablet">Notifications</p>
       </PopoverTrigger>
       <PopoverContent>Place content for the popover here!</PopoverContent>
     </Popover>

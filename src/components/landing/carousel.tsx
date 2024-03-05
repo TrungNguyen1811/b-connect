@@ -1,5 +1,4 @@
 import * as React from 'react'
-
 import {
   Carousel,
   CarouselContent,
@@ -13,11 +12,11 @@ import Autoplay from 'embla-carousel-autoplay'
 
 export default function CarouselDemo() {
   return (
-    <div className="bg-orange-100 sm:h-[10rem]  md:h-full lg:h-full">
+    <div className="bg-orange-100 md:h-[10rem] lg:h-full">
       <div className="flex h-full p-4 lg:ml-[5rem]">
         <div className="h-full w-[50%]">
           <Carousel
-            className="h-full w-[100%]"
+            className="h-full w-full"
             plugins={[
               Autoplay({
                 delay: 5000,
@@ -27,9 +26,9 @@ export default function CarouselDemo() {
           >
             <CarouselContent>
               {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItem key={index} className=" basis-1/9">
+                <CarouselItem key={index} className="basis-1/9">
                   <Card>
-                    <CardContent className=" xs:h-[8rem] xs:w-[12rem] flex aspect-square items-center justify-center p-6 lg:h-[17rem] lg:w-[44rem]">
+                    <CardContent className="flex aspect-square items-center justify-center p-6 sm:h-[8rem] sm:w-[22rem] md:h-[8rem] md:w-[30rem] lg:h-[17rem] lg:w-[44rem]">
                       <span className="text-4xl font-semibold">{index + 1}</span>
                     </CardContent>
                   </Card>
@@ -40,7 +39,7 @@ export default function CarouselDemo() {
             <CarouselNext />
           </Carousel>
         </div>
-        <div className="xs:w-[50%] h-full lg:w-[50%]">
+        <div className="h-full md:w-[50%] lg:w-[50%]">
           <Carousel
             plugins={[
               Autoplay({
@@ -54,12 +53,12 @@ export default function CarouselDemo() {
             orientation="vertical"
             className="h-full w-[100%]"
           >
-            <CarouselContent2 className="m-0.6 xs:h-[2rem] lg:h-[17rem]">
+            <CarouselContent2 className="m-0.6 w-full sm:h-[8rem]  lg:h-[17rem]">
               {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItem key={index} className="m-0 p-1 md:basis-1">
+                <CarouselItem key={index} className="m-0 p-1 sm:basis-1 ">
                   <div className="lg:w-[38rem]">
                     <Card>
-                      <CardContent className="xs:h-[3.5rem] flex items-center justify-center p-5 lg:h-[8rem]">
+                      <CardContent className="flex items-center justify-center p-5 sm:h-[3.5rem] sm:w-[22rem] lg:h-[8rem] lg:w-[38rem]">
                         <span className="text-3xl font-semibold">{index + 1}</span>
                       </CardContent>
                     </Card>
