@@ -1,7 +1,7 @@
 import { format, parseISO } from 'date-fns'
 import { Plus, Star } from 'lucide-react'
 import '@smastrom/react-rating/style.css'
-import React, { useEffect, useId, useMemo } from 'react'
+import React, { useEffect, useId, useMemo, useState } from 'react'
 // import { useForm } from 'react-hook-form'
 import { useLoaderData, useLocation } from 'react-router-dom'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
@@ -240,6 +240,20 @@ function BookDetailPage() {
   //   [book?.productId, reset, toast],
   // )
 
+  const carouselImages = [
+    'https://scontent.fsgn2-9.fna.fbcdn.net/v/t45.1600-4/424651322_120205246002150776_8767697774542782332_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=1&ccb=1-7&_nc_sid=528f85&_nc_ohc=LweRdoa9jAEAX-bYyjX&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCHqTorl1lCSTqlLOCp2hBJkRtU11Kzpko4dxNZGBEoDw&oe=65EAB968',
+    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
+    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
+    'https://scontent.fsgn2-9.fna.fbcdn.net/v/t45.1600-4/424651322_120205246002150776_8767697774542782332_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=1&ccb=1-7&_nc_sid=528f85&_nc_ohc=LweRdoa9jAEAX-bYyjX&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCHqTorl1lCSTqlLOCp2hBJkRtU11Kzpko4dxNZGBEoDw&oe=65EAB968',
+    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
+  ]
+  const [selectedImage, setSelectedImage] = useState(carouselImages[0])
+
+  // image show
+  const handleCarouselItemClick = (imageURL: React.SetStateAction<string>) => {
+    setSelectedImage(imageURL)
+  }
+
   return (
     <div className="mx-auto min-h-screen w-full bg-gray-200">
       <MetaData title={book ? book.name.slice(0, 10) + '...' : ''} />
@@ -252,21 +266,29 @@ function BookDetailPage() {
               className="grid w-full grid-cols-1 place-items-start gap-4 py-2 md:grid-cols-3 md:gap-6"
             >
               <article className="ml-7 flex flex-col">
+                {/* Hiển thị ảnh được chọn từ carousel */}
                 <img
-                  src={book.image}
-                  alt={book.name}
+                  src={selectedImage}
+                  alt="Selected Image"
                   className="rounded-sm object-cover shadow-md"
                   height={450}
                   width={450}
                 />
+
                 <div className="flex flex-row">
+                  {/* Carousel */}
                   <Carousel className="h-[120px] w-[25rem] p-2">
                     <CarouselContent3>
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <CarouselItem key={index} className=" basis-9/9">
+                      {/* Render các carousel item */}
+                      {carouselImages.map((image, index) => (
+                        <CarouselItem key={index} className="basis-9/9">
                           <Card>
-                            <CardContent className=" flex aspect-square h-[100px] w-[100px] items-center justify-center p-6">
-                              <span className="text-4xl font-semibold">{index + 1}</span>
+                            <CardContent
+                              className="hover: flex aspect-square h-full w-[6rem] items-center justify-center rounded-md p-0 hover:border hover:border-red-500"
+                              onClick={() => handleCarouselItemClick(image)}
+                              onMouseEnter={() => handleCarouselItemClick(image)}
+                            >
+                              <img className="rounded-sm" src={image} />
                             </CardContent>
                           </Card>
                         </CarouselItem>
@@ -278,7 +300,7 @@ function BookDetailPage() {
                 </div>
               </article>
 
-              <article className="col-span-2 ml-24 space-y-8 rounded-lg">
+              <article className="col-span-2 ml-32 space-y-8 rounded-lg">
                 <div className="space-y-4">
                   <h3 className="text-3xl font-medium tracking-wide">
                     {book.name}

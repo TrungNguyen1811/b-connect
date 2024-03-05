@@ -71,7 +71,7 @@ export const ROUTES = createBrowserRouter([
         element: <ViewCart />,
       },
       {
-        path: 'checkout/:id',
+        path: 'checkout/:state',
         element: <CheckOutPage />,
       },
       {

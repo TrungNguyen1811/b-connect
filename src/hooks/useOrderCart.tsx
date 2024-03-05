@@ -207,6 +207,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     const fetchCartData = async () => {
       try {
         const cartDataFromServer = await getCartApi(userId)
+        console.log('cart', cartDataFromServer)
         setCartItems(cartDataFromServer)
         document.cookie = `cartItems_${userId}=${JSON.stringify(cartDataFromServer)}; path=/`
       } catch (error) {
@@ -223,6 +224,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     const fetchCartId = async () => {
       try {
         const fetchedCartId = await getCartIdApi(userId)
+        console.log('cartId', fetchedCartId)
         setCartId(fetchedCartId)
       } catch (error) {
         console.error('Error retrieving cartId:', error)

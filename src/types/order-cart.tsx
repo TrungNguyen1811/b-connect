@@ -1,9 +1,7 @@
 import { IBook } from './books'
 
 export interface IOrderCart {
-  book?: IBook
-  _id: string
-  bookId?: IBook['productId']
+  productId: IBook['productId']
   quantity: number
   creatAt?: Date
   updateAt?: Date

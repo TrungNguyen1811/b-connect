@@ -1,10 +1,11 @@
-import { Table, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { useOrderCart } from 'src/hooks/useOrderCart'
 import React, { useEffect, useState } from 'react'
 import { IBook } from 'src/types/books'
 import { getBookById } from 'src/api/books/get-book'
 import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom'
+import { DeleteIcon } from 'lucide-react'
 
 function CartPage() {
   const { cartItems, addToCart, decreaseToCart, removeFromCart, clearCart } = useOrderCart()
@@ -46,140 +47,121 @@ function CartPage() {
 
   const [cartItemsByStore, setCartItemsByStore] = useState<GroupedByStore>({})
 
-  // useEffect(() => {
-  //   const groupedByStore: GroupedByStore = {}
+  useEffect(() => {
+    const groupedByStore: GroupedByStore = {}
 
-  //   const fetchInventoryData = async (inventoryId: string) => {
-  //     try {
-  //       const inventoryData = await getInventoryById(inventoryId) // Thay thế "getInventoryById" bằng hàm API thích hợp của bạn
-  //       return inventoryData
-  //     } catch (error) {
-  //       console.error('Error fetching inventory data:', error)
-  //       return null
-  //     }
-  //   }
+    const processBookData = async (book: IBook) => {
+      try {
+        if (book && book.productId) {
+          if (!groupedByStore[book.sellerId]) {
+            groupedByStore[book.sellerId] = []
+          }
+          groupedByStore[book.sellerId].push({
+            book: book,
+            quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
+            sellerName: book.sellerName,
+          })
+        }
+      } catch (error) {
+        console.error('Error processing book data:', error)
+      }
+    }
 
-  //   const processBookData = async (book: IBook) => {
-  //     try {
-  //       if (book && book.productId) {
-  //         const inventoryData = await fetchInventoryData(book.productId)
-  //         if (inventoryData) {
-  //           const { sellerId, sellerName } = inventoryData
-  //           if (!groupedByStore[sellerId]) {
-  //             groupedByStore[sellerId] = []
-  //           }
-  //           groupedByStore[sellerId].push({
-  //             book: book,
-  //             quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
-  //             sellerName: sellerName,
-  //           })
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error('Error processing book data:', error)
-  //     }
-  //   }
+    const processAllBooksData = async () => {
+      try {
+        for (const book of bookData) {
+          if (book && book.sellerId) {
+            if (!groupedByStore[book.sellerId]) {
+              groupedByStore[book.sellerId] = []
+            }
+            groupedByStore[book.sellerId].push({
+              book: book,
+              quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
+              sellerName: book.sellerName,
+            })
+          }
+        }
+        setCartItemsByStore(groupedByStore)
+      } catch (error) {
+        console.error('Error processing all books data:', error)
+      }
+    }
 
-  //   const processAllBooksData = async () => {
-  //     try {
-  //       for (const book of bookData) {
-  //         if (book && book.inventoryId) {
-  //           // Giả sử `inventoryId` là thuộc tính chứa ID của inventory
-  //           const inventoryData = await fetchInventoryData(book.inventoryId)
-  //           if (inventoryData) {
-  //             const { sellerId, sellerName } = inventoryData
-  //             if (!groupedByStore[sellerId]) {
-  //               groupedByStore[sellerId] = []
-  //             }
-  //             groupedByStore[sellerId].push({
-  //               book: book,
-  //               quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
-  //               sellerName: sellerName,
-  //             })
-  //           }
-  //         }
-  //       }
-  //       setCartItemsByStore(groupedByStore)
-  //     } catch (error) {
-  //       console.error('Error processing all books data:', error)
-  //     }
-  //   }
+    processAllBooksData()
+  }, [bookData, cartItems])
 
-  //   processAllBooksData()
-  // }, [bookData, cartItems])
+  // State để lưu trữ các sản phẩm đã chọn để xóa
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
 
-  // // State để lưu trữ các sản phẩm đã chọn để xóa
-  // const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const handleItemCheckboxChange = (productId: string) => {
+    const newSelectedItems = selectedItems.includes(productId)
+      ? selectedItems.filter((id) => id !== productId)
+      : [...selectedItems, productId]
+    setSelectedItems(newSelectedItems)
+  }
 
-  // const handleItemCheckboxChange = (productId: string) => {
-  //   const newSelectedItems = selectedItems.includes(productId)
-  //     ? selectedItems.filter((id) => id !== productId)
-  //     : [...selectedItems, productId]
-  //   setSelectedItems(newSelectedItems)
-  // }
+  // Hàm kiểm tra xem tất cả các sản phẩm của một cửa hàng đã được chọn chưa
+  const isStoreSelected = (sellerId: string) => {
+    const storeItems = cartItemsByStore[sellerId] || []
+    return storeItems.every((item) => selectedItems.includes(item.book.productId))
+  }
 
-  // // Hàm kiểm tra xem tất cả các sản phẩm của một cửa hàng đã được chọn chưa
-  // const isStoreSelected = (sellerId: string) => {
-  //   const storeItems = cartItemsByStore[sellerId] || []
-  //   return storeItems.every((item) => selectedItems.includes(item.book.productId))
-  // }
+  // Hàm cập nhật danh sách sản phẩm đã chọn dựa trên cửa hàng
+  const handleStoreCheckboxChange = (sellerId: string) => {
+    const storeItems = cartItemsByStore[sellerId] || []
+    const newSelectedItems = [...selectedItems]
+    if (isStoreSelected(sellerId)) {
+      storeItems.forEach((item) => {
+        const index = newSelectedItems.indexOf(item.book.productId)
+        if (index !== -1) {
+          newSelectedItems.splice(index, 1)
+        }
+      })
+    } else {
+      storeItems.forEach((item) => {
+        if (!newSelectedItems.includes(item.book.productId)) {
+          newSelectedItems.push(item.book.productId)
+        }
+      })
+    }
+    setSelectedItems(newSelectedItems)
+  }
 
-  // // Hàm cập nhật danh sách sản phẩm đã chọn dựa trên cửa hàng
-  // const handleStoreCheckboxChange = (sellerId: string) => {
-  //   const storeItems = cartItemsByStore[sellerId] || []
-  //   const newSelectedItems = [...selectedItems]
-  //   if (isStoreSelected(sellerId)) {
-  //     storeItems.forEach((item) => {
-  //       const index = newSelectedItems.indexOf(item.book.productId)
-  //       if (index !== -1) {
-  //         newSelectedItems.splice(index, 1)
-  //       }
-  //     })
-  //   } else {
-  //     storeItems.forEach((item) => {
-  //       if (!newSelectedItems.includes(item.book.productId)) {
-  //         newSelectedItems.push(item.book.productId)
-  //       }
-  //     })
-  //   }
-  //   setSelectedItems(newSelectedItems)
-  // }
+  // Hàm xóa các sản phẩm đã chọn
+  const handleRemoveSelected = () => {
+    selectedItems.forEach((productId) => removeFromCart(productId))
+    setSelectedItems([]) // Xóa danh sách sản phẩm đã chọn sau khi xóa
+  }
 
-  // // Hàm xóa các sản phẩm đã chọn
-  // const handleRemoveSelected = () => {
-  //   selectedItems.forEach((productId) => removeFromCart(productId))
-  //   setSelectedItems([]) // Xóa danh sách sản phẩm đã chọn sau khi xóa
-  // }
+  // Khai báo state cho checkbox "Select all"
+  const [selectAll, setSelectAll] = useState(false)
 
-  // // Khai báo state cho checkbox "Select all"
-  // const [selectAll, setSelectAll] = useState(false)
+  // Hàm xử lý khi checkbox "Select all" được nhấp vào
+  const handleSelectAllChange = () => {
+    // Đảo ngược trạng thái của checkbox "Select all"
+    setSelectAll(!selectAll)
 
-  // // Hàm xử lý khi checkbox "Select all" được nhấp vào
-  // const handleSelectAllChange = () => {
-  //   // Đảo ngược trạng thái của checkbox "Select all"
-  //   setSelectAll(!selectAll)
-
-  //   // Cập nhật danh sách sản phẩm đã chọn để xóa
-  //   const newSelectedItems: React.SetStateAction<string[]> = []
-  //   Object.keys(cartItemsByStore).forEach((sellerId) => {
-  //     cartItemsByStore[sellerId].forEach((item) => {
-  //       newSelectedItems.push(item.book.productId)
-  //     })
-  //   })
-  //   setSelectedItems(!selectAll ? newSelectedItems : [])
-  // }
+    // Cập nhật danh sách sản phẩm đã chọn để xóa
+    const newSelectedItems: React.SetStateAction<string[]> = []
+    Object.keys(cartItemsByStore).forEach((sellerId) => {
+      cartItemsByStore[sellerId].forEach((item) => {
+        newSelectedItems.push(item.book.productId)
+      })
+    })
+    setSelectedItems(!selectAll ? newSelectedItems : [])
+  }
 
   // Kiểm tra nếu có sản phẩm không được chọn thì tắt "Select all"
-  // useEffect(() => {
-  //   const allItemsSelected = Object.keys(cartItemsByStore).every((sellerId) => isStoreSelected(sellerId))
-  //   setSelectAll(allItemsSelected)
-  // }, [selectedItems])
+  useEffect(() => {
+    const allItemsSelected = Object.keys(cartItemsByStore).every((sellerId) => isStoreSelected(sellerId))
+    setSelectAll(allItemsSelected)
+  }, [selectedItems])
 
-  // const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.productId))
+  const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.productId))
   const navigate = useNavigate()
   const handleCheckout = async () => {
-    const selectedCartItemsEncoded = btoa(JSON.stringify(cartItems))
-    navigate(`/checkout/state=${selectedCartItemsEncoded}`)
+    const selectedCartItemsEncoded = btoa(JSON.stringify(selectedCartItems))
+    navigate(`/checkout/${selectedCartItemsEncoded}`)
   }
 
   return (
@@ -189,7 +171,7 @@ function CartPage() {
           <TableHeader>
             <TableRow>
               <TableCell>
-                {/* <input type="checkbox" checked={selectAll} onChange={handleSelectAllChange} /> */}
+                <input type="checkbox" checked={selectAll} onChange={handleSelectAllChange} />
               </TableCell>{' '}
               <TableHead>Product</TableHead>
               <TableHead>Price</TableHead>
@@ -197,7 +179,7 @@ function CartPage() {
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
-          {/* <TableBody>
+          <TableBody>
             {cartItems && bookData && bookData.length > 0 ? (
               Object.keys(cartItemsByStore).map((sellerId, index) => (
                 <React.Fragment key={index}>
@@ -245,13 +227,13 @@ function CartPage() {
                 <TableCell colSpan={5}>No items in the cart</TableCell>
               </TableRow>
             )}
-          </TableBody> */}
+          </TableBody>
         </Table>
-        {/* {selectedItems.length > 0 && (
+        {selectedItems.length > 0 && (
           <div className="mt-4">
             <Button onClick={handleRemoveSelected}>Remove Selected ({selectedItems.length})</Button>
           </div>
-        )} */}
+        )}
         {
           <div className="mt-4">
             <Button onClick={handleCheckout}>Check Out</Button>
