@@ -1,12 +1,12 @@
 import { IOrder } from 'src/types/order'
-import { axiosClient } from '../../lib/axios'
-import { IOrderCart } from 'src/types/order-cart'
+import { authAxiosClient, axiosClient } from '../../lib/axios'
+import { ICheckout } from 'src/types/order-cart'
 
 async function createOrder(orderData: IOrder) {
-  return await axiosClient
+  return await authAxiosClient
     .post('/Order/create-order', orderData, {})
     .then((response) => {
-      if (response.status === 201) {
+      if (response.status === 200) {
         return response.data
       } else {
         // Handle other HTTP statuses as needed
@@ -21,7 +21,7 @@ async function createOrder(orderData: IOrder) {
 
 export { createOrder }
 
-async function checkout(orderData: IOrderCart[]) {
+async function checkout(orderData: ICheckout) {
   return await axiosClient
     .post('/Order/check-out', orderData, {})
     .then((response) => {
@@ -39,3 +39,14 @@ async function checkout(orderData: IOrderCart[]) {
 }
 
 export { checkout }
+interface IPaymentReturn {
+  paymentReturnDTO: {
+    paymentId: string
+    paymentStatus: number
+    paymentMessage: string
+    paymentDate: Date
+    paymentRefId: string
+    amount: 0
+    signature: string
+  }
+}

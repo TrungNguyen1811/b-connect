@@ -4,26 +4,26 @@ import { User } from './user'
 export interface IOrder {
   _id?: string
   products?: IOrderCart[]
-  customerId?: User
+  customerId?: User['userId']
   addressId?: string
   totalPrice?: number
-  depositType?: 'COD' | 'ONLINE'
-  paymentReturnDTO: paymentReturnDTO
+  paymentMethod?: 'COD' | 'VnPay'
+  paymentReturnDTO?: IPaymentReturnDTO
   createdAt?: Date
   updatedAt?: Date
 }
 
 export enum ENUM_DEPOSIT_TYPE {
   COD = 'COD',
-  ONLINE = 'ONLINE',
+  VnPay = 'VnPay',
 }
 
-export interface paymentReturnDTO {
+export interface IPaymentReturnDTO {
   paymentId: string
   paymentStatus: string
   paymentMessage: string
   paymentDate: string
   paymentRefId: string
-  amount: 0
+  amount: number
   signature: string
 }

@@ -1,19 +1,27 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-import React, { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { Loader2, LoaderIcon } from 'lucide-react'
-import MetaData from '../metadata'
-import { IBook } from 'src/types/books'
-import { Separator } from '../ui/separator'
-import { Button } from '../ui/button'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Loader2 } from 'lucide-react'
 import { z } from 'zod'
 import { CartSchema } from './validation-cart'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ICart } from 'src/types'
 import { getBookById } from 'src/api/books/get-book'
-import { IOrderCart } from 'src/types/order-cart'
-import { checkout } from 'src/api/order/post-order'
+import { ICheckout, IOrderCart } from 'src/types/order-cart'
+import { checkout, createOrder } from 'src/api/order/post-order'
+import { useAuth } from 'src/hooks/useAuth'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { Input } from '../ui/input'
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
+import CheckoutSuccess from './success'
+import { Table, TableBody, TableCell, TableHead, TableRow } from '../ui/table'
+import { Separator } from '../ui/separator'
+import { Button } from '../ui/button'
+import { faker } from '@faker-js/faker'
+import { IOrder } from 'src/types/order'
+import { IBook } from 'src/types/books'
+import { ICart } from 'src/types/cart'
+import MetaData from '../metadata'
+import CheckoutFailed from './failed'
 
 type FormData = z.infer<typeof CartSchema>
 
@@ -21,45 +29,18 @@ export default function CheckOutPage() {
   const form = useForm<FormData>({
     resolver: zodResolver(CartSchema),
   })
+  const { user } = useAuth()
   const [checkoutUrl, setCheckoutUrl] = useState<string>('')
-
+  console.log('checkoutUrl', checkoutUrl)
   const { state } = useParams()
   const [order, setOrder] = useState<ICart[]>([])
-  const [checkoutData, setCheckoutData] = useState<IOrderCart[]>([])
-
-  useEffect(() => {
-    const getCheckoutData = () => {
-      const newData: IOrderCart[] = order.map((item) => {
-        const { productId, quantity } = item
-        return { productId, quantity }
-      })
-      setCheckoutData(newData)
-    }
-
-    getCheckoutData()
-  }, [order])
-
-  // useEffect(() => {
-  //   if (order?.totalPrice && order._id) {
-  //     getCheckoutUrlApi(order?.totalPrice, order?._id)
-  //       .then((res) => {
-  //         if (res) {
-  //           console.log(res)
-  //           setCheckoutUrl(res)
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error fetching order:', error)
-  //       })
-  //   }
-  // }, [order])
+  const [checkoutData, setCheckoutData] = useState<ICheckout | null>(null)
 
   useEffect(() => {
     if (state) {
       try {
         const decodedState = JSON.parse(atob(state))
         setOrder(decodedState)
-        console.log('state', decodedState)
       } catch (error) {
         console.error('Error decoding state parameter:', error)
       }
@@ -86,30 +67,13 @@ export default function CheckOutPage() {
   }, [order])
 
   interface GroupedByStore {
-    [key: string]: { book: IBook; quantity: number; sellerName: string }[] // Mảng của đối tượng chứa thông tin sách và số lượng trong giỏ hàng
+    [key: string]: { book: IBook; productId: string; quantity: number; agencyId: string }[]
   }
 
   const [cartItemsByStore, setCartItemsByStore] = useState<GroupedByStore>({})
 
   useEffect(() => {
     const groupedByStore: GroupedByStore = {}
-
-    const processBookData = async (book: IBook) => {
-      try {
-        if (book && book.productId) {
-          if (!groupedByStore[book.sellerId]) {
-            groupedByStore[book.sellerId] = []
-          }
-          groupedByStore[book.sellerId].push({
-            book: book,
-            quantity: order.find((item) => item.productId === book.productId)?.quantity || 0,
-            sellerName: book.sellerName,
-          })
-        }
-      } catch (error) {
-        console.error('Error processing book data:', error)
-      }
-    }
 
     const processAllBooksData = async () => {
       try {
@@ -120,8 +84,9 @@ export default function CheckOutPage() {
             }
             groupedByStore[book.sellerId].push({
               book: book,
+              productId: book.productId,
               quantity: order.find((item) => item.productId === book.productId)?.quantity || 0,
-              sellerName: book.sellerName,
+              agencyId: book.sellerId,
             })
           }
         }
@@ -135,11 +100,32 @@ export default function CheckOutPage() {
   }, [bookData, order])
 
   useEffect(() => {
+    const getCheckoutData = () => {
+      const newData: IOrderCart[] = Object.entries(cartItemsByStore)
+        .map(([storeId, items]) => {
+          return items.map(({ book, quantity, agencyId }) => ({
+            productId: book.productId,
+            agencyId: agencyId,
+            quantity: quantity,
+          }))
+        })
+        .flat()
+
+      const dataCheckout: ICheckout = {
+        referenceId: faker.string.uuid(),
+        products: newData,
+      }
+      setCheckoutData(dataCheckout)
+    }
+
+    getCheckoutData()
+  }, [cartItemsByStore])
+
+  useEffect(() => {
     if (checkoutData) {
       checkout(checkoutData)
         .then((res: string) => {
           if (res) {
-            console.log(res)
             setCheckoutUrl(res)
           }
         })
@@ -149,22 +135,37 @@ export default function CheckOutPage() {
     }
   }, [checkoutData])
 
-  const checkoutButton = useMemo(() => {
-    if (checkoutUrl == '') {
-      return (
-        <Button size={'lg'} className={'mx-4 px-2'} variant={'default'}>
-          <LoaderIcon className="mx-auto h-10 w-10 animate-spin text-secondary" />
-        </Button>
-      )
+  const onSubmit = async (dataOrder: FormData) => {
+    if (dataOrder) {
+      if (dataOrder.paymentMethod === 'COD') {
+        const mergedData: IOrder = {
+          addressId: dataOrder.address,
+          customerId: user?.userId,
+          paymentMethod: dataOrder.paymentMethod,
+          products: checkoutData?.products,
+        }
+
+        try {
+          const data = await createOrder(mergedData)
+          if (data) {
+            return <CheckoutSuccess />
+          }
+        } catch (error) {
+          console.error('Error creating order:', error)
+          return <CheckoutFailed />
+        }
+      } else {
+        const mergedData: IOrder = {
+          addressId: dataOrder.address,
+          customerId: user?.userId,
+          paymentMethod: dataOrder.paymentMethod,
+          products: checkoutData?.products,
+        }
+        localStorage.setItem('mergedData', JSON.stringify(mergedData))
+        return window.location.replace(checkoutUrl)
+      }
     }
-    return (
-      <Link to={checkoutUrl}>
-        <Button size={'lg'} className={'mx-4 px-2'} variant={'default'}>
-          Check out
-        </Button>
-      </Link>
-    )
-  }, [checkoutUrl])
+  }
 
   if (!order) {
     return (
@@ -174,55 +175,29 @@ export default function CheckOutPage() {
     )
   }
 
-  const onSubmit = async (data: FormData) => {
-    // const mergedData: IOrder = {
-    //   ...data,
-    //   cart: order.cart,
-    // }
-    // await createOrder(mergedData)
-    //   .then((order: IOrder) => {
-    //     if (order && order._id) {
-    //       toast({
-    //         title: 'Update address success',
-    //         description: 'Update address success',
-    //       })
-    //     } else {
-    //       toast({
-    //         title: 'Invalid order response',
-    //         description: 'No order ID in the response.',
-    //       })
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     toast({
-    //       title: 'Error submitting order',
-    //       description: error.message,
-    //     })
-    //   })
-  }
-
   return (
     <div className="p-4">
       <MetaData title="Checkout" />
       <div className="rounded-lg border border-gray-200 p-4">
         <Table>
-          <TableHeader>
+          <TableHead>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Action</TableHead>
+              <TableCell>Product</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>Quantity</TableCell>
             </TableRow>
-          </TableHeader>
+          </TableHead>
           <TableBody>
-            {Object.keys(cartItemsByStore).map((sellerId, index) => (
+            {Object.keys(cartItemsByStore).map((seller, index) => (
               <React.Fragment key={index}>
-                <TableRow>
-                  <TableCell colSpan={4} className="font-bold">
-                    Store {sellerId}
-                  </TableCell>
-                </TableRow>
-                {cartItemsByStore[sellerId].map((item, idx) => (
+                {cartItemsByStore[seller].map((item, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell colSpan={4} className="font-bold">
+                      Store {item.book.sellerName}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {cartItemsByStore[seller].map((item, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{item.book.name}</TableCell>
                     <TableCell>${item.book.price}</TableCell>
@@ -236,8 +211,7 @@ export default function CheckOutPage() {
           </TableBody>
         </Table>
         <Separator />
-        {/* <Button>Place Order</Button> */}
-        {/* <div>
+        <div>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -250,7 +224,7 @@ export default function CheckOutPage() {
                   <FormItem>
                     <FormLabel> Address Rental </FormLabel>
                     <FormControl>
-                      <Input placeholder="456 CDF" {...field} />
+                      <Input placeholder="Placeholder" {...field} />
                     </FormControl>
                     <FormDescription />
                     <FormMessage />
@@ -260,21 +234,21 @@ export default function CheckOutPage() {
 
               <FormField
                 control={form.control}
-                name="depositType"
+                name="paymentMethod"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Deposit Type</FormLabel>
                     <FormControl>
                       <RadioGroup
-                        onValueChange={(value) => form.setValue('depositType', value as 'ONLINE' | 'COD')}
+                        onValueChange={(value) => form.setValue('paymentMethod', value as 'VnPay' | 'COD')}
                         defaultValue={field.value}
                         className="flex flex-row justify-between"
                       >
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="ONLINE" />
+                            <RadioGroupItem value="VnPay" />
                           </FormControl>
-                          <FormLabel className="font-normal">Online</FormLabel>
+                          <FormLabel className="font-normal">VnPay</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
@@ -289,16 +263,23 @@ export default function CheckOutPage() {
                   </FormItem>
                 )}
               />
-              <div className="space-y-2">
-                <Button type="submit" className="w-full">
-                  Pay deposit
+              {/* {form.watch('paymentMethod') === 'ONLINE' ? (
+                <Button size="lg" className="mx-4 px-2" variant="default">
+                  <Link to={checkoutUrl}> Check out</Link>
                 </Button>
-              </div>
-              <div className="flex justify-center">{checkoutButton}</div>
+              ) : (
+                <div className="space-y-2">
+                  <Button type="submit" className="w-full">
+                    Pay deposit
+                  </Button>
+                </div>
+              )} */}
+              <Button type="submit" className="w-full">
+                Pay deposit
+              </Button>
             </form>
           </Form>
-        </div> */}
-        <div className="flex justify-center">{checkoutButton}</div>
+        </div>
       </div>
     </div>
   )

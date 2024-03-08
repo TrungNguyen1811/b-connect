@@ -13,6 +13,7 @@ const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
 const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
 const ViewCart = React.lazy(() => import('src/pages/cart/view-cart'))
 const CheckOutPage = React.lazy(() => import('src/components/cart/checkout'))
+const CheckoutResult = React.lazy(() => import('src/components/cart/checkout-result'))
 
 const AuthLayout = React.lazy(() => import('src/pages/layout/AuthLayout'))
 const LoginPage = React.lazy(() => import('src/pages/(auth)/login/SignInPage'))
@@ -73,6 +74,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: 'checkout/:state',
         element: <CheckOutPage />,
+      },
+      {
+        path: 'checkout-result',
+        element: <CheckoutResult />,
       },
       {
         element: <UserLayout />,
