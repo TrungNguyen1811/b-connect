@@ -41,7 +41,7 @@ function UserDetailDialog({ children, user }: Props) {
             </div>
             <div className=" flex-column flex">
               <Label className="font-semibold">Address:</Label>
-              <p className="pl-5 text-sm text-gray-700">{user?.address}</p>
+              <p className="pl-5 text-sm text-gray-700">{user?.addressId}</p>
             </div>
             <div className=" flex-column flex">
               <Label className="font-semibold">Create at:</Label>

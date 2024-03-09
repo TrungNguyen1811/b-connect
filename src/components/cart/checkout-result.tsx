@@ -6,13 +6,14 @@ import { createOrder } from 'src/api/order/post-order'
 import CheckoutSuccess from './success'
 import CheckoutFailed from './failed'
 import { useSearchParams } from 'react-router-dom'
-import { IOrder, IPaymentReturnDTO } from 'src/types'
+import { IOrder, IPaymentReturnDTO, ITransaction } from 'src/types'
 
 function CheckoutResult() {
   const [searchParams] = useSearchParams()
   const refId = searchParams.get('refId')
-  const [transaction, setTransaction] = useState<IPaymentReturnDTO>()
+  const [transaction, setTransaction] = useState<ITransaction>()
   const [dataOrder, setDataOrder] = useState<IOrder>()
+  const [isLoadingTransaction, setIsLoadingTransaction] = useState(true) // Biến trạng thái để kiểm tra xem giao dịch đã tải xong chưa
 
   useEffect(() => {
     const mergedDataString = localStorage.getItem('mergedData')
@@ -22,7 +23,6 @@ function CheckoutResult() {
         const mergedData = JSON.parse(mergedDataString)
         setDataOrder(mergedData)
         console.log('mergedData', mergedData)
-
         localStorage.removeItem('mergedData')
       } catch (error) {
         console.error('Error parsing JSON:', error)
@@ -35,18 +35,30 @@ function CheckoutResult() {
   useEffect(() => {
     const fetchTransaction = async () => {
       try {
-        const transactionDetail = await getTransaction(refId as string)
-        setTransaction(transactionDetail)
+        if (refId) {
+          const transactionDetail = await getTransaction(refId)
+          setTransaction(transactionDetail)
+        }
       } catch (error) {
         console.error('Error fetching transaction:', error)
+      } finally {
+        setIsLoadingTransaction(false) // Đánh dấu rằng giao dịch đã được tải xong
       }
     }
 
-    if (refId) {
-      // Ensure refId is present before fetching transaction
-      fetchTransaction()
-    }
+    fetchTransaction()
   }, [refId])
+
+  const paymentData: IPaymentReturnDTO = useMemo(() => {
+    return {
+      paymentStatus: transaction?.paymentStatus || '',
+      paymentMessage: transaction?.paymentMessage || '',
+      paymentDate: transaction?.paymentDate || '',
+      paymentRefId: transaction?.transactionId || '',
+      amount: transaction?.amount || 0,
+      signature: transaction?.signature || '',
+    }
+  }, [transaction])
 
   const mergedData: IOrder = useMemo(() => {
     return {
@@ -54,17 +66,21 @@ function CheckoutResult() {
       products: dataOrder?.products,
       paymentMethod: dataOrder?.paymentMethod,
       addressId: dataOrder?.addressId,
-      paymentReturnDTO: transaction,
+      paymentReturnDTO: paymentData,
     }
-  }, [transaction, dataOrder])
-  console.log('mergedData', mergedData)
+  }, [dataOrder, paymentData])
 
-  const { isLoading, data } = useQuery(['postTrans', transaction?.paymentId], () => createOrder(mergedData), {
-    retry: false,
-  })
+  const { isLoading: isLoadingOrder, data } = useQuery(
+    ['postTrans', paymentData.paymentRefId],
+    () => createOrder(mergedData),
+    {
+      retry: false,
+      enabled: !isLoadingTransaction, // Sử dụng biến trạng thái để kiểm tra xem giao dịch đã tải xong chưa
+    },
+  )
 
   const success = useMemo(() => {
-    if (isLoading) {
+    if (isLoadingOrder) {
       return (
         <div className="text-center">
           <LoaderIcon className="mx-auto h-10 w-10 animate-spin text-primary" />
@@ -77,7 +93,7 @@ function CheckoutResult() {
       }
       return <h1 className="text-center">Something went wrong while saving data</h1>
     }
-  }, [isLoading, data])
+  }, [isLoadingOrder, data])
 
   if (transaction?.paymentStatus === '00') {
     return success

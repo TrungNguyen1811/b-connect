@@ -17,7 +17,7 @@ import { updateUserApi } from 'src/api/user/post-user'
 const formSchema = z.object({
   username: z.string(),
   email: z.string(),
-  address: z.string(),
+  addressId: z.string(),
   avatar: z.string(),
   fullName: z.string(),
   url: z.string(),
@@ -58,7 +58,7 @@ function UpdateProfile() {
     defaultValues: {
       username: userDetail?.username || '',
       email: userDetail?.email || '',
-      address: userDetail?.address || '',
+      addressId: userDetail?.addressId || '',
       avatar: userDetail?.avatar || '',
       fullName: userDetail?.fullName || '',
       url: userDetail?.url || '',
@@ -238,7 +238,7 @@ function UpdateProfile() {
               <div className="py-2">
                 <FormField
                   control={form.control}
-                  name="address"
+                  name="addressId"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className=" mb-2">Address</FormLabel>

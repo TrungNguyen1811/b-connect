@@ -8,7 +8,7 @@ export interface User {
   role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'SELLER' | 'BASEUSER'
   phone?: number
   avatar?: string
-  address?: string | null
+  addressId?: string | null
   username: string
   password?: string
   passwordAttempt?: number

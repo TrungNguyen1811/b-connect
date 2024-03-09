@@ -78,7 +78,7 @@ function ProfileUser() {
                       <p className="px-36 py-4 text-center text-lg">Hello 👋, my name is {userData?.fullName} I am a</p>
                     </div>
                     <div className="flex flex-row items-center justify-center">
-                      <p className="px-4">Add: {userData?.address}</p>
+                      <p className="px-4">Add: {userData?.addressId}</p>
                       <p className="px-4">Joined on: {userData?.createdAt?.toISOString()}</p>
                       {/* <p className="px-4">Shopee: {userData?.username}</p> */}
                     </div>

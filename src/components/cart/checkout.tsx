@@ -135,11 +135,13 @@ export default function CheckOutPage() {
     }
   }, [checkoutData])
 
+  const [checkoutStatus, setCheckoutStatus] = useState<'success' | 'failed' | 'pending'>('pending')
+
   const onSubmit = async (dataOrder: FormData) => {
     if (dataOrder) {
       if (dataOrder.paymentMethod === 'COD') {
         const mergedData: IOrder = {
-          addressId: dataOrder.address,
+          addressId: '5bc177bc-6231-4cca-8f38-746809147f3f',
           customerId: user?.userId,
           paymentMethod: dataOrder.paymentMethod,
           products: checkoutData?.products,
@@ -148,15 +150,15 @@ export default function CheckOutPage() {
         try {
           const data = await createOrder(mergedData)
           if (data) {
-            return <CheckoutSuccess />
+            setCheckoutStatus('success')
           }
         } catch (error) {
           console.error('Error creating order:', error)
-          return <CheckoutFailed />
+          setCheckoutStatus('failed')
         }
       } else {
         const mergedData: IOrder = {
-          addressId: dataOrder.address,
+          addressId: '5bc177bc-6231-4cca-8f38-746809147f3f',
           customerId: user?.userId,
           paymentMethod: dataOrder.paymentMethod,
           products: checkoutData?.products,
@@ -173,6 +175,14 @@ export default function CheckOutPage() {
         <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
       </div>
     )
+  }
+
+  if (checkoutStatus === 'success') {
+    return <CheckoutSuccess />
+  }
+
+  if (checkoutStatus === 'failed') {
+    return <CheckoutFailed />
   }
 
   return (
@@ -224,7 +234,12 @@ export default function CheckOutPage() {
                   <FormItem>
                     <FormLabel> Address Rental </FormLabel>
                     <FormControl>
-                      <Input placeholder="Placeholder" {...field} />
+                      <Input
+                        placeholder="Placeholder"
+                        {...field}
+                        defaultValue={user?.username as string}
+                        value={field.value}
+                      />
                     </FormControl>
                     <FormDescription />
                     <FormMessage />

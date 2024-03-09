@@ -20,7 +20,7 @@ export function getUserByIdFaker(id: string) {
       height: 100,
       width: 100,
     }),
-    address: faker.lorem.words(),
+    addressId: faker.lorem.words(),
     username: faker.lorem.words(),
   }
 
@@ -42,7 +42,7 @@ export function getUserByUserName(username: string) {
       height: 100,
       width: 100,
     }),
-    address: faker.lorem.words(),
+    addressId: faker.lorem.words(),
     username: username,
   }
 
