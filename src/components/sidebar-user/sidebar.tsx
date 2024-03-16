@@ -41,7 +41,7 @@ export default function Sidebar({ className }: SidebarProps) {
       icon: UserCircle,
       href: 'user/account/profile',
       color: 'text-orange-500',
-      isChidren: true,
+      isChildren: true,
       children: [
         {
           title: 'Information',
@@ -80,7 +80,7 @@ export default function Sidebar({ className }: SidebarProps) {
       icon: BellDotIcon,
       href: '/user/notifications',
       color: 'text-orange-500',
-      isChidren: true,
+      isChildren: true,
       children: [
         {
           title: 'Order Updates',

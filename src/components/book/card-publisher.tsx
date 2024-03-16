@@ -7,7 +7,7 @@ type Props = { user: User }
 
 function Publisher({ user }: Props) {
   const renderPublisher = React.useMemo(() => {
-    if (user?.role === 'SELLER') {
+    if (user?.role === 'Agency') {
       return (
         <Link to={'/'} key={user.userId}>
           <Card className="my-0.5 w-36">

@@ -5,7 +5,9 @@ export interface User {
   userId?: string
   email?: string
   fullName?: string
-  role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'SELLER' | 'BASEUSER'
+  role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'Agency' | 'BaseUser'
+  isSeller?: boolean
+  isValidated?: boolean
   phone?: number
   avatar?: string
   addressId?: string | null
@@ -26,7 +28,7 @@ export interface User {
 export enum ROLE {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
-  SELLER = 'SELLER',
+  AGENCY = 'Agency',
   CUSTOMER = 'CUSTOMER',
   BASEUSER = 'BaseUser',
 }

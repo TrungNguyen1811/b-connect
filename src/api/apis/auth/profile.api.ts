@@ -42,3 +42,17 @@ async function changePasswordApi(
 }
 
 export { changePasswordApi, profileApi }
+
+async function getUserProfileApi(callback: (error: AxiosError | null, result: User | null) => void) {
+  return await authAxiosClient
+    .get('/Account/get-user-profile', {})
+    .then((err) => {
+      if (err.status === 200) {
+        callback(null, err.data)
+      }
+    })
+    .catch((error) => {
+      callback(error, null)
+    })
+}
+export { getUserProfileApi }

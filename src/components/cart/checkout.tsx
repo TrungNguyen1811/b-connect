@@ -12,7 +12,6 @@ import { useAuth } from 'src/hooks/useAuth'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import CheckoutSuccess from './success'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../ui/table'
 import { Separator } from '../ui/separator'
 import { Button } from '../ui/button'
@@ -21,11 +20,12 @@ import { IOrder } from 'src/types/order'
 import { IBook } from 'src/types/books'
 import { ICart } from 'src/types/cart'
 import MetaData from '../metadata'
+import CheckoutSuccess from './success'
 import CheckoutFailed from './failed'
 
 type FormData = z.infer<typeof CartSchema>
 
-export default function CheckOutPage() {
+const CheckoutPage = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(CartSchema),
   })
@@ -35,6 +35,7 @@ export default function CheckOutPage() {
   const { state } = useParams()
   const [order, setOrder] = useState<ICart[]>([])
   const [checkoutData, setCheckoutData] = useState<ICheckout | null>(null)
+  // const navigate = useNavigate()
 
   useEffect(() => {
     if (state) {
@@ -102,6 +103,7 @@ export default function CheckOutPage() {
   useEffect(() => {
     const getCheckoutData = () => {
       const newData: IOrderCart[] = Object.entries(cartItemsByStore)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map(([storeId, items]) => {
           return items.map(({ book, quantity, agencyId }) => ({
             productId: book.productId,
@@ -135,8 +137,6 @@ export default function CheckOutPage() {
     }
   }, [checkoutData])
 
-  const [checkoutStatus, setCheckoutStatus] = useState<'success' | 'failed' | 'pending'>('pending')
-
   const onSubmit = async (dataOrder: FormData) => {
     if (dataOrder) {
       if (dataOrder.paymentMethod === 'COD') {
@@ -150,11 +150,11 @@ export default function CheckOutPage() {
         try {
           const data = await createOrder(mergedData)
           if (data) {
-            setCheckoutStatus('success')
+            return <CheckoutSuccess />
           }
         } catch (error) {
           console.error('Error creating order:', error)
-          setCheckoutStatus('failed')
+          return <CheckoutFailed />
         }
       } else {
         const mergedData: IOrder = {
@@ -175,14 +175,6 @@ export default function CheckOutPage() {
         <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
       </div>
     )
-  }
-
-  if (checkoutStatus === 'success') {
-    return <CheckoutSuccess />
-  }
-
-  if (checkoutStatus === 'failed') {
-    return <CheckoutFailed />
   }
 
   return (
@@ -299,3 +291,4 @@ export default function CheckOutPage() {
     </div>
   )
 }
+export default CheckoutPage

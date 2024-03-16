@@ -303,4 +303,21 @@
     transform: scaleX(1);
     transform-origin: bottom left;
   }
+
+  //underline
+  .underline-animation {
+    position: relative;
+    display: inline-block;
+    background-color: none;
+  }
+
+  .underline-animation::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px; /* Adjust the value to position the underline below the text */
+    width: 100%;
+    height: 3px;
+    background-color: #ff4b2b;
+  }
 }

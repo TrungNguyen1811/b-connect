@@ -192,7 +192,7 @@ export const CreateUserForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 <FormControl>
                   <RadioGroup
                     onValueChange={(value) =>
-                      form.setValue('role', value as 'MANAGER' | 'ADMIN' | 'CUSTOMER' | 'SELLER')
+                      form.setValue('role', value as 'MANAGER' | 'ADMIN' | 'CUSTOMER' | 'Agency' | 'BaseUser')
                     }
                     defaultValue={field.value}
                     className="flex flex-row justify-between"

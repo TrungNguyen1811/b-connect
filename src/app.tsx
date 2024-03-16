@@ -6,7 +6,6 @@ import { ROUTES } from './lib/router'
 import PageLoader from './components/page-loader'
 import { OrderCartProvider } from './hooks/useOrderCart'
 import { AuthProvider } from './components/auth/test-auth'
-import { CheckoutProvider } from './hooks/useCheckout'
 
 export default function App() {
   const queryClient = useMemo(() => new QueryClient({}), [])
@@ -14,11 +13,9 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <OrderCartProvider>
-          <CheckoutProvider>
-            <Suspense fallback={<PageLoader />}>
-              <RouterProvider router={ROUTES} />
-            </Suspense>
-          </CheckoutProvider>
+          <Suspense fallback={<PageLoader />}>
+            <RouterProvider router={ROUTES} />
+          </Suspense>
         </OrderCartProvider>
       </AuthProvider>
       <ReactQueryDevtools />

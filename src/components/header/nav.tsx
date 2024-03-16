@@ -8,7 +8,7 @@ function Navigation() {
   return (
     <div className="m-1 flex items-center justify-between">
       <div className="flex">
-        <NavLink className={'nav-link'} to={'/'}>
+        <NavLink className={'nav-link'} to={'/seller'}>
           Seller Center
         </NavLink>
         <NavLink className={'hidden-on-mobile nav-link'} to={'/'}>

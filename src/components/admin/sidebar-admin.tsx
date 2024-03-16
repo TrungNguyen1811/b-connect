@@ -12,7 +12,6 @@ import {
   Users,
 } from 'lucide-react'
 import { NavItem } from 'src/types/NavItem'
-import { useAuth } from 'src/hooks/useAuth'
 import { SideNav } from '../sidebar-user/side-nav'
 
 interface SidebarProps {
@@ -23,7 +22,7 @@ export default function SidebarAdmin({ className }: SidebarProps) {
   const { isOpen, toggle } = useSidebar()
   const [status, setStatus] = useState(false)
 
-  const { user } = useAuth()
+  // const { user } = useAuth()
   const handleToggle = () => {
     setStatus(true)
     toggle()
@@ -42,7 +41,7 @@ export default function SidebarAdmin({ className }: SidebarProps) {
       icon: Users,
       href: '/admin/manage',
       color: 'text-orange-500',
-      isChidren: true,
+      isChildren: true,
       children: [
         {
           title: 'Manage User',
