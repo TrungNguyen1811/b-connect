@@ -102,9 +102,9 @@ async function postDeleteBlogById(blog_id: string) {
 
 export { postDeleteBlogById }
 
-async function unFollowingFromInterested(categoryId: string) {
+async function unFollowingFromInterested(cateId: string) {
   return await axiosClient
-    .post(`/blog/unFollowingCategory/${categoryId}`, {})
+    .post(`/blog/unFollowingCategory/${cateId}`, {})
     .then((response) => {
       if (response.status === 201) {
         return response.data

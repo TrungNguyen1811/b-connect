@@ -11,7 +11,7 @@ export interface IBook {
   quantity: number
   sellerId: string
   sellerName: string
-  category?: ICategory['categoryId']
+  category?: ICategory['cateId']
   reviews?: IReview['reviewId']
   ratingId?: string
   isAvailable?: boolean | undefined

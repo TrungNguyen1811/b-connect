@@ -22,7 +22,7 @@ function Interested(id: any) {
       <div className="flex flex-col p-4">
         <div className="px-1">
           <Link to={`/blog/${id}`}>
-            <p className="font-semibold">{categories?.name}</p>
+            <p className="font-semibold">{categories?.cateName}</p>
           </Link>
         </div>
         <div className="p-1">
@@ -34,7 +34,7 @@ function Interested(id: any) {
         </div>
         <div className="flex flex-row items-end justify-between p-1 py-2">
           <Button onClick={() => unFollowingFromInterested(id as string)}>Following</Button>
-          <img className="h-14 w-14 rounded-sm" src={categories?.img} />
+          <img className="h-14 w-14 rounded-sm" src={categories?.imageDir} />
         </div>
       </div>
     </div>

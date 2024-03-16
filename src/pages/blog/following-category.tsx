@@ -49,7 +49,7 @@ function FollowingCategory() {
           {categories ? (
             categories?.map((category, index) => (
               <div className="grid h-full w-full sm:grid-cols-1 sm:gap-1 md:grid-cols-3 md:gap-3" key={index}>
-                {category?.categoryId && <Interested id={category.categoryId} />}
+                {category?.cateId && <Interested id={category.cateId} />}
               </div>
             ))
           ) : (

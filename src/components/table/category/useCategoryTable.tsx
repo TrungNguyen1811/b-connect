@@ -13,8 +13,8 @@ export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
-    page: 0,
-    perPage: 10,
+    // pageNumber: 0,
+    // pageSize: 10,
   })
 
   const queryController = useQuery<IResponse<ICategory[]>, AxiosError>(

@@ -14,8 +14,8 @@ const fakeContentArray = Array.from({ length: 7 }, () => ({
 const fakeContent = JSON.stringify(fakeContentArray)
 
 const createCategory = (): ICategory => ({
-  categoryId: faker.string.uuid(),
-  name: faker.lorem.word({ length: 4, strategy: 'shortest' }),
+  cateId: faker.string.uuid(),
+  cateName: faker.lorem.word({ length: 4, strategy: 'shortest' }),
 })
 
 const fakeCommentArray: {

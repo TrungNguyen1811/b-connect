@@ -4,6 +4,6 @@ import { User } from './user'
 export interface IInterested {
   interestedId: string
   userId: User['userId']
-  categoryId: ICategory[]
+  cateId: ICategory[]
   // topic_id: ITopic["_id"]
 }

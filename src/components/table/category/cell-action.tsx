@@ -9,18 +9,57 @@ import {
 import { Button } from 'src/components/ui/button'
 import { Edit, MoreHorizontal } from 'lucide-react'
 import { ICategory } from 'src/types'
+import { deleteCategory } from 'src/api/categories/delete-category'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'src/components/ui/use-toast'
+import { UpdateCategory } from './manage/upate-category'
 
 interface CellActionProps {
   data: ICategory
 }
+
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  // const [loading, setLoading] = useState(false)
-  // const [open, setOpen] = useState(false)
   const navigate = useNavigate()
-  // const onConfirm = async () => {}
+  const cateId = data.cateId
+
+  const queryClient = useQueryClient()
+
+  const deleteCategoryFunction = async (cateId: string) => {
+    const cate = await deleteCategory(cateId)
+    return cate
+  }
+
+  const { mutate } = useMutation(deleteCategoryFunction, {
+    onSuccess: (data) => {
+      if (data) {
+        toast({
+          title: 'Success',
+          description: 'Delete Category Success',
+        })
+        queryClient.invalidateQueries()
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Delete Category Failed',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Submitting Category',
+        description: error.message,
+      })
+    },
+  })
+  const onDelete = () => {
+    mutate(cateId as string)
+  }
+
   return (
-    <div>
-      {/* <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} /> */}
+    <div className="flex flex-row">
+      <div className="flex gap-2">
+        <UpdateCategory categoryId={cateId as string} />
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -30,15 +69,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem onClick={() => navigate(`/admin/category/${data.categoryId}`)}>
+          <DropdownMenuItem onClick={() => navigate(`/admin/category/${data.cateId}`)}>
             <Edit className="mr-2 h-4 w-4" /> Detail
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <div className="flex gap-2 "></div>
+          <DropdownMenuItem onClick={onDelete}>
+            <div className="flex gap-2 ">Delete</div>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem onClick={() => setOpen(true)}>
-          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

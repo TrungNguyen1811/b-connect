@@ -35,7 +35,7 @@ export interface IBlog {
 export interface IBlogg {
   _id?: string
   userId?: User['userId']
-  categoryId?: string
+  cateId?: string
   commentsId?: string
   likeId?: string
   image?: any

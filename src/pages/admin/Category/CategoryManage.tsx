@@ -14,7 +14,7 @@ function CategoryManagerPage() {
   const { data } = useCategoryTable(columns)
 
   const navigate = useNavigate()
-  const title = `Manage Category (${data?.data.length})`
+  const title = `Manage Category ()`
   const description = 'Manage Categorys (Server side table functionalities.)'
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {

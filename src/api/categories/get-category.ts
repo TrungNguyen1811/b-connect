@@ -6,10 +6,10 @@ import { ICategory } from 'src/types'
 export function getCategoryById(id: string) {
   // TODO: Replace this with an actual API call
   const category: ICategory = {
-    categoryId: faker.string.uuid(),
+    cateId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
-    name: faker.lorem.word(),
-    img: faker.image.urlLoremFlickr({
+    cateName: faker.lorem.word(),
+    imageDir: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
     }),
@@ -25,10 +25,10 @@ export function getAllCategories(): Promise<ICategory[]> {
   // TODO: Replace this with an actual API call
 
   const categories: ICategory[] = Array.from({ length: 20 }, () => ({
-    categoryId: faker.string.uuid(),
+    cateId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
-    name: faker.lorem.sentence(),
-    img: faker.image.urlLoremFlickr({
+    cateName: faker.lorem.sentence(),
+    imageDir: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
     }),
@@ -46,10 +46,10 @@ export function getManyCategories() {
   // TODO: Replace this with an actual API call
 
   const categories: ICategory[] = Array.from({ length: 20 }, () => ({
-    categoryId: faker.string.uuid(),
+    cateId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
-    name: faker.lorem.sentence(),
-    img: faker.image.urlLoremFlickr({
+    cateName: faker.lorem.sentence(),
+    imageDir: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
     }),
@@ -67,8 +67,12 @@ import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
 export async function getAllCategory(params: Partial<IQueryPagination & IQuerySearch>) {
   return axiosClient
-    .get('/category/', {
+    .get('/Category/get-all-category', {
       params,
     })
     .then((res) => res.data)
+}
+
+export async function getCategoryApi(id: string) {
+  return axiosClient.get(`Category/get-category-by-id?cateId=${id}`).then((res) => res.data)
 }

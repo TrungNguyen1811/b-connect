@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker'
 import { ICategory, User } from 'src/types'
 
 const categories: ICategory[] = [
-  { categoryId: faker.string.uuid(), name: 'Technology' },
-  { categoryId: faker.string.uuid(), name: 'Science' },
-  { categoryId: faker.string.uuid(), name: 'Art' },
-  { categoryId: faker.string.uuid(), name: 'Music' },
-  { categoryId: faker.string.uuid(), name: 'Sports' },
+  { cateId: faker.string.uuid(), cateName: 'Technology' },
+  { cateId: faker.string.uuid(), cateName: 'Science' },
+  { cateId: faker.string.uuid(), cateName: 'Art' },
+  { cateId: faker.string.uuid(), cateName: 'Music' },
+  { cateId: faker.string.uuid(), cateName: 'Sports' },
 ]
 export function getUserByIdFaker(id: string) {
   // TODO: Replace this with an actual API call

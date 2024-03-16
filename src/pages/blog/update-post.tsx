@@ -48,7 +48,7 @@ export default function UpdateBlog() {
     defaultValues: {
       image: blogData?.image || '',
       title: blogData?.title || '',
-      category: blogData?.categoryId || '',
+      category: blogData?.cateId || '',
       content: content || '',
     },
   })
@@ -98,10 +98,10 @@ export default function UpdateBlog() {
     getAllCategories()
       .then((category: ICategory[]) => {
         if (category) {
-          const validCategories = category.filter((cat) => cat.categoryId !== undefined)
+          const validCategories = category.filter((cat) => cat.cateId !== undefined)
           const categoryOptions: Options[] = validCategories.map((cat) => ({
-            value: cat.categoryId!,
-            label: cat.name,
+            value: cat.cateId!,
+            label: cat.cateName,
           }))
           setOptions(categoryOptions)
         } else {

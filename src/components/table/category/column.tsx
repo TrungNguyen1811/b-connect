@@ -24,11 +24,11 @@ export const columns: ColumnDef<ICategory>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'img',
+    accessorKey: 'imageDir',
     header: 'Image',
   },
   {
-    accessorKey: 'name',
+    accessorKey: 'cateName',
     header: 'Name',
   },
   {
@@ -36,6 +36,7 @@ export const columns: ColumnDef<ICategory>[] = [
     header: 'Description',
   },
   {
+    header: 'Action',
     id: 'action',
     cell: ({ row }) => <CellAction data={row.original} />,
   },

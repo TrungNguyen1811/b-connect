@@ -3,54 +3,32 @@ import { CategorySchema } from './validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
-import { useMutation } from '@tanstack/react-query'
-import { toast } from 'src/components/ui/use-toast'
-import React, { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import React from 'react'
 import { Button } from 'src/components/ui/button'
 import { useForm } from 'react-hook-form'
-import { postCategoryApi } from 'src/api/categories/post-categogy'
-import { updateCategoryApi } from 'src/api/categories/update-category'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 'src/components/ui/dialog'
+import { toast } from 'src/components/ui/use-toast'
+import { postCategoryApi } from 'src/api/categories/post-categogy'
 
 export const IMG_MAX_LIMIT = 5
 type CategoryFormValues = z.infer<typeof CategorySchema>
 
-const addCategory = async (data: CategoryFormValues) => {
-  const category = await postCategoryApi(data)
-  return category
-}
-
-const updateCategory = async (data: CategoryFormValues) => {
-  const category = await updateCategoryApi(data)
-  return category
-}
-
-interface ProductFormProps {
-  initialData?: any | null
-}
-export const CreateCategoryForm: React.FC<ProductFormProps> = ({ initialData }) => {
-  const [loading, setLoading] = useState(false)
-
-  const defaultValues = initialData
-    ? initialData
-    : {
-        name: '',
-        description: '',
-        img: '',
-      }
+export function CreateCategoryForm() {
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(CategorySchema),
-    defaultValues,
   })
 
-  const { mutate } = useMutation(initialData ? updateCategory : addCategory, {
+  const queryClient = useQueryClient()
+
+  const { mutate: addCategory } = useMutation((data: CategoryFormValues) => postCategoryApi(data), {
     onSuccess: (data) => {
-      if (data && data._id) {
-        console.log('Category ID:', data._id)
+      if (data) {
         toast({
           title: 'Success',
           description: 'Add Category Success!!!',
         })
+        queryClient.invalidateQueries()
       } else {
         toast({
           title: 'Invalid Category Response',
@@ -66,22 +44,8 @@ export const CreateCategoryForm: React.FC<ProductFormProps> = ({ initialData }) 
     },
   })
   const onSubmit = (data: CategoryFormValues) => {
-    mutate(data)
+    addCategory(data)
   }
-
-  // const onDelete = async () => {
-  //   try {
-  //     setLoading(true)
-  //     await axiosClient.delete(`/api/${params.storeId}/products/${params.productId}`)
-  //     history.go(0)
-  //     history.push(`/${params.storeId}/products`)
-  //   } catch (error: any) {
-  //     console.log(error.message)
-  //   } finally {
-  //     setLoading(false)
-  //     setOpen(false)
-  //   }
-  // }
 
   return (
     <>
@@ -94,10 +58,10 @@ export const CreateCategoryForm: React.FC<ProductFormProps> = ({ initialData }) 
             <DialogTitle>Add Category</DialogTitle>
           </DialogHeader>
           <Form {...form}>
-            <form className="" onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
-                name="name"
+                name="cateName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel> Name </FormLabel>
@@ -125,24 +89,24 @@ export const CreateCategoryForm: React.FC<ProductFormProps> = ({ initialData }) 
               />
               <FormField
                 control={form.control}
-                name="img"
+                name="image"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Images</FormLabel>
                     <FormControl>
-                      <input type="file" name="img" value={field.value} />
+                      <Input type="file" accept="image/*" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <div className="mt-4">
+                <Button type="submit" className="text-xs md:text-sm">
+                  Submit
+                </Button>
+              </div>
             </form>
           </Form>
-          <div className="">
-            <Button type="submit" className="text-xs md:text-sm">
-              Submit
-            </Button>
-          </div>
         </DialogContent>
       </Dialog>
     </>

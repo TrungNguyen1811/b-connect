@@ -50,7 +50,7 @@ function CategoryList() {
         {categories ? (
           <div className="mx-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
             {categories.map((category, index) => (
-              <div key={index}>{category.categoryId && <Interested id={category.categoryId} />}</div>
+              <div key={index}>{category.cateId && <Interested id={category.cateId} />}</div>
             ))}
           </div>
         ) : (
