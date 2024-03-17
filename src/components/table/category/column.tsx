@@ -20,20 +20,43 @@ export const columns: ColumnDef<ICategory>[] = [
         aria-label="Select row"
       />
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
     accessorKey: 'imageDir',
     header: 'Image',
+    cell: ({ getValue }) => {
+      const image = getValue() as string
+      return (
+        <div className="w-[4rem]">
+          <img src={image} />
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'cateName',
     header: 'Name',
+    cell: ({ getValue }) => {
+      const cateName = getValue() as string
+
+      const truncateName = cateName.length > 20 ? `${cateName.substring(0, 20)}...` : cateName
+      return <p className="w-[8rem]">{truncateName}</p>
+    },
   },
   {
     accessorKey: 'description',
     header: 'Description',
+    cell: ({ getValue }) => {
+      const description: string | null = getValue() as string | null
+
+      if (!description) {
+        return <p className="text-slate-400">No description available</p>
+      }
+      const truncatedDescription = description.length > 100 ? `${description.substring(0, 100)}...` : description
+      return <p className="w-[36rem] text-slate-400">{truncatedDescription}</p>
+    },
   },
   {
     header: 'Action',

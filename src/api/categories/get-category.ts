@@ -70,7 +70,33 @@ export async function getAllCategory(params: Partial<IQueryPagination & IQuerySe
     .get('/Category/get-all-category', {
       params,
     })
-    .then((res) => res.data)
+    .then((res) => {
+      const data = res.data
+      const pagination = res.headers['x-pagination']
+      const parseJson: IQueryPagination = JSON.parse(pagination)
+      // console.log('a', parseJson)
+      const dataAll: IResponse<ICategory[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: parseJson,
+      }
+      return dataAll
+    })
+}
+
+export async function getAllCategoryNoParam() {
+  return axiosClient.get('/Category/get-all-category', {}).then((res) => {
+    const data = res.data
+    const pagination = res.headers['x-pagination']
+    const parseJson: IQueryPagination = JSON.parse(pagination)
+    // console.log('a', parseJson)
+    const dataAll: IResponse<ICategory[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: parseJson,
+    }
+    return dataAll
+  })
 }
 
 export async function getCategoryApi(id: string) {

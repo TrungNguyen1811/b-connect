@@ -89,7 +89,7 @@ export function CreateCategoryForm() {
               />
               <FormField
                 control={form.control}
-                name="image"
+                name="imageDir"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Images</FormLabel>

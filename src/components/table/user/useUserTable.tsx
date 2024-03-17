@@ -47,7 +47,7 @@ export function useUserTable(columns: ColumnDef<User>[]) {
   table.setOptions((prev) => ({
     ...prev,
     state: tableStates,
-    pageCount: queryController.data?._pagination?.totalPage || 0,
+    pageCount: queryController.data?._pagination?.TotalPages || 0,
     onStateChange: setTableStates,
     debugTable: tableStates.pagination.pageIndex > 2,
   }))
@@ -71,7 +71,7 @@ export function useUserTable(columns: ColumnDef<User>[]) {
   useEffect(() => {
     if (!queryController.data?._pagination) return
 
-    const pageCount = queryController.data?._pagination?.totalPage || 0
+    const pageCount = queryController.data?._pagination?.TotalPages || 0
     table.setPageCount(pageCount)
   }, [queryController.data?._pagination, table])
 

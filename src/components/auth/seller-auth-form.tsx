@@ -42,6 +42,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
       ownerId: user?.userId,
     }
     let error: AxiosError | null = null
+    console.log('user?.isValidated', user?.isValidated)
     if (user?.isValidated === false) {
       await SetIsAccountValidates(user?.userId as string, (err, data) => {
         if (err) {
@@ -55,9 +56,59 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
           })
         }
       })
-    }
-
-    if (!error) {
+      if (!error) {
+        await RegisterAgency(mergedData, async (err, data) => {
+          if (err) {
+            toast({
+              title: err.message,
+              description: err.cause?.message,
+              variant: 'destructive',
+            })
+          } else {
+            if (!user) {
+              return
+            }
+            toast({
+              title: 'Register Success',
+              description: data,
+              variant: 'success',
+            })
+            await getUserProfileApi((err, user) => {
+              if (err) {
+                toast({
+                  title: err.message,
+                  description: err.cause?.message,
+                  variant: 'destructive',
+                })
+              } else {
+                if (!user) {
+                  return
+                }
+                const token = localStorage.getItem('token') as string
+                login({ user, token })
+                if (user.isSeller === true || user.isValidated === true) {
+                  navigate('/seller')
+                } else {
+                  navigate('/')
+                }
+              }
+            })
+            //   if (err.isSeller === true || err.isValidated === true) {
+            //     navigate('/seller/dashboard')
+            //   } else {
+            //     navigate('/')
+            //   }
+            //   navigate('/seller')
+          }
+        })
+      }
+      if (error) {
+        toast({
+          title: 'Register Failed',
+          variant: 'destructive',
+        })
+      }
+    } else {
       await RegisterAgency(mergedData, async (err, data) => {
         if (err) {
           toast({
@@ -103,12 +154,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
         }
       })
     }
-    if (error) {
-      toast({
-        title: 'Register Failed',
-        variant: 'destructive',
-      })
-    }
+
     setIsLoading(false)
     setTimeout(() => {
       setIsLoading(false)

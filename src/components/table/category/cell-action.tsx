@@ -7,12 +7,14 @@ import {
   DropdownMenuTrigger,
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
-import { Edit, MoreHorizontal } from 'lucide-react'
+import { CopyCheckIcon, CopyIcon, DeleteIcon, Edit, MoreHorizontal } from 'lucide-react'
 import { ICategory } from 'src/types'
 import { deleteCategory } from 'src/api/categories/delete-category'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'src/components/ui/use-toast'
 import { UpdateCategory } from './manage/upate-category'
+import { useState } from 'react'
+import { ViewCategoryDetail } from './manage/view-category'
 
 interface CellActionProps {
   data: ICategory
@@ -21,6 +23,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const navigate = useNavigate()
   const cateId = data.cateId
+  const [copyId, setCopyId] = useState<boolean>(false)
 
   const queryClient = useQueryClient()
 
@@ -55,9 +58,21 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     mutate(cateId as string)
   }
 
+  const onCopyId = () => {
+    navigator.clipboard
+      .writeText(cateId as string)
+      .then(() => {
+        setCopyId(true)
+        setTimeout(() => setCopyId(false), 2000)
+      })
+      .catch(() => setCopyId(false))
+  }
   return (
-    <div className="flex flex-row">
-      <div className="flex gap-2">
+    <div className="flex w-44 flex-row gap-2">
+      <div className="">
+        <ViewCategoryDetail categoryId={cateId as string} />
+      </div>
+      <div className="">
         <UpdateCategory categoryId={cateId as string} />
       </div>
       <DropdownMenu>
@@ -69,10 +84,22 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={onCopyId}>
+            {copyId ? (
+              <span className="flex flex-row items-center">
+                <CopyCheckIcon className="mr-2 h-4 w-4" /> Copied!
+              </span>
+            ) : (
+              <span className="flex flex-row items-center">
+                <CopyIcon className="mr-2 h-4 w-4" /> CopyId
+              </span>
+            )}
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate(`/admin/category/${data.cateId}`)}>
             <Edit className="mr-2 h-4 w-4" /> Detail
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onDelete}>
+            <DeleteIcon className="mr-2 h-4 w-4" />
             <div className="flex gap-2 ">Delete</div>
           </DropdownMenuItem>
         </DropdownMenuContent>

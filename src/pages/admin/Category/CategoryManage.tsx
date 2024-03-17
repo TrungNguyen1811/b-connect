@@ -1,21 +1,32 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
 import CategoryTable from 'src/components/table/category/category-table'
-import { columns } from 'src/components/table/category/column'
 import { CreateCategoryForm } from 'src/components/table/category/manage/create-category'
-import { useCategoryTable } from 'src/components/table/category/useCategoryTable'
 import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function CategoryManagerPage() {
-  const { data } = useCategoryTable(columns)
+  // const [categories, setCategories] = useState<ICategory[]>([])
 
-  const navigate = useNavigate()
-  const title = `Manage Category ()`
-  const description = 'Manage Categorys (Server side table functionalities.)'
+  // useEffect(() => {
+  //   const getCategories = async () => {
+  //     try {
+  //       const cate = await getAllCategoryNoParam()
+  //       setBlogList(cate.data)
+  //     } catch (error) {
+  //       console.error('Error fetching cate:', error)
+  //     }
+  //   }
+
+  //   getCategories()
+  // }, [])
+
+  // console.log('${data?.data.length', blogList)
+
+  const title = `Manage Category`
+  const description = 'Manage Categories (Server side table functionalities.)'
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     return [

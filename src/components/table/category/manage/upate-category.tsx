@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ICategory } from 'src/types'
 import { z } from 'zod'
-import { CategorySchema } from './validation'
+import { UpdateCategorySchema } from './validation'
 import { toast } from 'src/components/ui/use-toast'
 import { updateCategoryApi } from 'src/api/categories/update-category'
 import { getCategoryApi } from 'src/api/categories/get-category'
@@ -21,14 +21,14 @@ import { Button } from 'src/components/ui/button'
 import { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
 
-type FormData = z.infer<typeof CategorySchema>
+type FormData = z.infer<typeof UpdateCategorySchema>
 
 export function UpdateCategory({ categoryId }: { categoryId: string }) {
   const queryClient = useQueryClient()
   const [category, setCategory] = useState<ICategory | undefined>(undefined)
 
   const form = useForm<FormData>({
-    resolver: zodResolver(CategorySchema),
+    resolver: zodResolver(UpdateCategorySchema),
     defaultValues: {
       cateName: category?.cateName || '',
       description: category?.description || '',

@@ -46,7 +46,7 @@ function CategoryTable() {
           />
           <Pagination
             currentPage={tableStates.pagination.pageIndex + 1}
-            totalPage={data?._pagination?.totalPage || 1}
+            totalPage={data?._pagination?.TotalPages || 1}
             onPageChange={(index) => {
               table.setPageIndex(index - 1)
             }}
