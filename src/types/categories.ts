@@ -1,6 +1,6 @@
 export interface ICategory {
   cateId?: string
   cateName: string
-  imageDir?: string
+  imageDir?: File | null | string
   description?: string
 }

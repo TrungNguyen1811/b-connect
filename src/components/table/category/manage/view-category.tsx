@@ -9,7 +9,7 @@ import { Label } from '@radix-ui/react-label'
 
 export function ViewCategoryDetail({ categoryId }: { categoryId: string }) {
   const [category, setCategory] = useState<ICategory | undefined>(undefined)
-
+  console.log(category)
   const fetchDataAndUpdateForm = async () => {
     try {
       const fetchedCategory: ICategory = await getCategoryApi(categoryId)
@@ -61,7 +61,7 @@ export function ViewCategoryDetail({ categoryId }: { categoryId: string }) {
                   <Label>
                     <strong>Image</strong>
                   </Label>
-                  <img className="w-16" src={category?.description} />
+                  <img className="w-16" src={category?.imageDir as string} />
                 </div>
               </CardContent>
             </Card>

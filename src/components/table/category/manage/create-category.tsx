@@ -21,7 +21,14 @@ export function CreateCategoryForm() {
 
   const queryClient = useQueryClient()
 
-  const { mutate: addCategory } = useMutation((data: CategoryFormValues) => postCategoryApi(data), {
+  const { mutate: addCategory } = useMutation({
+    mutationFn: (data: CategoryFormValues) => {
+      const formData = {
+        ...data,
+        imageDir: data.imageDir,
+      }
+      return postCategoryApi(formData)
+    },
     onSuccess: (data) => {
       if (data) {
         toast({
@@ -94,7 +101,7 @@ export function CreateCategoryForm() {
                   <FormItem>
                     <FormLabel>Images</FormLabel>
                     <FormControl>
-                      <Input type="file" accept="image/*" {...field} />
+                      <Input type="file" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

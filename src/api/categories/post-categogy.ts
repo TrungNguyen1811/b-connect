@@ -1,16 +1,19 @@
 import { axiosClient } from 'src/lib/axios'
-import { ICategory } from 'src/types'
 
-export async function postCategoryApi(data: ICategory) {
+export async function postCategoryApi(data: { cateName: string; description: string; imageDir: File | null }) {
   const formData = new FormData()
   formData.append('cateName', data.cateName)
   formData.append('description', data.description as string)
-  if (data.imageDir) {
+  if (data.imageDir instanceof File) {
     formData.append('imageDir', data.imageDir)
+  } else {
+    console.log('data.imageDir không phải là một đối tượng File hợp lệ')
   }
 
+  console.log('data.imageDir', data.imageDir)
+
   return await axiosClient
-    .post('/Category/add-category', data, {
+    .post('/Category/add-category', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -7,8 +7,10 @@ export async function updateCategoryApi(id: string, data: ICategory) {
   formData.append('cateName', data.cateName)
   formData.append('description', data.description as string)
   if (data.imageDir) {
-    formData.append('imageDir', data.imageDir)
+    formData.append('imageDir', data.imageDir as File)
   }
+
+  console.log('data.imageDir', data.imageDir)
 
   return await axiosClient
     .put('/Category/update-category', formData, {

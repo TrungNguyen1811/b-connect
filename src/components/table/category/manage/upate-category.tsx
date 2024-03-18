@@ -36,24 +36,28 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
     },
   })
 
-  const { mutate: updateCategory } = useMutation(
-    (updatedData: Partial<ICategory>) => updateCategoryApi(categoryId, updatedData as ICategory),
-    {
-      onSuccess: (updatedCategory) => {
-        toast({
-          title: 'Successful!!',
-          description: 'Update Category Success',
-        })
-        setCategory(updatedCategory)
-        queryClient.invalidateQueries()
-      },
-      onError: () => {
-        toast({
-          title: 'Error updating category',
-        })
-      },
+  const { mutate: updateCategory } = useMutation({
+    mutationFn: (updatedData: FormData) => {
+      const formData = {
+        ...updatedData,
+        imageDir: updatedData.image,
+      }
+      return updateCategoryApi(categoryId, formData)
     },
-  )
+    onSuccess: (updatedCategory) => {
+      toast({
+        title: 'Successful!!',
+        description: 'Update Category Success',
+      })
+      setCategory(updatedCategory)
+      queryClient.invalidateQueries()
+    },
+    onError: () => {
+      toast({
+        title: 'Error updating category',
+      })
+    },
+  })
 
   const fetchDataAndUpdateForm = async () => {
     try {
@@ -79,13 +83,15 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
   }, [categoryId]) // Add key as dependency
 
   const onSubmit = (data: FormData) => {
-    const updatedData: Partial<ICategory> = {}
+    const updatedData: Partial<FormData> = {}
 
-    updatedData.cateName = data.cateName!
-    updatedData.description = data.description!
-    updatedData.imageDir = data.image!
+    updatedData.cateName = data.cateName as string
+    updatedData.description = data.description as string
+    updatedData.image = data.image as File
 
-    updateCategory(updatedData)
+    console.log('data.image', data.image as File)
+
+    updateCategory(data)
   }
 
   return (
@@ -139,10 +145,10 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
                     <FormItem>
                       <FormLabel> Image </FormLabel>
                       <FormLabel>
-                        <img width="h-54" src={category?.imageDir} />{' '}
+                        <img width="50px" src={category?.imageDir as string} />
                       </FormLabel>
                       <FormControl>
-                        <Input type="file" accept="image/*" {...field} />
+                        <Input type="file" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
                       </FormControl>
                       <FormDescription />
                       <FormMessage />

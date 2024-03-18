@@ -34,7 +34,7 @@ function Interested(id: any) {
         </div>
         <div className="flex flex-row items-end justify-between p-1 py-2">
           <Button onClick={() => unFollowingFromInterested(id as string)}>Following</Button>
-          <img className="h-14 w-14 rounded-sm" src={categories?.imageDir} />
+          <img className="h-14 w-14 rounded-sm" src={categories?.imageDir as string} />
         </div>
       </div>
     </div>
