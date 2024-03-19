@@ -5,7 +5,7 @@ export async function postCategoryApi(data: { cateName: string; description: str
   formData.append('cateName', data.cateName)
   formData.append('description', data.description as string)
   if (data.imageDir instanceof File) {
-    formData.append('imageDir', data.imageDir)
+    formData.append('cateImg', data.imageDir)
   } else {
     console.log('data.imageDir không phải là một đối tượng File hợp lệ')
   }

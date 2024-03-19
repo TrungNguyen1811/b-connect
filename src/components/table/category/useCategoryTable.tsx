@@ -6,20 +6,20 @@ import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
 import { ICategory } from 'src/types'
-import { getAllCategory } from 'src/api/categories/get-category'
+import { getSearchCategory } from 'src/api/categories/get-category'
 
 export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
   const [queries, setQueries] = useState<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
-    // PageNumber: 1,
-    // PageSize: 5,
+    PageNumber: 1,
+    PageSize: 5,
   })
 
   const queryController = useQuery<IResponse<ICategory[]>, AxiosError>(
     [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => getAllCategory(queries),
+    () => getSearchCategory(queries),
     {
       keepPreviousData: true,
     },
@@ -60,7 +60,7 @@ export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
       role: otherFilters?.[0]?.value,
       PageNumber: tableStates.pagination.pageIndex + 1,
       PageSize: tableStates.pagination.pageSize,
-      search: tableStates.globalFilter || undefined,
+      inputString: tableStates.globalFilter || undefined,
     }))
   }, [
     tableStates.columnFilters,

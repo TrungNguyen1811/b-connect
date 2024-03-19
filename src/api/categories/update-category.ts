@@ -7,7 +7,7 @@ export async function updateCategoryApi(id: string, data: ICategory) {
   formData.append('cateName', data.cateName)
   formData.append('description', data.description as string)
   if (data.imageDir) {
-    formData.append('imageDir', data.imageDir as File)
+    formData.append('cateImg', data.imageDir as File)
   }
 
   console.log('data.imageDir', data.imageDir)

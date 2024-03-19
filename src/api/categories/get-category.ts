@@ -102,3 +102,23 @@ export async function getAllCategoryNoParam() {
 export async function getCategoryApi(id: string) {
   return axiosClient.get(`Category/get-category-by-id?cateId=${id}`).then((res) => res.data)
 }
+
+export async function getSearchCategory(params: Partial<IQueryPagination & IQuerySearch>) {
+  return axiosClient
+    .get('/Category/search-category', {
+      params,
+    })
+    .then((res) => {
+      const data: ICategory[] = res.data
+      console.log('data', data)
+      const pagination = res.headers['x-pagination']
+      // const parseJson: IQueryPagination = JSON.parse(pagination)
+      // console.log('a', parseJson)
+      const dataAll: IResponse<ICategory[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: pagination,
+      }
+      return dataAll
+    })
+}
