@@ -1,7 +1,10 @@
 import { z } from 'zod'
 
 export const ProfileShopSchema = z.object({
-  name: z.string(),
-  image: z.any(),
-  description: z.string(),
+  agencyId: z.string(),
+  ownerId: z.string(),
+  agencyName: z.string(),
+  postAddress: z.string(),
+  businessType: z.enum(['Individual', 'Company']),
+  logoImg: z.any(),
 })

@@ -2,7 +2,7 @@ import { AxiosError } from 'axios'
 import { authAxiosClient } from 'src/lib/axios'
 import { IAgency } from 'src/types/agency'
 
-async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null, result: string | null) => void) {
+async function UpdateAgency(data: IAgency, callback: (error: AxiosError | null, result: string | null) => void) {
   const formData = new FormData()
   formData.append('ownerId', data.ownerId as string)
   formData.append('agencyName', data.agencyName as string)
@@ -11,7 +11,7 @@ async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null
   formData.append('businessType', data.businessType as string)
 
   return await authAxiosClient
-    .post('/Account/register-agency', formData, {
+    .put('/Account/update-agency', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -26,4 +26,4 @@ async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null
     })
 }
 
-export { RegisterAgency }
+export { UpdateAgency }

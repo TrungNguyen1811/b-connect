@@ -21,6 +21,7 @@ import { getUserProfileApi } from 'src/api/apis/auth/profile.api'
 
 const SubscribeSchema = z.object({
   agencyName: z.string().min(3),
+  logoImg: z.any(),
   rendezvous: z.string(),
   businessType: z.enum(['Individual', 'Company']),
 })
@@ -35,20 +36,44 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
   })
   const navigate = useNavigate()
 
+  const resetUser = async () => {
+    await getUserProfileApi((err, user) => {
+      if (err) {
+        toast({
+          title: err.message,
+          description: err.cause?.message,
+          variant: 'destructive',
+        })
+      } else {
+        if (!user) {
+          return
+        }
+        const token = localStorage.getItem('token') as string
+        login({ user, token })
+        if (user.isSeller === true) {
+          navigate('/seller')
+        }
+      }
+    })
+  }
+
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
     const mergedData = {
       ...data,
       ownerId: user?.userId,
+      logoImg: data.logoImg as File,
     }
     let error: AxiosError | null = null
     console.log('user?.isValidated', user?.isValidated)
-    if (user?.isValidated === false) {
-      await SetIsAccountValidates(user?.userId as string, (err, data) => {
+
+    if (user?.isValidated == false) {
+      await SetIsAccountValidates(user?.userId as string, async (err, data) => {
         if (err) {
           error = err
           return
         } else {
+          resetUser()
           toast({
             title: 'Update validate success',
             description: data,
@@ -73,32 +98,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
               description: data,
               variant: 'success',
             })
-            await getUserProfileApi((err, user) => {
-              if (err) {
-                toast({
-                  title: err.message,
-                  description: err.cause?.message,
-                  variant: 'destructive',
-                })
-              } else {
-                if (!user) {
-                  return
-                }
-                const token = localStorage.getItem('token') as string
-                login({ user, token })
-                if (user.isSeller === true || user.isValidated === true) {
-                  navigate('/seller')
-                } else {
-                  navigate('/')
-                }
-              }
-            })
-            //   if (err.isSeller === true || err.isValidated === true) {
-            //     navigate('/seller/dashboard')
-            //   } else {
-            //     navigate('/')
-            //   }
-            //   navigate('/seller')
+            resetUser()
           }
         })
       }
@@ -108,7 +108,8 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
           variant: 'destructive',
         })
       }
-    } else {
+    }
+    if (user?.isValidated == true) {
       await RegisterAgency(mergedData, async (err, data) => {
         if (err) {
           toast({
@@ -125,32 +126,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
             description: data,
             variant: 'success',
           })
-          await getUserProfileApi((err, user) => {
-            if (err) {
-              toast({
-                title: err.message,
-                description: err.cause?.message,
-                variant: 'destructive',
-              })
-            } else {
-              if (!user) {
-                return
-              }
-              const token = localStorage.getItem('token') as string
-              login({ user, token })
-              if (user.isSeller === true || user.isValidated === true) {
-                navigate('/seller')
-              } else {
-                navigate('/')
-              }
-            }
-          })
-          //   if (err.isSeller === true || err.isValidated === true) {
-          //     navigate('/seller/dashboard')
-          //   } else {
-          //     navigate('/')
-          //   }
-          //   navigate('/seller')
+          resetUser()
         }
       })
     }
@@ -178,6 +154,20 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
                 <FormLabel>Name Shop</FormLabel>
                 <FormControl>
                   <Input defaultValue={user?.username} disabled={isLoading} placeholder="Store A" {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="logoImg"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Logo Shop</FormLabel>
+                <FormControl>
+                  <Input type="file" accept="image/*" disabled={isLoading} {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />

@@ -148,7 +148,11 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
                         <img width="50px" src={category?.imageDir as string} />
                       </FormLabel>
                       <FormControl>
-                        <Input type="file" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                        />
                       </FormControl>
                       <FormDescription />
                       <FormMessage />
