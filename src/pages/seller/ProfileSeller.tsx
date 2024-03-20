@@ -21,8 +21,15 @@ function ProfileSeller() {
   const [isEdit, setIsEdit] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const agency = user?.agencies?.[0]
+  console.log('agency', agency)
   const form = useForm<FormData>({
     resolver: zodResolver(ProfileShopSchema),
+    defaultValues: {
+      agencyName: agency?.agencyName || '',
+      logoImg: agency?.logoUrl,
+      businessType: agency?.businessType,
+      postAddress: agency?.postAddressId,
+    },
   })
 
   const onSubmit = async (data: FormData) => {
@@ -46,6 +53,7 @@ function ProfileSeller() {
         if (!user) {
           return
         }
+        console.log(result)
         toast({
           title: 'Register Success',
           variant: 'success',
@@ -95,7 +103,7 @@ function ProfileSeller() {
                       <FormItem className="flex flex-row items-center">
                         <FormLabel className="w-36 text-right">Name Shop</FormLabel>
                         <FormControl className="ml-8">
-                          <Input defaultValue={agency?.agencyName} disabled={isLoading} {...field} />
+                          <Input disabled={isLoading} {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -128,12 +136,7 @@ function ProfileSeller() {
                       <FormItem className="my-4 flex flex-row items-baseline">
                         <FormLabel className="w-36 text-right">Address</FormLabel>
                         <FormControl className="ml-8">
-                          <Textarea
-                            className="h-24"
-                            defaultValue={agency?.postAddressId}
-                            disabled={isLoading}
-                            {...field}
-                          />
+                          <Textarea className="h-24" disabled={isLoading} {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -147,7 +150,6 @@ function ProfileSeller() {
                         <FormControl className="ml-8">
                           <RadioGroup
                             onValueChange={(value) => form.setValue('businessType', value as 'Individual' | 'Company')}
-                            defaultValue={field.value}
                             className="flex flex-row justify-between"
                             defaultChecked={true}
                           >
@@ -199,8 +201,8 @@ function ProfileSeller() {
                 <p className="ml-8">{agency?.agencyName}</p>
               </div>
               <div className="flex flex-row py-2">
-                <p className="w-36 text-right">Logo Shop</p>
-                <Avatar>
+                <p className=" w-36 text-right">Logo Shop</p>
+                <Avatar className="ml-8 h-36 w-36">
                   <AvatarImage src={agency?.logoUrl as string} />
                 </Avatar>
               </div>

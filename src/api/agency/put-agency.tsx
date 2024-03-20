@@ -4,6 +4,7 @@ import { IAgency } from 'src/types/agency'
 
 async function UpdateAgency(data: IAgency, callback: (error: AxiosError | null, result: string | null) => void) {
   const formData = new FormData()
+  formData.append('agencyId', data.agencyId as string)
   formData.append('ownerId', data.ownerId as string)
   formData.append('agencyName', data.agencyName as string)
   formData.append('logoImg', data.logoImg as File)
