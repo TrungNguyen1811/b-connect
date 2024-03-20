@@ -63,7 +63,7 @@ function UserDetailDialog({ children, user }: Props) {
             </div>
             <div className="flex-column flex">
               <Label className="font-semibold">Blocked: </Label>
-              <p className="pl-5 text-sm text-gray-700">{user?.blocked ? <Check /> : <DoorClosedIcon />}</p>
+              <p className="pl-5 text-sm text-gray-700">{user?.isBanned ? <Check /> : <DoorClosedIcon />}</p>
             </div>
             <div className=" flex-column flex">
               <Label className="font-semibold">Blocked Date:</Label>
