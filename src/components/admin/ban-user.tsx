@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 'src/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel } from 'src/components/ui/form'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { IBan } from 'src/types/ban'
-import { Input } from 'src/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
-import { Button } from 'src/components/ui/button'
+import { Input } from '../ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Button } from '../ui/button'
 import { cn } from 'src/lib/utils'
 import { CalendarHeart } from 'lucide-react'
 import {
@@ -15,13 +15,13 @@ import {
   differenceInSeconds,
   format,
 } from 'date-fns'
-import { Calendar } from 'src/components/ui/calendar'
+import { Calendar } from '../ui/calendar'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postBanUser } from 'src/api/admin/ban-user'
-import { toast } from 'src/components/ui/use-toast'
+import { toast } from '../ui/use-toast'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from 'src/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 const DATE_REQUIRED_ERROR = 'Date is required.'
 
 const FormSchema = z.object({

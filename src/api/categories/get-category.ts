@@ -112,13 +112,15 @@ export async function getSearchCategory(params: Partial<IQueryPagination & IQuer
       const data: ICategory[] = res.data
       console.log('data', data)
       const pagination = res.headers['x-pagination']
-      // const parseJson: IQueryPagination = JSON.parse(pagination)
-      // console.log('a', parseJson)
+      const parseJson: IQueryPagination = JSON.parse(pagination)
+      console.log('a', parseJson)
       const dataAll: IResponse<ICategory[]> = {
         data: data,
         _metadata: data,
-        _pagination: pagination,
+        _pagination: parseJson,
       }
+      console.log('dataAll', dataAll)
+
       return dataAll
     })
 }

@@ -14,7 +14,17 @@ export interface User {
   username: string
   password?: string
   passwordAttempt?: number
-  blocked?: boolean
+  isBanned?: boolean
+  agencies?: [
+    {
+      agencyId?: string
+      agencyName?: string
+      ownerId?: string
+      postAddressId?: string
+      logoUrl?: string
+      businessType?: 'Individual' | 'Company'
+    },
+  ]
   blockedDate?: Date
   salt?: string
   interested?: IInterested['userId']

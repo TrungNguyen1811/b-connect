@@ -13,8 +13,8 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
-    page: 0,
-    perPage: 10,
+    PageNumber: 1,
+    PageSize: 10,
   })
 
   const queryController = useQuery<IResponse<User[]>, AxiosError>(
@@ -31,8 +31,8 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     manualPagination: true,
     initialState: {
       pagination: {
-        pageIndex: queries.page || 1 - 1,
-        pageSize: queries.perPage,
+        pageIndex: queries.PageNumber || 1 - 1,
+        pageSize: queries.PageSize,
       },
       globalFilter: queries.search,
     },

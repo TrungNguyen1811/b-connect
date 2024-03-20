@@ -17,7 +17,7 @@ import {
 } from 'date-fns'
 import { Calendar } from 'src/components/ui/calendar'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { postBanUser } from 'src/api/admin/ban-user'
+import { postUpdateBanUser } from 'src/api/admin/ban-user'
 import { toast } from 'src/components/ui/use-toast'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -40,7 +40,7 @@ const FormSchema = z.object({
 })
 
 type FormData = z.infer<typeof FormSchema>
-function BanUser({ userId }: { userId: string }) {
+function UpdateBanUser({ userId }: { userId: string }) {
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -52,7 +52,7 @@ function BanUser({ userId }: { userId: string }) {
     },
   })
   const query = useQueryClient()
-  const banUser = useMutation((formData: IBan) => postBanUser(formData), {
+  const banUser = useMutation((formData: IBan) => postUpdateBanUser(formData), {
     onSuccess: (data) => {
       if (data) {
         toast({
@@ -106,11 +106,11 @@ function BanUser({ userId }: { userId: string }) {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button>Ban</Button>
+        <Button>Update Ban</Button>
       </DialogTrigger>
       <DialogContent className="mt-16">
         <DialogHeader>
-          <DialogTitle>Ban User</DialogTitle>
+          <DialogTitle>Update Ban User</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -202,4 +202,4 @@ function BanUser({ userId }: { userId: string }) {
     </Dialog>
   )
 }
-export default BanUser
+export default UpdateBanUser
