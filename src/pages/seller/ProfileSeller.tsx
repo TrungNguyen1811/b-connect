@@ -1,8 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { getAgencyByUserId } from 'src/api/agency/get-agency'
 import { UpdateAgency } from 'src/api/agency/put-agency'
 import { ProfileShopSchema } from 'src/components/seller/schema/profile-shop'
 import { Avatar, AvatarImage } from 'src/components/ui/avatar'
@@ -21,24 +20,18 @@ function ProfileSeller() {
   const { user } = useAuth()
   const [isEdit, setIsEdit] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [agency, setAgency] = useState<IAgency>()
+  const agency = user?.agencies?.[0]
   const form = useForm<FormData>({
     resolver: zodResolver(ProfileShopSchema),
   })
 
-  useEffect(() => {
-    const getAgency = async () => {
-      const agencyProfile = await getAgencyByUserId('43f70ef5-f41c-4fea-9f6e-8b16b7a9b435')
-      setAgency(agencyProfile)
-    }
-    getAgency()
-  }, [user])
-
   const onSubmit = async (data: FormData) => {
-    console.log('submit')
+    console.log('submit', data)
     setIsLoading(true)
     const formData: IAgency = {
       ...data,
+      ownerId: user?.userId,
+      agencyId: agency?.agencyId,
       logoImg: data.logoImg as File,
     }
 
@@ -115,7 +108,7 @@ function ProfileSeller() {
                         <FormLabel className="w-32 text-right">Logo Shop</FormLabel>
                         <FormLabel className="ml-8">
                           <Avatar className="h-36 w-36">
-                            <AvatarImage src="https://scontent.fdad3-5.fna.fbcdn.net/v/t1.6435-9/152548127_1142266502879868_4370024121540699291_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=h46o93PwZ3sAX9oKYRI&_nc_ht=scontent.fdad3-5.fna&oh=00_AfA1QaidP-PACYyZ_lOE_GEICodpH-tyobrtoOu-Wfg1-g&oe=661CE105" />
+                            <AvatarImage src={agency?.logoUrl} />
                           </Avatar>
                         </FormLabel>
                         <FormControl className="ml-2 w-[50%]">
@@ -137,7 +130,7 @@ function ProfileSeller() {
                         <FormControl className="ml-8">
                           <Textarea
                             className="h-24"
-                            defaultValue={agency?.rendezvous}
+                            defaultValue={agency?.postAddressId}
                             disabled={isLoading}
                             {...field}
                           />
@@ -208,15 +201,15 @@ function ProfileSeller() {
               <div className="flex flex-row py-2">
                 <p className="w-36 text-right">Logo Shop</p>
                 <Avatar>
-                  <AvatarImage src={agency?.logoImg as string} />
+                  <AvatarImage src={agency?.logoUrl as string} />
                 </Avatar>
               </div>
-              <div className="flex flex-row">
+              <div className="flex flex-row py-2">
                 <p className="w-36 text-right">Address Shop</p>
-                <p className="ml-8">{agency?.rendezvous}</p>
+                <p className="ml-8">{agency?.postAddressId}</p>
               </div>
               <div className="flex flex-row">
-                <p className="w-36 text-right">businessType Shop</p>
+                <p className="w-36 text-right">Business Type</p>
                 <p className="ml-8">{agency?.businessType}</p>
               </div>
             </div>
