@@ -34,8 +34,10 @@ const CheckoutPage = () => {
   console.log('checkoutUrl', checkoutUrl)
   const { state } = useParams()
   const [order, setOrder] = useState<ICart[]>([])
+
   const [checkoutData, setCheckoutData] = useState<ICheckout | null>(null)
   // const navigate = useNavigate()
+  console.log('checkoutData', checkoutData)
 
   useEffect(() => {
     if (state) {
@@ -79,15 +81,15 @@ const CheckoutPage = () => {
     const processAllBooksData = async () => {
       try {
         for (const book of bookData) {
-          if (book && book.sellerId) {
-            if (!groupedByStore[book.sellerId]) {
-              groupedByStore[book.sellerId] = []
+          if (book && book.agencyId) {
+            if (!groupedByStore[book.agencyId]) {
+              groupedByStore[book.agencyId] = []
             }
-            groupedByStore[book.sellerId].push({
+            groupedByStore[book.agencyId].push({
               book: book,
               productId: book.productId,
               quantity: order.find((item) => item.productId === book.productId)?.quantity || 0,
-              agencyId: book.sellerId,
+              agencyId: book.agencyId,
             })
           }
         }
@@ -195,7 +197,7 @@ const CheckoutPage = () => {
                 {cartItemsByStore[seller].map((item, idx) => (
                   <TableRow key={idx}>
                     <TableCell colSpan={4} className="font-bold">
-                      Store {item.book.sellerName}
+                      Store {item.book.agencyName}
                     </TableCell>
                   </TableRow>
                 ))}

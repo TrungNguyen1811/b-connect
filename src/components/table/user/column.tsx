@@ -28,6 +28,10 @@ export const columns: ColumnDef<User>[] = [
     header: 'Full Name',
   },
   {
+    accessorKey: 'username',
+    header: 'Username',
+  },
+  {
     accessorKey: 'email',
     header: 'Email',
   },
@@ -37,6 +41,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     id: 'action',
+    header: 'Action',
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ]

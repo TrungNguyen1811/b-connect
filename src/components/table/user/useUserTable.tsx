@@ -14,7 +14,7 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
     PageNumber: 1,
-    PageSize: 10,
+    PageSize: 5,
   })
 
   const queryController = useQuery<IResponse<User[]>, AxiosError>(
@@ -57,8 +57,8 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     setQueries((prev) => ({
       ...prev,
       role: otherFilters?.[0]?.value,
-      page: tableStates.pagination.pageIndex + 1,
-      perPage: tableStates.pagination.pageSize,
+      PageNumber: tableStates.pagination.pageIndex + 1,
+      PageSize: tableStates.pagination.pageSize,
       search: tableStates.globalFilter || undefined,
     }))
   }, [

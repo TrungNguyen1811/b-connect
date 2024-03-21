@@ -8,9 +8,9 @@ export interface IBook {
   image?: string
   description: string
   price: number
-  quantity: number
-  sellerId: string
-  sellerName: string
+  stock: number
+  agencyId: string
+  agencyName: string
   category?: ICategory['cateId']
   reviews?: IReview['reviewId']
   ratingId?: string

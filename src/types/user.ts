@@ -42,3 +42,9 @@ export enum ROLE {
   CUSTOMER = 'CUSTOMER',
   BASEUSER = 'BaseUser',
 }
+
+export interface IRole {
+  roleId?: string
+  roleName?: string
+  description?: string
+}

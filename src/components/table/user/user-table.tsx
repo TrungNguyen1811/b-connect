@@ -15,8 +15,8 @@ function UserTable() {
       <UserTableToolbar
         table={table}
         queries={{
-          page: tableStates.pagination.pageIndex + 1,
-          pageSize: tableStates.pagination.pageSize,
+          PageNumber: tableStates.pagination.pageIndex + 1,
+          PageSize: tableStates.pagination.pageSize,
           search: tableStates.globalFilter,
         }}
         setSearchQuery={(value) => {

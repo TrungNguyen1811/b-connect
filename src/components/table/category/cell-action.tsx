@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
-import { CopyCheckIcon, CopyIcon, DeleteIcon, Edit, MoreHorizontal } from 'lucide-react'
+import { CopyCheckIcon, CopyIcon, DeleteIcon, MoreHorizontal } from 'lucide-react'
 import { ICategory } from 'src/types'
 import { deleteCategory } from 'src/api/categories/delete-category'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -21,7 +20,6 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const navigate = useNavigate()
   const cateId = data.cateId
   const [copyId, setCopyId] = useState<boolean>(false)
 
@@ -94,9 +92,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
                 <CopyIcon className="mr-2 h-4 w-4" /> CopyId
               </span>
             )}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate(`/admin/category/${data.cateId}`)}>
-            <Edit className="mr-2 h-4 w-4" /> Detail
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onDelete}>
             <DeleteIcon className="mr-2 h-4 w-4" />

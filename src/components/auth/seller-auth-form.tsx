@@ -66,7 +66,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
     }
     let error: AxiosError | null = null
     console.log('user?.isValidated', user?.isValidated)
-
+    resetUser()
     if (user?.isValidated == false) {
       await SetIsAccountValidates(user?.userId as string, async (err, data) => {
         if (err) {

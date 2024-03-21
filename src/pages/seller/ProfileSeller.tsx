@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { UpdateAgency } from 'src/api/agency/put-agency'
 import { ProfileShopSchema } from 'src/components/seller/schema/profile-shop'
 import { Avatar, AvatarImage } from 'src/components/ui/avatar'
@@ -21,7 +21,6 @@ function ProfileSeller() {
   const [isEdit, setIsEdit] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const agency = user?.agencies?.[0]
-  console.log('agency', agency)
   const form = useForm<FormData>({
     resolver: zodResolver(ProfileShopSchema),
     defaultValues: {
@@ -31,6 +30,8 @@ function ProfileSeller() {
       postAddress: agency?.postAddressId,
     },
   })
+
+  const navigate = useNavigate()
 
   const onSubmit = async (data: FormData) => {
     console.log('submit', data)
@@ -144,7 +145,7 @@ function ProfileSeller() {
                   <FormField
                     control={form.control}
                     name="businessType"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem className="flex flex-row items-baseline">
                         <FormLabel className="w-36 text-right">Business Type Shop</FormLabel>
                         <FormControl className="ml-8">
@@ -189,7 +190,9 @@ function ProfileSeller() {
             <div className=" flex flex-row items-center justify-between">
               <p className="p-4 text-2xl">Information</p>
               <div className="flex flex-row justify-between">
-                <Button className="mr-4">View My Shop</Button>
+                <Button onClick={() => navigate(`/shop/${agency?.agencyId}`)} className="mr-4">
+                  View My Shop
+                </Button>
                 <Button onClick={() => setIsEdit(true)} className="mr-8">
                   Edit
                 </Button>

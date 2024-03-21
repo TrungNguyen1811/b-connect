@@ -2,6 +2,7 @@ import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { getBlogById } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
+import { getUserById } from 'src/api/user/get-user'
 
 import CategoryList from 'src/pages/blog/category-list'
 import BlogDetail from 'src/pages/blog/post-detail'
@@ -24,13 +25,13 @@ const SignUpPage = React.lazy(() => import('src/pages/(auth)/register/SignUpPage
 const AdminLayout = React.lazy(() => import('src/pages/layout/AdminLayout'))
 const DashboardPage = React.lazy(() => import('src/pages/admin/DashBoardPage'))
 const UserManagerPage = React.lazy(() => import('src/pages/admin/User/UserManage'))
-const CreateUserPage = React.lazy(() => import('src/pages/admin/User/CreateUserPage'))
+const UserDetailPage = React.lazy(() => import('src/pages/admin/User/UserDetailPage'))
 const CategoryManagerPage = React.lazy(() => import('src/pages/admin/Category/CategoryManage'))
 
 const ManagerLayout = React.lazy(() => import('src/pages/layout/ManagerLayout'))
 
-const Test = React.lazy(() => import('src/pages/seller/test'))
 const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
+const MyShop = React.lazy(() => import('src/pages/seller/MyShop'))
 const SubscribeSellerPage = React.lazy(() => import('src/pages/seller/SubscribeAgencyPage'))
 const DashboardSellerPage = React.lazy(() => import('src/pages/seller/DashboardSellerPage'))
 const AccountSeller = React.lazy(() => import('src/pages/seller/AccountSeller'))
@@ -96,6 +97,16 @@ export const ROUTES = createBrowserRouter([
         element: <CheckoutFailed />,
       },
       {
+        path: 'shop/:id',
+        // loader: async ({ params }) => {
+        //   const shop = await getAgencyById(params.id as string)
+        //   return {
+        //     shop,
+        //   }
+        // },
+        element: <MyShop />,
+      },
+      {
         element: <UserLayout />,
         children: [
           {
@@ -124,10 +135,6 @@ export const ROUTES = createBrowserRouter([
     ],
   },
   {
-    path: '/test',
-    element: <Test />,
-  },
-  {
     element: <AdminLayout />,
     children: [
       {
@@ -139,8 +146,12 @@ export const ROUTES = createBrowserRouter([
         element: <UserManagerPage />,
       },
       {
-        path: 'admin/manage/user/create',
-        element: <CreateUserPage />,
+        path: 'admin/manage/user/:id',
+        loader: async ({ params }) => {
+          const user = await getUserById(params.id as string)
+          return { user }
+        },
+        element: <UserDetailPage />,
       },
       {
         path: 'admin/manage/category',

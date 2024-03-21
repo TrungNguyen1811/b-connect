@@ -40,9 +40,10 @@ export const columns: ColumnDef<ICategory>[] = [
     header: 'Name',
     cell: ({ getValue }) => {
       const cateName = getValue() as string
-
-      const truncateName = cateName.length > 20 ? `${cateName.substring(0, 20)}...` : cateName
-      return <p className="w-[8rem]">{truncateName}</p>
+      if (cateName) {
+        const truncateName = cateName.length > 20 ? `${cateName.substring(0, 20)}...` : cateName
+        return <p className="w-[8rem]">{truncateName}</p>
+      } else return <p className="w-[8rem]">{cateName}</p>
     },
   },
   {

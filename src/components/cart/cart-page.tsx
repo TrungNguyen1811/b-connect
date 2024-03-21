@@ -42,7 +42,7 @@ function CartPage() {
   }, [cartItems])
 
   interface GroupedByStore {
-    [key: string]: { book: IBook; quantity: number; sellerName: string }[] // Mảng của đối tượng chứa thông tin sách và số lượng trong giỏ hàng
+    [key: string]: { book: IBook; quantity: number; agencyName: string }[] // Mảng của đối tượng chứa thông tin sách và số lượng trong giỏ hàng
   }
 
   const [cartItemsByStore, setCartItemsByStore] = useState<GroupedByStore>({})
@@ -50,34 +50,34 @@ function CartPage() {
   useEffect(() => {
     const groupedByStore: GroupedByStore = {}
 
-    const processBookData = async (book: IBook) => {
-      try {
-        if (book && book.productId) {
-          if (!groupedByStore[book.sellerId]) {
-            groupedByStore[book.sellerId] = []
-          }
-          groupedByStore[book.sellerId].push({
-            book: book,
-            quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
-            sellerName: book.sellerName,
-          })
-        }
-      } catch (error) {
-        console.error('Error processing book data:', error)
-      }
-    }
+    // const processBookData = async (book: IBook) => {
+    //   try {
+    //     if (book && book.productId) {
+    //       if (!groupedByStore[book.agencyId]) {
+    //         groupedByStore[book.agencyId] = []
+    //       }
+    //       groupedByStore[book.agencyId].push({
+    //         book: book,
+    //         quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
+    //         agencyName: book.agencyName,
+    //       })
+    //     }
+    //   } catch (error) {
+    //     console.error('Error processing book data:', error)
+    //   }
+    // }
 
     const processAllBooksData = async () => {
       try {
         for (const book of bookData) {
-          if (book && book.sellerId) {
-            if (!groupedByStore[book.sellerId]) {
-              groupedByStore[book.sellerId] = []
+          if (book && book.agencyId) {
+            if (!groupedByStore[book.agencyId]) {
+              groupedByStore[book.agencyId] = []
             }
-            groupedByStore[book.sellerId].push({
+            groupedByStore[book.agencyId].push({
               book: book,
               quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
-              sellerName: book.sellerName,
+              agencyName: book.agencyName,
             })
           }
         }
@@ -101,16 +101,16 @@ function CartPage() {
   }
 
   // Hàm kiểm tra xem tất cả các sản phẩm của một cửa hàng đã được chọn chưa
-  const isStoreSelected = (sellerId: string) => {
-    const storeItems = cartItemsByStore[sellerId] || []
+  const isStoreSelected = (agencyId: string) => {
+    const storeItems = cartItemsByStore[agencyId] || []
     return storeItems.every((item) => selectedItems.includes(item.book.productId))
   }
 
   // Hàm cập nhật danh sách sản phẩm đã chọn dựa trên cửa hàng
-  const handleStoreCheckboxChange = (sellerId: string) => {
-    const storeItems = cartItemsByStore[sellerId] || []
+  const handleStoreCheckboxChange = (agencyId: string) => {
+    const storeItems = cartItemsByStore[agencyId] || []
     const newSelectedItems = [...selectedItems]
-    if (isStoreSelected(sellerId)) {
+    if (isStoreSelected(agencyId)) {
       storeItems.forEach((item) => {
         const index = newSelectedItems.indexOf(item.book.productId)
         if (index !== -1) {
@@ -143,8 +143,8 @@ function CartPage() {
 
     // Cập nhật danh sách sản phẩm đã chọn để xóa
     const newSelectedItems: React.SetStateAction<string[]> = []
-    Object.keys(cartItemsByStore).forEach((sellerId) => {
-      cartItemsByStore[sellerId].forEach((item) => {
+    Object.keys(cartItemsByStore).forEach((agencyId) => {
+      cartItemsByStore[agencyId].forEach((item) => {
         newSelectedItems.push(item.book.productId)
       })
     })
@@ -153,7 +153,7 @@ function CartPage() {
 
   // Kiểm tra nếu có sản phẩm không được chọn thì tắt "Select all"
   useEffect(() => {
-    const allItemsSelected = Object.keys(cartItemsByStore).every((sellerId) => isStoreSelected(sellerId))
+    const allItemsSelected = Object.keys(cartItemsByStore).every((agencyId) => isStoreSelected(agencyId))
     setSelectAll(allItemsSelected)
   }, [selectedItems])
 
@@ -181,21 +181,21 @@ function CartPage() {
           </TableHeader>
           <TableBody>
             {cartItems && bookData && bookData.length > 0 ? (
-              Object.keys(cartItemsByStore).map((sellerId, index) => (
+              Object.keys(cartItemsByStore).map((agencyId, index) => (
                 <React.Fragment key={index}>
                   <TableRow>
                     <TableCell>
                       <input
                         type="checkbox"
-                        checked={isStoreSelected(sellerId)}
-                        onChange={() => handleStoreCheckboxChange(sellerId)}
+                        checked={isStoreSelected(agencyId)}
+                        onChange={() => handleStoreCheckboxChange(agencyId)}
                       />
                     </TableCell>
                     <TableCell colSpan={4} className="font-bold">
-                      Store {sellerId}
+                      Store {agencyId}
                     </TableCell>
                   </TableRow>
-                  {cartItemsByStore[sellerId].map((item, idx) => (
+                  {cartItemsByStore[agencyId].map((item, idx) => (
                     <TableRow key={idx}>
                       <TableCell>
                         <input

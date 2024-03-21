@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { ICart } from 'src/types'
+import { IBook, ICart } from 'src/types'
 import { useAuth } from './useAuth'
 import { getCartIdApi } from 'src/api/cart/get-cart-id'
 import { postCartApi } from 'src/api/cart/post-cart'
@@ -202,12 +202,12 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
   const userId: string = user?.userId as string
   const [cartData, setCartData] = useState<DataCart[]>([])
   const [cartId, setCartId] = useState<string>()
-  console.log('cartItems', cartItems)
+  console.log('cartData', cartData)
   useEffect(() => {
     const fetchCartData = async () => {
       try {
         const cartDataFromServer = await getCartApi(userId)
-        console.log('cart', cartDataFromServer)
+        console.log('cartDataFromServer', cartDataFromServer)
         setCartItems(cartDataFromServer)
         document.cookie = `cartItems_${userId}=${JSON.stringify(cartDataFromServer)}; path=/`
       } catch (error) {
@@ -224,7 +224,6 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     const fetchCartId = async () => {
       try {
         const fetchedCartId = await getCartIdApi(userId)
-        console.log('cartId', fetchedCartId)
         setCartId(fetchedCartId)
       } catch (error) {
         console.error('Error retrieving cartId:', error)
@@ -271,7 +270,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     } else {
       handleLogout()
     }
-  }, [logout, cartItems])
+  }, [logout, cartItems, cartData])
 
   const saveCartToDatabase = async (cartData: DataCart[]) => {
     try {
@@ -308,10 +307,10 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
         return book
       }
 
-      const book = await addBookToCart(_id)
-
-      if (book && book.quantity > 0) {
-        setCartItems([...cartItems, { productId: _id, quantity: 1, stock: book.quantity }])
+      const book: IBook = await addBookToCart(_id)
+      console.log('book', book)
+      if (book && book.stock > 0) {
+        setCartItems([...cartItems, { productId: _id, quantity: 1, stock: book.stock }])
       }
     }
   }
