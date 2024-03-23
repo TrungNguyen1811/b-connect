@@ -40,6 +40,7 @@ const IdentificationProfile = React.lazy(() => import('src/pages/seller/Identifi
 
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
+const IdentificationUser = React.lazy(() => import('src/pages/profile/identify'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
 
 const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
@@ -112,6 +113,10 @@ export const ROUTES = createBrowserRouter([
           {
             path: 'user/account/profile',
             element: <InfoAccount />,
+          },
+          {
+            path: 'user/account/identify',
+            element: <IdentificationUser />,
           },
           {
             path: 'user/account/password',

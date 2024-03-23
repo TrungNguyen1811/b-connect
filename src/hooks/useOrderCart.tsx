@@ -203,6 +203,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
   const [cartData, setCartData] = useState<DataCart[]>([])
   const [cartId, setCartId] = useState<string>()
   console.log('cartData', cartData)
+
   useEffect(() => {
     const fetchCartData = async () => {
       try {

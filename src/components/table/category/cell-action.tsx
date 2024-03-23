@@ -18,7 +18,6 @@ import { ViewCategoryDetail } from './manage/view-category'
 interface CellActionProps {
   data: ICategory
 }
-
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const cateId = data.cateId
   const [copyId, setCopyId] = useState<boolean>(false)

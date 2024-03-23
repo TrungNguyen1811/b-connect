@@ -7,6 +7,7 @@ import CheckoutSuccess from './success'
 import CheckoutFailed from './failed'
 import { useSearchParams } from 'react-router-dom'
 import { IOrder, IPaymentReturnDTO, ITransaction } from 'src/types'
+import { SaveTransaction } from 'src/api/order/post-transaction'
 
 function CheckoutResult() {
   const [searchParams] = useSearchParams()
@@ -14,6 +15,26 @@ function CheckoutResult() {
   const [transaction, setTransaction] = useState<ITransaction>()
   const [dataOrder, setDataOrder] = useState<IOrder>()
   const [isLoadingTransaction, setIsLoadingTransaction] = useState(true) // Biến trạng thái để kiểm tra xem giao dịch đã tải xong chưa
+
+  const token = localStorage.getItem('token') as string
+  console.log('token', token)
+  // useEffect(() => {
+  //   const resetUser = async () => {
+  //     await getUserProfileApi((err, user) => {
+  //       if (err) {
+  //         return err.message
+  //       } else {
+  //         if (!user) {
+  //           return
+  //         }
+  //         const token = localStorage.getItem('token') as string
+  //         console.log(token)
+  //       }
+  //     })
+  //   }
+
+  //   resetUser()
+  // }, [refId])
 
   useEffect(() => {
     const mergedDataString = localStorage.getItem('mergedData')
@@ -38,6 +59,10 @@ function CheckoutResult() {
         if (refId) {
           const transactionDetail = await getTransaction(refId)
           setTransaction(transactionDetail)
+          const saveTransaction = async () => {
+            await SaveTransaction(refId)
+          }
+          saveTransaction()
         }
       } catch (error) {
         console.error('Error fetching transaction:', error)

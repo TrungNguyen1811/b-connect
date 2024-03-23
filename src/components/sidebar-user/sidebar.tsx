@@ -8,6 +8,7 @@ import {
   BellDotIcon,
   CreditCardIcon,
   Edit,
+  FingerprintIcon,
   Info,
   ListOrderedIcon,
   MapPinIcon,
@@ -48,6 +49,12 @@ export default function Sidebar({ className }: SidebarProps) {
           icon: Info,
           color: 'text-red-500',
           href: '/user/account/profile',
+        },
+        {
+          title: 'identify',
+          icon: FingerprintIcon,
+          color: 'text-red-500',
+          href: '/user/account/identify',
         },
         {
           title: 'Bank',
