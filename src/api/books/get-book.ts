@@ -1,7 +1,8 @@
 import { IBook } from 'src/types/books'
 // import { faker } from '@faker-js/faker'
-import { IResponse } from 'src/types/response'
+import { IResponse, IResponsePagination } from 'src/types/response'
 import { axiosClient } from 'src/lib/axios'
+import { IDefaultQuery } from 'src/types/requests'
 
 // export function getBookById(id: string) {
 //   // TODO: Replace this with an actual API call
@@ -134,20 +135,39 @@ export async function getBookById(book_Id: string) {
     .then((res) => res.data)
 }
 
-// export type GetManyBooksParams = {
-//   genres?: string
-//   category?: string
-//   status?: 'NEW' | 'LIKE_NEW' | 'DAMAGED'
-// } & Partial<IDefaultQuery>
+export type GetManyBooksParams = {
+  genres?: string
+  category?: string
+  status?: 'NEW' | 'OLD'
+} & Partial<IDefaultQuery>
 
-// export async function getManyBooks(params: GetManyBooksParams) {
-//   return axiosClient
-//     .get('/api/products/get-all-book', {
-//       params,
-//     })
-//     .then((res) => res.data)
-// }
+export async function getManyBooks(params: GetManyBooksParams) {
+  return axiosClient
+    .get('/products/all', {
+      params,
+    })
+    .then((res) => {
+      const data: IBook[] = res.data
+      const pagination = res.headers['x-pagination']
+      const parseJson: IResponsePagination = JSON.parse(pagination)
+      const dataAll: IResponse<IBook[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: parseJson,
+      }
+      return dataAll
+    })
+}
 
-export async function getManyBooks() {
-  return axiosClient.get('/products/get-all-book', {}).then((res) => res.data)
+export async function getTopBooks() {
+  return axiosClient.get('/products/get-all-book', {}).then((res) => {
+    const data: IBook[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
 }

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { IResponse } from 'src/types/response'
+import { IResponse, IResponsePagination } from 'src/types/response'
 import { ICategory } from 'src/types'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -65,23 +65,19 @@ export function getManyCategories() {
 import { axiosClient } from 'src/lib/axios'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
-export async function getAllCategory(params: Partial<IQueryPagination & IQuerySearch>) {
-  return axiosClient
-    .get('/Category/get-all-category', {
-      params,
-    })
-    .then((res) => {
-      const data = res.data
-      const pagination = res.headers['x-pagination']
-      const parseJson: IQueryPagination = JSON.parse(pagination)
-      // console.log('a', parseJson)
-      const dataAll: IResponse<ICategory[]> = {
-        data: data,
-        _metadata: data,
-        _pagination: parseJson,
-      }
-      return dataAll
-    })
+export async function getAllCategory() {
+  return axiosClient.get('/Category/get-all-category?PageNumber=1&PageSize=30').then((res) => {
+    const data = res.data
+    const pagination = res.headers['x-pagination']
+    const parseJson: IResponsePagination = JSON.parse(pagination)
+    // console.log('a', parseJson)
+    const dataAll: IResponse<ICategory[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: parseJson,
+    }
+    return dataAll
+  })
 }
 
 export async function getAllCategoryNoParam() {
@@ -112,7 +108,7 @@ export async function getSearchCategory(params: Partial<IQueryPagination & IQuer
       const data: ICategory[] = res.data
       console.log('data', data)
       const pagination = res.headers['x-pagination']
-      const parseJson: IQueryPagination = JSON.parse(pagination)
+      const parseJson: IResponsePagination = JSON.parse(pagination)
       console.log('a', parseJson)
       const dataAll: IResponse<ICategory[]> = {
         data: data,

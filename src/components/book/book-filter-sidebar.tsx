@@ -16,17 +16,17 @@ import { SearchCategory } from './search-categories'
 type Props = {
   onFilterChange?: (filter: Record<string, unknown>) => void
   totalBooks?: number
-  onRentAll?: () => void
 }
 
 const FilterSchema = z.object({
-  search: z.string().optional(),
+  searchTerm: z.string().optional(),
   category: z.string().optional(),
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
   rating: z.string().optional(),
   status: z.string().optional(),
 })
+
 type FilterForm = z.infer<typeof FilterSchema>
 function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -44,14 +44,14 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
   }, [categories])
 
   useEffect(() => {
-    const search = searchParams.get('search') || ''
+    const search = searchParams.get('searchTerm') || ''
     const minPrice = searchParams.get('minPrice') || ''
     const maxPrice = searchParams.get('maxPrice') || ''
     const rating = searchParams.get('rating') || ''
     const category = searchParams.get('category') || ''
     const status = searchParams.get('status') || ''
 
-    setValue('search', search)
+    setValue('searchTerm', search)
     setValue('category', category)
     setValue('minPrice', minPrice)
     setValue('maxPrice', maxPrice)
@@ -67,7 +67,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     (data: FilterForm) => {
       const searchParams = new URLSearchParams()
 
-      data.search && searchParams.set('search', data.search)
+      data.searchTerm && searchParams.set('searchTerm', data.searchTerm)
       data.category && searchParams.set('category', data.category)
       data.minPrice && searchParams.set('minPrice', data.minPrice)
       data.maxPrice && searchParams.set('maxPrice', data.maxPrice)
@@ -97,9 +97,14 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
             <Filter /> <p className="pl-2 text-lg font-extrabold">Search Filter </p>
           </span>
           <Separator />
-          <div aria-label="search">
-            <Label htmlFor="search">Find book</Label>
-            <Input placeholder="Search name of book" id="search" {...control.register('search')} className="bg-card" />
+          <div aria-label="searchTerm">
+            <Label htmlFor="searchTerm">Find book</Label>
+            <Input
+              placeholder="Search name of book"
+              id="searchTerm"
+              {...control.register('searchTerm')}
+              className="bg-card"
+            />
           </div>
           <div>
             <Label htmlFor="category">Category</Label>

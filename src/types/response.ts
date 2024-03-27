@@ -14,3 +14,12 @@ export type IResponse<T> = {
 export type IErrorResponse = {
   message: string
 }
+
+export interface IResponsePagination {
+  TotalCount: number
+  PageSize: number
+  CurrentPage: number
+  TotalPages: number
+  HasNext: boolean
+  HasPrevious: boolean
+}

@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query'
 import { IResponse } from 'src/types/response'
 import { ICategory } from 'src/types'
 import { AxiosError } from 'axios'
-import { getManyCategories } from 'src/api/categories/get-category'
+import { getAllCategory } from 'src/api/categories/get-category'
 import Category from './card-category'
 import { ChevronRight } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 
 function Categories() {
-  const { data } = useQuery<IResponse<ICategory[]>, AxiosError>(['FeatureCategory'], () => getManyCategories(), {
+  const { data } = useQuery<IResponse<ICategory[]>, AxiosError>(['FeatureCategory'], () => getAllCategory(), {
     keepPreviousData: true,
   })
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import MetaData from '../metadata'
-import { getManyBooks } from 'src/api/books/get-book'
+import { getTopBooks } from 'src/api/books/get-book'
 import { useQuery } from '@tanstack/react-query'
 import { IResponse } from 'src/types/response'
 import { IBook } from 'src/types/books'
@@ -14,11 +14,12 @@ function DailyDiscover() {
 
   const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
     ['getManyBooks'], // Provide a unique key for this query
-    () => getManyBooks(), // Pass an empty object as the argument
+    () => getTopBooks(), // Pass an empty object as the argument
     {
       keepPreviousData: true,
     },
   )
+  console.log(data)
 
   const [displayedBooks, setDisplayedBooks] = useState(40)
 

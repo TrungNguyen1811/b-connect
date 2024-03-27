@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { ChevronRight } from 'lucide-react'
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { getManyBooks } from 'src/api/books/get-book'
+import { getTopBooks } from 'src/api/books/get-book'
 import { IBook } from 'src/types/books'
 import { IResponse } from 'src/types/response'
 import Book from './card-book'
@@ -22,9 +22,10 @@ function TopBook() {
   //   },
   // )
 
-  const { data } = useQuery<IResponse<IBook[]>, AxiosError>(['Top'], () => getManyBooks(), {
+  const { data } = useQuery<IResponse<IBook[]>, AxiosError>(['Top'], () => getTopBooks(), {
     keepPreviousData: true,
   })
+  console.log(data?.data)
 
   const renderBooks = useMemo(() => {
     return data?.data.map((book, index) => (

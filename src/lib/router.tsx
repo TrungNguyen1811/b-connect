@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
+import AddToCart from 'src/components/cart/add-to-cart'
 
 import CategoryList from 'src/pages/blog/category-list'
 import BlogDetail from 'src/pages/blog/post-detail'
@@ -77,6 +78,9 @@ export const ROUTES = createBrowserRouter([
           }
         },
         element: <BookDetailPage />,
+      },
+      {
+        element: <AddToCart />,
       },
       {
         path: 'view-cart',

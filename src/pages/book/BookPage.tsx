@@ -9,15 +9,18 @@ import useGetManyBooks from 'src/hooks/useGetManyBooks'
 import SortBook from 'src/components/book/sort-book'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
+import Pagination from 'src/components/ui/pagination'
+import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
+import { GetManyBooksParams } from 'src/api/books/get-book'
 
-// const initBookState: GetManyBooksParams = {
-//   page: 0,
-//   perPage: 40,
-//   authors: undefined,
-//   genres: undefined,
-//   reviews: undefined,
-//   search: undefined,
-// }
+const initBookState: GetManyBooksParams = {
+  PageNumber: 0,
+  PageSize: 2,
+  authors: undefined,
+  genres: undefined,
+  reviews: undefined,
+  search: undefined,
+}
 function BookPage() {
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     return [
@@ -36,49 +39,32 @@ function BookPage() {
     ]
   }, [])
 
-  // const [bookState, setBookState] = React.useState<GetManyBooksParams>(initBookState)
+  const [bookState, setBookState] = React.useState<GetManyBooksParams>(initBookState)
 
-  // const { data, isLoading, isError } = useGetManyBooks(bookState, {
-  //   refetchOnWindowFocus: false,
-  // })
-
-  const { data, isLoading, isError } = useGetManyBooks({
+  const { data, isLoading, isError } = useGetManyBooks(bookState, {
     refetchOnWindowFocus: false,
   })
 
   const renderBooks = React.useMemo(() => {
     if (isLoading) return <BookGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
-    if (!data || data.length === 0)
+    if (!data?.data || data.data.length === 0)
       return (
         <div className="col-span-full row-span-full h-full w-full">
           <h3 className="text-center text-slate-300">No result found</h3>
         </div>
       )
-    return data?.map((book) => {
+    return data?.data.map((book) => {
       return <Book key={book.productId} book={book} />
     })
-  }, [data, isLoading])
+  }, [data?.data, isLoading])
 
-  // const renderBooks = React.useMemo(() => {
-  //   if (isLoading) return <BookGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
-  //   if (!data?.data || data.data.length === 0)
-  //     return (
-  //       <div className="col-span-full row-span-full h-full w-full">
-  //         <h3 className="text-center text-slate-300">No result found</h3>
-  //       </div>
-  //     )
-  //   return data?.data.map((book) => {
-  //     return <Book key={book._id} book={book} />
-  //   })
-  // }, [data?.data, isLoading])
+  const totalPage = React.useMemo(() => {
+    return data?._pagination?.TotalPages || 1
+  }, [data?._pagination?.TotalPages])
 
-  // const totalPage = React.useMemo(() => {
-  //   return data?._pagination?.totalPage || 1
-  // }, [data?._pagination?.totalPage])
-
-  // const totalBook = React.useMemo(() => {
-  //   return data?._pagination?.total || 0
-  // }, [data?._pagination?.total])
+  const totalBook = React.useMemo(() => {
+    return data?._pagination?.TotalCount || 0
+  }, [data?._pagination?.TotalCount])
 
   if (isError) return <div>Something went wrong</div>
   return (
@@ -89,9 +75,9 @@ function BookPage() {
           <Breadcrumb items={breadcrumb} className="w-full pt-4" />
           <CarouselAdv />
           <Publishers />
-          <div className="mb-8 mt-8 flex w-full gap-2">
-            <section key="main.section.sidebar" className="sticky top-0 h-min w-1/5 rounded-md bg-accent">
-              {/* <BookFilterSidebar
+          <div className="mt-8 flex w-full gap-2 pb-8">
+            <section key="main.section.sidebar" className="sticky top-28 h-min w-1/5 rounded-md bg-accent">
+              <BookFilterSidebar
                 onFilterChange={(data) => {
                   setBookState((prev) => ({
                     ...prev,
@@ -99,48 +85,50 @@ function BookPage() {
                   }))
                 }}
                 totalBooks={totalBook}
-              /> */}
+              />
             </section>
             <div className="ml-8">
               <SortBook />
               <section key="main.section.books" className="grid flex-1 grid-cols-4 gap-5">
                 {renderBooks}
-                {/* <div className="col-span-full mx-auto w-fit">
+                <div className="col-span-full mx-auto w-fit">
                   <Pagination
-                    currentPage={bookState.page || 1}
+                    currentPage={bookState.PageNumber || 1}
                     totalPage={totalPage}
-                    onPageChange={(page) => {
+                    onPageChange={(PageNumber) => {
                       setBookState((prev) => ({
                         ...prev,
-                        page,
+                        PageNumber,
                       }))
                     }}
                     onFirstPage={() => {
-                      setBookState(() => ({
-                        page: 0,
+                      setBookState((prev) => ({
+                        ...prev,
+                        PageNumber: 1,
                       }))
                     }}
                     onPreviousPage={() => {
                       setBookState((prev) => ({
                         ...prev,
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        page: prev.page! - 1,
+                        PageNumber: prev.PageNumber! - 1,
                       }))
                     }}
                     onNextPage={() => {
                       setBookState((prev) => ({
                         ...prev,
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        page: prev.page! + 1,
+                        PageNumber: prev.PageNumber! + 1,
                       }))
                     }}
                     onLastPage={() => {
-                      setBookState(() => ({
-                        page: totalPage - 1,
+                      setBookState((prev) => ({
+                        ...prev,
+                        PageNumber: totalPage,
                       }))
                     }}
                   />
-                </div> */}
+                </div>
               </section>
             </div>
           </div>

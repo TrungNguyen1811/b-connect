@@ -1,12 +1,7 @@
 export interface IQueryPagination {
-  TotalCount: number
+  PageNumber: number
   PageSize: number
-  CurrentPage: number
-  TotalPages: number
-  HasNext: boolean
-  HasPrevious: boolean
 }
-
 export interface IQuerySearch {
   search: string
 }
