@@ -1,14 +1,14 @@
 import { NavLink } from 'react-router-dom'
 import { Facebook, Instagram } from 'lucide-react'
-import Notification from './notification'
+import Notification from '../nofication/notification'
 import Help from './help'
-import AuthPreview from './auth-preview'
+import AuthPreview from '../auth-preview/auth-preview'
 import { LanguageSelector } from '../language-selector'
 function Navigation() {
   return (
     <div className="m-1 flex items-center justify-between">
       <div className="flex">
-        <NavLink className={'nav-link'} to={'/'}>
+        <NavLink className={'nav-link'} to={'/seller'}>
           Seller Center
         </NavLink>
         <NavLink className={'hidden-on-mobile nav-link'} to={'/'}>

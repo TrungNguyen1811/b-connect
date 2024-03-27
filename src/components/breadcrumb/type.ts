@@ -5,3 +5,10 @@ export interface IBreadcrumb {
   href?: string
   isDisabled?: boolean
 }
+
+export interface IMenuItem {
+  key: string
+  title: string
+  icon?: string
+  href?: string
+}

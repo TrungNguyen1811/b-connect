@@ -1,15 +1,11 @@
 import { format, parseISO } from 'date-fns'
 import { Plus, Star } from 'lucide-react'
-import { Rating } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
-import React, { useCallback, useEffect, useId, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useEffect, useId, useMemo, useState } from 'react'
 // import { useForm } from 'react-hook-form'
 import { useLoaderData, useLocation } from 'react-router-dom'
-import BookGridLoading from 'src/components/book/book-grid-loading'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
-import Book from 'src/components/landing/card-book'
 import MetaData from 'src/components/metadata'
 import { Avatar, AvatarFallback, AvatarImage } from 'src/components/ui/avatar'
 import { Button } from 'src/components/ui/button'
@@ -19,7 +15,6 @@ import { Label } from 'src/components/ui/label'
 import { Separator } from 'src/components/ui/separator'
 import { useToast } from 'src/components/ui/use-toast'
 // import { useToast } from 'src/components/ui/use-toast'
-import useGetManyBooks from 'src/hooks/useGetManyBooks'
 import { useOrderCart } from 'src/hooks/useOrderCart'
 import { formatPrice } from 'src/lib/utils'
 import { IBook, IReview } from 'src/types/books'
@@ -38,14 +33,14 @@ function BookDetailPage() {
     setBook(data.book)
   }, [data])
 
-  const { data: relatedBooks, isLoading } = useGetManyBooks(
-    {
-      category: book?.category?.length && book.category.length > 0 ? book.category[0]._id : '',
-    },
-    {
-      enabled: !!book?.category,
-    },
-  )
+  // const { data: relatedBooks, isLoading } = useGetManyBooks(
+  //   {
+  //     category: book?.category?.length && book.category.length > 0 ? book.category[0]._id : '',
+  //   },
+  //   {
+  //     enabled: !!book?.category,
+  //   },
+  // )
 
   const { pathname } = useLocation()
   // const user = useAuth()
@@ -58,42 +53,42 @@ function BookDetailPage() {
     //   return
     // }
     if (book) {
-      addToCart(book._id as string)
+      addToCart(book.productId as string)
     }
   }
 
-  const renderRelatedBooks = React.useMemo(() => {
-    if (isLoading) return <BookGridLoading pageSize={4} />
+  // const renderRelatedBooks = React.useMemo(() => {
+  //   if (isLoading) return <BookGridLoading pageSize={4} />
 
-    if (!relatedBooks?.data) return null
+  //   if (!relatedBooks?.data) return null
 
-    const _relatedBooks =
-      relatedBooks?.data.slice(0, relatedBooks?.data.length > 4 ? 4 : relatedBooks?.data.length) || []
+  //   const _relatedBooks =
+  //     relatedBooks?.data.slice(0, relatedBooks?.data.length > 4 ? 4 : relatedBooks?.data.length) || []
 
-    return _relatedBooks?.map((book) => <Book key={book._id} book={book} />)
-  }, [isLoading, relatedBooks?.data])
+  //   return _relatedBooks?.map((book) => <Book key={book._id} book={book} />)
+  // }, [isLoading, relatedBooks?.data])
 
   const bookInCartAmount = useMemo(() => {
     if (!book) return 0
-    const bookInCart = cartItems.find((item) => item.productId === book._id)
+    const bookInCart = cartItems.find((item) => item.productId === book.productId)
     return bookInCart?.quantity || 0
   }, [book, cartItems])
 
-  const addReview = useCallback(
-    (review: IReview) => {
-      if (!book?.reviews) {
-        return
-      }
+  // const addReview = useCallback(
+  //   (review: IReview) => {
+  //     if (!book?.reviews) {
+  //       return
+  //     }
 
-      const updatedBook: IBook = {
-        ...book,
-        reviews: [...book.reviews, review],
-      }
+  //     const updatedBook: IBook = {
+  //       ...book,
+  //       reviews: [...book.reviews, review],
+  //     }
 
-      setBook(updatedBook)
-    },
-    [book],
-  )
+  //     setBook(updatedBook)
+  //   },
+  //   [book],
+  // )
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     const paths = pathname.split('/')
@@ -134,16 +129,16 @@ function BookDetailPage() {
   // }, [])
 
   const renderReviewer = React.useCallback(
-    ({ user_id, rating, updatedAt }: IReview) => (
+    ({ userId, rating, updatedAt }: IReview) => (
       <div className="flex w-full items-center gap-3">
         <Avatar>
-          <AvatarImage width={'50rem'} src={user_id.avatar} alt={`${user_id.email}`} />
+          <AvatarImage width={'50rem'} src={userId.avatar} alt={`${userId.email}`} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="flex flex-1 justify-between gap-4">
           <div>
-            <div className="text-lg font-medium">{user_id.fullName}</div>
-            <div className="text-slate-400">{user_id.email}</div>
+            <div className="text-lg font-medium">{userId.fullName}</div>
+            <div className="text-slate-400">{userId.email}</div>
           </div>
           <div className="flex flex-col items-end justify-end">
             <div className="flex gap-2">
@@ -167,7 +162,7 @@ function BookDetailPage() {
   const id = useId()
 
   // const { mutateAsync, isLoading: isAddReview } = useMutation({
-  //   mutationFn: postBookReview,
+  // mutationFn: postBookReview,
   //   onSuccess: (_, { data: { comment, rating } }) => {
   //     if (!book) return
 
@@ -188,21 +183,21 @@ function BookDetailPage() {
   //   },
   // })
 
-  const renderReviews = React.useMemo(() => {
-    return book?.reviews?.map((reviewer) => (
-      <div key={reviewer._id} className="mb-2 w-full">
-        {renderReviewer(reviewer)}
-        <p className="mt-2 w-3/4">{reviewer.details}</p>
-      </div>
-    ))
-  }, [book?.reviews, renderReviewer])
+  // const renderReviews = React.useMemo(() => {
+  //   return book?.reviews?.map((reviewer) => (
+  //     <div key={reviewer._id} className="mb-2 w-full">
+  //       {renderReviewer(reviewer)}
+  //       <p className="mt-2 w-3/4">{reviewer.details}</p>
+  //     </div>
+  //   ))
+  // }, [book?.reviews, renderReviewer])
 
-  const { setValue, watch, reset, register, handleSubmit } = useForm<FormValue>({
-    defaultValues: {
-      review: '',
-      rating: 5,
-    },
-  })
+  // const { setValue, watch, reset, register, handleSubmit } = useForm<FormValue>({
+  //   defaultValues: {
+  //     review: '',
+  //     rating: 5,
+  //   },
+  // })
 
   // const renderGenres = React.useMemo(() => {
   //   return book?.genres?.map((genre) => (
@@ -214,36 +209,50 @@ function BookDetailPage() {
   //   ))
   // }, [book?.genres])
 
-  const handleReviewSubmit = useCallback(
-    ({ rating, review }: FormValue) => {
-      const payload = {
-        comment: review,
-        rating,
-      }
+  // const handleReviewSubmit = useCallback(
+  //   ({ rating, review }: FormValue) => {
+  //     const payload = {
+  //       comment: review,
+  //       rating,
+  //     }
 
-      // mutateAsync({
-      //   book_Id: book?._id || '',
-      //   data: payload,
-      // })
-      //   .then(() => {
-      //     toast({
-      //       type: 'foreground',
-      //       title: 'Post a comment successfully',
-      //       description: 'Your comment have been recorded',
-      //     })
+  //     // mutateAsync({
+  //     //   book_Id: book?._id || '',
+  //     //   data: payload,
+  //     // })
+  //     //   .then(() => {
+  //     //     toast({
+  //     //       type: 'foreground',
+  //     //       title: 'Post a comment successfully',
+  //     //       description: 'Your comment have been recorded',
+  //     //     })
 
-      //     reset()
-      //   })
-      //   .catch((e) => {
-      //     toast({
-      //       type: 'foreground',
-      //       title: 'Error',
-      //       description: JSON.stringify(e),
-      //     })
-      //   })
-    },
-    [book?._id, reset, toast],
-  )
+  //     //     reset()
+  //     //   })
+  //     //   .catch((e) => {
+  //     //     toast({
+  //     //       type: 'foreground',
+  //     //       title: 'Error',
+  //     //       description: JSON.stringify(e),
+  //     //     })
+  //     //   })
+  //   },
+  //   [book?.productId, reset, toast],
+  // )
+
+  const carouselImages = [
+    'https://scontent.fsgn2-9.fna.fbcdn.net/v/t45.1600-4/424651322_120205246002150776_8767697774542782332_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=1&ccb=1-7&_nc_sid=528f85&_nc_ohc=LweRdoa9jAEAX-bYyjX&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCHqTorl1lCSTqlLOCp2hBJkRtU11Kzpko4dxNZGBEoDw&oe=65EAB968',
+    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
+    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
+    'https://scontent.fsgn2-9.fna.fbcdn.net/v/t45.1600-4/424651322_120205246002150776_8767697774542782332_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=1&ccb=1-7&_nc_sid=528f85&_nc_ohc=LweRdoa9jAEAX-bYyjX&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCHqTorl1lCSTqlLOCp2hBJkRtU11Kzpko4dxNZGBEoDw&oe=65EAB968',
+    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
+  ]
+  const [selectedImage, setSelectedImage] = useState(carouselImages[0])
+
+  // image show
+  const handleCarouselItemClick = (imageURL: React.SetStateAction<string>) => {
+    setSelectedImage(imageURL)
+  }
 
   return (
     <div className="mx-auto min-h-screen w-full bg-gray-200">
@@ -257,21 +266,29 @@ function BookDetailPage() {
               className="grid w-full grid-cols-1 place-items-start gap-4 py-2 md:grid-cols-3 md:gap-6"
             >
               <article className="ml-7 flex flex-col">
+                {/* Hiển thị ảnh được chọn từ carousel */}
                 <img
-                  src={book.image}
-                  alt={book.name}
+                  src={selectedImage}
+                  alt="Selected Image"
                   className="rounded-sm object-cover shadow-md"
                   height={450}
                   width={450}
                 />
+
                 <div className="flex flex-row">
+                  {/* Carousel */}
                   <Carousel className="h-[120px] w-[25rem] p-2">
                     <CarouselContent3>
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <CarouselItem key={index} className=" basis-9/9">
+                      {/* Render các carousel item */}
+                      {carouselImages.map((image, index) => (
+                        <CarouselItem key={index} className="basis-9/9">
                           <Card>
-                            <CardContent className=" flex aspect-square h-[100px] w-[100px] items-center justify-center p-6">
-                              <span className="text-4xl font-semibold">{index + 1}</span>
+                            <CardContent
+                              className="hover: flex aspect-square h-full w-[6rem] items-center justify-center rounded-md p-0 hover:border hover:border-red-500"
+                              onClick={() => handleCarouselItemClick(image)}
+                              onMouseEnter={() => handleCarouselItemClick(image)}
+                            >
+                              <img className="rounded-sm" src={image} />
                             </CardContent>
                           </Card>
                         </CarouselItem>
@@ -283,7 +300,7 @@ function BookDetailPage() {
                 </div>
               </article>
 
-              <article className="col-span-2 ml-24 space-y-8 rounded-lg">
+              <article className="col-span-2 ml-32 space-y-8 rounded-lg">
                 <div className="space-y-4">
                   <h3 className="text-3xl font-medium tracking-wide">
                     {book.name}
@@ -360,32 +377,34 @@ function BookDetailPage() {
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.reviews'} className="w-full py-10">
             <h3 className="mb-8 text-3xl font-medium">Reviewers ({book ? book.reviews?.length : 0})</h3>
-            <div className="my-4 space-y-8">{renderReviews}</div>
+            {/* <div className="my-4 space-y-8">{renderReviews}</div> */}
           </section>
           <Separator />
           <section key={'main.myurevbiew'} className="w-full py-10">
-            <form onSubmit={handleSubmit(handleReviewSubmit)} className="space-y-2">
+            <form className="space-y-2">
+              {/* <form onSubmit={handleSubmit(handleReviewSubmit)} className="space-y-2"> */}
+
               <div>
                 <Label>Rating</Label>
                 <div className="flex items-center gap-2">
-                  <Rating
+                  {/* <Rating
                     style={{ maxWidth: 100 }}
                     value={watch('rating')}
                     onChange={(value: number) => setValue('rating', value)}
                     // isDisabled={isAddReview}
-                  />
+                  /> */}
                   {/* {renderReviewRating(watch('rating'))} */}
                 </div>
               </div>
               <div>
                 <Label htmlFor="review">Your review</Label>
                 <Textarea
-                  placeholder={''}
-                  {...register('review', {
-                    minLength: 2,
-                    maxLength: 255,
-                  })}
-                  // disabled={isAddReview}
+                // placeholder={''}
+                // {...register('review', {
+                //   minLength: 2,
+                //   maxLength: 255,
+                // })}
+                // disabled={isAddReview}
                 />
               </div>
               <Button type="submit">Submit</Button>
@@ -424,7 +443,7 @@ function BookDetailPage() {
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.suggest'} className="min-h-[70vh] w-full py-10">
             <h3 className="text-3xl font-medium">You might also like</h3>
-            <div className="h-30 flex gap-3 py-4">{renderRelatedBooks}</div>
+            {/* <div className="h-30 flex gap-3 py-4">{renderRelatedBooks}</div> */}
           </section>
         </div>
       </div>

@@ -14,7 +14,7 @@ function DailyDiscover() {
 
   const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
     ['getManyBooks'], // Provide a unique key for this query
-    () => getManyBooks({}), // Pass an empty object as the argument
+    () => getManyBooks(), // Pass an empty object as the argument
     {
       keepPreviousData: true,
     },
@@ -23,10 +23,10 @@ function DailyDiscover() {
   const [displayedBooks, setDisplayedBooks] = useState(40)
 
   const handleSeeMoreClick = () => {
-    if (displayedBooks > 56) {
+    if (displayedBooks > 50) {
       navigate('/daily_discover?pageNumber=2')
     }
-    setDisplayedBooks((prevCount) => prevCount + 8)
+    setDisplayedBooks((prevCount) => prevCount + 10)
   }
 
   const renderBooks = React.useMemo(() => {
@@ -38,7 +38,11 @@ function DailyDiscover() {
       )
     }
 
-    return data?.data.slice(0, displayedBooks).map((book) => <BookDaily key={book._id} book={book} />)
+    return data?.data.slice(0, displayedBooks).map((book) => (
+      <div key={book.productId}>
+        <BookDaily book={book} />
+      </div>
+    ))
   }, [data?.data, displayedBooks])
 
   return (
@@ -50,7 +54,7 @@ function DailyDiscover() {
             <h2 className="text-2xl text-red-600">DAILY DISCOVER</h2>
           </div>
           <div className="mb-8 flex w-full gap-2">
-            <section key="main.section.books" className="grid flex-1 grid-cols-4 gap-4">
+            <section key="main.section.books" className="grid flex-1 grid-cols-5 gap-5">
               {renderBooks}
             </section>
           </div>

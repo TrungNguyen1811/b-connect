@@ -6,6 +6,7 @@ import { ROUTES } from './lib/router'
 import PageLoader from './components/page-loader'
 import { OrderCartProvider } from './hooks/useOrderCart'
 import { AuthProvider } from './components/auth/test-auth'
+import { Toaster } from './components/ui/toast-ter'
 
 export default function App() {
   const queryClient = useMemo(() => new QueryClient({}), [])
@@ -18,6 +19,7 @@ export default function App() {
           </Suspense>
         </OrderCartProvider>
       </AuthProvider>
+      <Toaster />
       <ReactQueryDevtools />
     </QueryClientProvider>
   )

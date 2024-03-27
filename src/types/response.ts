@@ -2,8 +2,12 @@ export type IResponse<T> = {
   data: T
   _metadata?: T | undefined
   _pagination?: {
-    total: number
-    totalPage: number
+    TotalCount: number
+    PageSize: number
+    CurrentPage: number
+    TotalPages: number
+    HasNext: boolean
+    HasPrevious: boolean
   }
 }
 

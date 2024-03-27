@@ -6,10 +6,10 @@ import { ICategory } from 'src/types'
 export function getCategoryById(id: string) {
   // TODO: Replace this with an actual API call
   const category: ICategory = {
-    _id: faker.string.uuid(),
+    cateId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
-    name: faker.lorem.word(),
-    img: faker.image.urlLoremFlickr({
+    cateName: faker.lorem.word(),
+    imageDir: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
     }),
@@ -25,10 +25,10 @@ export function getAllCategories(): Promise<ICategory[]> {
   // TODO: Replace this with an actual API call
 
   const categories: ICategory[] = Array.from({ length: 20 }, () => ({
-    _id: faker.string.uuid(),
+    cateId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
-    name: faker.lorem.sentence(),
-    img: faker.image.urlLoremFlickr({
+    cateName: faker.lorem.sentence(),
+    imageDir: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
     }),
@@ -45,11 +45,11 @@ export function getAllCategories(): Promise<ICategory[]> {
 export function getManyCategories() {
   // TODO: Replace this with an actual API call
 
-  const categories: ICategory[] = Array.from({ length: 16 }, () => ({
-    _id: faker.string.uuid(),
+  const categories: ICategory[] = Array.from({ length: 20 }, () => ({
+    cateId: faker.string.uuid(),
     description: faker.lorem.paragraphs(),
-    name: faker.lorem.sentence(),
-    img: faker.image.urlLoremFlickr({
+    cateName: faker.lorem.sentence(),
+    imageDir: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
     }),
@@ -67,8 +67,60 @@ import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
 export async function getAllCategory(params: Partial<IQueryPagination & IQuerySearch>) {
   return axiosClient
-    .get('/category/', {
+    .get('/Category/get-all-category', {
       params,
     })
-    .then((res) => res.data)
+    .then((res) => {
+      const data = res.data
+      const pagination = res.headers['x-pagination']
+      const parseJson: IQueryPagination = JSON.parse(pagination)
+      // console.log('a', parseJson)
+      const dataAll: IResponse<ICategory[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: parseJson,
+      }
+      return dataAll
+    })
+}
+
+export async function getAllCategoryNoParam() {
+  return axiosClient.get('/Category/get-all-category?PageNumber=1&PageSize=30', {}).then((res) => {
+    const data = res.data
+    // const pagination = res.headers['x-pagination']
+    // const parseJson: IQueryPagination = JSON.parse(pagination)
+    // // console.log('a', parseJson)
+    // const dataAll: IResponse<ICategory[]> = {
+    //   data: data,
+    //   _metadata: data,
+    //   _pagination: parseJson,
+    // }
+    return data
+  })
+}
+
+export async function getCategoryApi(id: string) {
+  return axiosClient.get(`Category/get-category-by-id?cateId=${id}`).then((res) => res.data)
+}
+
+export async function getSearchCategory(params: Partial<IQueryPagination & IQuerySearch>) {
+  return axiosClient
+    .get('/Category/search-category', {
+      params,
+    })
+    .then((res) => {
+      const data: ICategory[] = res.data
+      console.log('data', data)
+      const pagination = res.headers['x-pagination']
+      const parseJson: IQueryPagination = JSON.parse(pagination)
+      console.log('a', parseJson)
+      const dataAll: IResponse<ICategory[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: parseJson,
+      }
+      console.log('dataAll', dataAll)
+
+      return dataAll
+    })
 }

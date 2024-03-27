@@ -7,7 +7,7 @@ function Help() {
     <Dialog>
       <DialogTrigger className="flex">
         <HelpCircle size={20} />
-        <p className="hidden-on-mobile">Help</p>
+        <p className="hidden-on-mobile hidden-on-tablet">Help</p>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

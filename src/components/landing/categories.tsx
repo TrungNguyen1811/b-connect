@@ -15,48 +15,25 @@ function Categories() {
     keepPreviousData: true,
   })
 
-  // const renderCategories = React.useMemo(() => {
-  //   return data?.data.map((category, index) => (
-  //     <div key={index} className={`carousel-item mr-1 flex-none`}>
-  //       <Category category={category} />
-  //     </div>
-  //   ))
-  // }, [data?.data])
+  const renderCategories = (categories: ICategory[]) => {
+    return categories.map((category, index) => (
+      <div key={index} className="carousel-item flex-none lg:space-x-4 lg:pb-4 lg:pr-4">
+        <Category category={category} />
+      </div>
+    ))
+  }
 
-  const evenCategories = React.useMemo(() => {
-    return data?.data.filter((_, index) => index % 2 === 0)
-  }, [data?.data])
-
-  const oddCategories = React.useMemo(() => {
-    return data?.data.filter((_, index) => index % 2 !== 0)
-  }, [data?.data])
-
-  const renderEvenCategories = React.useMemo(() => {
-    if (evenCategories != null)
-      return evenCategories.map((category, index) => (
-        <div key={index}>
-          <div className="flex lg:space-x-4 lg:pb-4 lg:pr-4">
-            <Category category={category} />
-          </div>
-        </div>
-      ))
-    return []
-  }, [evenCategories])
-
-  const renderOddCategories = React.useMemo(() => {
-    if (oddCategories != null)
-      return oddCategories.map((category, index) => (
-        <div key={index}>
-          <div className="flex lg:space-x-4 lg:pb-4 lg:pr-4">
-            <Category category={category} />
-          </div>
-        </div>
-      ))
-    return []
-  }, [oddCategories])
+  const splitCategoriesIntoRows = (categories: ICategory[]) => {
+    const rows = []
+    const firstRow = categories.slice(0, 10)
+    const secondRow = categories.slice(10, 20)
+    rows.push(firstRow)
+    rows.push(secondRow)
+    return rows
+  }
 
   return (
-    <div className=" bg-gray-100">
+    <div className="bg-gray-100">
       <div className="mx-auto mt-7 max-w-7xl bg-white px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="flex flex-row justify-between">
@@ -71,16 +48,16 @@ function Categories() {
           <Separator />
           <div className="relative mt-5">
             <ScrollArea>
-              <div className="flex flex-wrap lg:pb-4">
-                <div className="flex">{renderEvenCategories}</div>
-                <div className="flex">{renderOddCategories}</div>
+              <div className="flex flex-col lg:pb-4">
+                {data &&
+                  splitCategoriesIntoRows(data.data).map((row, rowIndex) => (
+                    <div key={rowIndex} className="flex lg:pb-4">
+                      {renderCategories(row)}
+                    </div>
+                  ))}
               </div>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
-            {/* <div className="carousel-container flex flex-wrap overflow-hidden overflow-x-auto">
-              <div className="flex">{renderEvenCategories}</div>
-              <div className="flex">{renderOddCategories}</div>
-            </div> */}
           </div>
         </div>
       </div>

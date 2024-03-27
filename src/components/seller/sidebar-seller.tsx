@@ -56,7 +56,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
       icon: BookIcon,
       href: '/seller/manage/books',
       color: 'text-orange-500',
-      isChidren: true,
+      isChildren: true,
       children: [
         {
           title: 'All of Books',
@@ -95,7 +95,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
       icon: TagIcon,
       href: '/seller/shop',
       color: 'text-orange-500',
-      isChidren: true,
+      isChildren: true,
       children: [
         {
           title: 'Account',

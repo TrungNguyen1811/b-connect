@@ -8,7 +8,7 @@ import { Button } from 'src/components/ui/button'
 import { ArrowLeftIcon } from 'lucide-react'
 import { IBreadcrumb } from 'src/components/breadcrumb'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
-import CartPage from 'src/components/cart/table-cart.txs/cart-page'
+import CartPage from 'src/components/cart/cart-page'
 
 type Props = React.HTMLAttributes<HTMLDivElement>
 

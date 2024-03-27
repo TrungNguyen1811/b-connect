@@ -21,3 +21,16 @@ export function formatPrice(price: number | undefined = 0) {
     currency: 'VND',
   })
 }
+
+import { addDays, addHours, addMinutes, addSeconds, format } from 'date-fns'
+
+export function formatDuration(days: number, hours: number, minutes: number, seconds: number): string {
+  let date = new Date(0)
+  date = addDays(date, days)
+  date = addHours(date, hours)
+  date = addMinutes(date, minutes)
+  date = addSeconds(date, seconds)
+  date = new Date(date.getTime()) // Add milliseconds
+
+  return format(date, 'D.HH:mm:ss')
+}

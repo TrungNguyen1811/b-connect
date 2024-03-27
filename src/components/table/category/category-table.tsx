@@ -15,8 +15,8 @@ function CategoryTable() {
       <CategoryTableToolbar
         table={table}
         queries={{
-          page: tableStates.pagination.pageIndex + 1,
-          pageSize: tableStates.pagination.pageSize,
+          PageNumber: tableStates.pagination.pageIndex + 1,
+          PageSize: tableStates.pagination.pageSize,
           search: tableStates.globalFilter,
         }}
         setSearchQuery={(value) => {
@@ -46,7 +46,7 @@ function CategoryTable() {
           />
           <Pagination
             currentPage={tableStates.pagination.pageIndex + 1}
-            totalPage={data?._pagination?.totalPage || 1}
+            totalPage={data?._pagination?.TotalPages || 1}
             onPageChange={(index) => {
               table.setPageIndex(index - 1)
             }}

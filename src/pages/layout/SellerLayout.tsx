@@ -1,20 +1,26 @@
 import { Outlet } from 'react-router-dom'
 import Header from 'src/components/header/header-dashboard'
 import SidebarSeller from 'src/components/seller/sidebar-seller'
-// import { useAuth } from 'src/hooks/useAuth'
-// import { ROLE } from 'src/types'
+import { useAuth } from 'src/hooks/useAuth'
+import RegisterAgency from '../seller/RegisterAgency'
 
 function SellerLayout() {
-  // const { user } = useAuth()
-  // if (user?.role === ROLE.CUSTOMER || user?.role === ROLE.MANAGER || user?.role === ROLE.ADMIN) {
-  //   return <Navigate to={''} />
-  // }
+  const { user } = useAuth()
+
+  if (user?.isSeller === false) {
+    return <RegisterAgency />
+  }
+
   return (
     <div>
       <Header />
       <div className="flex flex-row">
-        <SidebarSeller />
-        <Outlet />
+        <div className="relative">
+          <SidebarSeller />
+        </div>
+        <div className="">
+          <Outlet />
+        </div>
       </div>
     </div>
   )

@@ -74,19 +74,48 @@ function Pagination({
         </Button>
       ))
     }
-    //Else, render first page, current page - 1, current page, current page + 1, last page
-    return [1, currentPage - 1, currentPage, currentPage + 1, totalPage].map((page) => (
-      <Button
-        key={page}
-        className={cn(
-          'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
-          page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
-        )}
-        onClick={() => onPageChange(page)}
-      >
-        {page}
-      </Button>
-    ))
+
+    if (currentPage + 1 === totalPage) {
+      return [1, currentPage - 1, currentPage, totalPage].map((page) => (
+        <Button
+          key={page}
+          className={cn(
+            'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
+            page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
+          )}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </Button>
+      ))
+    } else if (currentPage + 1 > totalPage) {
+      return [1, currentPage - 1, currentPage].map((page) => (
+        <Button
+          key={page}
+          className={cn(
+            'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
+            page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
+          )}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </Button>
+      ))
+    } else {
+      //Else, render first page, current page - 1, current page, current page + 1, last page
+      return [1, currentPage - 1, currentPage, currentPage + 1, totalPage].map((page) => (
+        <Button
+          key={page}
+          className={cn(
+            'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
+            page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
+          )}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </Button>
+      ))
+    }
   }, [currentPage, itemRender, onPageChange, totalPage])
 
   if (hideOnSinglePage && totalPage <= 1) return null

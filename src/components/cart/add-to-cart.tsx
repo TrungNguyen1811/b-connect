@@ -21,11 +21,9 @@ function AddToCart() {
   useEffect(() => {
     if (cartItems && cartItems.length > 0) {
       const promises = cartItems.map((cart) => getBookById(cart.productId as string))
-
       Promise.all(promises)
         .then((bookDataArray) => {
           setBookData(bookDataArray)
-          // Tính tổng số lượng sách trong giỏ hàng
           const quantitySum = cartItems.reduce((total, cart) => total + cart.quantity, 0)
           setTotalQuantity(quantitySum)
         })
@@ -33,7 +31,6 @@ function AddToCart() {
           console.error('Error fetching book data:', error)
         })
     } else {
-      // Nếu giỏ hàng trống, đặt tổng số lượng sách là 0
       setTotalQuantity(0)
     }
   }, [cartItems])

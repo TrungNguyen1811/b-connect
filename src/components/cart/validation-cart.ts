@@ -1,9 +1,9 @@
 import * as z from 'zod'
 
 export const CartSchema = z.object({
-  pickupLocation: z.string().min(10),
-  returnLocation: z.string().min(10),
-  rentalDate: z.date(),
-  returnDate: z.date(),
-  depositType: z.enum(['ONLINE', 'COD']),
+  city_Province: z.string(),
+  district: z.string() || null,
+  subDistrict: z.string() || null,
+  rendezvous: z.string(),
+  paymentMethod: z.enum(['VnPay', 'COD']),
 })

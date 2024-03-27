@@ -7,12 +7,9 @@ import {
   BookTemplateIcon,
   LayoutDashboardIcon,
   StickyNoteIcon,
-  User,
-  User2,
   Users,
 } from 'lucide-react'
 import { NavItem } from 'src/types/NavItem'
-import { useAuth } from 'src/hooks/useAuth'
 import { SideNav } from '../sidebar-user/side-nav'
 
 interface SidebarProps {
@@ -23,7 +20,7 @@ export default function SidebarAdmin({ className }: SidebarProps) {
   const { isOpen, toggle } = useSidebar()
   const [status, setStatus] = useState(false)
 
-  const { user } = useAuth()
+  // const { user } = useAuth()
   const handleToggle = () => {
     setStatus(true)
     toggle()
@@ -40,23 +37,8 @@ export default function SidebarAdmin({ className }: SidebarProps) {
     {
       title: 'Manage Users',
       icon: Users,
-      href: '/admin/manage',
+      href: '/admin/manage/user',
       color: 'text-orange-500',
-      isChidren: true,
-      children: [
-        {
-          title: 'Manage User',
-          icon: User,
-          href: '/admin/manage/user',
-          color: 'text-orange-500',
-        },
-        {
-          title: 'Manage Manager',
-          icon: User2,
-          href: '/admin/manage/manager',
-          color: 'text-orange-500',
-        },
-      ],
     },
     {
       title: 'Manage Post',

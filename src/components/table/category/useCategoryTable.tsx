@@ -6,24 +6,25 @@ import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
 import { ICategory } from 'src/types'
-import { getAllCategory } from 'src/api/categories/get-category'
+import { getSearchCategory } from 'src/api/categories/get-category'
 
 export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
   const [queries, setQueries] = useState<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
-    page: 0,
-    perPage: 10,
+    PageNumber: 1,
+    PageSize: 5,
   })
 
   const queryController = useQuery<IResponse<ICategory[]>, AxiosError>(
     [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => getAllCategory(queries),
+    () => getSearchCategory(queries),
     {
       keepPreviousData: true,
     },
   )
+  console.log('meta', queryController.data?._pagination)
 
   const table = useReactTable<ICategory>({
     columns,
@@ -31,8 +32,8 @@ export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
     manualPagination: true,
     initialState: {
       pagination: {
-        pageIndex: queries.page || 1 - 1,
-        pageSize: queries.perPage,
+        pageIndex: queries.PageNumber || 1 - 1,
+        pageSize: queries.PageSize,
       },
       globalFilter: queries.search,
     },
@@ -47,7 +48,7 @@ export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
   table.setOptions((prev) => ({
     ...prev,
     state: tableStates,
-    pageCount: queryController.data?._pagination?.totalPage || 0,
+    pageCount: queryController.data?._pagination?.TotalPages || 0,
     onStateChange: setTableStates,
     debugTable: tableStates.pagination.pageIndex > 2,
   }))
@@ -57,9 +58,9 @@ export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
     setQueries((prev) => ({
       ...prev,
       role: otherFilters?.[0]?.value,
-      page: tableStates.pagination.pageIndex + 1,
-      perPage: tableStates.pagination.pageSize,
-      search: tableStates.globalFilter || undefined,
+      PageNumber: tableStates.pagination.pageIndex + 1,
+      PageSize: tableStates.pagination.pageSize,
+      inputString: tableStates.globalFilter || undefined,
     }))
   }, [
     tableStates.columnFilters,
@@ -71,7 +72,7 @@ export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
   useEffect(() => {
     if (!queryController.data?._pagination) return
 
-    const pageCount = queryController.data?._pagination?.totalPage || 0
+    const pageCount = queryController.data?._pagination?.TotalPages || 0
     table.setPageCount(pageCount)
   }, [queryController.data?._pagination, table])
 

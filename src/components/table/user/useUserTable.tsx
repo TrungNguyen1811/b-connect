@@ -13,8 +13,8 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
-    page: 0,
-    perPage: 10,
+    PageNumber: 1,
+    PageSize: 5,
   })
 
   const queryController = useQuery<IResponse<User[]>, AxiosError>(
@@ -31,8 +31,8 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     manualPagination: true,
     initialState: {
       pagination: {
-        pageIndex: queries.page || 1 - 1,
-        pageSize: queries.perPage,
+        pageIndex: queries.PageNumber || 1 - 1,
+        pageSize: queries.PageSize,
       },
       globalFilter: queries.search,
     },
@@ -47,7 +47,7 @@ export function useUserTable(columns: ColumnDef<User>[]) {
   table.setOptions((prev) => ({
     ...prev,
     state: tableStates,
-    pageCount: queryController.data?._pagination?.totalPage || 0,
+    pageCount: queryController.data?._pagination?.TotalPages || 0,
     onStateChange: setTableStates,
     debugTable: tableStates.pagination.pageIndex > 2,
   }))
@@ -57,8 +57,8 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     setQueries((prev) => ({
       ...prev,
       role: otherFilters?.[0]?.value,
-      page: tableStates.pagination.pageIndex + 1,
-      perPage: tableStates.pagination.pageSize,
+      PageNumber: tableStates.pagination.pageIndex + 1,
+      PageSize: tableStates.pagination.pageSize,
       search: tableStates.globalFilter || undefined,
     }))
   }, [
@@ -71,7 +71,7 @@ export function useUserTable(columns: ColumnDef<User>[]) {
   useEffect(() => {
     if (!queryController.data?._pagination) return
 
-    const pageCount = queryController.data?._pagination?.totalPage || 0
+    const pageCount = queryController.data?._pagination?.TotalPages || 0
     table.setPageCount(pageCount)
   }, [queryController.data?._pagination, table])
 

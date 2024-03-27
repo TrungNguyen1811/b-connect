@@ -8,6 +8,7 @@ import {
   BellDotIcon,
   CreditCardIcon,
   Edit,
+  FingerprintIcon,
   Info,
   ListOrderedIcon,
   MapPinIcon,
@@ -41,13 +42,19 @@ export default function Sidebar({ className }: SidebarProps) {
       icon: UserCircle,
       href: 'user/account/profile',
       color: 'text-orange-500',
-      isChidren: true,
+      isChildren: true,
       children: [
         {
           title: 'Information',
           icon: Info,
           color: 'text-red-500',
           href: '/user/account/profile',
+        },
+        {
+          title: 'identify',
+          icon: FingerprintIcon,
+          color: 'text-red-500',
+          href: '/user/account/identify',
         },
         {
           title: 'Bank',
@@ -80,7 +87,7 @@ export default function Sidebar({ className }: SidebarProps) {
       icon: BellDotIcon,
       href: '/user/notifications',
       color: 'text-orange-500',
-      isChidren: true,
+      isChildren: true,
       children: [
         {
           title: 'Order Updates',
