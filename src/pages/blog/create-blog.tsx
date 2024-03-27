@@ -19,16 +19,16 @@ import { useEffect, useState } from 'react'
 import { Form, FormField, FormItem, FormControl, FormLabel } from '../../components/ui/form'
 import { ScrollArea } from '../../components/ui/scroll-area'
 import { Input } from '../../components/ui/input'
-import { PlateEditor } from '../../components/ui/plate-editor'
-import { Value } from '@udecode/plate-common'
 import { ICategory } from 'src/types'
-import { getAllCategories } from 'src/api/categories/get-category'
+import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import { toast } from '../../components/ui/use-toast'
-import Select from 'react-select'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
-import { IBlog } from 'src/types/blog'
 import { postBlogApi } from 'src/api/blog/post-blog'
+import { useAuth } from 'src/hooks/useAuth'
+import { Checkbox } from 'src/components/ui/check-box'
+import { PlateEditor } from 'src/components/ui/plate-editor'
+import { Value } from '@udecode/plate-common'
 
 type FormData = z.infer<typeof createBlogSchema>
 
@@ -43,16 +43,24 @@ export default function CreateBlog() {
     readonly label: string
   }
 
+  const { user } = useAuth()
+  useEffect(() => {
+    form.setValue('userId', user?.userId as string)
+  }, [user?.userId, form])
+  // form.setValue('userId', user?.userId as string)
+  // form.setValue('authorName', user?.username as string)
+
   // const [categories, setCategories] = useState<ICategory[]>()
   const [options, setOptions] = useState<readonly Options[]>([])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const selectedCategoriesString = selectedCategories.join(',')
+  // form.setValue('listCate', selectedCategoriesString)
 
   useEffect(() => {
-    getAllCategories()
+    // Gọi hàm API trong useEffect
+    getAllCategoryNoParam()
       .then((category: ICategory[]) => {
         if (category) {
-          // setCategories(category)
           const validCategories = category.filter((cat) => cat.cateId !== undefined)
           const categoryOptions: Options[] = validCategories.map((cat) => ({
             value: cat.cateId!,
@@ -107,25 +115,36 @@ export default function CreateBlog() {
     },
   ]
   const [content, setContent] = useState<Value>(initialValue)
+  useEffect(() => {
+    form.setValue('content', JSON.stringify(content))
+  }, [content, form])
 
   // Hàm xử lý khi submit form
-  const onsubmit = async (data: FormData) => {
-    const dataBlog = {
-      ...(data as FormData),
-      category: selectedCategoriesString,
-      image: data.image,
-      content: JSON.stringify(content),
-    }
-    console.log('Form data:', dataBlog)
+  const onSubmit = async (data: FormData) => {
+    console.log('Form data:')
 
-    // console.log('Form data:', dataBlog)
-    postBlog.mutate(dataBlog)
+    if (user) {
+      const dataBlog: FormData = {
+        ...(data as FormData),
+        userId: data.userId,
+        // authorName: user.username as string,
+        // listCate: data.listCate as string,
+        productImages: data.productImages,
+        productVideos: data.productVideos,
+        isTradePost: data.isTradePost,
+        content: data.content,
+      }
+      console.log('Form data:', dataBlog)
+
+      // console.log('Form data:', dataBlog)
+      postBlog.mutate(dataBlog)
+    }
   }
 
-  const postBlog = useMutation((data: IBlog) => postBlogApi(data, data.image as string), {
-    onSuccess: (blog: IBlog) => {
-      if (blog && blog._id) {
-        console.log('Blog ID:', blog._id)
+  const postBlog = useMutation((data: FormData) => postBlogApi(data), {
+    onSuccess: (status) => {
+      if (status === 200) {
+        console.log('Successful!!!')
         toast({
           title: 'Successful!!!',
           description: 'Add Blog Success!',
@@ -141,7 +160,7 @@ export default function CreateBlog() {
     },
     onError: (error: Error) => {
       toast({
-        title: 'Error submitting book',
+        title: 'Error submitting post',
         description: error.message,
       })
     },
@@ -162,12 +181,26 @@ export default function CreateBlog() {
       </div>
       <div className="flex flex-row">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onsubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <ScrollArea className="ml-52 flex h-[35rem] w-[50rem] flex-row justify-between rounded-lg border-2 bg-white px-4 py-2">
               <div className="rounded-lg border-gray-400 px-12 py-6">
                 <FormField
                   control={form.control}
-                  name="image"
+                  name="isTradePost"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">
+                      <FormControl>
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>This post is a trade post</FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="productImages"
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center">
                       <FormLabel className="mr-10 text-lg">Add a cover image</FormLabel>
@@ -183,6 +216,22 @@ export default function CreateBlog() {
                 />
                 <FormField
                   control={form.control}
+                  name="productVideos"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center">
+                      <FormLabel className="mr-10 text-lg">Add a Video Introduce</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="w-[27rem]"
+                          type="file"
+                          onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                {/* <FormField
+                  control={form.control}
                   name="title"
                   render={({ field }) => (
                     <FormControl>
@@ -193,8 +242,8 @@ export default function CreateBlog() {
                       />
                     </FormControl>
                   )}
-                />
-                <Select
+                /> */}
+                {/* <Select
                   value={selectedCategories.map((value) => ({
                     value,
                     label: options.find((option) => option.value === value)?.label,
@@ -219,7 +268,7 @@ export default function CreateBlog() {
                   options={options}
                   className="basic-multi-select z-20 my-2 mb-4"
                   classNamePrefix="select"
-                />
+                /> */}
                 <PlateEditor setContentValue={setContent} content={content} />
               </div>
             </ScrollArea>

@@ -29,11 +29,11 @@ function Blog(id: any) {
     <div className="w-full rounded-md border-2 bg-slate-50">
       <div className="m-4 flex flex-row items-center justify-between">
         <div className="flex w-1/2 flex-col">
-          <Link to={`/blog/${blog?._id}`}>
+          <Link to={`/blog/${blog?.postId}`}>
             <p className="my-2 font-extrabold">{blog?.title}</p>
           </Link>
           <p className="text-sm font-light">
-            <strong>Published:</strong> {blog?.date}
+            <strong>Published:</strong> {blog?.createdAt}
           </p>
         </div>
         <div className="flex w-1/4  flex-row items-center justify-end">
@@ -45,10 +45,10 @@ function Blog(id: any) {
           </p>
         </div>
         <div className="flex w-1/4 flex-row items-center justify-end">
-          <button className="mr-5" onClick={() => navigate(`/blog/${blog?._id}/edit`)}>
+          <button className="mr-5" onClick={() => navigate(`/blog/${blog?.postId}/edit`)}>
             Edit
           </button>
-          <button onClick={() => postDeleteBlogById(blog?._id as string)}>Delete</button>
+          <button onClick={() => postDeleteBlogById(blog?.postId as string)}>Delete</button>
         </div>
       </div>
     </div>

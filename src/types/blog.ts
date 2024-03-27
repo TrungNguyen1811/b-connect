@@ -10,7 +10,7 @@ export interface IContentBlog {
   id: string
   type: string
   children: {
-    text: string
+    text?: string
     bold?: boolean
     italic?: boolean
     underline?: boolean
@@ -23,25 +23,65 @@ export interface IContentBlog {
   }[]
 }
 export interface IBlog {
-  _id?: string
-  userId?: User['userId']
-  category: string
-  image?: string
-  content: string
-  title: string
-  date?: string
-}
-
-export interface IBlogg {
-  _id?: string
-  userId?: User['userId']
+  postId?: string
+  userId?: string
+  authorName?: string
+  productImgs?: File | string
+  ProductVideos?: File | string
+  isTradePost: boolean
+  title?: string
+  content?: string
+  listCate?: listCate[]
+  createdAt?: string
+  appUser?: string
   cateId?: string
   commentsId?: string
   likeId?: string
-  image?: any
-  content: string
+}
+
+export interface IBlogg {
+  postId?: string
+  userId: string
+  authorName?: string
+  productImgs?: File | string
+  ProductVideos?: File | string
+  isTradePost?: boolean
   title: string
-  date?: string
+  content?: string
+  listCate?: listCate[]
+  createdAt?: string
+  appUser?: string
+  cateId?: string
+  commentsId?: string
+  likeId?: string
+}
+
+export interface IBlogResponse {
+  postId?: string
+  userId: string
+  authorName?: string
+  imageDir?: File | string
+  videoDir?: File | string
+  isTradePost?: boolean
+  title?: string
+  content?: string
+  listCate?: listCate[]
+  hearts?: number
+  createdAt?: string
+  appUser?: string
+  cateId?: string
+  commentsId?: string
+  likeId?: string
+}
+
+export interface IResponsePost {
+  postData: IBlogResponse
+  username: string
+  avatarDir: string
+}
+interface listCate {
+  cateId: string
+  cateName: string
 }
 
 export interface ILiked {
@@ -52,5 +92,5 @@ export interface ILiked {
 export interface IReadingList {
   _id?: string
   userId?: User['userId']
-  blog_Id: IBlogg['_id']
+  blog_Id: IBlogg['postId']
 }

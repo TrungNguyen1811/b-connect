@@ -3,7 +3,7 @@ import { IAddress } from 'src/types/address'
 
 function putAddress(data: IAddress) {
   return axiosClient
-    .put('/Address/add-new-address', data, {})
+    .put('/Address/UpdateAddress', data, {})
     .then((res) => {
       if (res.status === 200) {
         return res.data

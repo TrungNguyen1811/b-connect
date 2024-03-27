@@ -14,7 +14,7 @@ import { Button } from '../../components/ui/button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createBlogSchema } from '../../components/blog/validation'
+import { updateBlogSchema } from '../../components/blog/validation'
 import { useEffect, useState } from 'react'
 import { Form, FormField, FormItem, FormControl, FormLabel } from '../../components/ui/form'
 import { ScrollArea } from '../../components/ui/scroll-area'
@@ -27,14 +27,14 @@ import { toast } from '../../components/ui/use-toast'
 import Select from 'react-select'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
-import { IBlog, IBlogg } from 'src/types/blog'
+import { IBlog, IBlogResponse, IResponsePost } from 'src/types/blog'
 import { updateBlogApi } from 'src/api/blog/post-blog'
-import { getBlogById } from 'src/api/blog/get-blog'
+import { getPostByIdApi } from 'src/api/blog/get-blog'
 
-type FormData = z.infer<typeof createBlogSchema>
+type FormData = z.infer<typeof updateBlogSchema>
 
 export default function UpdateBlog() {
-  const [blogData, setBlogData] = useState<IBlogg | null>(null)
+  const [blogData, setBlogData] = useState<IBlogResponse | null>(null)
   const initialValue = [
     {
       id: '1',
@@ -42,14 +42,16 @@ export default function UpdateBlog() {
       children: [{ text: 'Hello, World!!!' }],
     },
   ]
-  const [content, setContent] = useState<Value>(initialValue)
   const form = useForm<FormData>({
-    resolver: zodResolver(createBlogSchema),
+    resolver: zodResolver(updateBlogSchema),
     defaultValues: {
-      image: blogData?.image || '',
+      userId: blogData?.userId,
+      postId: blogData?.postId,
+      authorName: blogData?.authorName,
+      productImgs: blogData?.imageDir || '',
       title: blogData?.title || '',
-      category: blogData?.cateId || '',
-      content: content || '',
+      listCate: JSON.stringify(blogData?.listCate) || '',
+      content: blogData?.content || '',
     },
   })
   const navigate = useNavigate()
@@ -69,14 +71,10 @@ export default function UpdateBlog() {
   }, [blogData])
 
   useEffect(() => {
-    setContent(content)
-  }, [content])
-
-  useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const currentBlogData = await getBlogById(id)
-        setBlogData(currentBlogData)
+        const currentBlogData: IResponsePost = await getPostByIdApi(id)
+        setBlogData(currentBlogData.postData)
       } catch (error) {
         console.error('Error fetching blog data:', error)
       }
@@ -93,6 +91,7 @@ export default function UpdateBlog() {
   const [options, setOptions] = useState<readonly Options[]>([])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const selectedCategoriesString = selectedCategories.join(',')
+  form.setValue('listCate', selectedCategoriesString)
 
   useEffect(() => {
     getAllCategories()
@@ -145,28 +144,37 @@ export default function UpdateBlog() {
     )
   }
 
+  const [content, setContent] = useState<Value>(initialValue)
+  form.setValue('content', JSON.stringify(content))
+  useEffect(() => {
+    setContent(content)
+  }, [content])
+
   const onsubmit = async (data: FormData) => {
-    const dataBlog = {
+    const dataBlog: FormData = {
       ...(data as FormData),
-      category: selectedCategoriesString,
-      image: data.image,
-      content: JSON.stringify(content),
+      userId: blogData?.userId as string,
+      postId: blogData?.postId as string,
+      authorName: blogData?.authorName as string,
+      listCate: data.listCate,
+      productImgs: data.productImgs,
+      content: data.content,
     }
     console.log('Form data:', dataBlog)
 
     updateBlog.mutate(dataBlog)
   }
 
-  const updateBlog = useMutation((data: IBlog) => updateBlogApi(data, data.image as string), {
+  const updateBlog = useMutation((data: FormData) => updateBlogApi(data), {
     onSuccess: (blog: IBlog) => {
-      if (blog && blog._id) {
-        console.log('Blog ID:', blog._id)
+      if (blog && blog.postId) {
+        console.log('Blog ID:', blog.postId)
         toast({
           title: 'Successful!!!',
           description: 'Update Blog Success!',
         })
         queryClient.invalidateQueries()
-        navigate(`/blog/${blog._id}`)
+        navigate(`/blog/${blog.postId}`)
       } else {
         toast({
           title: 'Invalid Blog response',
@@ -202,7 +210,7 @@ export default function UpdateBlog() {
               <div className="rounded-lg border-gray-400 px-12 py-6">
                 <FormField
                   control={form.control}
-                  name="image"
+                  name="productImgs"
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center">
                       <FormLabel className="mr-10 text-lg">Add a cover image</FormLabel>
@@ -211,7 +219,7 @@ export default function UpdateBlog() {
                           className="w-[27rem]"
                           type="file"
                           onChange={(e) => field.onChange(e.target.files?.[0] || null)}
-                          defaultValue={form.getValues('image')}
+                          defaultValue={form.getValues('productImgs')}
                         />
                       </FormControl>
                     </FormItem>

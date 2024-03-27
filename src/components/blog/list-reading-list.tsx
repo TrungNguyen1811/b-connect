@@ -21,7 +21,7 @@ const RenderNameUser: React.FC<{ id: string; post: IBlogg }> = ({ id, post }) =>
         <div>{users?.avatar}</div>
         <div className="my-2 ml-4 flex flex-row items-center">
           <p className="mr-2 text-lg font-bold">{post.title}</p>
-          <p className="text-sm font-light">{post.date}</p>
+          <p className="text-sm font-light">{post.createdAt}</p>
         </div>
         <div>
           <Avatar>

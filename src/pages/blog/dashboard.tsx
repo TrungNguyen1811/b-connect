@@ -65,7 +65,7 @@ function DashboardBlog() {
             {blogs ? (
               blogs?.map((blog, index) => (
                 <div className="my-4 mt-2" key={index}>
-                  {blog?._id && <Blog id={blog._id} />}
+                  {blog?.postId && <Blog id={blog.postId} />}
                 </div>
               ))
             ) : (

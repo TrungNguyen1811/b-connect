@@ -1,6 +1,6 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
-import { getBlogById } from 'src/api/blog/get-blog'
+import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
 
@@ -42,6 +42,7 @@ const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
 const IdentificationUser = React.lazy(() => import('src/pages/profile/identify'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
+const AddressPage = React.lazy(() => import('src/pages/profile/addressPage'))
 
 const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
@@ -121,6 +122,10 @@ export const ROUTES = createBrowserRouter([
           {
             path: 'user/account/password',
             element: <ChangePassword />,
+          },
+          {
+            path: 'user/account/address',
+            element: <AddressPage />,
           },
         ],
       },
@@ -231,7 +236,7 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/blog/:id',
         loader: async ({ params }) => {
-          const blog = await getBlogById(params.id as string)
+          const blog = await getPostByIdApi(params.id as string)
           return {
             blog,
           }

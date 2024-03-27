@@ -1,9 +1,10 @@
-import { User } from './user'
-
 export interface IComment {
-  commentId: string
-  userId: Pick<User, 'userId' | 'email' | 'avatar' | 'fullName'>
-  comment?: string
-  createdAt?: string
+  postId: string
+  commentId?: string
+  commenterId: string
+  content: string
+  userName?: string
+  avatarDir?: string
+  createDate?: string
   updatedAt?: string
 }

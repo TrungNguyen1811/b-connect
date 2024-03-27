@@ -1,33 +1,44 @@
 import FormData from 'form-data'
 import { authAxiosClient, axiosClient } from '../../lib/axios'
 
-async function postBlogApi(
-  blogData: {
-    category: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    image?: any
-    title: string
-    content: string
-  },
-  image: string,
-) {
+async function postBlogApi(blogData: {
+  userId: string
+  // authorName: string
+  // listCate: string
+  productImages?: File | null
+  productVideos?: File | null
+  isTradePost?: boolean
+  // title: string
+  content: string
+}) {
   const data = new FormData()
-  data.append('category', blogData.category)
-  data.append('title', blogData.title)
-  data.append('content', blogData.content)
-  if (image) {
-    data.append('image', blogData.image)
+  // data.append('listCate', blogData.listCate)
+  data.append('UserId', blogData.userId)
+  data.append('IsTradePost', blogData.isTradePost)
+  // data.append('authorName', blogData.authorName)
+  // data.append('title', blogData.title)
+  data.append('Content', blogData.content)
+  if (blogData.productImages instanceof File) {
+    data.append('ProductImages', blogData.productImages)
+  } else {
+    console.log('blogData.productImages is not logic object File')
+  }
+
+  if (blogData.productVideos instanceof File) {
+    data.append('ProductVideos', blogData.productVideos)
+  } else {
+    console.log('blogData.ProductVideos is not logic object File')
   }
 
   return await authAxiosClient
-    .post('/blog', data, {
+    .post('/Post/add-new-post', data, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
     })
     .then((response) => {
-      if (response.status === 201) {
-        return response.data
+      if (response.status === 200) {
+        return response.status
       } else {
         // Handle other HTTP statuses as needed
         console.log(response)
@@ -42,32 +53,36 @@ async function postBlogApi(
 
 export { postBlogApi }
 
-async function updateBlogApi(
-  blogData: {
-    category: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    image?: any
-    title: string
-    content: string
-  },
-  image: string,
-) {
+async function updateBlogApi(blogData: {
+  postId: string
+  userId: string
+  authorName: string
+  listCate: string
+  productImgs?: File | null
+  title: string
+  content: string
+}) {
   const data = new FormData()
-  data.append('category', blogData.category)
+  data.append('listCate', blogData.listCate)
+  data.append('postId', blogData.postId)
+  data.append('userId', blogData.userId)
+  data.append('authorName', blogData.authorName)
   data.append('title', blogData.title)
   data.append('content', blogData.content)
-  if (image) {
-    data.append('image', blogData.image)
+  if (blogData.productImgs instanceof File) {
+    data.append('productImgs', blogData.productImgs)
+  } else {
+    console.log('blogData.productImgs is not logic object File')
   }
 
   return await authAxiosClient
-    .post('/blog', data, {
+    .put('/Post/update post', data, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
     })
     .then((response) => {
-      if (response.status === 201) {
+      if (response.status === 200) {
         return response.data
       } else {
         // Handle other HTTP statuses as needed

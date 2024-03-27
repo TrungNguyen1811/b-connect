@@ -2,10 +2,10 @@ import { axiosClient } from 'src/lib/axios'
 
 export async function postCategoryApi(data: { cateName: string; description: string; imageDir: File | null }) {
   const formData = new FormData()
-  formData.append('cateName', data.cateName)
-  formData.append('description', data.description as string)
+  formData.append('CateName', data.cateName)
+  formData.append('Description', data.description as string)
   if (data.imageDir instanceof File) {
-    formData.append('cateImg', data.imageDir)
+    formData.append('CateImg', data.imageDir)
   } else {
     console.log('data.imageDir không phải là một đối tượng File hợp lệ')
   }

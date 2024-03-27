@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker'
 import { IResponse } from 'src/types/response'
-import { IBlogg } from 'src/types/blog'
+import { IBlogg, IResponsePost } from 'src/types/blog'
 import { ICategory } from 'src/types/categories'
 import axios from 'axios'
+import { axiosClient } from 'src/lib/axios'
+import { IDefaultQuery } from 'src/types/requests'
 
 const fakeContentArray = Array.from({ length: 7 }, () => ({
   id: faker.string.uuid(),
@@ -54,15 +56,15 @@ const fakeLikeArray: {
 export function getBlogById(id: string) {
   // TODO: Replace this with an actual API call
   const blog: IBlogg = {
-    _id: faker.string.uuid(),
+    postId: faker.string.uuid(),
     userId: '',
     title: faker.lorem.words(),
-    image: faker.image.urlLoremFlickr({
+    productImgs: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
     }),
     content: fakeContent,
-    date: faker.date.recent().toISOString(),
+    createdAt: faker.date.recent().toISOString(),
   }
 
   return new Promise<IBlogg>((resolve) => {
@@ -167,4 +169,26 @@ export function getBlogActive(number: number) {
 
 export async function getInterestedByUserId(userId: string): Promise<ICategory[]> {
   return axios.get(`/blog/interested/${userId}`).then((res) => res.data)
+}
+
+export async function getPostByIdApi(id: string) {
+  return axiosClient.get(`/Post/get-post-by-id?postId=${id}`).then((res) => {
+    const data: IResponsePost = res.data
+    return data
+  })
+}
+
+export type GetManyPostsParams = {
+  category?: string
+} & Partial<IDefaultQuery>
+
+export async function getAllPosts(params: GetManyPostsParams) {
+  return axiosClient
+    .get('/Post/get-all-post', {
+      params,
+    })
+    .then((res) => {
+      const data: IResponsePost[] = res.data
+      return data
+    })
 }

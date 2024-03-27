@@ -4,47 +4,45 @@ import { AvatarImage } from '../../components/ui/avatar'
 import { Separator } from '../../components/ui/separator'
 import { BookMarkedIcon, HeartIcon, MessageCircleHeart, MessageCircleHeartIcon } from 'lucide-react'
 import { useLoaderData } from 'react-router-dom'
-import { IBlogg, IContentBlog } from 'src/types/blog'
+import { IResponsePost } from 'src/types/blog'
 import { useToast } from '../../components/ui/use-toast'
-import { User } from 'src/types'
 import { Button } from '../../components/ui/button'
-import { useForm } from 'react-hook-form'
-import { IComment } from 'src/types/comment'
-import { useMutation } from '@tanstack/react-query'
 import { useAuth } from 'src/hooks/useAuth'
-import { postBlogComment } from 'src/api/blog/post-comment'
-import { Textarea } from '../../components/ui/text-area'
-import { getUserByIdFaker } from 'src/api/user/get-user-faker'
+import { getPostCommentByPostId, postPostComment } from 'src/api/blog/comment'
+import { IComment } from 'src/types/comment'
+import { format } from 'date-fns'
+import { useForm } from 'react-hook-form'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Textarea } from 'src/components/ui/text-area'
+import { Value } from '@udecode/plate-common'
+import { PlateView } from 'src/components/ui/plate-view'
 
 type FormValue = {
-  comment: string
+  content: string
 }
 
 function BlogDetail() {
-  const data = useLoaderData() as { blog: IBlogg }
-  const [blog, setBlog] = React.useState<IBlogg | null>(data.blog)
-  const [users, setUser] = useState<User>()
+  const data = useLoaderData() as { blog: IResponsePost }
+  const [blog, setBlog] = React.useState<IResponsePost | null>(data.blog)
+  const contents: Value = JSON.parse(blog?.postData.content as string)
+  const [comments, setComments] = useState<IComment[]>()
   const [isSaved, setIsSaved] = useState<boolean>()
   const [isLiked, setIsLiked] = useState<boolean>()
-
-  const user = useAuth()
+  const queryClient = useQueryClient()
+  const { user } = useAuth()
   const { toast } = useToast()
   useEffect(() => {
     setBlog(data.blog)
   }, [data])
 
   useEffect(() => {
-    // if (!blog || blog.userId === undefined) {
-    //   return // Return early if blog or blog.userId is undefined
-    // }
-
-    const fetchBlogAndUser = async () => {
-      const userData = await getUserByIdFaker(blog?.userId as string)
-      setUser(userData)
+    const renderCommentsPost = async () => {
+      const comments = await getPostCommentByPostId(blog?.postData.postId as string)
+      setComments(comments)
     }
 
-    fetchBlogAndUser()
-  }, [blog?.userId, blog])
+    renderCommentsPost()
+  }, [blog?.postData.postId])
 
   const saveToReadingList = async () => {
     if (blog) {
@@ -137,7 +135,7 @@ function BlogDetail() {
   }
 
   useEffect(() => {
-    if (blog?.content) {
+    if (blog?.postData.content) {
       try {
         const contentString = JSON.parse(
           '[{"type":"h1","align":"start","children":[{"text":"Writing a Great Post","bold":true}],"id":"ivw9i"},{"type":"p","children":[{"text":"Title Think of your p","fontSize":"medium","backgroundColor":"rgb(241, 245, 249)","color":"rgb(9, 9, 11)","code":true},{"fontSize":"medium","backgroundColor":"rgb(241, 245, 249)","color":"rgb(9, 9, 11)","code":true,"text":"ost title as a super short (but compelling!) description — like an overview of the actual post in one short sentence.","strikethrough":true}],"id":"2hoj7"},{"type":"p","children":[{"text":"Use keywords where appropriate to help ensu","fontSize":"medium","backgroundColor":"rgb(241, 245, 249)","color":"rgb(9, 9, 11)"},{"fontSize":"medium","backgroundColor":"rgb(241, 245, 249)","color":"rgb(9, 9, 11)","text":"re people can find your post by search.","underline":true,"italic":true}],"id":"e2dkd"},{"type":"p","children":[{"text":""},{"type":"a","url":"http://localhost:5000/blog/create-post","children":[{"text":"http://localhost:5000/blog/create-post"}],"id":"mxe1k"},{"text":""}],"id":"o5gze"}]',
@@ -150,25 +148,25 @@ function BlogDetail() {
         console.error('Error converting content to JSON string:', error)
       }
     }
-  }, [blog?.content])
-  console.log(blog?.content)
+  }, [blog?.postData.content])
+  console.log(blog?.postData.content)
 
   const renderCommenter = React.useCallback(
-    ({ userId, comment, createdAt }: IComment) => (
+    ({ userName, avatarDir, content, createDate }: IComment) => (
       <div className="flex flex-row items-start justify-start">
         <div className="mr-4">
           <Avatar>
-            <AvatarImage src={userId.avatar} className="h-10 w-10 rounded-[50%]" />
+            <AvatarImage src={avatarDir} className="h-10 w-10 rounded-[50%]" />
           </Avatar>
         </div>
         <div className="flex w-full flex-col">
           <div className=" border-1 w-9/10 flex flex-col rounded-md border">
             <div className="my-2 ml-4 flex flex-row items-center">
-              <p className="mr-2 text-lg font-bold">{userId.fullName}</p>
-              <p className="text-sm font-light">{createdAt}</p>
+              <p className="mr-2 text-lg font-bold">{userName}</p>
+              <p className="text-sm font-light">{createDate ? format(new Date(createDate), 'PPpp') : 'N/A'}</p>
             </div>
             <div>
-              <p className="ml-4">| {comment}</p>
+              <p className="ml-4">| {content}</p>
             </div>
           </div>
           <div className="m-4 flex flex-row">
@@ -186,75 +184,51 @@ function BlogDetail() {
     [],
   )
 
-  // const renderComments = React.useMemo(() => {
-  //   return blog?.comments?.map((cmt) => (
-  //     <div key={cmt.comment} className="mb-2 w-full">
-  //       {renderCommenter(cmt)}
-  //     </div>
-  //   ))
-  // }, [blog?.comments, renderCommenter])
+  const renderComments = React.useMemo(() => {
+    return comments?.map((cmt) => (
+      <div key={cmt.commentId} className="mb-2 w-full">
+        {renderCommenter(cmt)}
+      </div>
+    ))
+  }, [comments, renderCommenter])
 
-  // const addComment = useCallback(
-  //   (comment: IComment) => {
-  //     if (!blog?.comments) {
-  //       return
-  //     }
-
-  //     const updatedBlog: IBlogg = {
-  //       ...blog,
-  //       comments: [...blog.comments, comment],
-  //     }
-
-  //     setBlog(updatedBlog)
-  //   },
-  //   [blog],
-  // )
+  const addComment = useCallback((comment: IComment) => {
+    return postPostComment(comment)
+  }, [])
 
   const id = useId()
 
   const { mutateAsync, isLoading: isAddComment } = useMutation({
-    mutationFn: postBlogComment,
-    onSuccess: (_, { data: { comment } }) => {
+    mutationFn: postPostComment,
+    onSuccess: (payload: IComment) => {
       if (!blog) return
-
-      // addComment({
-      //   commentId: id,
-      //   userId: {
-      //     userId: '',
-      //     email: '',
-      //     fullName: '',
-      //     avatar: '',
-      //     ...user.user,
-      //   },
-      //   comment,
-      //   createdAt: new Date().toISOString(),
-      //   updatedAt: new Date().toISOString(),
-      // })
+      addComment(payload)
+      queryClient.invalidateQueries()
     },
   })
 
-  const { setValue, watch, reset, register, handleSubmit } = useForm<FormValue>({
+  const { reset, register, handleSubmit } = useForm<FormValue>({
     defaultValues: {
-      comment: '',
+      content: '',
     },
   })
 
   const handleCommentSubmit = useCallback(
-    ({ comment }: FormValue) => {
+    ({ content }: FormValue) => {
       const payload = {
-        comment: comment,
+        postId: blog?.postData.postId as string,
+        commenterId: user?.userId as string,
+        content: content,
       }
 
-      mutateAsync({
-        blog_id: blog?._id || '',
-        data: payload,
-      })
+      mutateAsync(payload)
         .then(() => {
           toast({
             type: 'foreground',
             title: 'Post a comment successfully',
             description: 'Your comment have been successfully',
           })
+          setComments((prevComments) => [...(prevComments || []), payload])
           reset()
         })
         .catch((e) => {
@@ -265,7 +239,7 @@ function BlogDetail() {
           })
         })
     },
-    [blog?._id, mutateAsync, reset, toast],
+    [blog?.postData.postId, user?.userId, mutateAsync, reset, toast],
   )
 
   return (
@@ -295,20 +269,21 @@ function BlogDetail() {
         <div className="col-span-8">
           <div className="h-full w-full rounded-md border-2 bg-slate-50">
             <div className="w-full rounded-md">
-              <img src={blog?.image} className="max-h-[24rem] w-full rounded-t-md" />
+              <img src={blog?.postData.imageDir as string} className="max-h-[24rem] w-full rounded-t-md" />
             </div>
+            <div className="w-full rounded-md"></div>
             <div className="m-4  px-12 pt-4">
               <div className="flex flex-row">
                 <Avatar>
-                  <AvatarImage src={users?.avatar} className="h-10 w-10 rounded-[50%]" />
+                  <AvatarImage src={blog?.avatarDir} className="h-10 w-10 rounded-[50%]" />
                 </Avatar>
                 <div className="ml-2 flex flex-col items-start">
-                  <p className="font-semibold">{users?.username}</p>
-                  <p className="text-xs font-light">{blog?.date}</p>
+                  <p className="font-semibold">{blog?.username}</p>
+                  <p className="text-xs font-light">{blog?.postData.createdAt}</p>
                 </div>
               </div>
               <div className="flex flex-col">
-                <p className="my-4 text-5xl font-extrabold">{blog?.title}</p>
+                <p className="my-4 text-5xl font-extrabold">{blog?.postData.title}</p>
                 <p className="mb-2 flex flex-row text-sm">
                   Category:
                   {/* {blog?.category.map((cat, index) => (
@@ -320,20 +295,13 @@ function BlogDetail() {
                 </p>
               </div>
               <div className="pt-4">
-                {Array.isArray(blog?.content) &&
-                  blog?.content.map((item: IContentBlog) => {
-                    switch (item.type) {
-                      case 'h1':
-                        return <h1 key={item.id}>{renderTextWithFormatting(item.children)}</h1>
-                      case 'blockquote':
-                        return <blockquote key={item.id}>{renderTextWithFormatting(item.children)}</blockquote>
-                      case 'p':
-                        return <p key={item.id}>{renderTextWithFormatting(item.children)}</p>
-                      default:
-                        return null
-                    }
-                  })}
+                <PlateView content={contents} />
               </div>
+              <video
+                src={blog?.postData.videoDir as string}
+                className="max-h-[24rem] w-full rounded-md"
+                controls
+              ></video>
               <Separator className="my-8" />
               <div>
                 <div className="mb-6 flex flex-row items-center justify-between">
@@ -348,22 +316,24 @@ function BlogDetail() {
                     />
                   </Avatar>
                   <div className="w-full">
-                    <Textarea
-                      id="commentTextarea"
-                      placeholder="Add to the discussion"
-                      {...register('comment')}
-                      onChange={handleCommentChange}
-                      disabled={isAddComment}
-                    />
+                    <form onSubmit={handleSubmit(handleCommentSubmit)} className="space-y-2">
+                      <Textarea
+                        id="commentTextarea"
+                        placeholder="Add to the discussion"
+                        {...register('content')}
+                        onChange={handleCommentChange}
+                        disabled={isAddComment}
+                      />
 
-                    {commentText && (
-                      <Button className="my-2" type="submit">
-                        Submit
-                      </Button>
-                    )}
+                      {commentText && (
+                        <Button className="my-2" type="submit">
+                          Submit
+                        </Button>
+                      )}
+                    </form>
                   </div>
                 </div>
-                {/* <div className="my-4 space-y-8">{renderComments}</div> */}
+                <div className="my-4 space-y-8">{renderComments}</div>
               </div>
             </div>
           </div>

@@ -52,7 +52,7 @@ function ReadingList() {
     setSearchKeyword(value)
 
     const filteredPosts = postDetail.filter((post) => post.title.toLowerCase().includes(value.toLowerCase()))
-    const filteredPostIds = filteredPosts.map((post) => post._id).filter((id) => id !== undefined) as string[]
+    const filteredPostIds = filteredPosts.map((post) => post.postId).filter((id) => id !== undefined) as string[]
 
     // setFilteredPosts(filteredPostIds)
 

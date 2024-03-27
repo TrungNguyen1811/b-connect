@@ -28,7 +28,7 @@ export function Active() {
           <p className="p-2 pb-0 text-lg font-bold">Active discussions</p>
           <div className="my flex flex-col p-2">
             {blogList.map((blog, index) => (
-              <Link key={index} to={`/blog/${blog._id}`}>
+              <Link key={index} to={`/blog/${blog.postId}`}>
                 <div className="mx-2 my-2">
                   {index < 1 && <Separator className="border-1 mb-4" />}
                   <p className="font-semibold">{blog.title}</p>

@@ -7,7 +7,7 @@ import Navigation from './nav'
 
 function Header() {
   return (
-    <div className="left-0 top-0 z-10 w-full flex-col items-center justify-between border bg-slate-50 md:px-12">
+    <div className="sticky left-0 top-0 z-10 w-full flex-col items-center justify-between border bg-slate-50 md:px-12">
       <Navigation />
       <div className="flex justify-evenly py-4">
         <div className="flex items-center">

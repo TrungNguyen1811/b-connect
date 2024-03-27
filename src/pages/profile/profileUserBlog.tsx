@@ -106,7 +106,7 @@ function ProfileUser() {
             <main className="h-full w-full rounded-md">
               {blogs?.data.map((blog, index) => (
                 <div className="my-4 mt-2" key={index}>
-                  {blog?._id && <Post id={blog._id} />}
+                  {blog?.postId && <Post postId={blog.postId} />}
                 </div>
               ))}
             </main>

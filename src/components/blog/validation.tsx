@@ -11,8 +11,22 @@ const contentSchema = z.object({
 })
 
 export const createBlogSchema = z.object({
-  image: z.any(),
+  userId: z.string(),
+  // authorName: z.string(),
+  productImages: z.any(),
+  productVideos: z.any(),
+  // title: z.string(),
+  // listCate: z.string(),
+  content: z.string(),
+  isTradePost: z.boolean().default(false),
+})
+
+export const updateBlogSchema = z.object({
+  postId: z.string(),
+  userId: z.string(),
+  authorName: z.string(),
+  productImgs: z.any(),
   title: z.string(),
-  category: z.string(),
-  content: z.any(),
+  listCate: z.string(),
+  content: z.string(),
 })

@@ -82,7 +82,6 @@ import { HeadingElement } from '../plate-ui/heading-element'
 import { MediaEmbedElement } from '../plate-ui/media-embed-element'
 import { MentionElement } from '../plate-ui/mention-element'
 import { MentionInputElement } from '../plate-ui/mention-input-element'
-import { MentionCombobox } from '../plate-ui/mention-combobox'
 import { ParagraphElement } from '../plate-ui/paragraph-element'
 import { TableElement } from '../plate-ui/table-element'
 import { TableRowElement } from '../plate-ui/table-row-element'
@@ -90,19 +89,14 @@ import { TableCellElement, TableCellHeaderElement } from '../plate-ui/table-cell
 import { TodoListElement } from '../plate-ui/todo-list-element'
 import { CodeLeaf } from '../plate-ui/code-leaf'
 import { CommentLeaf } from '../plate-ui/comment-leaf'
-import { CommentsPopover } from '../plate-ui/comments-popover'
 import { HighlightLeaf } from '../plate-ui/highlight-leaf'
 import { KbdLeaf } from '../plate-ui/kbd-leaf'
 import { Editor } from '../plate-ui/editor'
-import { FixedToolbar } from '../plate-ui/fixed-toolbar'
-import { FixedToolbarButtons } from '../plate-ui/fixed-toolbar-buttons'
-import { FloatingToolbar } from '../plate-ui/floating-toolbar'
-import { FloatingToolbarButtons } from '../plate-ui/floating-toolbar-buttons'
 import { withPlaceholders } from '../plate-ui/placeholder'
 import { withDraggables } from '../plate-ui/with-draggables'
 import { EmojiCombobox } from '../plate-ui/emoji-combobox'
 import { TooltipProvider } from '../plate-ui/tooltip'
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 
 const plugins = createPlugins(
   [
@@ -312,42 +306,16 @@ const initialValue = [
   },
 ]
 type PlateEditorProps = {
-  setContentValue: (content: Value) => void
   content: Value
 }
 
-export function PlateEditor({ setContentValue, content }: PlateEditorProps) {
-  const [debugValue, setDebugValue] = useState<Value>(content)
-  const getContentValue = useCallback(() => {
-    return debugValue
-  }, [debugValue])
-
-  useEffect(() => {
-    setContentValue(getContentValue())
-  }, [debugValue, setContentValue, getContentValue])
-
+export function PlateView({ content }: PlateEditorProps) {
   return (
     <TooltipProvider>
       <DndProvider backend={HTML5Backend}>
         <CommentsProvider users={{}} myUserId="1">
-          <Plate
-            plugins={plugins}
-            initialValue={content}
-            onChange={(newValue) => {
-              setDebugValue(newValue)
-            }}
-          >
-            <FixedToolbar>
-              <FixedToolbarButtons />
-            </FixedToolbar>
-
-            <Editor />
-
-            <FloatingToolbar>
-              <FloatingToolbarButtons />
-            </FloatingToolbar>
-            <MentionCombobox items={[]} />
-            <CommentsPopover />
+          <Plate plugins={plugins} initialValue={content}>
+            <Editor readOnly={true} />
           </Plate>
         </CommentsProvider>
       </DndProvider>
