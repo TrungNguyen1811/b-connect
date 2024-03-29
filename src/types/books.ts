@@ -12,7 +12,7 @@ export interface IBook {
   agencyId: string
   agencyName: string
   category?: ICategory['cateId']
-  reviews?: IReview['reviewId']
+  reviews?: IReview['RatingRecordId']
   ratingId?: string
   isAvailable?: boolean | undefined
   status?: 'NEW' | 'OLD'
@@ -26,14 +26,11 @@ export enum BOOK_STATUS {
 }
 
 export interface IReview {
-  reviewId: string
-  productId: string
+  RatingRecordId?: string
+  RatingId: string
   userId: Pick<User, 'userId' | 'email' | 'avatar' | 'fullName'>
-  title?: string
-  details?: string
-  rating?: number
-  voteCount?: number
-  status?: string
+  RatingPoint?: number
+  comment?: string
   purchasesVerify?: string
   createdAt?: string
   updatedAt?: string

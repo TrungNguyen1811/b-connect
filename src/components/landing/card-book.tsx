@@ -25,12 +25,14 @@ function Book({ book }: Props) {
   // }
 
   return (
-    <div>
+    <div className="hover:scale-105">
       <Link to={`/books/${book.productId}`} key={book.productId}>
         <Card className="xs:w-[4rem] lg:w-[12rem]">
-          <CardTitle className="aspect-[1] flex-col overflow-clip rounded-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
+          <CardTitle className="aspect-[1] flex-col overflow-clip rounded-t-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
-              src={book.image}
+              src={
+                'https://res.cloudinary.com/dbpvdxzvi/image/upload/v1711622416/Categories/Book/c58owdoqgrqccyi8qkna.jpg'
+              }
               alt={book.name}
               className="aspect-[1] object-contain transition-all duration-300"
               style={{ width: '100%' }}

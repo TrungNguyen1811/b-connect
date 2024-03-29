@@ -15,7 +15,7 @@ export function getUserByIdFaker(id: string) {
     email: faker.lorem.paragraphs(),
     fullName: faker.lorem.words(),
     role: 'ADMIN' || 'MANAGER' || 'CUSTOMER' || 'SELLER' || 'BASEUSER',
-    phone: faker.number.int({ min: 10000000, max: 100000000 }),
+    phone: faker.lorem.words(),
     avatar: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,
@@ -37,7 +37,7 @@ export function getUserByUserName(username: string) {
     email: faker.lorem.paragraphs(),
     fullName: faker.lorem.words(),
     role: 'ADMIN' || 'MANAGER' || 'CUSTOMER' || 'SELLER' || 'BASEUSER',
-    phone: faker.number.int({ min: 10000000, max: 100000000 }),
+    phone: faker.lorem.words(),
     avatar: faker.image.urlLoremFlickr({
       height: 100,
       width: 100,

@@ -8,7 +8,7 @@ function LandingPage() {
   return (
     <LandingLayout>
       <>
-        <div className=" bg-gray-100">
+        <div className=" bg-zinc-100">
           <CarouselDemo />
           <Categories />
           <TopBook />

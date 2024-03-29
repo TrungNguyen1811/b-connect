@@ -11,7 +11,7 @@ function SortBook() {
   //     resolver: zodResolver(FilterSchema),
   //   })
   return (
-    <div className=" mb-4 flex flex-row bg-gray-300 p-4">
+    <div className=" mb-4 flex w-[105%] flex-row bg-gray-300 p-4">
       <div className="mr-4 py-1">
         <p>Sort by</p>
       </div>

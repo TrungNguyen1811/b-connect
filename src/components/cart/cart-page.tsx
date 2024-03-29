@@ -234,8 +234,10 @@ function CartPage() {
             <Button onClick={handleRemoveSelected}>Remove Selected ({selectedItems.length})</Button>
           </div>
         )}
+      </div>
+      <div className="mt-8 flex flex-row items-center">
         {
-          <div className="mt-4">
+          <div className="mr-4">
             <Button onClick={handleCheckout}>Check Out</Button>
           </div>
         }

@@ -6,8 +6,10 @@ import { createOrder } from 'src/api/order/post-order'
 import CheckoutSuccess from './success'
 import CheckoutFailed from './failed'
 import { useSearchParams } from 'react-router-dom'
-import { IOrder, IPaymentReturnDTO, ITransaction } from 'src/types'
+import { ICart, IOrder, IPaymentReturnDTO, ITransaction } from 'src/types'
 import { SaveTransaction } from 'src/api/order/post-transaction'
+import { useAuth } from 'src/hooks/useAuth'
+import { getCartApi } from 'src/api/cart/get-cart'
 
 function CheckoutResult() {
   const [searchParams] = useSearchParams()
@@ -15,6 +17,8 @@ function CheckoutResult() {
   const [transaction, setTransaction] = useState<ITransaction>()
   const [dataOrder, setDataOrder] = useState<IOrder>()
   const [isLoadingTransaction, setIsLoadingTransaction] = useState(true) // Biến trạng thái để kiểm tra xem giao dịch đã tải xong chưa
+  const [cartItems, setCartItems] = useState<ICart[]>([])
+  const { user } = useAuth()
 
   const token = localStorage.getItem('token') as string
   console.log('token', token)
@@ -114,6 +118,21 @@ function CheckoutResult() {
       )
     } else {
       if (data) {
+        if (user) {
+          const fetchCartData = async () => {
+            try {
+              const cartDataFromServer = await getCartApi(user.userId as string)
+              setCartItems(cartDataFromServer)
+              document.cookie = `cartItems_${user.userId}=${JSON.stringify(cartItems)}; path=/`
+            } catch (error) {
+              console.error('Error fetching cart data from server:', error)
+            }
+          }
+
+          if (user) {
+            fetchCartData()
+          }
+        }
         return <CheckoutSuccess />
       }
       return <h1 className="text-center">Something went wrong while saving data</h1>

@@ -63,13 +63,12 @@ function IdentificationUser() {
           <div>
             <img src={URL.createObjectURL(imageFS)} />
           </div>
-          <p>{imageFS.name}</p>
         </div>
       )
     return isDragActive ? (
       <div className="h-32 w-32 border-dashed">Drop the files here ...</div>
     ) : (
-      <div className="flex h-32 w-32 items-center justify-center rounded-lg border-2 border-dashed text-center text-xs">
+      <div className="flex h-32 w-60 items-center justify-center rounded-lg border-2 border-dashed text-center text-xs">
         <div>Upload Front Side</div>
         <Image className="ml-2" />
       </div>
@@ -83,13 +82,12 @@ function IdentificationUser() {
           <div>
             <img src={URL.createObjectURL(imageBS)} />
           </div>
-          <p>{imageBS.name}</p>
         </div>
       )
     return isDragActiveBS ? (
       <div className="h-32 w-32 border-dashed">Drop the files here ...</div>
     ) : (
-      <div className="flex h-32 w-32 items-center justify-center rounded-lg border-2 border-dashed text-center text-xs">
+      <div className="flex h-32 w-60 items-center justify-center rounded-lg border-2 border-dashed text-center text-xs">
         <div>Upload Back Side</div>
         <Image className="ml-2" />
       </div>
@@ -135,120 +133,110 @@ function IdentificationUser() {
   const renderCTC = useMemo(() => {
     if (!isBothSide) return null
     return (
-      <>
-        <FormField
-          control={form.control}
-          name="ctcId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel> Citizen ID </FormLabel>
-              <FormControl>
-                <Input disabled {...field} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ctcDob"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel> Date of Birth </FormLabel>
-              <FormControl>
-                <Input disabled {...field} value={isDate(field.value) ? format(field.value, 'dd/MM/yyyy') : ''} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ctcDoe"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date of End</FormLabel>
-              <FormControl>
-                <Input disabled {...field} value={isDate(field.value) ? format(field.value, 'dd/MM/yyyy') : ''} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ctcName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input disabled {...field} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ctcSex"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sex</FormLabel>
-              <FormControl>
-                <Input disabled {...field} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ctcSex"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sex</FormLabel>
-              <FormControl>
-                <Input disabled {...field} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ctcHome"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Home</FormLabel>
-              <FormControl>
-                <Input disabled {...field} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ctcNationality"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nationality</FormLabel>
-              <FormControl>
-                <Input disabled {...field} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </>
+      <div className="flex flex-row">
+        <div className="mr-8">
+          <FormField
+            control={form.control}
+            name="ctcId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> Citizen ID </FormLabel>
+                <FormControl>
+                  <Input disabled {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ctcName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input disabled {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ctcSex"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sex</FormLabel>
+                <FormControl>
+                  <Input disabled {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ctcDob"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> Date of Birth </FormLabel>
+                <FormControl>
+                  <Input disabled {...field} value={isDate(field.value) ? format(field.value, 'dd/MM/yyyy') : ''} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <FormField
+            control={form.control}
+            name="ctcHome"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Home</FormLabel>
+                <FormControl>
+                  <Input disabled {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ctcNationality"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nationality</FormLabel>
+                <FormControl>
+                  <Input disabled {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ctcDoe"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date of End</FormLabel>
+                <FormControl>
+                  <Input disabled {...field} value={isDate(field.value) ? format(field.value, 'dd/MM/yyyy') : ''} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
     )
   }, [form.control, isBothSide])
 
@@ -288,21 +276,26 @@ function IdentificationUser() {
         <div>{renderCTC}</div>
       ) : (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="my-12 grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div>
-              <div>Upload CTC Front Side</div>
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                {renderCTCFS}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-16 flex flex-col">
+            <div className="flex flex-row items-center justify-around">
+              <div className="">
+                <div className="font-semibold">Upload CTC Front Side</div>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  {renderCTCFS}
+                </div>
               </div>
-              <div>Upload CTC Back Side</div>
-              <div {...getRootPropsBS()}>
-                <input {...getInputPropsBS()} />
-                {renderCTCBS}
+              <div>
+                <div className="font-semibold">Upload CTC Back Side</div>
+                <div {...getRootPropsBS()}>
+                  <input {...getInputPropsBS()} />
+                  {renderCTCBS}
+                </div>
               </div>
-              {renderCTC}
+              <div className="7/12 caret-lime-200">{renderCTC}</div>
             </div>
-            <Button disabled={isLoading} type="submit" className="w-full">
+
+            <Button disabled={isLoading} type="submit" className="my-6 ml-[48rem] w-32">
               {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
               Register
             </Button>

@@ -31,6 +31,12 @@ type FormData = z.infer<typeof AddressSchema>
 const UpdateAddress = ({ addressId }: Props) => {
   const form = useForm<FormData>({
     resolver: zodResolver(AddressSchema),
+    defaultValues: {
+      // city_Province: 'Tỉnh Tuyên Quang',
+      // district: z.string() || null,
+      // subDistrict: z.string() || null,
+      // rendezvous: z.string(),
+    },
   })
   const { user } = useAuth()
   const [city, setCity] = useState('')
@@ -56,14 +62,16 @@ const UpdateAddress = ({ addressId }: Props) => {
     <div className="p-4">
       <MetaData title="Address" />
       <Dialog>
-        <DialogTrigger>Add New Address</DialogTrigger>
+        <DialogTrigger>
+          <Button>Update</Button>{' '}
+        </DialogTrigger>
         <DialogContent>
           <div className="rounded-lg border border-gray-200 p-4">
             <div>
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="m-4 mx-auto w-full max-w-sm space-y-4 rounded-lg border border-gray-200 p-4"
+                  className="m-4 mx-auto w-full max-w-sm space-y-4 rounded-lg p-4"
                 >
                   <>
                     <FormField

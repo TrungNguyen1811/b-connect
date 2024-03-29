@@ -166,15 +166,15 @@ function BlogDetail() {
               <p className="text-sm font-light">{createDate ? format(new Date(createDate), 'PPpp') : 'N/A'}</p>
             </div>
             <div>
-              <p className="ml-4">| {content}</p>
+              <p className="ml-4">{content}</p>
             </div>
           </div>
           <div className="m-4 flex flex-row">
-            <div className="mx-2 flex flex-row">
-              <HeartIcon /> <p className="mx-1"></p>
+            <div className="mx-2 flex flex-row items-center">
+              <HeartIcon size={16} /> <p className="mx-1">Like</p>
             </div>
-            <div className="mx-2 flex flex-row">
-              <MessageCircleHeart />
+            <div className="mx-2 flex flex-row items-center">
+              <MessageCircleHeart size={16} />
               <button className="mx-1">Reply</button>
             </div>
           </div>
@@ -245,7 +245,7 @@ function BlogDetail() {
   return (
     <div className="mx-32 px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
-        <div className="col-span-1 bg-gray-200">
+        <div className="col-span-1 bg-zinc-100">
           <div className="flex flex-col items-center justify-center">
             <div
               className="m-2 mt-16 flex flex-col items-center rounded-sm p-2 hover:bg-gray-300"
@@ -297,11 +297,16 @@ function BlogDetail() {
               <div className="pt-4">
                 <PlateView content={contents} />
               </div>
-              <video
-                src={blog?.postData.videoDir as string}
-                className="max-h-[24rem] w-full rounded-md"
-                controls
-              ></video>
+              {blog?.postData.videoDir ? (
+                <video
+                  src={blog?.postData.videoDir as string}
+                  className="max-h-[24rem] w-full rounded-md"
+                  controls
+                ></video>
+              ) : (
+                ''
+              )}
+
               <Separator className="my-8" />
               <div>
                 <div className="mb-6 flex flex-row items-center justify-between">
@@ -338,7 +343,7 @@ function BlogDetail() {
             </div>
           </div>
         </div>
-        <div className="col-span-3 bg-gray-200">{/* <More /> */}</div>
+        <div className="col-span-3 bg-zinc-100">{/* <More /> */}</div>
       </div>
     </div>
   )

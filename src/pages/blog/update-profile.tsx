@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 import { User } from 'src/types'
 import { toast } from '../../components/ui/use-toast'
 import { getUserById } from 'src/api/user/get-user'
-import { updateUserApi } from 'src/api/user/post-user'
+import { updateUserProfileApi } from 'src/api/user/post-user'
 
 const formSchema = z.object({
   username: z.string(),
@@ -59,7 +59,7 @@ function UpdateProfile() {
       username: userDetail?.username || '',
       email: userDetail?.email || '',
       addressId: userDetail?.addressId || '',
-      avatar: userDetail?.avatar || '',
+      avatar: userDetail?.avatar as string,
       fullName: userDetail?.fullName || '',
       url: userDetail?.url || '',
       bio: userDetail?.bio || '',
@@ -67,7 +67,7 @@ function UpdateProfile() {
   })
 
   const { mutate: updatedUser } = useMutation(
-    (updatedData: Partial<User>) => updateUserApi(user?.userId as string, updatedData as User),
+    (updatedData: Partial<User>) => updateUserProfileApi(updatedData as User),
     {
       onSuccess: (updatedUser) => {
         if (updatedUser) {
@@ -209,7 +209,11 @@ function UpdateProfile() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input className="mx-4" type="file" accept="image/*" {...field} />
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

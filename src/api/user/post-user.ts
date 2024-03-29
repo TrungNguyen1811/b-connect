@@ -20,11 +20,24 @@ async function postUserApi(userData: User) {
 
 export { postUserApi }
 
-async function updateUserApi(userId: string, userData: User) {
+async function updateUserProfileApi(userData: User) {
+  const formData = new FormData()
+  formData.append('userId', userData?.userId as string)
+  formData.append('email', userData?.email || '')
+  formData.append('username', userData?.username || '')
+  formData.append('phone', userData?.phone || '')
+  if (userData?.avatar instanceof File) {
+    formData.append('avatar', userData?.avatar)
+  }
+
   return await axiosClient
-    .post(`/user/update/${userId}`, userData, {})
+    .post('/Account/update-user-profile', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then((response) => {
-      if (response.status === 201) {
+      if (response.status === 200) {
         return response.data
       } else {
         // Handle other HTTP statuses as needed
@@ -37,4 +50,4 @@ async function updateUserApi(userId: string, userData: User) {
     })
 }
 
-export { updateUserApi }
+export { updateUserProfileApi }

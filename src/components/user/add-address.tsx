@@ -6,7 +6,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import { faker } from '@faker-js/faker'
 import { IAddress } from 'src/types/address'
 import postAddress from 'src/api/address/post-address'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import MetaData from 'src/components/metadata'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { Button } from 'src/components/ui/button'
@@ -17,6 +17,8 @@ import { ScrollArea } from 'src/components/ui/scroll-area'
 import AddressData from 'src/components/cart/address.json'
 import { Input } from 'src/components/ui/input'
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from '../ui/use-toast'
 
 export const AddressSchema = z.object({
   city_Province: z.string(),
@@ -34,10 +36,21 @@ const AddNewAddress = () => {
   const { user } = useAuth()
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
-
+  const queryClient = useQueryClient()
   // const provinces = Object.keys(AddressData)
-
   // const navigate = useNavigate()
+
+  const { mutate: addAddress } = useMutation(postAddress, {
+    onSuccess: () => {
+      toast({
+        title: 'Add new address success',
+      }),
+        queryClient.invalidateQueries()
+    },
+    onError: (error: Error) => {
+      throw error.message
+    },
+  })
 
   const onSubmit = async (data: FormData) => {
     const address: IAddress = {
@@ -50,14 +63,16 @@ const AddNewAddress = () => {
       userId: user?.userId as string,
     }
 
-    await postAddress(address)
+    await addAddress(address)
   }
 
   return (
     <div className="p-4">
       <MetaData title="Address" />
       <Dialog>
-        <DialogTrigger>Add New Address</DialogTrigger>
+        <DialogTrigger>
+          <Button>Add New Address</Button>
+        </DialogTrigger>
         <DialogContent>
           <div className="rounded-lg border border-gray-200 p-4">
             <div>
@@ -115,7 +130,6 @@ const AddNewAddress = () => {
                               </Command>
                             </PopoverContent>
                           </Popover>
-                          <FormDescription>This is the province in the selected city.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -126,7 +140,7 @@ const AddNewAddress = () => {
                       name="district"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
-                          <FormLabel>District</FormLabel>
+                          <FormLabel className="mt-4">District</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
@@ -174,7 +188,6 @@ const AddNewAddress = () => {
                               </Command>
                             </PopoverContent>
                           </Popover>
-                          <FormDescription>This is the district in the selected city.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -185,7 +198,7 @@ const AddNewAddress = () => {
                       name="subDistrict"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
-                          <FormLabel>Wards</FormLabel>
+                          <FormLabel className="mt-4">Wards</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
@@ -233,7 +246,6 @@ const AddNewAddress = () => {
                               </Command>
                             </PopoverContent>
                           </Popover>
-                          <FormDescription>This is the wards in the selected city.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -244,17 +256,16 @@ const AddNewAddress = () => {
                       name="rendezvous"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Rendezvous</FormLabel>
+                          <FormLabel className="mt-4">Rendezvous</FormLabel>
                           <FormControl>
                             <Input placeholder="ABC..." {...field} />
                           </FormControl>
-                          <FormDescription>This is the rendezvous in the selected city.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </>
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="mt-4 w-full">
                     Save
                   </Button>
                 </form>

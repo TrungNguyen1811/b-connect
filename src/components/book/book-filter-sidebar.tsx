@@ -11,6 +11,7 @@ import { Label } from '../ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/selector'
 import { Filter } from 'lucide-react'
 import { Separator } from '../ui/separator'
+import { MultiSelect } from '../ui/multi-select'
 import { SearchCategory } from './search-categories'
 
 type Props = {
@@ -19,7 +20,7 @@ type Props = {
 }
 
 const FilterSchema = z.object({
-  searchTerm: z.string().optional(),
+  searchName: z.string().optional(),
   category: z.string().optional(),
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
@@ -34,6 +35,9 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     resolver: zodResolver(FilterSchema),
   })
   const { isLoading: isCategoryLoading, data: categories } = useGetAllCategory()
+  const [selected, setSelected] = useState<string[]>([])
+  const ct = selected.toString()
+
   const categoriesCombobox = useMemo(() => {
     if (!categories) return []
     else
@@ -44,20 +48,19 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
   }, [categories])
 
   useEffect(() => {
-    const search = searchParams.get('searchTerm') || ''
+    const search = searchParams.get('searchName') || ''
     const minPrice = searchParams.get('minPrice') || ''
     const maxPrice = searchParams.get('maxPrice') || ''
     const rating = searchParams.get('rating') || ''
     const category = searchParams.get('category') || ''
     const status = searchParams.get('status') || ''
 
-    setValue('searchTerm', search)
+    setValue('searchName', search)
     setValue('category', category)
     setValue('minPrice', minPrice)
     setValue('maxPrice', maxPrice)
     setValue('rating', rating)
     setValue('status', status)
-
     control.handleSubmit((data) => {
       onFilterChange && onFilterChange(data)
     })()
@@ -67,7 +70,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     (data: FilterForm) => {
       const searchParams = new URLSearchParams()
 
-      data.searchTerm && searchParams.set('searchTerm', data.searchTerm)
+      data.searchName && searchParams.set('searchName', data.searchName)
       data.category && searchParams.set('category', data.category)
       data.minPrice && searchParams.set('minPrice', data.minPrice)
       data.maxPrice && searchParams.set('maxPrice', data.maxPrice)
@@ -80,7 +83,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
         onFilterChange(data)
       }
     },
-    [onFilterChange, setSearchParams],
+    [onFilterChange, setSearchParams, ct],
   )
   const [clearFlag, setClearFlag] = useState(false)
   const onClear = React.useCallback(() => {
@@ -97,12 +100,12 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
             <Filter /> <p className="pl-2 text-lg font-extrabold">Search Filter </p>
           </span>
           <Separator />
-          <div aria-label="searchTerm">
-            <Label htmlFor="searchTerm">Find book</Label>
+          <div aria-label="searchName">
+            <Label htmlFor="searchName">Find book</Label>
             <Input
               placeholder="Search name of book"
-              id="searchTerm"
-              {...control.register('searchTerm')}
+              id="searchName"
+              {...control.register('searchName')}
               className="bg-card"
             />
           </div>
@@ -115,6 +118,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               onSelection={(category) => setValue('category', category)}
               clear={clearFlag}
             />
+            <MultiSelect options={categoriesCombobox} selected={selected} onChange={setSelected} />
           </div>
           <div>
             <Label htmlFor="status">Status</Label>

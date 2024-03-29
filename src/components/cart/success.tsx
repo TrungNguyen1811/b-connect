@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const CheckoutSuccess = () => {
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="h-screen bg-zinc-100">
       <div className="bg-white p-6  md:mx-auto">
         <CheckCircle2Icon size={24} className="mx-auto my-6 h-16 w-16 text-blue-600" />
 

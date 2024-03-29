@@ -35,22 +35,24 @@ function AddressPage() {
       <div className="w-full">
         <div className="w-full">
           <div className="flex w-full flex-row items-center justify-between px-8">
-            <p>My Addresses</p>
+            <p className="text-xl font-semibold">My Addresses</p>
             <AddNewAddress />
           </div>
           <Separator />
           <div>
-            <p className="my-2 ml-8">Address</p>
+            <p className="ml-8 mt-2 text-lg">
+              Address {''}({addresses.length})
+            </p>
             {addresses.map((address, index) => (
-              <div key={index}>
-                <div className="flex flex-row items-center justify-between">
-                  <div>
+              <div key={index} className="ml-8">
+                <div className="my-2 flex flex-row items-center justify-between">
+                  <div className="flex flex-col">
                     <p>{address.rendezvous}</p>
                     <p>
                       {address.city_Province}, {address.district}, {address.subDistrict}
                     </p>
                     {address.default ? (
-                      <p className="border-1 border border-red-600 px-2 py-1 text-red-600">Default</p>
+                      <p className="border-1 w-24 border border-red-600 px-2 py-1 text-center text-red-600">Default</p>
                     ) : (
                       ''
                     )}
@@ -59,6 +61,7 @@ function AddressPage() {
                     <UpdateAddress addressId={address.addressId} />
                   </div>
                 </div>
+                <Separator />
               </div>
             ))}
           </div>

@@ -3,7 +3,6 @@ import { createBrowserRouter } from 'react-router-dom'
 import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
-import AddToCart from 'src/components/cart/add-to-cart'
 
 import CategoryList from 'src/pages/blog/category-list'
 import BlogDetail from 'src/pages/blog/post-detail'
@@ -13,7 +12,7 @@ import DailyDiscover from 'src/pages/e-comerce/DailyDiscover'
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
-const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
+// const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
 const ViewCart = React.lazy(() => import('src/pages/cart/view-cart'))
 const CheckoutPage = React.lazy(() => import('src/components/cart/checkout'))
 const CheckoutResult = React.lazy(() => import('src/components/cart/checkout-result'))
@@ -77,11 +76,11 @@ export const ROUTES = createBrowserRouter([
             book,
           }
         },
-        element: <BookDetailPage />,
+        // element: <BookDetailPage />,
       },
-      {
-        element: <AddToCart />,
-      },
+      // {
+      //   element: <AddToCart />,
+      // },
       {
         path: 'view-cart',
         element: <ViewCart />,

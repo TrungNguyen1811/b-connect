@@ -8,8 +8,8 @@ export interface User {
   role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'Agency' | 'BaseUser'
   isSeller?: boolean
   isValidated?: boolean
-  phone?: number
-  avatar?: string
+  phone?: string
+  avatar?: File | string
   addressId?: string | null
   username: string
   password?: string

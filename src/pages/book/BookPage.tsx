@@ -14,8 +14,8 @@ import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
 import { GetManyBooksParams } from 'src/api/books/get-book'
 
 const initBookState: GetManyBooksParams = {
-  PageNumber: 0,
-  PageSize: 2,
+  PageNumber: 1,
+  PageSize: 40,
   authors: undefined,
   genres: undefined,
   reviews: undefined,
@@ -49,8 +49,8 @@ function BookPage() {
     if (isLoading) return <BookGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
     if (!data?.data || data.data.length === 0)
       return (
-        <div className="col-span-full row-span-full h-full w-full">
-          <h3 className="text-center text-slate-300">No result found</h3>
+        <div className="col-span-full row-span-full  w-full">
+          <h3 className="h-96 pt-48 text-center text-slate-300">No result found</h3>
         </div>
       )
     return data?.data.map((book) => {
@@ -68,7 +68,7 @@ function BookPage() {
 
   if (isError) return <div>Something went wrong</div>
   return (
-    <div className=" bg-gray-100">
+    <div className=" bg-zinc-100">
       <div className="mx-auto max-w-7xl sm:px-6">
         <main className="mx-auto min-h-screen w-full">
           <MetaData title="Books" />
@@ -89,7 +89,7 @@ function BookPage() {
             </section>
             <div className="ml-8">
               <SortBook />
-              <section key="main.section.books" className="grid flex-1 grid-cols-4 gap-5">
+              <section key="main.section.books" className="ml-4 grid flex-1 grid-cols-5 gap-12">
                 {renderBooks}
                 <div className="col-span-full mx-auto w-fit">
                   <Pagination

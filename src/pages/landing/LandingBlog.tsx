@@ -64,7 +64,7 @@ export default function LandingBlog() {
   return (
     <div className="mx-24 px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
-        <div className="col-span-2 bg-gray-200">
+        <div className="col-span-2 bg-zinc-100">
           <Menu />
         </div>
         <div className="col-span-7">
@@ -75,7 +75,7 @@ export default function LandingBlog() {
             </div>
           ))} */}
         </div>
-        <div className="col-span-3 bg-gray-200">
+        <div className="col-span-3 bg-zinc-100">
           <Active />
         </div>
       </div>

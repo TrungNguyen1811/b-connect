@@ -3,7 +3,7 @@ import { IAddress } from 'src/types/address'
 
 function putAddress(data: IAddress) {
   return axiosClient
-    .put('/Address/UpdateAddress', data, {})
+    .put('/Address/update-default-address', data, {})
     .then((res) => {
       if (res.status === 200) {
         return res.data
