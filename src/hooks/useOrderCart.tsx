@@ -289,30 +289,31 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
   }
 
   const addToCart = async (_id: string) => {
-    const existingItem = cartItems.find((item) => item.productId === _id)
+    try {
+      const book: IBook = await getBookById(_id)
 
-    if (existingItem) {
-      const updatedCartItems = cartItems.map((item) =>
-        item.productId === _id
-          ? {
-              ...item,
-              quantity: item.quantity + 1 > item.stock ? item.quantity : item.quantity + 1,
-            }
-          : item,
-      )
-      setCartItems(updatedCartItems)
-    } else {
-      // Hàm trung gian async để gọi getBookById
-      const addBookToCart = async (bookId: string) => {
-        const book = await getBookById(bookId)
-        return book
-      }
-
-      const book: IBook = await addBookToCart(_id)
-      console.log('book', book)
       if (book && book.stock > 0) {
-        setCartItems([...cartItems, { productId: _id, quantity: 1, stock: book.stock }])
+        const existingItem = cartItems.find((item) => item.productId === _id)
+
+        if (existingItem) {
+          const updatedCartItems = cartItems.map((item) =>
+            item.productId === _id
+              ? {
+                  ...item,
+                  quantity: item.quantity + 1 > book.stock ? book.stock : item.quantity + 1,
+                  stock: book.stock,
+                }
+              : item,
+          )
+          setCartItems(updatedCartItems)
+        } else {
+          setCartItems([...cartItems, { productId: _id, quantity: 1, stock: book.stock }])
+        }
+      } else {
+        console.log('Book not found or out of stock')
       }
+    } catch (error) {
+      console.error('Error fetching book details:', error)
     }
   }
 
