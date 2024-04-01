@@ -19,12 +19,14 @@ import { Input } from 'src/components/ui/input'
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '../ui/use-toast'
+import { Checkbox } from '../ui/check-box'
 
 export const AddressSchema = z.object({
   city_Province: z.string(),
   district: z.string() || null,
   subDistrict: z.string() || null,
   rendezvous: z.string(),
+  default: z.boolean().default(false),
 })
 
 type FormData = z.infer<typeof AddressSchema>
@@ -59,7 +61,7 @@ const AddNewAddress = () => {
       district: data.district,
       subDistrict: data.subDistrict,
       rendezvous: data.rendezvous,
-      default: true,
+      default: data.default,
       userId: user?.userId as string,
     }
 
@@ -259,6 +261,20 @@ const AddNewAddress = () => {
                           <FormLabel className="mt-4">Rendezvous</FormLabel>
                           <FormControl>
                             <Input placeholder="ABC..." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="default"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="mt-4">Default</FormLabel>
+                          <FormControl>
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

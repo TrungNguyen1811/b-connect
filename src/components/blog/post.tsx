@@ -6,8 +6,9 @@ import { AvatarImage } from '../ui/avatar'
 import { Separator } from '../ui/separator'
 import { BookMarkedIcon, HandshakeIcon, MessageCircleIcon } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { postInterestedPost } from 'src/api/blog/interested'
 import { useAuth } from 'src/hooks/useAuth'
+import { IResponseInteresterList } from 'src/types/interester'
+import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
 
 interface PostProps {
   postId: string
@@ -16,18 +17,14 @@ interface PostProps {
 function Post({ postId }: PostProps) {
   const { user } = useAuth()
   const [blog, setBlog] = useState<IResponsePost>()
+  const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isSaved, setIsSaved] = useState<boolean>(false)
   const [isInterested, setIsInterested] = useState<boolean>(false)
-
-  console.log(blog)
+  const [postInterestId, setPostInterestId] = useState<string | undefined>(undefined) // Sử dụng kiểu union để cho phép giá trị undefined
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    // if (!blog || blog.userId === undefined) {
-    //   return // Return early if blog or blog.userId is undefined
-    // }
-
     const fetchBlogAndUser = async () => {
       const blogData = await getPostByIdApi(postId)
       setBlog(blogData)
@@ -36,28 +33,53 @@ function Post({ postId }: PostProps) {
     fetchBlogAndUser()
   }, [postId])
 
-  const saveToReadingList = async () => {
+  const saveToReadingList = () => {
     if (blog?.postData) {
-      //   await postReadingList(blog._id)
       setIsSaved(true)
     }
   }
 
-  const unsaveFromReadingList = async () => {
-    //   await postRemoveReadingList(blog._id)
+  const unsaveFromReadingList = () => {
     setIsSaved(false)
   }
 
-  const saveInterested = async () => {
-    if (blog?.postData) {
-      await postInterestedPost(blog.postData.postId as string, user?.userId as string)
-      setIsInterested(true)
+  useEffect(() => {
+    const fetchInterestStatus = async () => {
+      try {
+        const interesters = await getPostInterestByPostId(postId)
+        setInteresterList(interesters) // Cập nhật state interesterList sau khi lấy dữ liệu từ API
+        const userInterest = interesters.find((interester) => interester.userId === user?.userId)
+        if (userInterest) {
+          setIsInterested(true)
+          setPostInterestId(userInterest.recordId)
+        } else {
+          setIsInterested(false)
+        }
+      } catch (error) {
+        console.error('Error fetching interest status:', error)
+      }
     }
-  }
+    if (user) {
+      fetchInterestStatus()
+    }
+  }, [postId, user, isInterested])
 
-  const unSaveInterested = async () => {
-    //   await postRemoveReadingList(blog._id)
-    setIsInterested(false)
+  const handleInterestClick = async () => {
+    try {
+      if (!isInterested) {
+        const data = await postInterestedPost(postId)
+        setPostInterestId(data)
+        setIsInterested(true)
+      } else {
+        if (postInterestId) {
+          await removeInterestedPost(postInterestId)
+        }
+        setIsInterested(false)
+        setPostInterestId(undefined)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 
   return (
@@ -97,6 +119,14 @@ function Post({ postId }: PostProps) {
           </div>
         </div>
       </Link>
+      <div>IS interested</div>
+      <div>
+        {interesterList.map((inter, index) => (
+          <div key={index}>
+            <div className="text-sm">{inter.username}</div>
+          </div>
+        ))}
+      </div>
       <Separator />
       <div className="flex flex-row items-center justify-between">
         <button
@@ -107,10 +137,7 @@ function Post({ postId }: PostProps) {
         </button>
         <div className="flex flex-row items-center">
           {blog?.postData.isTradePost ? (
-            <div
-              className="m-2 rounded-sm p-1 hover:bg-gray-300"
-              onClick={isInterested ? unSaveInterested : saveInterested}
-            >
+            <div className="m-2 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
               <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
             </div>
           ) : (

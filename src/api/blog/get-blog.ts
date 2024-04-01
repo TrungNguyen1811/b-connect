@@ -3,7 +3,7 @@ import { IResponse } from 'src/types/response'
 import { IBlogg, IResponsePost } from 'src/types/blog'
 import { ICategory } from 'src/types/categories'
 import axios from 'axios'
-import { axiosClient } from 'src/lib/axios'
+import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { IDefaultQuery } from 'src/types/requests'
 
 const fakeContentArray = Array.from({ length: 7 }, () => ({
@@ -191,4 +191,23 @@ export async function getAllPosts(params: GetManyPostsParams) {
       const data: IResponsePost[] = res.data
       return data
     })
+}
+
+export async function getPostByUserId(userId: string) {
+  return axiosClient.get(`/Post/get-post-by-user?userId=${userId}`).then((res) => {
+    const data: IResponsePost[] = res.data
+    return data
+  })
+}
+
+export interface IResponsePostLocked {
+  postId: string
+  status: string
+  title: string
+}
+export async function getLockedPostByUserId(id: string) {
+  return authAxiosClient.get(`/Post/trading/get-locked-post-by-userId?traderType=${id}`).then((res) => {
+    const data: IResponsePostLocked[] = res.data
+    return data
+  })
 }

@@ -5,14 +5,15 @@ import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
 
 import CategoryList from 'src/pages/blog/category-list'
-import BlogDetail from 'src/pages/blog/post-detail'
 import ReadingList from 'src/pages/blog/reading-list'
 import UpdateBlog from 'src/pages/blog/update-post'
-import DailyDiscover from 'src/pages/e-comerce/DailyDiscover'
+
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
-// const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
+const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
+const DailyDiscover = React.lazy(() => import('src/pages/e-commerce/DailyDiscover'))
+const TopBookPage = React.lazy(() => import('src/pages/e-commerce/TopBook'))
 const ViewCart = React.lazy(() => import('src/pages/cart/view-cart'))
 const CheckoutPage = React.lazy(() => import('src/components/cart/checkout'))
 const CheckoutResult = React.lazy(() => import('src/components/cart/checkout-result'))
@@ -48,9 +49,13 @@ const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/profileUserBlog'))
 const UpdateProfile = React.lazy(() => import('src/pages/blog/update-profile'))
-const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard'))
+const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard-post'))
 const FollowingCategory = React.lazy(() => import('src/pages/blog/following-category'))
 const CreateBlog = React.lazy(() => import('src/pages/blog/create-blog'))
+const BlogDetail = React.lazy(() => import('src/pages/blog/post-detail'))
+const PostInterestedManage = React.lazy(() => import('src/pages/blog/post-interested-manage'))
+const ManagePostInterester = React.lazy(() => import('src/pages/blog/manage-post-interester'))
+const SubmitTrade = React.lazy(() => import('src/pages/blog/submit-trade'))
 
 export const ROUTES = createBrowserRouter([
   {
@@ -59,6 +64,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/',
         element: <LandingPage />,
+      },
+      {
+        path: '/top-book',
+        element: <TopBookPage />,
       },
       {
         path: '/daily_discover',
@@ -76,7 +85,7 @@ export const ROUTES = createBrowserRouter([
             book,
           }
         },
-        // element: <BookDetailPage />,
+        element: <BookDetailPage />,
       },
       // {
       //   element: <AddToCart />,
@@ -228,8 +237,24 @@ export const ROUTES = createBrowserRouter([
         element: <DashboardBlog />,
       },
       {
-        path: '/blog/dashboard/following_categories',
+        path: '/blog/dashboard/following_tags',
         element: <FollowingCategory />,
+      },
+      // {
+      //   path: '/blog/dashboard/manage-interester',
+      //   element: <ManagePostInterester />,
+      // },
+      {
+        path: '/blog/dashboard/manage-interester/:id',
+        element: <ManagePostInterester />,
+      },
+      {
+        path: '/blog/dashboard/submit-form/:id',
+        element: <SubmitTrade />,
+      },
+      {
+        path: '/blog/dashboard/manage-interested',
+        element: <PostInterestedManage />,
       },
       {
         path: '/blog/categories',

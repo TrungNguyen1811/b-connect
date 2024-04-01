@@ -44,6 +44,18 @@ function FollowingCategory() {
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
             </div>
           </Link>
+          <Link to={'/blog/dashboard/manage-interested'} className=" ">
+            <div className="flex flex-row items-center rounded-sm px-2 py-1">
+              <p className="w-full font-semibold">Manage Post interested</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+            </div>
+          </Link>
+          <Link to={'/blog/dashboard/manage-interester'} className="">
+            <div className="flex flex-row items-center rounded-sm px-2 py-1">
+              <p className="w-full font-semibold">Manage Post Interester</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+            </div>
+          </Link>
         </nav>
         <div className="h-full w-full">
           {categories ? (

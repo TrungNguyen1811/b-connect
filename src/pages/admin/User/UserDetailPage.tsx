@@ -53,7 +53,7 @@ function UserDetailPage() {
       <Separator className="mt-4" />
       <div>
         <Avatar>
-          <AvatarImage src={user?.avatar} />
+          <AvatarImage src={user?.avatar as string} />
         </Avatar>
         <div>
           <p>UserId: {user?.userId}</p>

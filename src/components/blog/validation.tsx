@@ -11,14 +11,14 @@ const contentSchema = z.object({
 })
 
 export const createBlogSchema = z.object({
-  userId: z.string(),
+  // userId: z.string(),
   // authorName: z.string(),
   productImages: z.any(),
   productVideos: z.any(),
-  // title: z.string(),
+  title: z.string(),
   // listCate: z.string(),
   content: z.string(),
-  isTradePost: z.boolean().default(false),
+  isTradePost: z.boolean().optional().default(false),
 })
 
 export const updateBlogSchema = z.object({

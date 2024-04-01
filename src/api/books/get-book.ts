@@ -143,7 +143,7 @@ export type GetManyBooksParams = {
 
 export async function getManyBooks(params: GetManyBooksParams) {
   return axiosClient
-    .get('/products/get-book-by-name', {
+    .get('/products/get-book-by-all', {
       params,
     })
     .then((res) => {

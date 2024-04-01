@@ -76,7 +76,7 @@ function InfoAccount() {
 
   useEffect(() => {
     fetchDataAndUpdateForm()
-  }, [users])
+  }, [])
 
   const { mutate: updateUser } = useMutation((updateUser: User) => updateUserProfileApi(updateUser), {
     onSuccess: (updateUser) => {
@@ -164,7 +164,7 @@ function InfoAccount() {
               <ResizablePanel defaultSize={40}>
                 <div className="flex h-[200px] flex-col items-center p-6 pt-24">
                   <Avatar className="h-24 w-24">
-                    <AvatarImage src="https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn"></AvatarImage>
+                    <AvatarImage src={user?.avatar as string}></AvatarImage>
                   </Avatar>
                   <FormField
                     control={form.control}

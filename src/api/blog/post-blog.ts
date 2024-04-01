@@ -2,21 +2,19 @@ import FormData from 'form-data'
 import { authAxiosClient, axiosClient } from '../../lib/axios'
 
 async function postBlogApi(blogData: {
-  userId: string
   // authorName: string
   // listCate: string
   productImages?: File | null
   productVideos?: File | null
   isTradePost?: boolean
-  // title: string
+  title: string
   content: string
 }) {
   const data = new FormData()
   // data.append('listCate', blogData.listCate)
-  data.append('UserId', blogData.userId)
   data.append('IsTradePost', blogData.isTradePost)
   // data.append('authorName', blogData.authorName)
-  // data.append('title', blogData.title)
+  data.append('title', blogData.title)
   data.append('Content', blogData.content)
   if (blogData.productImages instanceof File) {
     data.append('ProductImages', blogData.productImages)

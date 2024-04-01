@@ -20,7 +20,7 @@ type Props = {
 }
 
 const FilterSchema = z.object({
-  searchName: z.string().optional(),
+  Name: z.string().optional(),
   category: z.string().optional(),
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
@@ -48,14 +48,14 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
   }, [categories])
 
   useEffect(() => {
-    const search = searchParams.get('searchName') || ''
+    const search = searchParams.get('Name') || ''
     const minPrice = searchParams.get('minPrice') || ''
     const maxPrice = searchParams.get('maxPrice') || ''
     const rating = searchParams.get('rating') || ''
     const category = searchParams.get('category') || ''
     const status = searchParams.get('status') || ''
 
-    setValue('searchName', search)
+    setValue('Name', search)
     setValue('category', category)
     setValue('minPrice', minPrice)
     setValue('maxPrice', maxPrice)
@@ -70,7 +70,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     (data: FilterForm) => {
       const searchParams = new URLSearchParams()
 
-      data.searchName && searchParams.set('searchName', data.searchName)
+      data.Name && searchParams.set('Name', data.Name)
       data.category && searchParams.set('category', data.category)
       data.minPrice && searchParams.set('minPrice', data.minPrice)
       data.maxPrice && searchParams.set('maxPrice', data.maxPrice)
@@ -100,14 +100,9 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
             <Filter /> <p className="pl-2 text-lg font-extrabold">Search Filter </p>
           </span>
           <Separator />
-          <div aria-label="searchName">
-            <Label htmlFor="searchName">Find book</Label>
-            <Input
-              placeholder="Search name of book"
-              id="searchName"
-              {...control.register('searchName')}
-              className="bg-card"
-            />
+          <div aria-label="Name">
+            <Label htmlFor="Name">Find book</Label>
+            <Input placeholder="Search name of book" id="Name" {...control.register('Name')} className="bg-card" />
           </div>
           <div>
             <Label htmlFor="category">Category</Label>

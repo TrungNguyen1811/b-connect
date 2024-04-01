@@ -1,5 +1,4 @@
 import { ICategory } from './categories'
-import { User } from './user'
 
 export interface IBook {
   productId: string
@@ -12,7 +11,7 @@ export interface IBook {
   agencyId: string
   agencyName: string
   category?: ICategory['cateId']
-  reviews?: IReview['RatingRecordId']
+  reviews?: IReview['ratingRecordId']
   ratingId?: string
   isAvailable?: boolean | undefined
   status?: 'NEW' | 'OLD'
@@ -26,12 +25,25 @@ export enum BOOK_STATUS {
 }
 
 export interface IReview {
-  RatingRecordId?: string
-  RatingId: string
-  userId: Pick<User, 'userId' | 'email' | 'avatar' | 'fullName'>
-  RatingPoint?: number
+  ratingRecordId?: string
+  ratingId: string
+  userId: string
+  ratingPoint?: number
   comment?: string
   purchasesVerify?: string
   createdAt?: string
+  updatedAt?: string
+}
+
+export interface IReviewResponse {
+  ratingRecordId?: string
+  ratingId?: string
+  userId: string
+  ratingPoint: number
+  comment: string
+  username?: string
+  avatarDir?: string
+  email?: string
+  createDate?: string
   updatedAt?: string
 }

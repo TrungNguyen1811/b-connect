@@ -44,11 +44,6 @@ export default function CreateBlog() {
   }
 
   const { user } = useAuth()
-  useEffect(() => {
-    form.setValue('userId', user?.userId as string)
-  }, [user?.userId, form])
-  // form.setValue('userId', user?.userId as string)
-  // form.setValue('authorName', user?.username as string)
 
   // const [categories, setCategories] = useState<ICategory[]>()
   const [options, setOptions] = useState<readonly Options[]>([])
@@ -126,12 +121,12 @@ export default function CreateBlog() {
     if (user) {
       const dataBlog: FormData = {
         ...(data as FormData),
-        userId: data.userId,
         // authorName: user.username as string,
         // listCate: data.listCate as string,
         productImages: data.productImages,
         productVideos: data.productVideos,
         isTradePost: data.isTradePost,
+        title: data.title,
         content: data.content,
       }
       console.log('Form data:', dataBlog)
@@ -206,7 +201,7 @@ export default function CreateBlog() {
                       <FormLabel className="mr-10 text-lg">Add a cover image</FormLabel>
                       <FormControl>
                         <Input
-                          className="w-[27rem]"
+                          className="ml-8 w-[27rem]"
                           type="file"
                           onChange={(e) => field.onChange(e.target.files?.[0] || null)}
                         />
@@ -218,7 +213,7 @@ export default function CreateBlog() {
                   control={form.control}
                   name="productVideos"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center">
+                    <FormItem className="mb-4 flex flex-row items-center">
                       <FormLabel className="mr-10 text-lg">Add a Video Introduce</FormLabel>
                       <FormControl>
                         <Input
@@ -230,7 +225,7 @@ export default function CreateBlog() {
                     </FormItem>
                   )}
                 />
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
@@ -242,7 +237,7 @@ export default function CreateBlog() {
                       />
                     </FormControl>
                   )}
-                /> */}
+                />
                 {/* <Select
                   value={selectedCategories.map((value) => ({
                     value,

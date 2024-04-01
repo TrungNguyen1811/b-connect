@@ -265,6 +265,27 @@ function IdentificationUser() {
     form.formState.errors && console.log(form.formState.errors)
   }, [form.formState.errors])
 
+  const Result = () => {
+    return (
+      <div>
+        <div className=" flex flex-row items-center justify-between">
+          <p className="p-4 text-2xl">Identification Information</p>
+        </div>
+        <div className="flex h-96 flex-row">
+          <div className="ml-8">
+            <p>ID: {user?.ctcId}</p>
+            <p>NAME: {user?.ctcName}</p>
+            <p>SEX: {user?.ctcSex}3</p>
+            <p>DATE OF BIRTH: {user?.ctcDob}</p>
+            <p>ADDRESS{user?.ctcAddress}</p>
+            <p>HOME: {user?.ctcHome}</p>
+            <p>NATIONALITY: {user?.ctcNationality}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-[75vw] rounded-lg border bg-card text-card-foreground shadow-sm">
       <div className="px-8 py-2">
@@ -273,7 +294,9 @@ function IdentificationUser() {
       </div>
       <Separator />
       {user?.isValidated ? (
-        <div>{renderCTC}</div>
+        <div>
+          <Result />
+        </div>
       ) : (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="mt-16 flex flex-col">

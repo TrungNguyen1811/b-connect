@@ -6,6 +6,8 @@ import { getBookById } from 'src/api/books/get-book'
 import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom'
 import { DeleteIcon } from 'lucide-react'
+import { getAgencyByAgencyId } from 'src/api/agency/get-agency'
+import { IAgency } from 'src/types/agency'
 
 function CartPage() {
   const { cartItems, addToCart, decreaseToCart, removeFromCart, clearCart } = useOrderCart()
@@ -164,6 +166,24 @@ function CartPage() {
     navigate(`/checkout/${selectedCartItemsEncoded}`)
   }
 
+  const AgencyName: React.FC<{ agencyId: string }> = ({ agencyId }) => {
+    const [agencyName, setAgencyName] = useState<string>('')
+
+    useEffect(() => {
+      const fetchAgencyName = async () => {
+        try {
+          const name: IAgency = await getAgencyByAgencyId(agencyId)
+          setAgencyName(name.agencyName as string)
+        } catch (error) {
+          console.error('Error fetching agency name:', error)
+        }
+      }
+
+      fetchAgencyName()
+    }, [agencyId])
+
+    return <span>{agencyName}</span>
+  }
   return (
     <div className="p-4">
       <div className="rounded-lg border border-gray-200 p-4">
@@ -192,7 +212,7 @@ function CartPage() {
                       />
                     </TableCell>
                     <TableCell colSpan={4} className="font-bold">
-                      Store {agencyId}
+                      Store <AgencyName agencyId={agencyId} />
                     </TableCell>
                   </TableRow>
                   {cartItemsByStore[agencyId].map((item, idx) => (

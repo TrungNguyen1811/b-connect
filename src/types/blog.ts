@@ -63,6 +63,7 @@ export interface IBlogResponse {
   imageDir?: File | string
   videoDir?: File | string
   isTradePost?: boolean
+  isLock?: boolean
   title?: string
   content?: string
   listCate?: listCate[]

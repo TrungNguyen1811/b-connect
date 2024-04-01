@@ -23,7 +23,7 @@ export function Menu() {
       {
         title: 'Tags',
         key: 'tags',
-        href: '/tags',
+        href: '/following_categories',
         icon: 'tags',
       },
       {
@@ -97,18 +97,18 @@ export function Menu() {
     )
   }
 
-  const Interested = () => {
+  const Tags = () => {
     const { user } = useAuth()
     const [categoryNames, setCategoryNames] = useState<string[]>([])
 
     // useEffect(() => {
     //   const fetchCategoryNames = async () => {
     //     const names: string[] = []
-    //     for (const interest of user?.interested || []) {
-    //       for (const category of interest.category_id) {
-    //         const name = await getCategoryById(category.name)
+    //     for (const tag of user?.interested || []) {
+    //       for (const category of tags.cateId) {
+    //         const name = await getCategoryById(category.cateId)
     //         if (name) {
-    //           names.push(name.name)
+    //           names.push(name.cateName)
     //         }
     //       }
     //     }
@@ -121,7 +121,7 @@ export function Menu() {
     return (
       <div className="flex flex-col">
         <div className="flex flex-row justify-between">
-          <p className="text-md mb-4 font-bold">My Interest</p>
+          <p className="text-md mb-4 font-bold">My Tags</p>
           <Link to={'dashboard/following_tags'}>
             <SettingsIcon />
           </Link>
@@ -142,13 +142,58 @@ export function Menu() {
     )
   }
 
+  const Interested = () => {
+    const { user } = useAuth()
+    const [interestedName, setInterestedName] = useState<string[]>([])
+
+    // useEffect(() => {
+    //   const fetchCategoryNames = async () => {
+    //     const names: string[] = []
+    //     for (const tag of user?.interested || []) {
+    //       for (const category of tags.cateId) {
+    //         const name = await getCategoryById(category.cateId)
+    //         if (name) {
+    //           names.push(name.cateName)
+    //         }
+    //       }
+    //     }
+    //     setCategoryNames(names)
+    //   }
+
+    //   fetchCategoryNames()
+    // }, [user])
+
+    return (
+      <div className="flex flex-col">
+        <div className="flex flex-row justify-between">
+          <p className="text-md mb-4 font-bold">My Interested</p>
+          <Link to={'dashboard/following_tags'}>
+            <SettingsIcon />
+          </Link>
+        </div>
+        <div className="flex max-h-[16rem] flex-col overflow-y-auto">
+          <ul className="list-none">
+            {interestedName.map((name) => (
+              <li
+                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-slate-300"
+                key={name}
+              >
+                <Link to={`c/${name}`}>{name}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       <aside>
         <nav>
           <MenuSideBar items={menu} />
           <Contact items={CONTACT} />
-          <Interested />
+          <Tags />
         </nav>
       </aside>
     </div>

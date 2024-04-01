@@ -1,21 +1,33 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getBlogsByUserId } from 'src/api/blog/get-blog'
-import Blog from 'src/components/blog/post-manage'
+import { IResponsePostLocked, getLockedPostByUserId, getPostByUserId } from 'src/api/blog/get-blog'
 import { Button } from 'src/components/ui/button'
+import { Checkbox } from 'src/components/ui/check-box'
+import { Separator } from 'src/components/ui/separator'
 import { useAuth } from 'src/hooks/useAuth'
-import { IBlogg } from 'src/types/blog'
+import { IResponsePost } from 'src/types/blog'
 
 function DashboardBlog() {
   const { user } = useAuth()
-  const [blogs, setBlogs] = useState<IBlogg[]>()
+  const [blogs, setBlogs] = useState<IResponsePost[]>()
+  const [lockBlogs, setLockBlogs] = useState<IResponsePostLocked[]>()
+  const [checkbox, setCheckbox] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user) {
-          const blogsData = await getBlogsByUserId(user.userId as string)
-          setBlogs(blogsData.data)
+        if (user && user.userId) {
+          if (checkbox) {
+            const id = '1'
+            const lockedBlogsData: IResponsePostLocked[] = await getLockedPostByUserId(id as string)
+            setLockBlogs(lockedBlogsData)
+          } else {
+            const id = '0'
+            const lockedBlogsData: IResponsePostLocked[] = await getLockedPostByUserId(id as string)
+            setLockBlogs(lockedBlogsData)
+            const blogsData: IResponsePost[] = await getPostByUserId(user.userId)
+            setBlogs(blogsData)
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -23,7 +35,7 @@ function DashboardBlog() {
     }
 
     fetchData()
-  }, [user])
+  }, [user, checkbox])
 
   return (
     <div className="mx-28">
@@ -58,14 +70,55 @@ function DashboardBlog() {
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
             </div>
           </Link>
+          <Link to={'/blog/dashboard/manage-interested'} className=" ">
+            <div className="flex flex-row items-center rounded-sm px-2 py-1">
+              <p className="w-full font-semibold">Manage Post interested</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+            </div>
+          </Link>
+          <Link to={'/blog/dashboard/manage-interester'} className="">
+            <div className="flex flex-row items-center rounded-sm px-2 py-1">
+              <p className="w-full font-semibold">Manage Post Interester</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+            </div>
+          </Link>
         </nav>
         <div className="h-full min-h-[32rem] w-full">
-          <p className="text-xl font-bold">Posts</p>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-xl font-bold">Posts</p>
+            <div className="flex flex-row items-center">
+              <p className="mr-2">Lock Post</p>
+              <Checkbox checked={checkbox} onCheckedChange={(checked: boolean) => setCheckbox(checked)} />
+            </div>
+          </div>
+
           <div className="h-full min-h-[32rem] w-full rounded-md border-2 bg-slate-50 p-6">
+            {checkbox
+              ? lockBlogs?.map((lock, index) => (
+                  <>
+                    <Link key={index} to={`/blog/dashboard/submit-form/${lock.postId}`}>
+                      <div className="flex flex-col">
+                        <p className="text-lg">{lock.title}</p>
+                        <p className="text-red-600">{lock.status}</p>
+                      </div>
+                    </Link>
+                    <Separator className="my-2" />
+                  </>
+                ))
+              : ''}
             {blogs ? (
               blogs?.map((blog, index) => (
                 <div className="my-4 mt-2" key={index}>
-                  {blog?.postId && <Blog id={blog.postId} />}
+                  {blog.postData && blog.postData.postId ? (
+                    <div>
+                      <Link to={`/blog/dashboard/manage-interester/${blog.postData.postId}`}>
+                        <div>{blog.postData.title}</div>
+                        <div>{blog.postData.createdAt}</div>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div>This post data is incomplete.</div>
+                  )}
                 </div>
               ))
             ) : (

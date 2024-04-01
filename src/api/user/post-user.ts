@@ -1,5 +1,5 @@
 import { User } from 'src/types/user'
-import { authAxiosClient, axiosClient } from '../../lib/axios'
+import { authAxiosClient } from '../../lib/axios'
 
 async function postUserApi(userData: User) {
   return await authAxiosClient
@@ -22,16 +22,18 @@ export { postUserApi }
 
 async function updateUserProfileApi(userData: User) {
   const formData = new FormData()
-  formData.append('userId', userData?.userId as string)
-  formData.append('email', userData?.email || '')
-  formData.append('username', userData?.username || '')
-  formData.append('phone', userData?.phone || '')
+  formData.append('UserId', userData?.userId as string)
+  formData.append('Email', userData?.email || '')
+  formData.append('Username', userData?.username || '')
+  formData.append('Phone', userData?.phone || '')
   if (userData?.avatar instanceof File) {
-    formData.append('avatar', userData?.avatar)
+    formData.append('AvatarDir', userData?.avatar)
+  } else {
+    formData.append('AvatarDir', '')
   }
 
-  return await axiosClient
-    .post('/Account/update-user-profile', formData, {
+  return await authAxiosClient
+    .put('/Account/update-user-profile', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -2,7 +2,7 @@ import { Avatar } from '@radix-ui/react-avatar'
 import React, { useCallback, useEffect, useId, useState } from 'react'
 import { AvatarImage } from '../../components/ui/avatar'
 import { Separator } from '../../components/ui/separator'
-import { BookMarkedIcon, HeartIcon, MessageCircleHeart, MessageCircleHeartIcon } from 'lucide-react'
+import { BookMarkedIcon, HandshakeIcon, HeartIcon, MessageCircleHeart, MessageCircleHeartIcon } from 'lucide-react'
 import { useLoaderData } from 'react-router-dom'
 import { IResponsePost } from 'src/types/blog'
 import { useToast } from '../../components/ui/use-toast'
@@ -16,6 +16,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Textarea } from 'src/components/ui/text-area'
 import { Value } from '@udecode/plate-common'
 import { PlateView } from 'src/components/ui/plate-view'
+import { IResponseInteresterList } from 'src/types/interester'
+import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
 
 type FormValue = {
   content: string
@@ -31,9 +33,10 @@ function BlogDetail() {
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const { toast } = useToast()
+
   useEffect(() => {
     setBlog(data.blog)
-  }, [data])
+  }, [data.blog])
 
   useEffect(() => {
     const renderCommentsPost = async () => {
@@ -242,6 +245,56 @@ function BlogDetail() {
     [blog?.postData.postId, user?.userId, mutateAsync, reset, toast],
   )
 
+  const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
+  const [isInterested, setIsInterested] = useState<boolean>()
+  const [postInterestId, setPostInterestId] = useState<string>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const interesterList: IResponseInteresterList[] = await getPostInterestByPostId(blog?.postData.postId as string)
+      setInteresterList(interesterList)
+    }
+    fetchData()
+  }, [blog?.postData.postId])
+
+  useEffect(() => {
+    const fetchInterestStatus = async () => {
+      try {
+        const interesters = await getPostInterestByPostId(blog?.postData.postId as string)
+        setInteresterList(interesters) // Cập nhật state interesterList sau khi lấy dữ liệu từ API
+        const userInterest = interesters.find((interester) => interester.userId === user?.userId)
+        if (userInterest) {
+          setIsInterested(true)
+          setPostInterestId(userInterest.recordId)
+        } else {
+          setIsInterested(false)
+        }
+      } catch (error) {
+        console.error('Error fetching interest status:', error)
+      }
+    }
+    if (user) {
+      fetchInterestStatus()
+    }
+  }, [blog?.postData.postId, user, isInterested])
+
+  const handleInterestClick = async () => {
+    try {
+      if (!isInterested) {
+        const data = await postInterestedPost(blog?.postData.postId as string)
+        setPostInterestId(data)
+        setIsInterested(true)
+      } else {
+        if (postInterestId) {
+          await removeInterestedPost(postInterestId)
+        }
+        setIsInterested(false)
+        setPostInterestId(undefined)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
   return (
     <div className="mx-32 px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
@@ -264,6 +317,13 @@ function BlogDetail() {
             >
               <BookMarkedIcon size={24} className={isSaved ? ' text-orange-400 ' : ''} />
             </div>
+            {blog?.postData.isTradePost ? (
+              <div className="m-2 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
+                <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         </div>
         <div className="col-span-8">

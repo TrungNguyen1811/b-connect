@@ -19,7 +19,7 @@ const initBookState: GetManyBooksParams = {
   authors: undefined,
   genres: undefined,
   reviews: undefined,
-  search: undefined,
+  Name: undefined,
 }
 function BookPage() {
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
