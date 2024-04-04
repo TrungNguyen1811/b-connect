@@ -5,7 +5,7 @@ export interface User {
   userId?: string
   email?: string
   fullName?: string
-  role?: 'ADMIN' | 'MANAGER' | 'CUSTOMER' | 'Agency' | 'BaseUser'
+  roles?: ROLE[]
   isSeller?: boolean
   isValidated?: boolean
   phone?: string

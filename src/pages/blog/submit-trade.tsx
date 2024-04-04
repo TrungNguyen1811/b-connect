@@ -2,7 +2,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ITradeDetail, getPostTraderByPostId, getTradeDetailByPostId, putSubmitTrade } from 'src/api/blog/interested'
+import {
+  ISetTradeStatus,
+  ITradeDetail,
+  getPostTraderByPostId,
+  getTradeDetailByPostId,
+  putSetTradeStatus,
+  putSubmitTrade,
+} from 'src/api/blog/interested'
 import { Separator } from 'src/components/ui/separator'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponseTraderList } from 'src/types/interester'
@@ -63,6 +70,7 @@ export default function SubmitTrade() {
   const navigate = useNavigate()
   const [authorized, setAuthorized] = useState<boolean>(true)
   const [tradeDetail, setTradeDetail] = useState<ITradeDetail[]>()
+  const [tradeDetailsIdOther, setTradeDetailsIdOther] = useState<string>()
   const [userTrade, setUserTrader] = useState<ITradeDetail | null>(null)
   const [interester, setInterester] = useState<ITradeDetail | null>(null)
   const [owner, setOwner] = useState<ITradeDetail | null>(null)
@@ -167,6 +175,15 @@ export default function SubmitTrade() {
       })
     }
   }, [address])
+
+  const putStatusTrade = async (tradeDetailsId: string) => {
+    const data: ISetTradeStatus = {
+      postId: id as string,
+      tradeDetailsId: tradeDetailsId,
+      updatedStatus: 2,
+    }
+    await putSetTradeStatus(data)
+  }
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -331,13 +348,30 @@ export default function SubmitTrade() {
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2">
               <p className="m-4 text-lg font-medium">Interester</p>
-              {interester?.details.status === 0 ? (
+              {interester?.details.status === 0 || interester?.details.status == 1 ? (
                 <div className="w-full px-4 pb-4">
-                  <div className="text-red-600">Interested person has not confirmed</div>
+                  {interester?.details.status === 0 ? (
+                    <div className="text-red-600">Interested person has not confirmed</div>
+                  ) : (
+                    ''
+                  )}
+                  <div className="flex flex-row items-center">
+                    <p className="ml-4">
+                      <button
+                        className="font-normal text-red-600 underline"
+                        onClick={() => {
+                          putStatusTrade(interester?.details.tradeDetailId as string)
+                        }}
+                      >
+                        Accept
+                      </button>{' '}
+                      to confirm the trade information
+                    </p>
+                  </div>
                   {renderTrader(interester!)}
                 </div>
               ) : (
-                renderTrader(interester!)
+                <div className="">{renderTrader(interester!)}</div>
               )}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
@@ -573,7 +607,7 @@ export default function SubmitTrade() {
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2">
               <p className="m-4 text-lg font-medium">Interester</p>
-              {userTrade?.details.status === 0 ? (
+              {userTrade?.details.status === 0 || userTrade?.details.status == 1 ? (
                 <div>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -801,13 +835,32 @@ export default function SubmitTrade() {
             <Separator className="mx-8" orientation={'vertical'} />
             <div className="rounded-md border-2">
               <p className="m-4 text-lg font-medium">Owner</p>
-              {owner?.details.status === 0 ? (
+              {owner?.details.status === 0 || owner?.details.status === 1 ? (
                 <div>
-                  <div className="text-red-600">Interested person has not confirmed</div>
-                  {renderOwner(owner!)}
+                  {owner?.details.status === 0 ? (
+                    <div className="text-red-600">Interested person has not confirmed</div>
+                  ) : (
+                    ' '
+                  )}
+                  <div className="">
+                    <div className="flex flex-row items-center">
+                      <p className="ml-4">
+                        <button
+                          className="font-normal text-red-600 underline"
+                          onClick={() => {
+                            putStatusTrade(owner?.details.tradeDetailId as string)
+                          }}
+                        >
+                          Accept
+                        </button>{' '}
+                        to confirm the trade information
+                      </p>
+                    </div>
+                    {renderOwner(owner!)}
+                  </div>
                 </div>
               ) : (
-                renderOwner(owner!)
+                <div className="">{renderOwner(owner!)}</div>
               )}
             </div>
           </div>

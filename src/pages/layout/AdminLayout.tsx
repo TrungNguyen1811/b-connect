@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom'
 import Header from 'src/components/header/header-dashboard'
-import SidebarAdmin from 'src/components/admin/sidebar-admin'
+import SidebarAdmin from 'src/components/admins/sidebar-admin'
 // import { useAuth } from 'src/hooks/useAuth'
 // import { ROLE } from 'src/types'
 
 function AdminLayout() {
   // const { user } = useAuth()
-  // if (user?.role === ROLE.CUSTOMER || user?.role === ROLE.SELLER) {
+  // if (user.roles && user.roles.includes(ROLE.AGENCY) || user.roles && user.roles.includes(ROLE.BASEUSER)) {
   //   return <Navigate to={''} />
   // }
   return (

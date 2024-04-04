@@ -3,6 +3,8 @@ import { createBrowserRouter } from 'react-router-dom'
 import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
+import BookGroupDetailTable from 'src/components/seller/table/book-group-detail/book-group-table'
+import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 
 import CategoryList from 'src/pages/blog/category-list'
 import ReadingList from 'src/pages/blog/reading-list'
@@ -38,6 +40,9 @@ const DashboardSellerPage = React.lazy(() => import('src/pages/seller/DashboardS
 const AccountSeller = React.lazy(() => import('src/pages/seller/AccountSeller'))
 const ProfileSeller = React.lazy(() => import('src/pages/seller/ProfileSeller'))
 const IdentificationProfile = React.lazy(() => import('src/pages/seller/IdentificationProfile'))
+const BookTable = React.lazy(() => import('src/components/seller/table/book/book-table'))
+const AddBookPage = React.lazy(() => import('src/components/seller/table/book/manage/add-book'))
+const BookGroupManagerPage = React.lazy(() => import('src/pages/seller/bookGroup/BookGroupManagerPage'))
 
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
@@ -200,6 +205,26 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/seller/profile/identity-information',
         element: <IdentificationProfile />,
+      },
+      {
+        path: '/seller/manage/books',
+        element: <BookTable />,
+      },
+      {
+        path: '/seller/manage/books/new',
+        element: <AddBookPage />,
+      },
+      {
+        path: '/seller/manage/books/:id',
+        element: <UpdateBook />,
+      },
+      {
+        path: '/seller/manage/book-groups',
+        element: <BookGroupManagerPage />,
+      },
+      {
+        path: '/seller/manage/group-of-book/:id',
+        element: <BookGroupDetailTable />,
       },
     ],
   },

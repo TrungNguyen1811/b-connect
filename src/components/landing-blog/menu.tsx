@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { IMenuItem } from '../breadcrumb'
 import MenuSideBar from '../menu-items/menu-item'
-import { FacebookIcon, GithubIcon, InstagramIcon, SettingsIcon, TwitterIcon, Youtube } from 'lucide-react'
+import { FacebookIcon, GithubIcon, InstagramIcon, SettingsIcon, TwitterIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
 
@@ -71,11 +71,6 @@ export function Menu() {
     {
       id: 4,
       icon: TwitterIcon,
-      href: '',
-    },
-    {
-      id: 5,
-      icon: Youtube,
       href: '',
     },
   ]

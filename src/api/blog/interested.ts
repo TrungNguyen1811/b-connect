@@ -121,6 +121,30 @@ async function putSubmitTrade(data: ISubmitTrade) {
 }
 export { putSubmitTrade }
 
+export interface ISetTradeStatus {
+  postId: string
+  tradeDetailsId: string
+  updatedStatus: number
+}
+
+async function putSetTradeStatus(data: ISetTradeStatus) {
+  return await authAxiosClient
+    .put('/Post/trading/set-trade-status', data)
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+export { putSetTradeStatus }
+
 async function removeInterestedPost(postInterestId: string) {
   return await authAxiosClient
     .delete(`/Post/trading/delete-post-interest?postInterestId=${postInterestId}`)

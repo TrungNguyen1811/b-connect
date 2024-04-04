@@ -316,7 +316,7 @@ function BookDetailPage() {
                   <h3 className="text-3xl font-medium tracking-wide">
                     {book.name}
                     <span className="ml-2 text-sm text-gray-500">
-                      <p>{book.status}</p>
+                      <p>{book.type}</p>
                     </span>
                   </h3>
                   <div className="flex flex-row justify-between">
@@ -343,7 +343,7 @@ function BookDetailPage() {
                 </div>
                 <div className="space-y-2 px-6">
                   <span>Type</span>
-                  <span>{book.status}</span>
+                  <span>{book.type}</span>
                 </div>
                 <div className="flex flex-row items-center space-y-2 px-6">
                   <span className="mr-6">Quantity</span>
@@ -375,7 +375,7 @@ function BookDetailPage() {
               <p className="text-md font-bold">Book Specifications:</p>
               {/* <p className="text-base text-slate-500">{book?.category}</p> */}
               <p className="text-base text-slate-500">{book?.author}</p>
-              <p className="text-base text-slate-500">{book?.status}</p>
+              <p className="text-base text-slate-500">{book?.type}</p>
             </div>
             <div className="ml-4">
               <p className="text-md font-bold">Book Description:</p>

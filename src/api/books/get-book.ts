@@ -1,8 +1,8 @@
-import { IBook } from 'src/types/books'
+import { IBook, IResponseBookGroup } from 'src/types/books'
 // import { faker } from '@faker-js/faker'
 import { IResponse, IResponsePagination } from 'src/types/response'
-import { axiosClient } from 'src/lib/axios'
-import { IDefaultQuery } from 'src/types/requests'
+import { authAxiosClient, axiosClient } from 'src/lib/axios'
+import { IBookGroupSearch, IDefaultQuery, IQueryPagination, IQuerySearch } from 'src/types/requests'
 
 // export function getBookById(id: string) {
 //   // TODO: Replace this with an actual API call
@@ -135,6 +135,24 @@ export async function getBookById(book_Id: string) {
     .then((res) => res.data)
 }
 
+export async function GetAllBookInInventory(params: Partial<IQueryPagination & IQuerySearch>) {
+  return await authAxiosClient
+    .get(`/products/BookGroup/GetAllBookInInventory`, {
+      params,
+    })
+    .then((res) => {
+      const data: IBook[] = res.data
+      const pagination = res.headers['x-pagination']
+      const parseJson: IResponsePagination = JSON.parse(pagination)
+      const dataAll: IResponse<IBook[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: parseJson,
+      }
+      return dataAll
+    })
+}
+
 export type GetManyBooksParams = {
   genres?: string
   category?: string
@@ -159,11 +177,129 @@ export async function getManyBooks(params: GetManyBooksParams) {
     })
 }
 
+export async function getAllBooks() {
+  return axiosClient.get('/products/get-all-book').then((res) => {
+    const data: IBook[] = res.data
+    const pagination = res.headers['x-pagination']
+    const parseJson: IResponsePagination = JSON.parse(pagination)
+    const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: parseJson,
+    }
+    return dataAll
+  })
+}
+
 export async function getTopBooks() {
   return axiosClient.get('/products/get-all-book', {}).then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}
+
+export async function getAllBookGroupOfBook() {
+  return axiosClient.get('/products/BookGroup/GetAllBookGroupOfBook', {}).then((res) => {
+    const data: IBook[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}
+
+export async function getBookGroupById(id: string) {
+  return axiosClient.get(`/BookGroup/GetBookGroupById?bookGroupId=${id}`).then((res) => {
+    const data: IResponseBookGroup = res.data
+    return data
+  })
+}
+export type GetManyBookGroupsParams = {
+  inputString: string
+} & Partial<IDefaultQuery>
+
+export async function searchBookGroup(params: GetManyBookGroupsParams) {
+  return axiosClient.get('BookGroup/SearchBookGroup', { params }).then((res) => {
+    const data: IBook[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}
+
+export type GetManyBooksGroupParams = Partial<IQueryPagination & IQuerySearch & IBookGroupSearch>
+export async function getAllBookOfBookGroup(params: GetManyBooksGroupParams) {
+  return axiosClient.get('/products/BookGroup/GetAllBookOfBookGroup', { params }).then((res) => {
+    const data: IBook[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}
+
+export type GetParams = Partial<IDefaultQuery>
+
+export async function findAllBookGroupsByAgency(params: GetParams) {
+  return axiosClient.get('/products/BookGroup/FindAllBookGroupsByAgency', { params }).then((res) => {
+    const data: IBook[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}
+
+export async function getAllBookGroupsForAgency(params: GetParams) {
+  return authAxiosClient.get('/products/BookGroup/GetAllBookGroupsForAgency', { params }).then((res) => {
+    const data: IResponseBookGroup[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IResponseBookGroup[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}
+
+export async function getAllBookInInventory(params: GetParams) {
+  return axiosClient.get('/products/BookGroup/GetAllBookGroupsForAgency', { params }).then((res) => {
+    const data: IBook[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IBook[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}
+
+export async function getAllBookGroup(params: GetParams) {
+  return axiosClient.get('/BookGroup/GetAllBookGroup', { params }).then((res) => {
+    const data: IResponseBookGroup[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IResponseBookGroup[]> = {
       data: data,
       _metadata: data,
       _pagination: pagination,

@@ -2,12 +2,13 @@ import { Outlet } from 'react-router-dom'
 import Header from 'src/components/header/header-dashboard'
 import SidebarSeller from 'src/components/seller/sidebar-seller'
 import { useAuth } from 'src/hooks/useAuth'
+import { ROLE } from 'src/types/user'
 import RegisterAgency from '../seller/RegisterAgency'
 
 function SellerLayout() {
   const { user } = useAuth()
 
-  if (user?.isSeller === false) {
+  if (user?.roles && !user.roles.includes(ROLE.AGENCY)) {
     return <RegisterAgency />
   }
 
@@ -18,7 +19,7 @@ function SellerLayout() {
         <div className="relative">
           <SidebarSeller />
         </div>
-        <div className="">
+        <div className="h-full w-full">
           <Outlet />
         </div>
       </div>

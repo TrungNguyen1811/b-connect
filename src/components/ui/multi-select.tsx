@@ -5,6 +5,7 @@ import { Check, X, ChevronsUpDown } from 'lucide-react'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from './command'
 import { Badge } from './badge'
 import { cn } from 'src/lib/utils'
+import { ScrollArea } from './scroll-area'
 
 export type OptionType = {
   label: string
@@ -65,22 +66,26 @@ function MultiSelect({ options, selected, onChange, className, ...props }: Multi
           <CommandInput placeholder="Search ..." />
           <CommandEmpty>No item found.</CommandEmpty>
           <CommandGroup className="max-h-64 overflow-auto">
-            {options.map((option) => (
-              <CommandItem
-                key={option.value}
-                onSelect={() => {
-                  onChange(
-                    selected.includes(option.value)
-                      ? selected.filter((item) => item !== option.value)
-                      : [...selected, option.value],
-                  )
-                  setOpen(true)
-                }}
-              >
-                <Check className={cn('mr-2 h-4 w-4', selected.includes(option.value) ? 'opacity-100' : 'opacity-0')} />
-                {option.label}
-              </CommandItem>
-            ))}
+            <ScrollArea>
+              {options.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  onSelect={() => {
+                    onChange(
+                      selected.includes(option.value)
+                        ? selected.filter((item) => item !== option.value)
+                        : [...selected, option.value],
+                    )
+                    setOpen(true)
+                  }}
+                >
+                  <Check
+                    className={cn('mr-2 h-4 w-4', selected.includes(option.value) ? 'opacity-100' : 'opacity-0')}
+                  />
+                  {option.label}
+                </CommandItem>
+              ))}
+            </ScrollArea>
           </CommandGroup>
         </Command>
       </PopoverContent>

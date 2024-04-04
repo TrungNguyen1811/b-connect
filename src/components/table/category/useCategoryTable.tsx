@@ -24,7 +24,7 @@ export function useCategoryTable(columns: ColumnDef<ICategory>[]) {
       keepPreviousData: true,
     },
   )
-  console.log('meta', queryController.data?._pagination)
+  console.log('meta', queryController.data)
 
   const table = useReactTable<ICategory>({
     columns,

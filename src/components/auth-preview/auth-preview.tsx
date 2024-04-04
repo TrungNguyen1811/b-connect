@@ -81,7 +81,7 @@ function AuthPreview({ className, ...prosp }: Props) {
   }, [logout, navigate])
 
   const AdminSection = React.useMemo(() => {
-    if (user?.role === ROLE.CUSTOMER) {
+    if (user?.roles && user.roles.includes(ROLE.CUSTOMER)) {
       return <></>
     }
     return (
@@ -107,7 +107,7 @@ function AuthPreview({ className, ...prosp }: Props) {
         </DropdownMenuPortal>
       </DropdownMenuSub>
     )
-  }, [user?.role])
+  }, [user?.roles])
 
   const renderUserDropdown = React.useMemo(() => {
     if (!user) return <></>

@@ -4,7 +4,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 export default function Header() {
   const { user } = useAuth()
-  const path = `${user?.role}`
+  const path = `${user?.roles}`
   const lowercasedPath = path.toLowerCase()
   return (
     <div className="supports-backdrop-blur:bg-background/60 sticky left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur">

@@ -33,7 +33,7 @@ function UserDetailDialog({ children, user }: Props) {
             </div>
             <div className=" flex-column flex">
               <Label className="font-semibold">Role:</Label>
-              <p className="pl-5 text-sm text-gray-700">{user?.role}</p>
+              <p className="pl-5 text-sm text-gray-700">{user?.roles}</p>
             </div>
             <div className=" flex-column flex">
               <Label className="font-semibold">Phone:</Label>

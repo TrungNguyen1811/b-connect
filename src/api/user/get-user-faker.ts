@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { ICategory, User } from 'src/types'
+import { ICategory, ROLE, User } from 'src/types'
 
 const categories: ICategory[] = [
   { cateId: faker.string.uuid(), cateName: 'Technology' },
@@ -14,7 +14,7 @@ export function getUserByIdFaker(id: string) {
     userId: id,
     email: faker.lorem.paragraphs(),
     fullName: faker.lorem.words(),
-    role: 'ADMIN' || 'MANAGER' || 'CUSTOMER' || 'SELLER' || 'BASEUSER',
+    roles: [ROLE.ADMIN, ROLE.MANAGER],
     phone: faker.lorem.words(),
     avatar: faker.image.urlLoremFlickr({
       height: 100,
@@ -36,7 +36,7 @@ export function getUserByUserName(username: string) {
     userId: faker.string.uuid(),
     email: faker.lorem.paragraphs(),
     fullName: faker.lorem.words(),
-    role: 'ADMIN' || 'MANAGER' || 'CUSTOMER' || 'SELLER' || 'BASEUSER',
+    roles: [ROLE.ADMIN, ROLE.MANAGER],
     phone: faker.lorem.words(),
     avatar: faker.image.urlLoremFlickr({
       height: 100,

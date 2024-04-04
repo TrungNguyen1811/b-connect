@@ -50,10 +50,11 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
         }
         const token = localStorage.getItem('token') as string
         login({ user, token })
-        navigate('/seller')
-        // if (user.isSeller === true) {
-        //   navigate('/seller')
-        // }
+        const agency = user?.roles?.find((role) => role === 'Agency')
+        console.log('agency', agency)
+        if (agency === 'Agency') {
+          navigate('/seller')
+        }
       }
     })
   }

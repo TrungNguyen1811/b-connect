@@ -70,7 +70,7 @@ export function UpdateBook() {
     mutationFn: (updatedData: FormData) => {
       const formData = {
         ...updatedData,
-        productId: bookId,
+        productId: bookId as string,
       }
       return putUpdateBook(formData)
     },

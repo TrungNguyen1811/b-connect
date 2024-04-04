@@ -119,14 +119,6 @@ function Post({ postId }: PostProps) {
           </div>
         </div>
       </Link>
-      <div>IS interested</div>
-      <div>
-        {interesterList.map((inter, index) => (
-          <div key={index}>
-            <div className="text-sm">{inter.username}</div>
-          </div>
-        ))}
-      </div>
       <Separator />
       <div className="flex flex-row items-center justify-between">
         <button
@@ -137,8 +129,11 @@ function Post({ postId }: PostProps) {
         </button>
         <div className="flex flex-row items-center">
           {blog?.postData.isTradePost ? (
-            <div className="m-2 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
-              <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
+            <div className="flex flex-row items-center">
+              <div className="my-2 mr-0 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
+                <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
+              </div>
+              <p className="text-sm font-light">{interesterList.length}</p>
             </div>
           ) : (
             ''

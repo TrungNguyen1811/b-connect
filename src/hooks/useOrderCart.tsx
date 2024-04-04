@@ -244,7 +244,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     const updateCartData = () => {
       if (cartItems && cartItems.length > 0) {
         const updatedCartData = cartItems.map((book) => ({
-          productId: book.productId,
+          productId: book.productId as string,
           cartId: cartId || '',
           quantity: book.quantity,
         }))

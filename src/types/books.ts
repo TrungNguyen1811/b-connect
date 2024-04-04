@@ -1,25 +1,26 @@
-import { ICategory } from './categories'
-
 export interface IBook {
-  productId: string
+  productId?: string
   name: string
-  author?: string
-  image?: string
+  author: string
+  bookDir?: string
+  bookImg?: File | string
+  backgroundImg?: File | string
   description: string
   price: number
+  quantity: number
   stock: number
-  agencyId: string
-  agencyName: string
-  category?: ICategory['cateId']
+  agencyId?: string
+  agencyName?: string
+  category?: string[]
   reviews?: IReview['ratingRecordId']
   ratingId?: string
   isAvailable?: boolean | undefined
-  status?: 'NEW' | 'OLD'
+  type?: 'NEW' | 'OLD'
   genres?: 'popular' | 'best'
   createdDate?: Date
   publishDate?: Date
 }
-export enum BOOK_STATUS {
+export enum BOOK_TYPE {
   NEW = 'NEW',
   OLD = 'OLD',
 }
@@ -46,4 +47,41 @@ export interface IReviewResponse {
   email?: string
   createDate?: string
   updatedAt?: string
+}
+
+export interface IBookGroup {
+  bookGroupId?: string
+  bookGroupName: string
+  bookGroupImg?: File
+  description: string
+}
+
+export interface IResponseBookGroup {
+  bookGroupId: string
+  bookGroupName: string
+  imgDir: string
+  description: string
+  agencyId: string
+}
+
+export interface IBookTest {
+  productId?: string
+  name: string
+  author: string
+  bookDir?: string
+  bookImg?: File | string
+  backgroundImg?: File | string
+  description: string
+  price: number
+  quantity: number
+  agencyId?: string
+  agencyName?: string
+  category?: string[]
+  reviews?: IReview['ratingRecordId']
+  ratingId?: string
+  isAvailable?: boolean | undefined
+  type?: 'NEW' | 'OLD'
+  genres?: 'popular' | 'best'
+  createdDate?: Date
+  publishDate?: Date
 }

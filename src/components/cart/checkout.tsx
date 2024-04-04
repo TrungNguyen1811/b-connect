@@ -128,7 +128,7 @@ const CheckoutPage = () => {
             }
             groupedByStore[book.agencyId].push({
               book: book,
-              productId: book.productId,
+              productId: book.productId as string,
               quantity: order.find((item) => item.productId === book.productId)?.quantity || 0,
               agencyId: book.agencyId,
             })

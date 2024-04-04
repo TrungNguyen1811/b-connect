@@ -79,7 +79,7 @@ function CartPage() {
             groupedByStore[book.agencyId].push({
               book: book,
               quantity: cartItems.find((item) => item.productId === book.productId)?.quantity || 0,
-              agencyName: book.agencyName,
+              agencyName: book.agencyName as string,
             })
           }
         }
@@ -105,7 +105,7 @@ function CartPage() {
   // Hàm kiểm tra xem tất cả các sản phẩm của một cửa hàng đã được chọn chưa
   const isStoreSelected = (agencyId: string) => {
     const storeItems = cartItemsByStore[agencyId] || []
-    return storeItems.every((item) => selectedItems.includes(item.book.productId))
+    return storeItems.every((item) => selectedItems.includes(item.book.productId as string))
   }
 
   // Hàm cập nhật danh sách sản phẩm đã chọn dựa trên cửa hàng
@@ -114,15 +114,15 @@ function CartPage() {
     const newSelectedItems = [...selectedItems]
     if (isStoreSelected(agencyId)) {
       storeItems.forEach((item) => {
-        const index = newSelectedItems.indexOf(item.book.productId)
+        const index = newSelectedItems.indexOf(item.book.productId as string)
         if (index !== -1) {
           newSelectedItems.splice(index, 1)
         }
       })
     } else {
       storeItems.forEach((item) => {
-        if (!newSelectedItems.includes(item.book.productId)) {
-          newSelectedItems.push(item.book.productId)
+        if (!newSelectedItems.includes(item.book.productId as string)) {
+          newSelectedItems.push(item.book.productId as string)
         }
       })
     }
@@ -147,7 +147,7 @@ function CartPage() {
     const newSelectedItems: React.SetStateAction<string[]> = []
     Object.keys(cartItemsByStore).forEach((agencyId) => {
       cartItemsByStore[agencyId].forEach((item) => {
-        newSelectedItems.push(item.book.productId)
+        newSelectedItems.push(item.book.productId as string)
       })
     })
     setSelectedItems(!selectAll ? newSelectedItems : [])
@@ -159,7 +159,7 @@ function CartPage() {
     setSelectAll(allItemsSelected)
   }, [selectedItems])
 
-  const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.productId))
+  const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.productId as string))
   const navigate = useNavigate()
   const handleCheckout = async () => {
     const selectedCartItemsEncoded = btoa(JSON.stringify(selectedCartItems))
@@ -220,23 +220,31 @@ function CartPage() {
                       <TableCell>
                         <input
                           type="checkbox"
-                          checked={selectedItems.includes(item.book.productId)}
-                          onChange={() => handleItemCheckboxChange(item.book.productId)}
+                          checked={selectedItems.includes(item.book.productId as string)}
+                          onChange={() => handleItemCheckboxChange(item.book.productId as string)}
                         />
                       </TableCell>
                       <TableCell>{item.book.name}</TableCell>
                       <TableCell>${item.book.price}</TableCell>
                       <TableCell className="flex flex-row">
-                        <Button size="sm" variant={'outline'} onClick={() => handleDecreaseToCart(item.book.productId)}>
+                        <Button
+                          size="sm"
+                          variant={'outline'}
+                          onClick={() => handleDecreaseToCart(item.book.productId as string)}
+                        >
                           -
                         </Button>{' '}
                         <p className="p-2">{item.quantity}</p>
-                        <Button size="sm" variant={'outline'} onClick={() => handleAddToCart(item.book.productId)}>
+                        <Button
+                          size="sm"
+                          variant={'outline'}
+                          onClick={() => handleAddToCart(item.book.productId as string)}
+                        >
                           +
                         </Button>
                       </TableCell>
                       <TableCell>
-                        <DeleteIcon onClick={() => handleRemoveFromCart(item.book.productId)} />
+                        <DeleteIcon onClick={() => handleRemoveFromCart(item.book.productId as string)} />
                       </TableCell>
                     </TableRow>
                   ))}

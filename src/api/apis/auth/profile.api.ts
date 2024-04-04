@@ -1,10 +1,10 @@
 import { AxiosError } from 'axios'
-import { authAxiosClient } from 'src/lib/axios'
+import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { User } from 'src/types/user'
 import { IProfileResponse } from 'src/types/user-response'
 
 async function profileApi(token: string, callback: (error: AxiosError | null, result: User | null) => void) {
-  return await authAxiosClient
+  return await axiosClient
     .get('/Account/get-user-profile', {
       headers: {
         Authorization: `Bearer ${token}`,

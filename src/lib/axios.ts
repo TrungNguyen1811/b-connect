@@ -36,9 +36,9 @@ authAxiosClient.interceptors.request.use(
 //   async (error) => {
 //     const originalRequest = error.config
 
-//     if (error.response?.status === 401 && originalRequest.url !== BASED_URL + '/auth/refresh-token') {
+//     if (error.response?.status === 401 && originalRequest.url !== BASED_URL + '/Account/RefreshToken') {
 //       try {
-//         const { data, status } = await axiosClient.post('/auth/refresh', undefined, { withCredentials: true })
+//         const { data, status } = await axiosClient.post('/Account/RefreshToken', undefined, { withCredentials: true })
 //         if (status === 200 || status === 201) {
 //           localStorage.setItem('accessToken', data.data.accessToken)
 //           return authAxiosClient(originalRequest)

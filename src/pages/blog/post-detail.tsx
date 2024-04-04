@@ -118,24 +118,24 @@ function BlogDetail() {
     setCommentText(e.target.value)
   }
 
-  const renderTextWithFormatting = (children: any[]) => {
-    return children.map((child, index) => {
-      let formattedText = child.text
-      if (child.bold) formattedText = <strong>{formattedText}</strong>
-      if (child.italic) formattedText = <em>{formattedText}</em>
-      if (child.underline) formattedText = <u>{formattedText}</u>
-      if (child.strikethrough) formattedText = <s>{formattedText}</s>
-      if (child.subscript) formattedText = <sub>{formattedText}</sub>
-      if (child.superscript) formattedText = <sup>{formattedText}</sup>
-      if (child.fontSize) formattedText = <span style={{ fontSize: child.fontSize }}>{formattedText}</span>
-      if (child.backgroundColor)
-        formattedText = <span style={{ backgroundColor: child.backgroundColor }}>{formattedText}</span>
-      if (child.color) formattedText = <span style={{ color: child.color }}>{formattedText}</span>
-      if (child.code) formattedText = <code>{formattedText}</code>
-      if (child.url) formattedText = <a href={child.url}>{formattedText}</a>
-      return <React.Fragment key={index}>{formattedText}</React.Fragment>
-    })
-  }
+  // const renderTextWithFormatting = (children: any[]) => {
+  //   return children.map((child, index) => {
+  //     let formattedText = child.text
+  //     if (child.bold) formattedText = <strong>{formattedText}</strong>
+  //     if (child.italic) formattedText = <em>{formattedText}</em>
+  //     if (child.underline) formattedText = <u>{formattedText}</u>
+  //     if (child.strikethrough) formattedText = <s>{formattedText}</s>
+  //     if (child.subscript) formattedText = <sub>{formattedText}</sub>
+  //     if (child.superscript) formattedText = <sup>{formattedText}</sup>
+  //     if (child.fontSize) formattedText = <span style={{ fontSize: child.fontSize }}>{formattedText}</span>
+  //     if (child.backgroundColor)
+  //       formattedText = <span style={{ backgroundColor: child.backgroundColor }}>{formattedText}</span>
+  //     if (child.color) formattedText = <span style={{ color: child.color }}>{formattedText}</span>
+  //     if (child.code) formattedText = <code>{formattedText}</code>
+  //     if (child.url) formattedText = <a href={child.url}>{formattedText}</a>
+  //     return <React.Fragment key={index}>{formattedText}</React.Fragment>
+  //   })
+  // }
 
   useEffect(() => {
     if (blog?.postData.content) {
@@ -195,9 +195,9 @@ function BlogDetail() {
     ))
   }, [comments, renderCommenter])
 
-  const addComment = useCallback((comment: IComment) => {
-    return postPostComment(comment)
-  }, [])
+  // const addComment = useCallback((comment: IComment) => {
+  //   return postPostComment(comment)
+  // }, [])
 
   const id = useId()
 
@@ -205,7 +205,7 @@ function BlogDetail() {
     mutationFn: postPostComment,
     onSuccess: (payload: IComment) => {
       if (!blog) return
-      addComment(payload)
+      // addComment(payload)
       queryClient.invalidateQueries()
     },
   })
@@ -312,14 +312,14 @@ function BlogDetail() {
               <p>{totalComment}</p>
             </div>
             <div
-              className="m-2 rounded-sm p-2 hover:bg-gray-300"
+              className="m-2 rounded-sm p-4 hover:bg-gray-300"
               onClick={isSaved ? unsaveFromReadingList : saveToReadingList}
             >
               <BookMarkedIcon size={24} className={isSaved ? ' text-orange-400 ' : ''} />
             </div>
             {blog?.postData.isTradePost ? (
-              <div className="m-2 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
-                <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
+              <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
+                <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
               </div>
             ) : (
               ''
@@ -327,7 +327,7 @@ function BlogDetail() {
           </div>
         </div>
         <div className="col-span-8">
-          <div className="h-full w-full rounded-md border-2 bg-slate-50">
+          <div className="h-full w-full rounded-md border-2 bg-background">
             <div className="w-full rounded-md">
               <img src={blog?.postData.imageDir as string} className="max-h-[24rem] w-full rounded-t-md" />
             </div>
