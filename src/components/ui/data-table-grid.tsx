@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { Table as ITable } from '@tanstack/table-core'
 import { Table, TableBody, TableCell, TableHeader, TableRow } from './table'
-import { CircleOffIcon } from 'lucide-react'
+import { CircleOffIcon, Edit } from 'lucide-react'
 import { IBook } from 'src/types'
 import BookGridLoading from '../book/book-grid-loading'
 import { Input } from './input'
@@ -10,6 +10,10 @@ import { Button } from './button'
 import { toast } from './use-toast'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { removeBookFromBookGroup } from 'src/api/books/delete-book'
+import { CellAction } from '../seller/table/book-group-detail/cell-action'
+import { useNavigate } from 'react-router-dom'
+import { addBookToBookGroup } from 'src/api/books/post-add-book'
+import { formatPrice } from 'src/lib/utils'
 
 interface DataTableProps<TData extends IBook, TValue> {
   id: string
@@ -18,10 +22,15 @@ interface DataTableProps<TData extends IBook, TValue> {
   header?: React.ReactNode
   footer?: React.ReactNode
   isLoading?: boolean
+  isAdd?: boolean
   table: ITable<TData>
   onSelectItem?: (items: string[]) => void // Cập nhật kiểu dữ liệu ở đây
 }
 
+interface addData {
+  productId: string
+  bookGroupIds: string[]
+}
 interface deleteData {
   productId: string
   bookGroupId: string
@@ -34,24 +43,24 @@ export function DataTableGrid<TData extends IBook, TValue>({
   header,
   table,
   isLoading = false,
+  isAdd,
 }: DataTableProps<TData, TValue>) {
-  const [selectedItems, setSelectedItems] = useState<string[]>([]) // State để lưu trữ các phần tử được chọn
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
 
-  console.log(selectedItems)
+  const navigate = useNavigate()
 
   const handleItemClick = (item: string) => {
     const selectedIndex = selectedItems.findIndex((selectedItem) => selectedItem === item)
     if (selectedIndex === -1) {
-      setSelectedItems([...selectedItems, item]) // Thêm vào danh sách nếu chưa được chọn
+      setSelectedItems([...selectedItems, item])
     } else {
       const updatedItems = [...selectedItems]
-      updatedItems.splice(selectedIndex, 1) // Loại bỏ khỏi danh sách nếu đã được chọn
+      updatedItems.splice(selectedIndex, 1)
       setSelectedItems(updatedItems)
     }
   }
 
   const handleAllItemClick = () => {
-    // Nếu tất cả các mục đã được chọn, hãy bỏ chọn tất cả. Ngược lại, chọn tất cả.
     const allSelected = data.every((item) => selectedItems.includes(item.productId as string))
     if (allSelected) {
       setSelectedItems([])
@@ -62,15 +71,17 @@ export function DataTableGrid<TData extends IBook, TValue>({
   }
 
   const queryClient = useQueryClient()
-  const deleteBookFunction = async (data: deleteData) => {
-    const book = await removeBookFromBookGroup(data.productId, data.bookGroupId)
+
+  const addBookFunction = async (data: addData) => {
+    const book = await addBookToBookGroup(data)
     return book
   }
 
-  const { mutate } = useMutation(deleteBookFunction, {
+  const { mutate: AddBook } = useMutation(addBookFunction, {
     onSuccess: (data) => {
       if (data) {
         queryClient.invalidateQueries()
+        setSelectedItems([])
       } else {
         toast({
           title: 'Failed',
@@ -86,13 +97,48 @@ export function DataTableGrid<TData extends IBook, TValue>({
     },
   })
 
+  const deleteBookFunction = async (data: deleteData) => {
+    const book = await removeBookFromBookGroup(data.productId, data.bookGroupId)
+    return book
+  }
+
+  const { mutate: deleteBook } = useMutation(deleteBookFunction, {
+    onSuccess: (data) => {
+      if (data) {
+        queryClient.invalidateQueries()
+        setSelectedItems([])
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Delete Book Failed',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Delete Book',
+        description: error.message,
+      })
+    },
+  })
+
+  const onAdd = () => {
+    selectedItems.map((item) => {
+      const data: addData = {
+        productId: item,
+        bookGroupIds: [id],
+      }
+      AddBook(data)
+    })
+  }
+
   const onDelete = () => {
     selectedItems.map((item) => {
       const data: deleteData = {
         productId: item,
         bookGroupId: id,
       }
-      mutate(data)
+      deleteBook(data)
     })
   }
 
@@ -118,9 +164,15 @@ export function DataTableGrid<TData extends IBook, TValue>({
                 />
                 <p className="w-20">Select All</p>
               </div>
-              <Button onClick={onDelete} className="my-2 ml-[50rem] mr-[40rem] w-32" type="submit">
-                Delete
-              </Button>
+              {isAdd ? (
+                <Button onClick={onAdd} className="my-2 ml-[50rem] mr-[40rem] w-32" type="submit">
+                  Add
+                </Button>
+              ) : (
+                <Button onClick={onDelete} className="my-2 ml-[50rem] mr-[40rem] w-32" type="submit">
+                  Delete
+                </Button>
+              )}
             </div>
           </div>
         ) : (
@@ -128,7 +180,7 @@ export function DataTableGrid<TData extends IBook, TValue>({
         )}
       </div>
     )
-  }, [footer, selectedItems.length])
+  }, [footer, selectedItems.length, data.length, isAdd])
 
   const renderBody = useMemo(() => {
     if (isLoading) {
@@ -150,7 +202,7 @@ export function DataTableGrid<TData extends IBook, TValue>({
 
     return data.map((item, index) => (
       <div
-        className={`mb-4 w-40 rounded-md border p-4 ${
+        className={`mb-4 w-40 rounded-md border p-1 ${
           selectedItems.includes(item.productId as string) ? 'bg-gray-200' : ''
         }`}
         key={index}
@@ -164,17 +216,24 @@ export function DataTableGrid<TData extends IBook, TValue>({
               onChange={() => handleItemClick(item.productId as string)}
             />
           </div>
-          <img width={16} src={item.bookDir as string} alt={item.name} className="h-20 w-32 object-cover" />
-          <div>
-            <h2 className="text-lg font-semibold">{item.name}</h2>
-            <div className="flex flex-row justify-between">
-              <p className="text-gray-600">Price: ${item.price}</p>
-              <p className="text-gray-600">Quantity: {item.quantity}</p>
+          <img src={item.bookDir as string} alt={item.name} className="aspect-[1/1] h-44 object-cover" />
+          <div className="w-full px-1">
+            <p className=" text-base font-bold">{item.name}</p>
+            <div className="mt-4 flex flex-row justify-between">
+              <p className="text-red-600">{formatPrice(item.price)}</p>
+              <p className="text-gray-600">Stock: {item.quantity}</p>
             </div>
           </div>
-          <div className="flex flex-row gap-2">
-            <Button>update</Button>
-            <Button>delete</Button>
+          <div className="mt-1 flex w-full flex-row justify-around border-t-2">
+            {/* <Button>update</Button>
+            <Button>delete</Button> */}
+            <button
+              className="mt-1 rounded-sm p-1 px-2 hover:bg-gray-100"
+              onClick={() => navigate(`/seller/manage/books/${item.productId}`)}
+            >
+              <Edit size={20} />
+            </button>
+            <CellAction data={item} />
           </div>
         </div>
       </div>

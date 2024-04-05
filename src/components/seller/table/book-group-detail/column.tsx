@@ -2,13 +2,14 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from 'src/components/ui/check-box'
 import { IBook } from 'src/types'
 import { CellAction } from './cell-action'
+import { formatPrice } from 'src/lib/utils'
 
 export const columns: ColumnDef<IBook>[] = [
   {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
@@ -20,7 +21,7 @@ export const columns: ColumnDef<IBook>[] = [
         aria-label="Select row"
       />
     ),
-    enableSorting: true,
+    enableSorting: false,
     enableHiding: false,
   },
   {
@@ -42,10 +43,15 @@ export const columns: ColumnDef<IBook>[] = [
   {
     accessorKey: 'price',
     header: 'Price',
-    cell: ({ getValue }) => {
-      const price = getValue() as string
-      return <p className="w-[8rem]">{price}</p>
+    cell: ({ row }) => {
+      const price = parseFloat(row.getValue('price'))
+
+      return <div className="text-right font-medium">{formatPrice(price)}</div>
     },
+    // cell: ({ getValue }) => {
+    //   const price = getValue() as string
+    //   return <p className="w-[8rem]">{price}</p>
+    // },
   },
   {
     accessorKey: 'quantity',

@@ -1,5 +1,5 @@
 import { Button } from 'src/components/ui/button'
-import React from 'react'
+import React, { useState } from 'react'
 import Pagination from 'src/components/ui/pagination'
 import TableSizeSelector from 'src/components/ui/table-size-selector'
 import { Skeleton } from 'src/components/ui/skeleton'
@@ -8,23 +8,36 @@ import { useBookGroupTable } from './useBookGroupTable'
 import { BookGroupTableToolbar } from './toolbar'
 import { DataTableGrid } from 'src/components/ui/data-table-grid'
 import { useParams } from 'react-router-dom'
+import { useBookTable } from '../book/useBookTable'
 
 function BookGroupDetailTable() {
   const { id } = useParams<{ id: string }>()
-  const { isError, isLoading, table, error, refetch, data, tableStates } = useBookGroupTable(columns)
+  const [isAdd, setIsAdd] = useState<boolean>(false)
+
+  const bookGroupTable = useBookGroupTable(columns)
+  const bookTable = useBookTable(columns)
+
+  const { isError, isLoading, table, error, refetch, data, tableStates } = isAdd ? bookTable : bookGroupTable
+
   const renderHeader = React.useMemo(() => {
     return (
-      <BookGroupTableToolbar
-        table={table}
-        queries={{
-          PageNumber: tableStates.pagination.pageIndex + 1,
-          PageSize: tableStates.pagination.pageSize,
-          search: tableStates.globalFilter,
-        }}
-        setSearchQuery={(value) => {
-          table.setGlobalFilter(value.search)
-        }}
-      />
+      <div className="flex flex-row items-center justify-between">
+        <BookGroupTableToolbar
+          table={table}
+          queries={{
+            PageNumber: tableStates.pagination.pageIndex + 1,
+            PageSize: tableStates.pagination.pageSize,
+            search: tableStates.globalFilter,
+          }}
+          setSearchQuery={(value) => {
+            table.setGlobalFilter(value.search)
+          }}
+        />
+        <div className="mr-4 flex flex-row gap-2">
+          <Button onClick={() => setIsAdd(true)}>Add Book</Button>
+          <Button onClick={() => setIsAdd(false)}>View Book</Button>
+        </div>
+      </div>
     )
   }, [table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize, tableStates.globalFilter])
 
@@ -47,7 +60,7 @@ function BookGroupDetailTable() {
             }}
           />
           <Pagination
-            currentPage={tableStates.pagination.pageIndex + 1}
+            currentPage={tableStates.pagination.pageIndex}
             totalPage={data?._pagination?.TotalPages || 1}
             onPageChange={(index) => {
               table.setPageIndex(index - 1)
@@ -78,6 +91,7 @@ function BookGroupDetailTable() {
         columns={columns}
         data={data?.data ?? []}
         footer={renderFooter}
+        isAdd={isAdd}
       />
     </div>
   )

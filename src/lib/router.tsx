@@ -3,7 +3,6 @@ import { createBrowserRouter } from 'react-router-dom'
 import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
-import BookGroupDetailTable from 'src/components/seller/table/book-group-detail/book-group-table'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 
 import CategoryList from 'src/pages/blog/category-list'
@@ -40,9 +39,10 @@ const DashboardSellerPage = React.lazy(() => import('src/pages/seller/DashboardS
 const AccountSeller = React.lazy(() => import('src/pages/seller/AccountSeller'))
 const ProfileSeller = React.lazy(() => import('src/pages/seller/ProfileSeller'))
 const IdentificationProfile = React.lazy(() => import('src/pages/seller/IdentificationProfile'))
-const BookTable = React.lazy(() => import('src/components/seller/table/book/book-table'))
+const BookManagerPage = React.lazy(() => import('src/pages/seller/book/BookManagerPage'))
 const AddBookPage = React.lazy(() => import('src/components/seller/table/book/manage/add-book'))
-const BookGroupManagerPage = React.lazy(() => import('src/pages/seller/bookGroup/BookGroupManagerPage'))
+const BookGroupManagerPage = React.lazy(() => import('src/pages/seller/book/BookGroupManagerPage'))
+const BookGroupDetailManagerPage = React.lazy(() => import('src/pages/seller/book/BookGroupDetailManagerPage'))
 
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
@@ -208,7 +208,7 @@ export const ROUTES = createBrowserRouter([
       },
       {
         path: '/seller/manage/books',
-        element: <BookTable />,
+        element: <BookManagerPage />,
       },
       {
         path: '/seller/manage/books/new',
@@ -224,7 +224,7 @@ export const ROUTES = createBrowserRouter([
       },
       {
         path: '/seller/manage/group-of-book/:id',
-        element: <BookGroupDetailTable />,
+        element: <BookGroupDetailManagerPage />,
       },
     ],
   },

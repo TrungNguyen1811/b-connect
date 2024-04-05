@@ -14,7 +14,7 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
     PageNumber: 0,
-    PageSize: 5,
+    PageSize: 6,
   })
 
   const queryController = useQuery<IResponse<IBook[]>, AxiosError>(

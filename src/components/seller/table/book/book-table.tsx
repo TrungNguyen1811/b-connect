@@ -12,17 +12,19 @@ function BookTable() {
   const { isError, isLoading, table, error, refetch, data, tableStates } = useBookTable(columns)
   const renderHeader = React.useMemo(() => {
     return (
-      <BookTableToolbar
-        table={table}
-        queries={{
-          PageNumber: tableStates.pagination.pageIndex + 1,
-          PageSize: tableStates.pagination.pageSize,
-          search: tableStates.globalFilter,
-        }}
-        setSearchQuery={(value) => {
-          table.setGlobalFilter(value.search)
-        }}
-      />
+      <div>
+        <BookTableToolbar
+          table={table}
+          queries={{
+            PageNumber: tableStates.pagination.pageIndex + 1,
+            PageSize: tableStates.pagination.pageSize,
+            search: tableStates.globalFilter,
+          }}
+          setSearchQuery={(value) => {
+            table.setGlobalFilter(value.search)
+          }}
+        />
+      </div>
     )
   }, [table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize, tableStates.globalFilter])
 
@@ -65,7 +67,7 @@ function BookTable() {
   }, [isLoading, tableStates.pagination.pageIndex, table, data])
 
   return (
-    <div className="mt-8">
+    <div className="mt-4">
       {isError && <Button onClick={() => refetch()}>Retry</Button>}
       {isError && <p>{error?.message}</p>}
       <DataTable

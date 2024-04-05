@@ -65,7 +65,7 @@ function BookGroupTable() {
   }, [isLoading, tableStates.pagination.pageIndex, table, data])
 
   return (
-    <div className="mt-8">
+    <div className="mt-4">
       {isError && <Button onClick={() => refetch()}>Retry</Button>}
       {isError && <p>{error?.message}</p>}
       <DataTable

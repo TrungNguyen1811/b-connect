@@ -11,12 +11,14 @@ import { useParams } from 'react-router-dom'
 
 export function useBookGroupTable(columns: ColumnDef<IBook>[]) {
   const { id } = useParams<{ id: string }>()
+  const [bookGroupId, setBookGroupId] = useState<string | undefined>(id)
+
   const [queries, setQueries] = useState<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch & IBookGroupSearch> & { [key: string]: any }
   >({
-    PageNumber: 1,
-    PageSize: 5,
+    PageNumber: 0,
+    PageSize: 6,
     bookGroupId: id,
   })
 
@@ -28,16 +30,27 @@ export function useBookGroupTable(columns: ColumnDef<IBook>[]) {
     },
   )
 
+  useEffect(() => {
+    setBookGroupId(id)
+  }, [id])
+
+  useEffect(() => {
+    setQueries((prev) => ({
+      ...prev,
+      bookGroupId: bookGroupId,
+    }))
+  }, [bookGroupId])
+
   const table = useReactTable<IBook>({
     columns,
     data: queryController.data?.data || [],
     manualPagination: true,
     initialState: {
       pagination: {
-        pageIndex: queries.PageNumber || 1,
+        pageIndex: queries.PageNumber || 1 - 1,
         pageSize: queries.PageSize,
       },
-      globalFilter: queries.bookGroupId,
+      globalFilter: queries.search,
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getCoreRowModel(),
@@ -61,7 +74,7 @@ export function useBookGroupTable(columns: ColumnDef<IBook>[]) {
       ...prev,
       PageNumber: tableStates.pagination.pageIndex + 1,
       PageSize: tableStates.pagination.pageSize,
-      bookGroupId: tableStates.globalFilter || undefined,
+      search: tableStates.globalFilter || undefined,
     }))
   }, [
     tableStates.columnFilters,
@@ -82,5 +95,6 @@ export function useBookGroupTable(columns: ColumnDef<IBook>[]) {
     table,
     tableStates,
     setTableStates,
+    bookGroupId,
   }
 }

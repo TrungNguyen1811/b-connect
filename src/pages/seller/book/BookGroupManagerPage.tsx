@@ -33,7 +33,7 @@ function BookGroupManagerPage() {
       {
         label: 'DashBoard',
         key: 'dashboard',
-        href: '/seller',
+        href: '/seller/dashboard',
         icon: 'dashboard',
       },
       {
@@ -43,7 +43,7 @@ function BookGroupManagerPage() {
     ]
   }, [])
   return (
-    <div className="mx-8">
+    <div className="mx-4">
       <MetaData title={'Manage Book Group'} />
       {<Breadcrumb items={breadcrumb} className="max-w-7xl py-4" />}
       <div className="flex items-start justify-between">

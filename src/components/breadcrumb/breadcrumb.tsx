@@ -37,10 +37,10 @@ function BreadCrumbItem({ item, className, isLast, ...props }: BreadCrumbItemPro
       <Link
         to={isLast ? '#' : item.href || '#'}
         className={cn(
-          'inline-flex items-center text-ellipsis text-sm font-medium text-blue-700 dark:text-gray-400 dark:hover:text-white',
+          'inline-flex items-center text-ellipsis text-sm font-medium text-orange-500 dark:text-gray-400 dark:hover:text-white',
           {
             'text-primary': isLast,
-            'hover:text-primary': !isLast,
+            'hover:text-orange-700': !isLast,
           },
         )}
       >

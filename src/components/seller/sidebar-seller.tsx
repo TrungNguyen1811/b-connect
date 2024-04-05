@@ -9,9 +9,12 @@ import {
   LayoutDashboardIcon,
   LibraryBigIcon,
   LineChartIcon,
+  ListStartIcon,
   PackageIcon,
+  StoreIcon,
   TagIcon,
   TruckIcon,
+  User2Icon,
   WalletCardsIcon,
 } from 'lucide-react'
 import { NavItem } from 'src/types/NavItem'
@@ -77,12 +80,6 @@ export default function SidebarSeller({ className }: SidebarProps) {
           href: '/seller/manage/book-groups',
           color: 'text-orange-500',
         },
-        {
-          title: 'All Group of Book',
-          icon: LibraryBigIcon,
-          href: '/seller/manage/group-of-book',
-          color: 'text-orange-500',
-        },
       ],
     },
     {
@@ -112,19 +109,19 @@ export default function SidebarSeller({ className }: SidebarProps) {
       children: [
         {
           title: 'Account',
-          icon: LineChartIcon,
+          icon: User2Icon,
           href: '/seller/account',
           color: 'text-orange-500',
         },
         {
           title: 'Profile Shop',
-          icon: LineChartIcon,
+          icon: StoreIcon,
           href: '/seller/profile',
           color: 'text-orange-500',
         },
         {
           title: 'Rating Shop',
-          icon: LineChartIcon,
+          icon: ListStartIcon,
           href: '/seller/rating',
           color: 'text-orange-500',
         },
