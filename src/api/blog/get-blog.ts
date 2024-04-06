@@ -178,6 +178,13 @@ export async function getPostByIdApi(id: string) {
   })
 }
 
+export async function getUserSavedPosts() {
+  return authAxiosClient.get(`/Post/get-user-saved-posts`).then((res) => {
+    const data: IResponsePost[] = res.data
+    return data
+  })
+}
+
 export type GetManyPostsParams = {
   category?: string
 } & Partial<IDefaultQuery>

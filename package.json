@@ -108,6 +108,7 @@
     "react-resizable-panels": "^1.0.9",
     "react-router-dom": "^6.10.0",
     "react-select": "^5.8.0",
+    "react-tag-autocomplete": "^7.2.0",
     "react-tweet": "^3.2.0",
     "shadcn-ui": "^0.8.0",
     "slate": "^0.102.0",

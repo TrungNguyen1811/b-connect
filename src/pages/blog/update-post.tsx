@@ -15,86 +15,79 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { updateBlogSchema } from '../../components/blog/validation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Form, FormField, FormItem, FormControl, FormLabel } from '../../components/ui/form'
 import { ScrollArea } from '../../components/ui/scroll-area'
 import { Input } from '../../components/ui/input'
 import { PlateEditor } from '../../components/ui/plate-editor'
 import { Value } from '@udecode/plate-common'
 import { ICategory } from 'src/types'
-import { getAllCategories } from 'src/api/categories/get-category'
+import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import { toast } from '../../components/ui/use-toast'
-import Select from 'react-select'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
-import { IBlog, IBlogResponse, IResponsePost } from 'src/types/blog'
+import { IBlog, IResponsePost } from 'src/types/blog'
 import { updateBlogApi } from 'src/api/blog/post-blog'
 import { getPostByIdApi } from 'src/api/blog/get-blog'
+import { Checkbox } from 'src/components/ui/check-box'
+import { Tag } from 'react-tag-autocomplete'
 
 type FormData = z.infer<typeof updateBlogSchema>
-
+interface updatePost {
+  productImages: File | null
+  productVideos: File | null
+  userId: string
+  postId: string
+  // title: z.string(),
+  // listCate: z.string(),
+  content: string
+  isTradePost: boolean
+}
 export default function UpdateBlog() {
-  const [blogData, setBlogData] = useState<IBlogResponse | null>(null)
-  const initialValue = [
-    {
-      id: '1',
-      type: 'p',
-      children: [{ text: 'Hello, World!!!' }],
-    },
-  ]
+  const [blogData, setBlogData] = useState<IResponsePost | null>(null)
+  const [formValues, setFormValues] = useState<FormData | null>(null)
+
   const form = useForm<FormData>({
     resolver: zodResolver(updateBlogSchema),
-    defaultValues: {
-      userId: blogData?.userId,
-      postId: blogData?.postId,
-      authorName: blogData?.authorName,
-      productImgs: blogData?.imageDir || '',
-      title: blogData?.title || '',
-      listCate: JSON.stringify(blogData?.listCate) || '',
-      content: blogData?.content || '',
-    },
+    defaultValues: formValues ?? undefined,
   })
-  const navigate = useNavigate()
-  const param = useParams()
-  const id: string = param['id'] as string
 
   useEffect(() => {
-    if (blogData?.content) {
-      try {
-        const parsedData: Value = JSON.parse(blogData.content)
-        setContent(parsedData)
-        console.log('p', parsedData)
-      } catch (error) {
-        console.error('Error parsing blog data content:', error)
-      }
+    if (blogData) {
+      setFormValues({
+        content: blogData.postData.content || '',
+        isTradePost: blogData.postData.isTradePost || false,
+      })
     }
   }, [blogData])
 
-  useEffect(() => {
-    const fetchBlogData = async () => {
-      try {
-        const currentBlogData: IResponsePost = await getPostByIdApi(id)
-        setBlogData(currentBlogData.postData)
-      } catch (error) {
-        console.error('Error fetching blog data:', error)
-      }
-    }
-
-    fetchBlogData()
-  }, [id])
+  const navigate = useNavigate()
+  const param = useParams()
+  const id: string = param['id'] as string
 
   interface Options {
     readonly value: string
     readonly label: string
   }
-
-  const [options, setOptions] = useState<readonly Options[]>([])
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const selectedCategoriesString = selectedCategories.join(',')
-  form.setValue('listCate', selectedCategoriesString)
+  const [selected, setSelected] = useState<Tag[]>([])
+  const [options, setOptions] = useState<Options[]>([])
+  const reactTags = useRef(null)
+  const onAdd = useCallback(
+    (newTag: Tag) => {
+      setSelected([...selected, newTag])
+    },
+    [selected],
+  )
+  const onDelete = useCallback(
+    (tagIndex: number) => {
+      setSelected(selected.filter((_, i) => i !== tagIndex))
+    },
+    [selected],
+  )
 
   useEffect(() => {
-    getAllCategories()
+    // Gọi hàm API trong useEffect
+    getAllCategoryNoParam()
       .then((category: ICategory[]) => {
         if (category) {
           const validCategories = category.filter((cat) => cat.cateId !== undefined)
@@ -117,6 +110,30 @@ export default function UpdateBlog() {
         })
       })
   }, [])
+
+  useEffect(() => {
+    if (blogData?.postData.content) {
+      try {
+        const parsedData: Value = JSON.parse(blogData.postData.content)
+        setContent(parsedData)
+      } catch (error) {
+        console.error('Error parsing blog data content:', error)
+      }
+    }
+  }, [blogData])
+
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        const currentBlogData: IResponsePost = await getPostByIdApi(id)
+        setBlogData(currentBlogData)
+      } catch (error) {
+        console.error('Error fetching blog data:', error)
+      }
+    }
+
+    fetchBlogData()
+  }, [id])
 
   const Close = () => {
     return (
@@ -143,29 +160,35 @@ export default function UpdateBlog() {
       </Dialog>
     )
   }
-
+  const initialValue = [
+    {
+      id: '1',
+      type: 'p',
+      children: [{ text: 'Hello, World!!!' }],
+    },
+  ]
   const [content, setContent] = useState<Value>(initialValue)
-  form.setValue('content', JSON.stringify(content))
   useEffect(() => {
-    setContent(content)
-  }, [content])
+    form.setValue('content', JSON.stringify(content))
+  }, [content, form])
 
-  const onsubmit = async (data: FormData) => {
-    const dataBlog: FormData = {
+  const onSubmit = async (data: FormData) => {
+    const dataBlog: updatePost = {
       ...(data as FormData),
-      userId: blogData?.userId as string,
-      postId: blogData?.postId as string,
-      authorName: blogData?.authorName as string,
-      listCate: data.listCate,
-      productImgs: data.productImgs,
+      userId: blogData?.postData.userId as string,
+      postId: blogData?.postData.postId as string,
+      // listCate: data.listCate,
+      productImages: data.productImages,
+      productVideos: data.productVideos,
       content: data.content,
+      isTradePost: data.isTradePost as boolean,
     }
     console.log('Form data:', dataBlog)
 
     updateBlog.mutate(dataBlog)
   }
 
-  const updateBlog = useMutation((data: FormData) => updateBlogApi(data), {
+  const updateBlog = useMutation((data: updatePost) => updateBlogApi(data), {
     onSuccess: (blog: IBlog) => {
       if (blog && blog.postId) {
         console.log('Blog ID:', blog.postId)
@@ -205,66 +228,114 @@ export default function UpdateBlog() {
       </div>
       <div className="flex flex-row">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onsubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <ScrollArea className="ml-52 flex h-[35rem] w-[50rem] flex-row justify-between rounded-lg border-2 bg-white px-4 py-2">
               <div className="rounded-lg border-gray-400 px-12 py-6">
-                <FormField
-                  control={form.control}
-                  name="productImgs"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center">
-                      <FormLabel className="mr-10 text-lg">Add a cover image</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="w-[27rem]"
-                          type="file"
-                          onChange={(e) => field.onChange(e.target.files?.[0] || null)}
-                          defaultValue={form.getValues('productImgs')}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
+                <div className="flex flex-row items-center justify-stretch">
+                  <FormField
+                    control={form.control}
+                    name="productImages"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center">
+                        {field.value ? (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Change a cover image
+                          </FormLabel>
+                        ) : (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Add a cover image
+                          </FormLabel>
+                        )}
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="productVideos"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center">
+                        {field.value ? (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Change a video introduce
+                          </FormLabel>
+                        ) : (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Add a video introduce
+                          </FormLabel>
+                        )}
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex-grow" />
+                  <FormField
+                    control={form.control}
+                    name="isTradePost"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-end space-x-3 space-y-0 rounded-md p-4">
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Trade post</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {/* <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
                     <FormControl>
                       <Input
                         {...field}
-                        className="sm:text3-xl focus-visible my-2 h-16 border-none font-bold outline-none hover:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-ring md:text-4xl lg:text-5xl"
+                        className="focus-visible my-2 h-16 border-none font-bold outline-none hover:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-ring sm:text-4xl md:text-4xl lg:text-5xl"
                         placeholder="New a post title here..."
-                        defaultValue={blogData?.title}
                       />
                     </FormControl>
                   )}
-                />
-                <Select
-                  value={selectedCategories.map((value) => ({
-                    value,
-                    label: options.find((option) => option.value === value)?.label,
-                  }))}
-                  onChange={(selectedOptions: any) => {
-                    const selectedValues = selectedOptions.map((option: any) => option.value)
-                    setSelectedCategories(selectedValues)
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const target = e.target as HTMLInputElement
-                      if (target.value) {
-                        const newCategory = { value: target.value, label: target.value }
-                        setSelectedCategories([...selectedCategories, target.value])
-                        target.value = ''
-                      }
-                    }
-                  }}
-                  isMulti
-                  placeholder="Add categories"
-                  name="categories"
-                  options={options}
-                  className="basic-multi-select z-20 my-2 mb-4"
-                  classNamePrefix="select"
-                />
+                /> */}
+                {/* <div className="mb-4">
+                  <ReactTags
+                    labelText="Add to 4 tags"
+                    selected={selected}
+                    suggestions={options}
+                    onAdd={onAdd}
+                    onDelete={onDelete}
+                    noOptionsText="No matching countries"
+                    delimiterKeys={[',', 'Enter']}
+                    allowNew={true}
+                    ref={reactTags}
+                  />
+                </div> */}
                 <PlateEditor setContentValue={setContent} content={content} />
               </div>
             </ScrollArea>

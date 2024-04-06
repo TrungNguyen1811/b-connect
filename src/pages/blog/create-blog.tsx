@@ -15,12 +15,10 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createBlogSchema } from '../../components/blog/validation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Form, FormField, FormItem, FormControl, FormLabel } from '../../components/ui/form'
 import { ScrollArea } from '../../components/ui/scroll-area'
 import { Input } from '../../components/ui/input'
-import { ICategory } from 'src/types'
-import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import { toast } from '../../components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
@@ -29,6 +27,10 @@ import { useAuth } from 'src/hooks/useAuth'
 import { Checkbox } from 'src/components/ui/check-box'
 import { PlateEditor } from 'src/components/ui/plate-editor'
 import { Value } from '@udecode/plate-common'
+import { ReactTags, Tag } from 'react-tag-autocomplete'
+import { getAllCategoryNoParam } from 'src/api/categories/get-category'
+import { ICategory } from 'src/types/categories'
+import './style.css'
 
 type FormData = z.infer<typeof createBlogSchema>
 
@@ -37,19 +39,43 @@ export default function CreateBlog() {
     resolver: zodResolver(createBlogSchema),
   })
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   interface Options {
     readonly value: string
     readonly label: string
   }
 
-  const { user } = useAuth()
+  const [selected, setSelected] = useState<Tag[]>([])
+
+  const reactTags = useRef(null)
+
+  const onAdd = useCallback(
+    (newTag: Tag) => {
+      setSelected([...selected, newTag])
+    },
+    [selected],
+  )
+
+  const onDelete = useCallback(
+    (tagIndex: number) => {
+      setSelected(selected.filter((_, i) => i !== tagIndex))
+    },
+    [selected],
+  )
 
   // const [categories, setCategories] = useState<ICategory[]>()
-  const [options, setOptions] = useState<readonly Options[]>([])
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const selectedCategoriesString = selectedCategories.join(',')
-  // form.setValue('listCate', selectedCategoriesString)
+  const [options, setOptions] = useState<Options[]>([])
+  console.log('options', options)
+  // const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const listCate = useMemo(() => {
+    if (!selected) return
+    else return selected.map((ct) => ct.label)
+  }, [selected])
+
+  useEffect(() => {
+    form.setValue('listCate', JSON.stringify(listCate))
+  }, [form, listCate])
 
   useEffect(() => {
     // Gọi hàm API trong useEffect
@@ -122,7 +148,7 @@ export default function CreateBlog() {
       const dataBlog: FormData = {
         ...(data as FormData),
         // authorName: user.username as string,
-        // listCate: data.listCate as string,
+        listCate: data.listCate as string,
         productImages: data.productImages,
         productVideos: data.productVideos,
         isTradePost: data.isTradePost,
@@ -179,52 +205,85 @@ export default function CreateBlog() {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <ScrollArea className="ml-52 flex h-[35rem] w-[50rem] flex-row justify-between rounded-lg border-2 bg-white px-4 py-2">
               <div className="rounded-lg border-gray-400 px-12 py-6">
-                <FormField
-                  control={form.control}
-                  name="isTradePost"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">
-                      <FormControl>
-                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>This post is a trade post</FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="productImages"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center">
-                      <FormLabel className="mr-10 text-lg">Add a cover image</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="ml-8 w-[27rem]"
-                          type="file"
-                          onChange={(e) => field.onChange(e.target.files?.[0] || null)}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="productVideos"
-                  render={({ field }) => (
-                    <FormItem className="mb-4 flex flex-row items-center">
-                      <FormLabel className="mr-10 text-lg">Add a Video Introduce</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="w-[27rem]"
-                          type="file"
-                          onChange={(e) => field.onChange(e.target.files?.[0] || null)}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                <div className="flex flex-row items-center justify-stretch">
+                  <FormField
+                    control={form.control}
+                    name="productImages"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center">
+                        {field.value ? (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Change a cover image
+                          </FormLabel>
+                        ) : (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Add a cover image
+                          </FormLabel>
+                        )}
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="productVideos"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center">
+                        {field.value ? (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Change a video introduce
+                          </FormLabel>
+                        ) : (
+                          <FormLabel className="mr-10 rounded-md border-2 px-2 py-1 text-base">
+                            <FormControl>
+                              <Input
+                                className="screen-reader-only"
+                                type="file"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
+                            </FormControl>
+                            Add a video introduce
+                          </FormLabel>
+                        )}
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex-grow" />
+                  <FormField
+                    control={form.control}
+                    name="isTradePost"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-end space-x-3 space-y-0 rounded-md p-4">
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Trade post</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="title"
@@ -232,38 +291,25 @@ export default function CreateBlog() {
                     <FormControl>
                       <Input
                         {...field}
-                        className="sm:text3-xl focus-visible my-2 h-16 border-none font-bold outline-none hover:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-ring md:text-4xl lg:text-5xl"
+                        className="focus-visible my-2 h-16 border-none font-bold outline-none hover:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-ring sm:text-4xl md:text-4xl lg:text-5xl"
                         placeholder="New a post title here..."
                       />
                     </FormControl>
                   )}
                 />
-                {/* <Select
-                  value={selectedCategories.map((value) => ({
-                    value,
-                    label: options.find((option) => option.value === value)?.label,
-                  }))}
-                  onChange={(selectedOptions: any) => {
-                    const selectedValues = selectedOptions.map((option: any) => option.value)
-                    setSelectedCategories(selectedValues)
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const target = e.target as HTMLInputElement
-                      if (target.value) {
-                        const newCategory = { value: target.value, label: target.value }
-                        setSelectedCategories([...selectedCategories, target.value])
-                        target.value = '' // Xóa giá trị trường nhập sau khi thêm vào danh sách đã chọn
-                      }
-                    }
-                  }}
-                  isMulti
-                  placeholder="Add categories"
-                  name="categories"
-                  options={options}
-                  className="basic-multi-select z-20 my-2 mb-4"
-                  classNamePrefix="select"
-                /> */}
+                <div className="mb-4">
+                  <ReactTags
+                    labelText="Add to 4 tags"
+                    selected={selected}
+                    suggestions={options}
+                    onAdd={onAdd}
+                    onDelete={onDelete}
+                    noOptionsText="No matching countries"
+                    delimiterKeys={[',', 'Enter']}
+                    allowNew={true}
+                    ref={reactTags}
+                  />
+                </div>
                 <PlateEditor setContentValue={setContent} content={content} />
               </div>
             </ScrollArea>

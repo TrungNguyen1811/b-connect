@@ -60,8 +60,8 @@ export interface IBlogResponse {
   postId?: string
   userId: string
   authorName?: string
-  imageDir?: File | string
-  videoDir?: File | string
+  imageDir?: string
+  videoDir?: string
   isTradePost?: boolean
   isLock?: boolean
   title?: string

@@ -1,9 +1,14 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { EyeIcon, HeartIcon, MessageCircleHeartIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { deletePost } from 'src/api/blog/delete-blog'
 import { IResponsePostLocked, getLockedPostByUserId, getPostByUserId } from 'src/api/blog/get-blog'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/check-box'
 import { Separator } from 'src/components/ui/separator'
+import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponsePost } from 'src/types/blog'
 
@@ -12,6 +17,7 @@ function DashboardBlog() {
   const [blogs, setBlogs] = useState<IResponsePost[]>()
   const [lockBlogs, setLockBlogs] = useState<IResponsePostLocked[]>()
   const [checkbox, setCheckbox] = useState<boolean>(false)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +42,37 @@ function DashboardBlog() {
 
     fetchData()
   }, [user, checkbox])
+
+  const deletePostFn = async (postId: string) => {
+    const post = await deletePost(postId)
+    return post
+  }
+
+  const { mutate } = useMutation(deletePostFn, {
+    onSuccess: (data) => {
+      if (data) {
+        toast({
+          title: 'Success',
+          description: 'Delete Post Success',
+        })
+        queryClient.invalidateQueries()
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Delete Post Failed',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Submitting Book',
+        description: error.message,
+      })
+    },
+  })
+  const onDelete = (postId: string) => {
+    mutate(postId)
+  }
 
   return (
     <div className="mx-28">
@@ -92,7 +129,7 @@ function DashboardBlog() {
             </div>
           </div>
 
-          <div className="h-full min-h-[32rem] w-full rounded-md border-2 bg-slate-50 p-6">
+          <div className="h-full min-h-[28rem] w-full rounded-md border-2 bg-slate-50 p-6">
             {checkbox
               ? lockBlogs?.map((lock, index) => (
                   <>
@@ -110,11 +147,35 @@ function DashboardBlog() {
               blogs?.map((blog, index) => (
                 <div className="my-4 mt-2" key={index}>
                   {blog.postData && blog.postData.postId ? (
-                    <div>
-                      <Link to={`/blog/dashboard/manage-interester/${blog.postData.postId}`}>
-                        <div>{blog.postData.title}</div>
-                        <div>{blog.postData.createdAt}</div>
-                      </Link>
+                    <div className="flex flex-row items-center justify-between">
+                      <div>
+                        <Link to={`/blog/dashboard/manage-interester/${blog.postData.postId}`}>
+                          <p className="text-lg font-bold text-orange-600">{blog.postData.title}</p>
+                        </Link>
+                        <p className="flex flex-row text-sm font-semibold text-gray-500">
+                          Published:{' '}
+                          <p className="ml-2 font-light">{format(blog.postData.createdAt as string, 'PPP')}</p>
+                        </p>
+                      </div>
+                      <div className="flex flex-row gap-3 text-gray-500">
+                        <div className="flex flex-row items-center gap-1">
+                          <HeartIcon size={18} />
+                          <p>0</p>
+                        </div>
+                        <div className="flex flex-row items-center gap-1">
+                          <MessageCircleHeartIcon size={18} />
+                          <p>0</p>
+                        </div>
+                        <div className="flex flex-row items-center gap-1">
+                          <EyeIcon size={18} />
+                          <p>0</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between gap-5 text-gray-500">
+                        <Link to={`/blog/${blog.postData.postId}`}>View</Link>
+                        <Link to={`/blog/${blog.postData.postId}/edit`}>Edit</Link>
+                        <button onClick={() => onDelete(blog.postData.postId as string)}>Delete</button>
+                      </div>
                     </div>
                   ) : (
                     <div>This post data is incomplete.</div>
@@ -124,7 +185,7 @@ function DashboardBlog() {
             ) : (
               <div className="flex flex-col items-center">
                 <img
-                  className="pb-6 pt-16"
+                  className="w-44 pb-6 pt-16"
                   src="https://media.dev.to/cdn-cgi/image/width=300,height=,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fi%2Fy5767q6brm62skiyywvc.png"
                 />
                 <p className="text-lg">

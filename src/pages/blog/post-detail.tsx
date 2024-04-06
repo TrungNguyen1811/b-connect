@@ -18,6 +18,9 @@ import { Value } from '@udecode/plate-common'
 import { PlateView } from 'src/components/ui/plate-view'
 import { IResponseInteresterList } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
+import { removeUserSavedPost } from 'src/api/blog/delete-blog'
+import { addNewSavedPost } from 'src/api/blog/post-blog'
+import { getUserSavedPosts } from 'src/api/blog/get-blog'
 
 type FormValue = {
   content: string
@@ -47,30 +50,58 @@ function BlogDetail() {
     renderCommentsPost()
   }, [blog?.postData.postId])
 
+  useEffect(() => {
+    const getSavedPost = async () => {
+      const save: IResponsePost[] = await getUserSavedPosts()
+      const isSave = save.filter((save) => save.postData.postId === blog?.postData.postId)
+      if (isSave) {
+        setIsSaved(true)
+      } else {
+        setIsSaved(false)
+      }
+    }
+    getSavedPost()
+  }, [blog?.postData.postId])
+
   const saveToReadingList = async () => {
     if (blog) {
-      //   await postReadingList(blog._id)
-      setIsSaved(true)
+      await addNewSavedPost(blog.postData.postId as string).then((res) => {
+        if (res === 'Successful!') {
+          setIsSaved(true)
+        }
+      })
     }
   }
 
   const unsaveFromReadingList = async () => {
-    //   await postRemoveReadingList(blog._id)
-    setIsSaved(false)
+    if (blog) {
+      await removeUserSavedPost(blog.postData.postId as string).then((res) => {
+        if (res === 'Successful!') {
+          setIsSaved(false)
+        }
+      })
+    }
   }
 
   const saveToLikePost = async () => {
-    if (blog) {
-      //   await postLikeBlog(blog._id)
-      setIsLiked(true)
-    }
+    // if (blog) {
+    //   await addNewSavedPost(blog.postData.postId as string).then((res) => {
+    //     if (res === 'Successful!') {
+    //       setIsLiked(false)
+    //     }
+    //   })
+    // }
+    setIsLiked(false)
   }
 
   const unsaveToLikePost = async () => {
-    if (blog) {
-      //   await postLikeBlog(blog._id)
-      setIsLiked(false)
-    }
+    // if (blog) {
+    //   await removeUserSavedPost(blog.postData.postId as string).then((res) => {
+    //     if (res === 'Successful!') {
+    //     }
+    //   })
+    // }
+    setIsLiked(false)
   }
 
   const focusTextarea = () => {
@@ -152,7 +183,7 @@ function BlogDetail() {
       }
     }
   }, [blog?.postData.content])
-  console.log(blog?.postData.content)
+  // console.log(blog?.postData.content)
 
   const renderCommenter = React.useCallback(
     ({ userName, avatarDir, content, createDate }: IComment) => (

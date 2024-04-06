@@ -54,27 +54,34 @@ export { postBlogApi }
 async function updateBlogApi(blogData: {
   postId: string
   userId: string
-  authorName: string
-  listCate: string
-  productImgs?: File | null
-  title: string
+  // listCate: string
+  // title: string
+  ProductImages?: File | null
+  ProductVideos?: File | null
   content: string
+  isTradePost: boolean
 }) {
   const data = new FormData()
-  data.append('listCate', blogData.listCate)
+  // data.append('title', blogData.title)
+  // data.append('listCate', blogData.listCate)
   data.append('postId', blogData.postId)
   data.append('userId', blogData.userId)
-  data.append('authorName', blogData.authorName)
-  data.append('title', blogData.title)
   data.append('content', blogData.content)
-  if (blogData.productImgs instanceof File) {
-    data.append('productImgs', blogData.productImgs)
+  data.append('isTradePost', blogData.isTradePost)
+  if (blogData.ProductImages instanceof File) {
+    data.append('ProductImages', blogData.ProductImages)
   } else {
-    console.log('blogData.productImgs is not logic object File')
+    console.log('blogData.ProductImages is not logic object File')
+  }
+
+  if (blogData.ProductVideos instanceof File) {
+    data.append('ProductVideos', blogData.ProductVideos)
+  } else {
+    console.log('blogData.ProductVideos is not logic object File')
   }
 
   return await authAxiosClient
-    .put('/Post/update post', data, {
+    .put('/Post/update-post', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -133,3 +140,22 @@ async function unFollowingFromInterested(cateId: string) {
 }
 
 export { unFollowingFromInterested }
+
+async function addNewSavedPost(postId: string) {
+  return await authAxiosClient
+    .post(`/Post/add-new-user-saved-post?postId=${postId}`, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { addNewSavedPost }
