@@ -316,58 +316,107 @@ export default function SubmitTrade() {
     submitTradeMutation.mutate(formData)
   }
 
-  const renderTrader = (userTrade: ITradeDetail) => {
-    return (
-      <div className="px-4 pb-4">
-        <div className="flex flex-row items-center">
-          <Label className="text-md">TraderId:</Label>
-          <p className="ml-2">{userTrade?.traderId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">TradeDetailId:</Label>
-          <p className="ml-2">{userTrade?.details.tradeDetailId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">RatingRecordId:</Label>
-          <p className="ml-2">{userTrade?.details.ratingRecordId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">RatingRecord:</Label>
-          <p className="ml-2">{userTrade?.details.ratingRecord}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">LockedRecordId:</Label>
-          <p className="ml-2">{userTrade?.details.lockedRecordId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Status:</Label>
-          <p className="ml-2">{ITradeStatus[userTrade?.details.status as keyof typeof ITradeStatus]}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">IsPostOwner:</Label>
-          {userTrade?.details.isPostOwner ? <p className="ml-2">True</p> : <p className="ml-2">False</p>}
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">AddressId:</Label>
-          <p className="ml-2">{userTrade?.details.addressId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Address:</Label>
-          <p className="ml-2">{userTrade?.details.address}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Phone:</Label>
-          <p className="ml-2">{userTrade?.details.phone}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Note:</Label>
-          <p className="ml-2">{userTrade?.details.note}</p>
-        </div>
-      </div>
-    )
+  const renderTraderComponent = (userTrader: ITradeDetail) => {
+    const status = userTrader?.details.status
+    const tradeDetailId = userTrader?.details.tradeDetailId
+
+    const handlePutStatusTrade = (newStatus: number) => {
+      putStatusTrade(tradeDetailId as string, newStatus)
+    }
+
+    switch (status) {
+      case 2:
+        return (
+          <p>
+            Confirm receipt of goods and user{' '}
+            <button className="font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(3)}>
+              reviews
+            </button>
+          </p>
+        )
+
+      case 3:
+        return (
+          <div>
+            <button className="font-normal text-red-600 underline" onClick={() => setOpen(true)}>
+              Reviews
+            </button>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogContent className="h-[45%]">
+                <DialogHeader className="mb-2 px-12">
+                  <p className="text-4xl font-extrabold">Feedback</p>
+                </DialogHeader>
+                <div className="flex flex-col">
+                  <Form {...formReview}>
+                    <form onSubmit={formReview.handleSubmit(onSubmitReview)}>
+                      <FormField
+                        control={formReview.control}
+                        name="ratingPoint"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="mt-4">Rating</FormLabel>
+                            <FormControl>
+                              <Input placeholder="5*" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={formReview.control}
+                        name="comment"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="mt-4">Comment</FormLabel>
+                            <FormControl>
+                              <Input placeholder="ABC..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button type="submit" className="w-full">
+                        Submit
+                      </Button>
+                    </form>
+                  </Form>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        )
+
+      case 0:
+        return (
+          <div className="min-w-[33vw] px-4 pb-4">
+            <div className="text-red-600">Interested person has not confirmed</div>
+            <div className="">{renderTrader(userTrader)}</div>
+          </div>
+        )
+
+      case 1:
+        return (
+          <div className="min-w-[33vw] px-4 pb-4">
+            <div className="">
+              <div className="flex flex-row items-center">
+                <p className="ml-4">
+                  <button className="font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(2)}>
+                    Accept
+                  </button>{' '}
+                  to confirm the trade information
+                </p>
+              </div>
+              {renderTrader(userTrader)}
+            </div>
+          </div>
+        )
+
+      default:
+        return renderTrader(userTrader)
+    }
   }
 
-  const renderOwner = (userTrade: ITradeDetail) => {
+  const renderTrader = (userTrade: ITradeDetail) => {
     return (
       <div className="px-4 pb-4">
         <div className="flex flex-row items-center">
@@ -424,104 +473,8 @@ export default function SubmitTrade() {
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2">
-              <p className="m-4 text-lg font-medium">Interester</p>{' '}
-              {interester?.details.status === 2 ? (
-                <p>
-                  Confirm receipt of goods and user{' '}
-                  <button
-                    className="font-normal text-red-600 underline"
-                    onClick={() => {
-                      putStatusTrade(interester?.details.tradeDetailId as string, 3)
-                    }}
-                  >
-                    reviews
-                  </button>
-                </p>
-              ) : (
-                ''
-              )}
-              {interester?.details.status === 3 ? (
-                <div>
-                  <button className="font-normal text-red-600 underline" onClick={() => setOpen(true)}>
-                    Reviews
-                  </button>
-                  <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogContent className="h-[45%] ">
-                      <DialogHeader className="mb-2 px-12">
-                        <p className="text-4xl font-extrabold">Feedback</p>
-                      </DialogHeader>
-                      <div className="flex flex-col">
-                        <Form {...formReview}>
-                          <form onSubmit={formReview.handleSubmit(onSubmitReview)}>
-                            <FormField
-                              control={formReview.control}
-                              name="ratingPoint"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="mt-4">Rating</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder="5*" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={formReview.control}
-                              name="comment"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="mt-4">Comment</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder="ABC..." {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <Button type="submit" className="w-full">
-                              Submit
-                            </Button>
-                          </form>
-                        </Form>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              ) : (
-                ''
-              )}
-              {interester?.details.status === 0 || interester?.details.status == 1 ? (
-                <div className="min-w-[33vw] px-4 pb-4">
-                  {interester?.details.status === 0 ? (
-                    <div className="text-red-600">Interested person has not confirmed</div>
-                  ) : (
-                    ''
-                  )}
-                  <div className="">
-                    {interester?.details.status === 1 ? (
-                      <div className="flex flex-row items-center">
-                        <p className="ml-4">
-                          <button
-                            className="font-normal text-red-600 underline"
-                            onClick={() => {
-                              putStatusTrade(interester?.details.tradeDetailId as string, 2)
-                            }}
-                          >
-                            Accept
-                          </button>{' '}
-                          to confirm the trade information
-                        </p>
-                      </div>
-                    ) : (
-                      ' '
-                    )}
-                    {renderTrader(interester!)}
-                  </div>
-                </div>
-              ) : (
-                <div className="">{renderTrader(interester!)}</div>
-              )}
+              <p className="m-4 text-lg font-medium">Interester</p> {interester && renderTraderComponent(interester)}{' '}
+              {interester && renderTrader(interester)}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
             <div className="rounded-md border-2">
@@ -748,7 +701,7 @@ export default function SubmitTrade() {
                   </Form>
                 </div>
               ) : (
-                renderOwner(userTrade!)
+                userTrade && renderTrader(userTrade)
               )}
             </div>
           </div>
@@ -978,109 +931,14 @@ export default function SubmitTrade() {
                   </Form>
                 </div>
               ) : (
-                renderTrader(userTrade!)
+                userTrade && renderTrader(userTrade)
               )}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
             <div className="rounded-md border-2">
               <p className="m-4 text-lg font-medium">Owner</p>
-              {owner?.details.status === 2 ? (
-                <p>
-                  Confirm receipt of goods and user{' '}
-                  <button
-                    className="font-normal text-red-600 underline"
-                    onClick={() => {
-                      putStatusTrade(owner?.details.tradeDetailId as string, 3)
-                    }}
-                  >
-                    reviews
-                  </button>
-                </p>
-              ) : (
-                ''
-              )}
-              {owner?.details.status === 3 ? (
-                <div>
-                  <button className="font-normal text-red-600 underline" onClick={() => setOpen(true)}>
-                    Reviews
-                  </button>
-                  <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogContent className="h-[45%] ">
-                      <DialogHeader className="mb-2 px-12">
-                        <p className="text-4xl font-extrabold">Feedback</p>
-                      </DialogHeader>
-                      <div className="flex flex-col">
-                        <Form {...formReview}>
-                          <form onSubmit={formReview.handleSubmit(onSubmitReview)}>
-                            <FormField
-                              control={formReview.control}
-                              name="ratingPoint"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="mt-4">Rating</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder="5*" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={formReview.control}
-                              name="comment"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="mt-4">Comment</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder="ABC..." {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <Button type="submit" className="w-full">
-                              Submit
-                            </Button>
-                          </form>
-                        </Form>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              ) : (
-                ''
-              )}
-              {owner?.details.status === 0 || owner?.details.status === 1 ? (
-                <div>
-                  {owner?.details.status === 0 ? (
-                    <div className="text-red-600">Interested person has not confirmed</div>
-                  ) : (
-                    ' '
-                  )}
-                  <div className="">
-                    {owner?.details.status === 1 ? (
-                      <div className="flex flex-row items-center">
-                        <p className="ml-4">
-                          <button
-                            className="font-normal text-red-600 underline"
-                            onClick={() => {
-                              putStatusTrade(owner?.details.tradeDetailId as string, 2)
-                            }}
-                          >
-                            Accept
-                          </button>{' '}
-                          to confirm the trade information
-                        </p>
-                      </div>
-                    ) : (
-                      ' '
-                    )}
-                    {renderOwner(owner!)}
-                  </div>
-                </div>
-              ) : (
-                <div className="">{renderOwner(owner!)}</div>
-              )}
+              {owner && renderTraderComponent(owner)}
+              {owner && renderTrader(owner)}
             </div>
           </div>
         )}

@@ -108,6 +108,7 @@ async function postAcceptTrade(postId: string, interesterId: string) {
       throw error
     })
 }
+export { postAcceptTrade }
 
 async function postRateUserPostTrade(trade: IReviewUser) {
   return await authAxiosClient

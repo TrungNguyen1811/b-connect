@@ -18,6 +18,7 @@ import { SetIsAccountValidates } from 'src/api/agency/set-is-account-validated'
 import { RegisterAgency } from 'src/api/agency/post-register-agency'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { getUserProfileApi } from 'src/api/apis/auth/profile.api'
+import { ROLE } from 'src/types/user'
 
 const SubscribeSchema = z.object({
   agencyName: z.string().min(3),
@@ -50,11 +51,15 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
         }
         const token = localStorage.getItem('token') as string
         login({ user, token })
-        const agency = user?.roles?.find((role) => role === 'Agency')
-        console.log('agency', agency)
-        if (agency === 'Agency') {
+        console.log(user.roles)
+        if (user?.roles && user.roles.includes(ROLE.AGENCY)) {
           navigate('/seller')
         }
+        // const agency = user?.roles?.find((role) => role === 'Agency')
+        // console.log('agency', agency)
+        // if (agency === 'Agency') {
+        //   navigate('/seller')
+        // }
       }
     })
   }
