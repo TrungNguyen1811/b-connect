@@ -229,6 +229,33 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProp
 )
 CarouselPrevious.displayName = 'CarouselPrevious'
 
+const CarouselButtonPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+  ({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
+    const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+
+    return (
+      <Button
+        ref={ref}
+        variant={'default'}
+        size={size}
+        className={cn(
+          'absolute m-4 h-8 w-32 rounded-md',
+          orientation === 'horizontal'
+            ? 'bottom-12 left-5 -translate-y-1/2'
+            : 'left-1/2 top-5 -translate-x-1/2 rotate-90',
+          className,
+        )}
+        disabled={!canScrollPrev}
+        onClick={scrollPrev}
+        {...props}
+      >
+        Previous slide
+      </Button>
+    )
+  },
+)
+CarouselButtonPrevious.displayName = 'CarouselButtonPrevious'
+
 const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
   ({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
     const { orientation, scrollNext, canScrollNext } = useCarousel()
@@ -257,6 +284,33 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
 )
 CarouselNext.displayName = 'CarouselNext'
 
+const CarouselButtonNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+  ({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
+    const { orientation, scrollNext, canScrollNext } = useCarousel()
+
+    return (
+      <Button
+        ref={ref}
+        variant={'default'}
+        size={size}
+        className={cn(
+          'absolute m-4 h-8 w-16 rounded-md',
+          orientation === 'horizontal'
+            ? 'bottom-12 right-5 -translate-y-1/2'
+            : 'bottom-5 left-1/2 -translate-x-1/2 rotate-90',
+          className,
+        )}
+        disabled={!canScrollNext}
+        onClick={scrollNext}
+        {...props}
+      >
+        Next
+      </Button>
+    )
+  },
+)
+CarouselButtonNext.displayName = 'CarouselButtonNext'
+
 export {
   type CarouselApi,
   Carousel,
@@ -265,5 +319,7 @@ export {
   CarouselContent3,
   CarouselItem,
   CarouselPrevious,
+  CarouselButtonPrevious,
   CarouselNext,
+  CarouselButtonNext,
 }
