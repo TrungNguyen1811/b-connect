@@ -33,7 +33,13 @@ import { ICategory } from 'src/types/categories'
 import './style.css'
 
 type FormData = z.infer<typeof createBlogSchema>
-
+interface createPost {
+  productImages: File | null
+  productVideos: File | null
+  title: string
+  content: string
+  isTradePost: boolean
+}
 export default function CreateBlog() {
   const form = useForm<FormData>({
     resolver: zodResolver(createBlogSchema),
@@ -140,10 +146,8 @@ export default function CreateBlog() {
     console.log('Form data:')
 
     if (user) {
-      const dataBlog: FormData = {
+      const dataBlog: createPost = {
         ...(data as FormData),
-        // authorName: user.username as string,
-        // listCate: data.listCate as string,
         productImages: data.productImages,
         productVideos: data.productVideos,
         isTradePost: data.isTradePost,
@@ -157,7 +161,7 @@ export default function CreateBlog() {
     }
   }
 
-  const postBlog = useMutation((data: FormData) => postBlogApi(data), {
+  const postBlog = useMutation((data: createPost) => postBlogApi(data), {
     onSuccess: (res) => {
       if (res) {
         queryClient.invalidateQueries()

@@ -11,12 +11,9 @@ const contentSchema = z.object({
 })
 
 export const createBlogSchema = z.object({
-  // userId: z.string(),
-  // authorName: z.string(),
   productImages: z.any(),
   productVideos: z.any(),
   title: z.string(),
-  // listCate: z.string(),
   content: z.string(),
   isTradePost: z.boolean().optional().default(false),
 })
@@ -24,8 +21,7 @@ export const createBlogSchema = z.object({
 export const updateBlogSchema = z.object({
   productImages: z.any(),
   productVideos: z.any(),
-  // title: z.string(),
-  // listCate: z.string(),
+  title: z.string(),
   content: z.string(),
-  isTradePost: z.boolean(),
+  isLock: z.boolean(),
 })

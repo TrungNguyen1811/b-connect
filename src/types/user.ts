@@ -9,7 +9,7 @@ export interface User {
   isSeller?: boolean
   isValidated?: boolean
   phone?: string
-  avatar?: File | string
+  avatarDir?: File | string
   addressId?: string | null
   username: string
   password?: string

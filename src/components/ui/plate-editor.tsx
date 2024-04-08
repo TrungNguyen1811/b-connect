@@ -304,19 +304,13 @@ const plugins = createPlugins(
   },
 )
 
-const initialValue = [
-  {
-    id: '1',
-    type: 'p',
-    children: [{ text: 'Hello, World!' }],
-  },
-]
 type PlateEditorProps = {
   setContentValue: (content: Value) => void
   content: Value
 }
 
 export function PlateEditor({ setContentValue, content }: PlateEditorProps) {
+  console.log('huhu', content)
   const [debugValue, setDebugValue] = useState<Value>(content)
   const getContentValue = useCallback(() => {
     return debugValue

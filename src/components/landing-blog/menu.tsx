@@ -142,7 +142,7 @@ export function Menu() {
 
     useEffect(() => {
       const fetchInterestedNames = async () => {
-        const cate = await getPostInterestedByUser(user?.userId as string)
+        const cate = await getPostInterestedByUser()
         if (cate) {
           setInterested(cate)
         }
@@ -154,7 +154,7 @@ export function Menu() {
     return (
       <div className=" flex flex-col">
         <div className="mb-4 flex flex-row items-center justify-between">
-          <p className="text-md font-bold">My Interested</p>
+          <p className="text-md font-bold">My Trade</p>
           <Link to={'/blog/dashboard/manage-interested'}>
             <SettingsIcon />
           </Link>

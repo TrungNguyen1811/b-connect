@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useId, useState } from 'react'
 import { AvatarImage } from '../../components/ui/avatar'
 import { Separator } from '../../components/ui/separator'
 import { BookMarkedIcon, HandshakeIcon, HeartIcon, MessageCircleHeart, MessageCircleHeartIcon } from 'lucide-react'
-import { useLoaderData } from 'react-router-dom'
+import { Link, useLoaderData } from 'react-router-dom'
 import { IResponsePost } from 'src/types/blog'
 import { useToast } from '../../components/ui/use-toast'
 import { Button } from '../../components/ui/button'
@@ -365,7 +365,7 @@ function BlogDetail() {
             </div>
             <div className="w-full rounded-md"></div>
             <div className="m-4  px-12 pt-4">
-              <div className="flex flex-row">
+              <div className="flex flex-row items-center justify-start">
                 <Avatar>
                   <AvatarImage src={blog?.avatarDir} className="h-10 w-10 rounded-[50%]" />
                 </Avatar>
@@ -373,17 +373,22 @@ function BlogDetail() {
                   <p className="font-semibold">{blog?.username}</p>
                   <p className="text-xs font-light">{blog?.postData.createdAt}</p>
                 </div>
+                <div className="flex-grow"></div>
+                <div className="text-sm font-light">{blog?.readingTime}</div>
               </div>
               <div className="flex flex-col">
                 <p className="my-4 text-5xl font-extrabold">{blog?.postData.title}</p>
                 <p className="mb-2 flex flex-row text-sm">
-                  Category:
-                  {/* {blog?.category.map((cat, index) => (
+                  {blog?.tags.map((tag, index) => (
                     <React.Fragment key={index}>
-                      <div className="text-sm">{cat.name}</div>
-                      {index < blog.category.length - 1 && <span>, </span>}
+                      <Link
+                        to={'/'}
+                        className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-50 hover:text-orange-600"
+                      >
+                        #{tag.label}
+                      </Link>
                     </React.Fragment>
-                  ))} */}
+                  ))}
                 </p>
               </div>
               <div className="pt-4">

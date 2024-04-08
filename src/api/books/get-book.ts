@@ -154,8 +154,6 @@ export async function GetAllBookInInventory(params: Partial<IQueryPagination & I
 }
 
 export type GetManyBooksParams = {
-  genres?: string
-  category?: string
   status?: 'NEW' | 'OLD'
 } & Partial<IDefaultQuery>
 

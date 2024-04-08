@@ -20,7 +20,7 @@ const formSchema = z.object({
   username: z.string().optional(),
   email: z.string().optional(),
   phone: z.string().optional(),
-  avatar: z.any().optional(),
+  avatarDir: z.any().optional(),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -33,7 +33,7 @@ function InfoAccount() {
       username: user?.username,
       email: user?.email,
       phone: user?.phone,
-      avatar: user?.avatar,
+      avatarDir: user?.avatarDir,
     },
   })
   const queryClient = useQueryClient()
@@ -100,7 +100,7 @@ function InfoAccount() {
       username: data.username ?? '',
       email: data.email ?? '',
       phone: data.phone ?? '',
-      avatar: data.avatar ?? '',
+      avatarDir: data.avatarDir ?? '',
     }
     updateUser(updatedData)
   }
@@ -164,11 +164,11 @@ function InfoAccount() {
               <ResizablePanel defaultSize={40}>
                 <div className="flex h-[200px] flex-col items-center p-6 pt-24">
                   <Avatar className="h-24 w-24">
-                    <AvatarImage src={user?.avatar as string}></AvatarImage>
+                    <AvatarImage src={user?.avatarDir as string}></AvatarImage>
                   </Avatar>
                   <FormField
                     control={form.control}
-                    name="avatar"
+                    name="avatarDir"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="mb-2">Avatar User</FormLabel>

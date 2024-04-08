@@ -16,8 +16,6 @@ import { GetManyBooksParams } from 'src/api/books/get-book'
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
   PageSize: 40,
-  authors: undefined,
-  genres: undefined,
   reviews: undefined,
   Name: undefined,
 }

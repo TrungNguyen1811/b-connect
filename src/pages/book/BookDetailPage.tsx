@@ -150,7 +150,7 @@ function BookDetailPage() {
   }, [])
 
   const renderReviewer = React.useCallback(
-    ({ email, username, ratingPoint, avatarDir, createDate }: IReviewResponse) => (
+    ({ email, username, ratingPoint, avatarDir, createdDate }: IReviewResponse) => (
       <div className="flex w-full items-center gap-3">
         <Avatar>
           <AvatarImage width={'50rem'} src={avatarDir} alt={`${username}`} />
@@ -170,7 +170,7 @@ function BookDetailPage() {
               {renderReviewRating(ratingPoint)}
             </div>
             <p className="text-right text-xs text-slate-300">
-              {createDate ? `Reviewed at ${format(parseISO(createDate), 'dd/MM/yyyy')}` : 'Review date not available'}
+              {createdDate ? `Reviewed at ${format(parseISO(createdDate), 'dd/MM/yyyy')}` : 'Review date not available'}
             </p>
           </div>
         </div>
@@ -224,20 +224,19 @@ function BookDetailPage() {
 
   const handleReviewSubmit = useCallback(
     ({ ratingPoint, comment }: FormValue) => {
-      mutateAsync({
-        // ratingId: book?.ratingId as string,
+      const payload = {
         ratingId: book?.ratingId as string,
         userId: user?.userId as string,
         comment: comment,
-        ratingPoint: ratingPoint,
-      })
+        ratingPoint: ratingPoint.toString(),
+      }
+      mutateAsync(payload)
         .then(() => {
           toast({
             type: 'foreground',
             title: 'Post a comment successfully',
             description: 'Your comment have been recorded',
           })
-
           reset()
         })
         .catch((e) => {

@@ -29,8 +29,8 @@ export interface IReview {
   ratingRecordId?: string
   ratingId: string
   userId: string
-  ratingPoint?: number
-  comment?: string
+  ratingPoint: string
+  comment: string
   purchasesVerify?: string
   createdAt?: string
   updatedAt?: string
@@ -45,7 +45,7 @@ export interface IReviewResponse {
   username?: string
   avatarDir?: string
   email?: string
-  createDate?: string
+  createdDate?: string
   updatedAt?: string
 }
 

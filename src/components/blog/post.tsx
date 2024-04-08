@@ -135,14 +135,21 @@ function Post({ postId }: PostProps) {
           <div className="flex flex-col">
             <p className="my-2 ml-12 text-2xl font-extrabold">{blog?.postData.title}</p>
             <p className="mb-2 ml-12 flex flex-row gap-1 text-sm">
-              {/* {blog?.postData.listCate.map((cat, index) => (
+              {blog?.tags.map((tag, index) => (
                 <React.Fragment key={index}>
-                  <Link to={} className="hover:border-1 hover:border hover:shadow-sm">
-                    <div className="text-sm">#{cat.cateName}</div>
+                  <Link
+                    to={'/'}
+                    className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-50 hover:text-orange-600"
+                  >
+                    #{tag.label}
                   </Link>
                 </React.Fragment>
-              ))} */}
+              ))}
             </p>
+          </div>
+          <div className="flex flex-row">
+            <p className="flex-grow"></p>
+            <p className="right-0 text-xs font-extralight">{blog?.readingTime}</p>
           </div>
         </div>
       </Link>

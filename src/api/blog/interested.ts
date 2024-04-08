@@ -10,8 +10,8 @@ export async function getAllPosts() {
   })
 }
 
-export async function getPostInterestedByUser(userId: string) {
-  return axiosClient.get(`/Post/trading/get-post-interested-by-user?userId=${userId}`).then((res) => {
+export async function getPostInterestedByUser() {
+  return authAxiosClient.get(`/Post/trading/get-post-interested-by-user`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })

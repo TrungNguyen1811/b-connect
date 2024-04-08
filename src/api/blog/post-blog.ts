@@ -2,8 +2,6 @@ import FormData from 'form-data'
 import { authAxiosClient, axiosClient } from '../../lib/axios'
 
 async function postBlogApi(blogData: {
-  // authorName: string
-  // listCate: string
   productImages?: File | null
   productVideos?: File | null
   isTradePost?: boolean
@@ -11,10 +9,9 @@ async function postBlogApi(blogData: {
   content: string
 }) {
   const data = new FormData()
-  // data.append('listCate', blogData.listCate)
   data.append('IsTradePost', blogData.isTradePost)
   // data.append('authorName', blogData.authorName)
-  data.append('title', blogData.title)
+  data.append('Title', blogData.title)
   data.append('Content', blogData.content)
   if (blogData.productImages instanceof File) {
     data.append('ProductImages', blogData.productImages)
@@ -53,29 +50,26 @@ export { postBlogApi }
 
 async function updateBlogApi(blogData: {
   postId: string
-  userId: string
   // listCate: string
-  // title: string
+  title: string
   ProductImages?: File | null
   ProductVideos?: File | null
   content: string
-  isTradePost: boolean
+  isLock?: boolean
 }) {
   const data = new FormData()
-  // data.append('title', blogData.title)
-  // data.append('listCate', blogData.listCate)
-  data.append('postId', blogData.postId)
-  data.append('userId', blogData.userId)
-  data.append('content', blogData.content)
-  data.append('isTradePost', blogData.isTradePost)
+  data.append('Title', blogData.title)
+  data.append('PostId', blogData.postId)
+  data.append('Content', blogData.content)
+  data.append('IsLock', blogData.isLock)
   if (blogData.ProductImages instanceof File) {
-    data.append('ProductImages', blogData.ProductImages)
+    data.append('Image', blogData.ProductImages)
   } else {
     console.log('blogData.ProductImages is not logic object File')
   }
 
   if (blogData.ProductVideos instanceof File) {
-    data.append('ProductVideos', blogData.ProductVideos)
+    data.append('Video', blogData.ProductVideos)
   } else {
     console.log('blogData.ProductVideos is not logic object File')
   }

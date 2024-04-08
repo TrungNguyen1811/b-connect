@@ -1,5 +1,5 @@
 import { XIcon } from 'lucide-react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLoaderData, useNavigate, useParams } from 'react-router-dom'
 import {
   Dialog,
   DialogClose,
@@ -15,7 +15,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { updateBlogSchema } from '../../components/blog/validation'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Form, FormField, FormItem, FormControl, FormLabel } from '../../components/ui/form'
 import { ScrollArea } from '../../components/ui/scroll-area'
 import { Input } from '../../components/ui/input'
@@ -23,43 +23,45 @@ import { PlateEditor } from '../../components/ui/plate-editor'
 import { Value } from '@udecode/plate-common'
 import { ICategory } from 'src/types'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
-import { toast } from '../../components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
-import { IBlog, IResponsePost } from 'src/types/blog'
-import { updateBlogApi } from 'src/api/blog/post-blog'
-import { getPostByIdApi } from 'src/api/blog/get-blog'
+import { IResponsePost } from 'src/types/blog'
+import { addSocialTag, updateBlogApi } from 'src/api/blog/post-blog'
 import { Checkbox } from 'src/components/ui/check-box'
-import { Tag } from 'react-tag-autocomplete'
+import { ReactTags, Tag } from 'react-tag-autocomplete'
+import './style.css'
+import { toast } from 'src/components/ui/use-toast'
 
 type FormData = z.infer<typeof updateBlogSchema>
 interface updatePost {
   productImages: File | null
   productVideos: File | null
-  userId: string
   postId: string
-  // title: z.string(),
-  // listCate: z.string(),
+  title: string
   content: string
-  isTradePost: boolean
+  isLock?: boolean
 }
+
 export default function UpdateBlog() {
-  const [blogData, setBlogData] = useState<IResponsePost | null>(null)
-  const [formValues, setFormValues] = useState<FormData | null>(null)
+  const data = useLoaderData() as { post: IResponsePost }
+  const [post, setPost] = useState<IResponsePost | null>(data.post)
+  useEffect(() => {
+    setPost(data.post)
+    setSelected(data.post.tags)
+  }, [data])
+
+  const initialValue = useMemo(() => {
+    const content: Value = JSON.parse(post?.postData.content as string)
+    return content
+  }, [post])
 
   const form = useForm<FormData>({
     resolver: zodResolver(updateBlogSchema),
-    defaultValues: formValues ?? undefined,
+    defaultValues: {
+      title: post?.postData.title || '',
+      isLock: post?.postData.isLock || false,
+    },
   })
-
-  useEffect(() => {
-    if (blogData) {
-      setFormValues({
-        content: blogData.postData.content || '',
-        isTradePost: blogData.postData.isTradePost || false,
-      })
-    }
-  }, [blogData])
 
   const navigate = useNavigate()
   const param = useParams()
@@ -71,6 +73,7 @@ export default function UpdateBlog() {
   }
   const [selected, setSelected] = useState<Tag[]>([])
   const [options, setOptions] = useState<Options[]>([])
+
   const reactTags = useRef(null)
   const onAdd = useCallback(
     (newTag: Tag) => {
@@ -84,6 +87,11 @@ export default function UpdateBlog() {
     },
     [selected],
   )
+
+  const listTags = useMemo(() => {
+    if (!selected) return
+    else return selected.map((ct) => ct.label)
+  }, [selected])
 
   useEffect(() => {
     // Gọi hàm API trong useEffect
@@ -111,30 +119,6 @@ export default function UpdateBlog() {
       })
   }, [])
 
-  useEffect(() => {
-    if (blogData?.postData.content) {
-      try {
-        const parsedData: Value = JSON.parse(blogData.postData.content)
-        setContent(parsedData)
-      } catch (error) {
-        console.error('Error parsing blog data content:', error)
-      }
-    }
-  }, [blogData])
-
-  useEffect(() => {
-    const fetchBlogData = async () => {
-      try {
-        const currentBlogData: IResponsePost = await getPostByIdApi(id)
-        setBlogData(currentBlogData)
-      } catch (error) {
-        console.error('Error fetching blog data:', error)
-      }
-    }
-
-    fetchBlogData()
-  }, [id])
-
   const Close = () => {
     return (
       <Dialog>
@@ -160,14 +144,8 @@ export default function UpdateBlog() {
       </Dialog>
     )
   }
-  const initialValue = [
-    {
-      id: '1',
-      type: 'p',
-      children: [{ text: 'Hello, World!!!' }],
-    },
-  ]
   const [content, setContent] = useState<Value>(initialValue)
+
   useEffect(() => {
     form.setValue('content', JSON.stringify(content))
   }, [content, form])
@@ -175,13 +153,12 @@ export default function UpdateBlog() {
   const onSubmit = async (data: FormData) => {
     const dataBlog: updatePost = {
       ...(data as FormData),
-      userId: blogData?.postData.userId as string,
-      postId: blogData?.postData.postId as string,
-      // listCate: data.listCate,
+      postId: post?.postData.postId as string,
       productImages: data.productImages,
       productVideos: data.productVideos,
       content: data.content,
-      isTradePost: data.isTradePost as boolean,
+      title: data.title,
+      isLock: data.isLock as boolean,
     }
     console.log('Form data:', dataBlog)
 
@@ -189,15 +166,14 @@ export default function UpdateBlog() {
   }
 
   const updateBlog = useMutation((data: updatePost) => updateBlogApi(data), {
-    onSuccess: (blog: IBlog) => {
-      if (blog && blog.postId) {
-        console.log('Blog ID:', blog.postId)
-        toast({
-          title: 'Successful!!!',
-          description: 'Update Blog Success!',
-        })
+    onSuccess: (blog) => {
+      if (blog) {
+        const data = {
+          tagNames: listTags!,
+          postId: id,
+        }
+        postTags.mutate(data)
         queryClient.invalidateQueries()
-        navigate(`/blog/${blog.postId}`)
       } else {
         toast({
           title: 'Invalid Blog response',
@@ -212,7 +188,30 @@ export default function UpdateBlog() {
       })
     },
   })
-
+  const postTags = useMutation((data: { tagNames: string[]; postId: string }) => addSocialTag(data), {
+    onSuccess: (status) => {
+      if (status === 200) {
+        console.log('Successful!!!')
+        toast({
+          title: 'Successful!!!',
+          description: 'Add Blog Success!',
+        })
+        queryClient.invalidateQueries()
+        navigate('/blog')
+      } else {
+        toast({
+          title: 'Invalid Blog response',
+          description: 'No Blog ID in the response.',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error submitting post',
+        description: error.message,
+      })
+    },
+  })
   return (
     <div className="h-screen bg-slate-100">
       <div className="mx-32 flex flex-row justify-between px-4 py-2">
@@ -297,11 +296,11 @@ export default function UpdateBlog() {
                   <div className="flex-grow" />
                   <FormField
                     control={form.control}
-                    name="isTradePost"
+                    name="isLock"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-end space-x-3 space-y-0 rounded-md p-4">
                         <div className="space-y-1 leading-none">
-                          <FormLabel>Trade post</FormLabel>
+                          <FormLabel>Lock post</FormLabel>
                         </div>
                         <FormControl>
                           <Checkbox checked={field.value} onCheckedChange={field.onChange} />
@@ -310,7 +309,7 @@ export default function UpdateBlog() {
                     )}
                   />
                 </div>
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
@@ -322,8 +321,8 @@ export default function UpdateBlog() {
                       />
                     </FormControl>
                   )}
-                /> */}
-                {/* <div className="mb-4">
+                />
+                <div className="mb-4">
                   <ReactTags
                     labelText="Add to 4 tags"
                     selected={selected}
@@ -335,7 +334,7 @@ export default function UpdateBlog() {
                     allowNew={true}
                     ref={reactTags}
                   />
-                </div> */}
+                </div>
                 <PlateEditor setContentValue={setContent} content={content} />
               </div>
             </ScrollArea>

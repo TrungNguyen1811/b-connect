@@ -26,8 +26,8 @@ async function updateUserProfileApi(userData: User) {
   formData.append('Email', userData?.email || '')
   formData.append('Username', userData?.username || '')
   formData.append('Phone', userData?.phone || '')
-  if (userData?.avatar instanceof File) {
-    formData.append('AvatarDir', userData?.avatar)
+  if (userData?.avatarDir instanceof File) {
+    formData.append('AvatarDir', userData?.avatarDir)
   } else {
     formData.append('AvatarDir', '')
   }

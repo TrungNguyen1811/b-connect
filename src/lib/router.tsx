@@ -307,6 +307,12 @@ export const ROUTES = createBrowserRouter([
   },
   {
     path: `/blog/:id/edit`,
+    loader: async ({ params }) => {
+      const post = await getPostByIdApi(params.id as string)
+      return {
+        post,
+      }
+    },
     element: <UpdateBlog />,
   },
 ])

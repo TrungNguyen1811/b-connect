@@ -24,7 +24,7 @@ function PostInterestedManage() {
     const fetchData = async () => {
       try {
         if (user) {
-          const interestedData: IResponsePost[] = await getPostInterestedByUser(user.userId as string)
+          const interestedData: IResponsePost[] = await getPostInterestedByUser()
           setInterestedList(interestedData)
         }
       } catch (error) {
@@ -141,10 +141,7 @@ function PostInterestedManage() {
                         />
                       </Avatar>
                       <div className="my-2 ml-4 flex flex-col items-start">
-                        <Link
-                          className="flex flex-row items-center justify-start"
-                          to={`/blog/dashboard/submit-form/${post.postData.postId}`}
-                        >
+                        <Link className="flex flex-row items-center justify-start" to={`/blog/${post.postData.postId}`}>
                           <p className="mr-2 text-lg font-bold text-orange-600 hover:text-orange-700">
                             {post.postData.title}
                           </p>

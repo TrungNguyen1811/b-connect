@@ -1,3 +1,4 @@
+import { Tag } from 'react-tag-autocomplete'
 import { User } from './user'
 
 export interface InitialValueItem {
@@ -79,6 +80,8 @@ export interface IResponsePost {
   postData: IBlogResponse
   username: string
   avatarDir: string
+  tags: Tag[]
+  readingTime: string
 }
 interface listCate {
   cateId: string
