@@ -1,10 +1,17 @@
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
-import { ISubmitTrade } from 'src/pages/blog/submit-trade'
-import { IResponsePost } from 'src/types/blog'
+import { IResponsePost, ISubmitTrade } from 'src/types/blog'
 import { IResponseInteresterList, IResponseTraderList } from 'src/types/interester'
+import { IReviewUser } from 'src/types/user'
 
 export async function getAllPosts() {
   return axiosClient.get('/Post/get-all-post').then((res) => {
+    const data: IResponsePost[] = res.data
+    return data
+  })
+}
+
+export async function getPostInterestedByUser(userId: string) {
+  return axiosClient.get(`/Post/trading/get-post-interested-by-user?userId=${userId}`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })
@@ -101,7 +108,41 @@ async function postAcceptTrade(postId: string, interesterId: string) {
       throw error
     })
 }
-export { postAcceptTrade }
+
+async function postRateUserPostTrade(trade: IReviewUser) {
+  return await authAxiosClient
+    .post('/Post/trading/rate-user-post-trade', trade)
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      throw error
+    })
+}
+
+export { postRateUserPostTrade }
+
+async function postAddUserTargetedCategory(tags: string) {
+  return await authAxiosClient
+    .post('/SocialMedia/add-user-targeted-category', tags)
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+export { postAddUserTargetedCategory }
 
 async function putSubmitTrade(data: ISubmitTrade) {
   return await authAxiosClient

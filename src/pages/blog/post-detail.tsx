@@ -54,7 +54,8 @@ function BlogDetail() {
     const getSavedPost = async () => {
       const save: IResponsePost[] = await getUserSavedPosts()
       const isSave = save.filter((save) => save.postData.postId === blog?.postData.postId)
-      if (isSave) {
+
+      if (isSave && isSave.length > 0) {
         setIsSaved(true)
       } else {
         setIsSaved(false)

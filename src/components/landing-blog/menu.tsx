@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IMenuItem } from '../breadcrumb'
 import MenuSideBar from '../menu-items/menu-item'
 import { FacebookIcon, GithubIcon, InstagramIcon, SettingsIcon, TwitterIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
+import { getUserTargetedTags } from 'src/api/blog/get-blog'
+import { IResponsePost, IResponseTag } from 'src/types/blog'
+import { getPostInterestedByUser } from 'src/api/blog/interested'
 
 export function Menu() {
   const menu = React.useMemo<IMenuItem[]>(() => {
@@ -23,7 +26,7 @@ export function Menu() {
       {
         title: 'Tags',
         key: 'tags',
-        href: '/following_categories',
+        href: '/following_tags',
         icon: 'tags',
       },
       {
@@ -94,27 +97,21 @@ export function Menu() {
 
   const Tags = () => {
     const { user } = useAuth()
-    const [categoryNames, setCategoryNames] = useState<string[]>([])
+    const [tags, setTags] = useState<IResponseTag[]>([])
 
-    // useEffect(() => {
-    //   const fetchCategoryNames = async () => {
-    //     const names: string[] = []
-    //     for (const tag of user?.interested || []) {
-    //       for (const category of tags.cateId) {
-    //         const name = await getCategoryById(category.cateId)
-    //         if (name) {
-    //           names.push(name.cateName)
-    //         }
-    //       }
-    //     }
-    //     setCategoryNames(names)
-    //   }
+    useEffect(() => {
+      const fetchTagsNames = async () => {
+        const tags = await getUserTargetedTags()
+        if (tags) {
+          setTags(tags)
+        }
+      }
 
-    //   fetchCategoryNames()
-    // }, [user])
+      fetchTagsNames()
+    }, [user])
 
     return (
-      <div className="flex flex-col">
+      <div className="mb-8 flex flex-col">
         <div className="flex flex-row justify-between">
           <p className="text-md mb-4 font-bold">My Tags</p>
           <Link to={'dashboard/following_tags'}>
@@ -123,12 +120,14 @@ export function Menu() {
         </div>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
           <ul className="list-none">
-            {categoryNames.map((name) => (
+            {tags.map((tag) => (
               <li
                 className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-slate-300"
-                key={name}
+                key={tag.cateId}
               >
-                <Link to={`c/${name}`}>{name}</Link>
+                <Link to={`c/${tag.cateName}`}>
+                  <p className="text-base">#{tag.cateName}</p>
+                </Link>
               </li>
             ))}
           </ul>
@@ -139,41 +138,37 @@ export function Menu() {
 
   const Interested = () => {
     const { user } = useAuth()
-    const [interestedName, setInterestedName] = useState<string[]>([])
+    const [interested, setInterested] = useState<IResponsePost[]>([])
 
-    // useEffect(() => {
-    //   const fetchCategoryNames = async () => {
-    //     const names: string[] = []
-    //     for (const tag of user?.interested || []) {
-    //       for (const category of tags.cateId) {
-    //         const name = await getCategoryById(category.cateId)
-    //         if (name) {
-    //           names.push(name.cateName)
-    //         }
-    //       }
-    //     }
-    //     setCategoryNames(names)
-    //   }
+    useEffect(() => {
+      const fetchInterestedNames = async () => {
+        const cate = await getPostInterestedByUser(user?.userId as string)
+        if (cate) {
+          setInterested(cate)
+        }
+      }
 
-    //   fetchCategoryNames()
-    // }, [user])
+      fetchInterestedNames()
+    }, [user])
 
     return (
-      <div className="flex flex-col">
-        <div className="flex flex-row justify-between">
-          <p className="text-md mb-4 font-bold">My Interested</p>
-          <Link to={'dashboard/following_tags'}>
+      <div className=" flex flex-col">
+        <div className="mb-4 flex flex-row items-center justify-between">
+          <p className="text-md font-bold">My Interested</p>
+          <Link to={'/blog/dashboard/manage-interested'}>
             <SettingsIcon />
           </Link>
         </div>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
           <ul className="list-none">
-            {interestedName.map((name) => (
+            {interested.map((i) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-slate-300"
-                key={name}
+                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-1 text-sm hover:bg-slate-300"
+                key={i.postData.postId}
               >
-                <Link to={`c/${name}`}>{name}</Link>
+                <Link className="p-1 text-base" to={`/blog/${i.postData.postId}`}>
+                  {i.postData.title?.slice(0, 20)}...
+                </Link>
               </li>
             ))}
           </ul>
@@ -189,6 +184,7 @@ export function Menu() {
           <MenuSideBar items={menu} />
           <Contact items={CONTACT} />
           <Tags />
+          <Interested />
         </nav>
       </aside>
     </div>

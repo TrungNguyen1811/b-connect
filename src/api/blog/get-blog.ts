@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { IResponse } from 'src/types/response'
-import { IBlogg, IResponsePost } from 'src/types/blog'
+import { IBlogg, IResponsePost, IResponseTag } from 'src/types/blog'
 import { ICategory } from 'src/types/categories'
 import axios from 'axios'
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
@@ -181,6 +181,13 @@ export async function getPostByIdApi(id: string) {
 export async function getUserSavedPosts() {
   return authAxiosClient.get(`/Post/get-user-saved-posts`).then((res) => {
     const data: IResponsePost[] = res.data
+    return data
+  })
+}
+
+export async function getUserTargetedTags() {
+  return authAxiosClient.get('/SocialMedia/get-user-targeted-categories').then((res) => {
+    const data: IResponseTag[] = res.data
     return data
   })
 }

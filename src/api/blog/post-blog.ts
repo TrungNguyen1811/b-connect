@@ -36,7 +36,7 @@ async function postBlogApi(blogData: {
     })
     .then((response) => {
       if (response.status === 200) {
-        return response.status
+        return response.data
       } else {
         // Handle other HTTP statuses as needed
         console.log(response)
@@ -159,3 +159,22 @@ async function addNewSavedPost(postId: string) {
 }
 
 export { addNewSavedPost }
+
+async function addSocialTag(data: { tagNames: string[]; postId: string }) {
+  return await axiosClient
+    .post(`/SocialMedia/add-social-tag`, data)
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { addSocialTag }

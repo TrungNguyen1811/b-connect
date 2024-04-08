@@ -94,15 +94,13 @@ function ManagePostInterester() {
           </div>
         </div>
         <div className=" flex flex-row items-center">
-          <div>
-            {isChosen ? (
-              <Link to={`/blog/dashboard/submit-form/${id}`} className="mr-4 w-32 border-2 border-red-600 text-center">
-                Confirm Trade
-              </Link>
-            ) : (
-              ''
-            )}
-          </div>
+          {isChosen ? (
+            <Link to={`/blog/dashboard/submit-form/${id}`} className="mr-4 w-32 border-2 border-red-600 text-center">
+              Confirm Trade
+            </Link>
+          ) : (
+            ''
+          )}
           <div>{isChosen ? <Button> Deny </Button> : ''}</div>
         </div>
       </div>

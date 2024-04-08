@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { UpdateCategorySchema } from './validation'
 import { toast } from 'src/components/ui/use-toast'
 import { updateCategoryApi } from 'src/api/categories/update-category'
-import { getCategoryApi } from 'src/api/categories/get-category'
+import { getCategoryById } from 'src/api/categories/get-category'
 import {
   Dialog,
   DialogClose,
@@ -61,7 +61,7 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
 
   const fetchDataAndUpdateForm = async () => {
     try {
-      const fetchedCategory: ICategory = await getCategoryApi(categoryId)
+      const fetchedCategory: ICategory = await getCategoryById(categoryId)
       if (fetchedCategory && fetchedCategory.cateId) {
         setCategory(fetchedCategory)
         form.reset(fetchedCategory)

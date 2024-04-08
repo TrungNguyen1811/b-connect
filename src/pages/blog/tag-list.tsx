@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useState } from 'react'
-import Interested from 'src/components/blog/category-manage'
 import { ICategory } from 'src/types'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Input } from 'src/components/ui/input'
 import { Search } from 'lucide-react'
-import { getManyCategories } from 'src/api/categories/get-category'
+import { getAllCategory } from 'src/api/categories/get-category'
+import TagItem from 'src/components/blog/tags-item'
 
-function CategoryList() {
+function TagList() {
   const [categories, setCategories] = useState<ICategory[]>()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -20,7 +20,7 @@ function CategoryList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesData = await getManyCategories()
+        const categoriesData = await getAllCategory()
         setCategories(categoriesData.data)
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -50,7 +50,7 @@ function CategoryList() {
         {categories ? (
           <div className="mx-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
             {categories.map((category, index) => (
-              <div key={index}>{category.cateId && <Interested id={category.cateId} />}</div>
+              <div key={index}>{category.cateId && <TagItem id={category.cateId} />}</div>
             ))}
           </div>
         ) : (
@@ -67,4 +67,4 @@ function CategoryList() {
     </div>
   )
 }
-export default CategoryList
+export default TagList

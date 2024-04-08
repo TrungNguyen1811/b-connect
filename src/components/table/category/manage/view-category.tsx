@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ICategory } from 'src/types'
 import { toast } from 'src/components/ui/use-toast'
-import { getCategoryApi } from 'src/api/categories/get-category'
+import { getCategoryById } from 'src/api/categories/get-category'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from 'src/components/ui/dialog'
 import { Button } from 'src/components/ui/button'
 import { Card, CardContent } from 'src/components/ui/card'
@@ -12,7 +12,7 @@ export function ViewCategoryDetail({ categoryId }: { categoryId: string }) {
   console.log(category)
   const fetchDataAndUpdateForm = async () => {
     try {
-      const fetchedCategory: ICategory = await getCategoryApi(categoryId)
+      const fetchedCategory: ICategory = await getCategoryById(categoryId)
       if (fetchedCategory && fetchedCategory.cateId) {
         setCategory(fetchedCategory)
       } else {

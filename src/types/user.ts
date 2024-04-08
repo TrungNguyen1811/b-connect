@@ -117,3 +117,10 @@ export enum ENUM_CITIZEN_ID_TYPE {
   CMND_12_FRONT = 'cmnd_12_front',
   CCCD_12_FRONT = 'cccd_12_front',
 }
+
+export interface IReviewUser {
+  revieweeId: string
+  tradeDetailsId: string
+  comment: string
+  ratingPoint: string
+}

@@ -1,6 +1,6 @@
 import { Avatar } from '@radix-ui/react-avatar'
 import React, { useEffect, useState } from 'react'
-import { getPostByIdApi } from 'src/api/blog/get-blog'
+import { getPostByIdApi, getUserSavedPosts } from 'src/api/blog/get-blog'
 import { IResponsePost } from 'src/types/blog'
 import { AvatarImage } from '../ui/avatar'
 import { Separator } from '../ui/separator'
@@ -9,6 +9,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponseInteresterList } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
+import { addNewSavedPost } from 'src/api/blog/post-blog'
+import { removeUserSavedPost } from 'src/api/blog/delete-blog'
 
 interface PostProps {
   postId: string
@@ -33,14 +35,39 @@ function Post({ postId }: PostProps) {
     fetchBlogAndUser()
   }, [postId])
 
-  const saveToReadingList = () => {
-    if (blog?.postData) {
-      setIsSaved(true)
+  useEffect(() => {
+    const getSavedPost = async () => {
+      const save: IResponsePost[] = await getUserSavedPosts()
+      const isSave = save.filter((save) => save.postData.postId === blog?.postData.postId)
+
+      if (isSave && isSave.length > 0) {
+        setIsSaved(true)
+        console.log('isSaved', isSave)
+      } else {
+        setIsSaved(false)
+      }
+    }
+    getSavedPost()
+  }, [blog?.postData.postId])
+
+  const saveToReadingList = async () => {
+    if (blog) {
+      await addNewSavedPost(blog.postData.postId as string).then((res) => {
+        if (res === 'Successful!') {
+          setIsSaved(true)
+        }
+      })
     }
   }
 
-  const unsaveFromReadingList = () => {
-    setIsSaved(false)
+  const unsaveFromReadingList = async () => {
+    if (blog) {
+      await removeUserSavedPost(blog.postData.postId as string).then((res) => {
+        if (res === 'Successful!') {
+          setIsSaved(false)
+        }
+      })
+    }
   }
 
   useEffect(() => {

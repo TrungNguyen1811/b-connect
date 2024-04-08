@@ -16,7 +16,7 @@ export const createBlogSchema = z.object({
   productImages: z.any(),
   productVideos: z.any(),
   title: z.string(),
-  listCate: z.string(),
+  // listCate: z.string(),
   content: z.string(),
   isTradePost: z.boolean().optional().default(false),
 })

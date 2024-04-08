@@ -7,6 +7,7 @@ import {
   ITradeDetail,
   getPostTraderByPostId,
   getTradeDetailByPostId,
+  postRateUserPostTrade,
   putSetTradeStatus,
   putSubmitTrade,
 } from 'src/api/blog/interested'
@@ -29,6 +30,9 @@ import { Textarea } from 'src/components/ui/text-area'
 import { Label } from 'src/components/ui/label'
 import { IAddress } from 'src/types/address'
 import { getAddressbyAddressId } from 'src/api/address/get-address'
+import { Dialog, DialogContent, DialogHeader } from 'src/components/ui/dialog'
+import { IReviewUser } from 'src/types'
+import { ISubmitTrade } from 'src/types/blog'
 
 export const ITradeStatus = {
   0: 'Unsubmitted',
@@ -36,18 +40,6 @@ export const ITradeStatus = {
   2: 'OnDelivery',
   3: 'Successful',
   4: 'Cancel',
-}
-
-export interface ISubmitTrade {
-  postId: string
-  tradeDetailsId: string
-  isPostOwner: boolean
-  city_Province: string
-  district: string
-  subDistrict: string
-  rendezvous: string
-  phone: string
-  note: string
 }
 
 const formSchema = z.object({
@@ -60,7 +52,13 @@ const formSchema = z.object({
   note: z.string(),
 })
 
+const formReviewSchema = z.object({
+  comment: z.string(),
+  ratingPoint: z.string(),
+})
+
 type FormData = z.infer<typeof formSchema>
+type FormReview = z.infer<typeof formReviewSchema>
 
 export default function SubmitTrade() {
   const { id } = useParams()
@@ -72,11 +70,14 @@ export default function SubmitTrade() {
   const [tradeDetail, setTradeDetail] = useState<ITradeDetail[]>()
   const [tradeDetailsIdOther, setTradeDetailsIdOther] = useState<string>()
   const [userTrade, setUserTrader] = useState<ITradeDetail | null>(null)
+  const [partnerTrade, setPartnerTrader] = useState<ITradeDetail | null>(null)
   const [interester, setInterester] = useState<ITradeDetail | null>(null)
   const [owner, setOwner] = useState<ITradeDetail | null>(null)
   const [isOwner, setIsOwner] = useState<boolean>(true)
   const [address, setAddress] = useState<IAddress>()
   const [addressId, setAddressId] = useState<string>()
+  const [open, setOpen] = useState(false)
+
   useEffect(() => {
     const fetchTradeDetail = async () => {
       try {
@@ -149,6 +150,23 @@ export default function SubmitTrade() {
   }, [tradeDetail, isOwner, user?.userId])
 
   useEffect(() => {
+    if (tradeDetail && user) {
+      const otherUserTradeFound = tradeDetail.find((trade) => {
+        if (isOwner) {
+          return !trade.details.isPostOwner && trade.traderId !== user.userId
+        } else {
+          return trade.details.isPostOwner && trade.traderId !== user.userId
+        }
+      })
+
+      if (otherUserTradeFound) {
+        console.log('otherUserTradeFound', otherUserTradeFound)
+        setPartnerTrader(otherUserTradeFound)
+      }
+    }
+  }, [tradeDetail, isOwner, user])
+
+  useEffect(() => {
     const fetchAddress = async () => {
       try {
         const address = await getAddressbyAddressId(addressId as string)
@@ -176,13 +194,70 @@ export default function SubmitTrade() {
     }
   }, [address])
 
-  const putStatusTrade = async (tradeDetailsId: string) => {
+  const tradeStatus = useMutation((formData: ISetTradeStatus) => putSetTradeStatus(formData), {
+    onSuccess: (formData) => {
+      if (formData) {
+        toast({
+          title: 'Success',
+          description: 'Accept Trade Information Success!!!',
+        })
+        queryClient.invalidateQueries()
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Accept Trade Information Failed!!!',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Update User',
+        description: error.message,
+      })
+    },
+  })
+
+  const putStatusTrade = async (tradeDetailsId: string, status: number) => {
     const data: ISetTradeStatus = {
       postId: id as string,
       tradeDetailsId: tradeDetailsId,
-      updatedStatus: 2,
+      updatedStatus: status,
     }
-    await putSetTradeStatus(data)
+    tradeStatus.mutate(data)
+  }
+
+  const reviewUser = useMutation((formData: IReviewUser) => postRateUserPostTrade(formData), {
+    onSuccess: (formData) => {
+      if (formData) {
+        toast({
+          title: 'Success',
+          description: 'Review User Success!!!',
+        })
+        queryClient.invalidateQueries()
+        setOpen(false)
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Review User Failed!!!',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Review User',
+        description: error.message,
+      })
+    },
+  })
+
+  const onSubmitReview = async (data: FormReview) => {
+    const formData: IReviewUser = {
+      revieweeId: partnerTrade?.traderId as string,
+      tradeDetailsId: partnerTrade?.details.tradeDetailId as string,
+      comment: data.comment,
+      ratingPoint: data.ratingPoint,
+    }
+    reviewUser.mutate(formData)
   }
 
   const form = useForm<FormData>({
@@ -195,6 +270,9 @@ export default function SubmitTrade() {
       phone: userTrade?.details.phone,
       note: userTrade?.details.note,
     },
+  })
+  const formReview = useForm<FormReview>({
+    resolver: zodResolver(formReviewSchema),
   })
   const [city, setCity] = useState('h')
   const [getDistrict, setDistrict] = useState('')
@@ -339,7 +417,6 @@ export default function SubmitTrade() {
       </div>
     )
   }
-  console.log('citycity', city)
 
   return (
     <div className="mx-32">
@@ -347,28 +424,100 @@ export default function SubmitTrade() {
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2">
-              <p className="m-4 text-lg font-medium">Interester</p>
+              <p className="m-4 text-lg font-medium">Interester</p>{' '}
+              {interester?.details.status === 2 ? (
+                <p>
+                  Confirm receipt of goods and user{' '}
+                  <button
+                    className="font-normal text-red-600 underline"
+                    onClick={() => {
+                      putStatusTrade(interester?.details.tradeDetailId as string, 3)
+                    }}
+                  >
+                    reviews
+                  </button>
+                </p>
+              ) : (
+                ''
+              )}
+              {interester?.details.status === 3 ? (
+                <div>
+                  <button className="font-normal text-red-600 underline" onClick={() => setOpen(true)}>
+                    Reviews
+                  </button>
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogContent className="h-[45%] ">
+                      <DialogHeader className="mb-2 px-12">
+                        <p className="text-4xl font-extrabold">Feedback</p>
+                      </DialogHeader>
+                      <div className="flex flex-col">
+                        <Form {...formReview}>
+                          <form onSubmit={formReview.handleSubmit(onSubmitReview)}>
+                            <FormField
+                              control={formReview.control}
+                              name="ratingPoint"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="mt-4">Rating</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="5*" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={formReview.control}
+                              name="comment"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="mt-4">Comment</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="ABC..." {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <Button type="submit" className="w-full">
+                              Submit
+                            </Button>
+                          </form>
+                        </Form>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              ) : (
+                ''
+              )}
               {interester?.details.status === 0 || interester?.details.status == 1 ? (
-                <div className="w-full px-4 pb-4">
+                <div className="min-w-[33vw] px-4 pb-4">
                   {interester?.details.status === 0 ? (
                     <div className="text-red-600">Interested person has not confirmed</div>
                   ) : (
                     ''
                   )}
-                  <div className="flex flex-row items-center">
-                    <p className="ml-4">
-                      <button
-                        className="font-normal text-red-600 underline"
-                        onClick={() => {
-                          putStatusTrade(interester?.details.tradeDetailId as string)
-                        }}
-                      >
-                        Accept
-                      </button>{' '}
-                      to confirm the trade information
-                    </p>
+                  <div className="">
+                    {interester?.details.status === 1 ? (
+                      <div className="flex flex-row items-center">
+                        <p className="ml-4">
+                          <button
+                            className="font-normal text-red-600 underline"
+                            onClick={() => {
+                              putStatusTrade(interester?.details.tradeDetailId as string, 2)
+                            }}
+                          >
+                            Accept
+                          </button>{' '}
+                          to confirm the trade information
+                        </p>
+                      </div>
+                    ) : (
+                      ' '
+                    )}
+                    {renderTrader(interester!)}
                   </div>
-                  {renderTrader(interester!)}
                 </div>
               ) : (
                 <div className="">{renderTrader(interester!)}</div>
@@ -378,7 +527,7 @@ export default function SubmitTrade() {
             <div className="rounded-md border-2">
               <p className="m-4 text-lg font-medium">Owner</p>
               {userTrade?.details.status == 0 || userTrade?.details.status == 1 ? (
-                <div className="w-full px-4 pb-4">
+                <div className="min-w-[33vw] px-4 pb-4">
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                       <FormField
@@ -608,7 +757,7 @@ export default function SubmitTrade() {
             <div className="rounded-md border-2">
               <p className="m-4 text-lg font-medium">Interester</p>
               {userTrade?.details.status === 0 || userTrade?.details.status == 1 ? (
-                <div>
+                <div className="min-w-[33vw] px-4 pb-4">
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                       <FormField
@@ -835,6 +984,72 @@ export default function SubmitTrade() {
             <Separator className="mx-8" orientation={'vertical'} />
             <div className="rounded-md border-2">
               <p className="m-4 text-lg font-medium">Owner</p>
+              {owner?.details.status === 2 ? (
+                <p>
+                  Confirm receipt of goods and user{' '}
+                  <button
+                    className="font-normal text-red-600 underline"
+                    onClick={() => {
+                      putStatusTrade(owner?.details.tradeDetailId as string, 3)
+                    }}
+                  >
+                    reviews
+                  </button>
+                </p>
+              ) : (
+                ''
+              )}
+              {owner?.details.status === 3 ? (
+                <div>
+                  <button className="font-normal text-red-600 underline" onClick={() => setOpen(true)}>
+                    Reviews
+                  </button>
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogContent className="h-[45%] ">
+                      <DialogHeader className="mb-2 px-12">
+                        <p className="text-4xl font-extrabold">Feedback</p>
+                      </DialogHeader>
+                      <div className="flex flex-col">
+                        <Form {...formReview}>
+                          <form onSubmit={formReview.handleSubmit(onSubmitReview)}>
+                            <FormField
+                              control={formReview.control}
+                              name="ratingPoint"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="mt-4">Rating</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="5*" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={formReview.control}
+                              name="comment"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="mt-4">Comment</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="ABC..." {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <Button type="submit" className="w-full">
+                              Submit
+                            </Button>
+                          </form>
+                        </Form>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              ) : (
+                ''
+              )}
               {owner?.details.status === 0 || owner?.details.status === 1 ? (
                 <div>
                   {owner?.details.status === 0 ? (
@@ -843,19 +1058,23 @@ export default function SubmitTrade() {
                     ' '
                   )}
                   <div className="">
-                    <div className="flex flex-row items-center">
-                      <p className="ml-4">
-                        <button
-                          className="font-normal text-red-600 underline"
-                          onClick={() => {
-                            putStatusTrade(owner?.details.tradeDetailId as string)
-                          }}
-                        >
-                          Accept
-                        </button>{' '}
-                        to confirm the trade information
-                      </p>
-                    </div>
+                    {owner?.details.status === 1 ? (
+                      <div className="flex flex-row items-center">
+                        <p className="ml-4">
+                          <button
+                            className="font-normal text-red-600 underline"
+                            onClick={() => {
+                              putStatusTrade(owner?.details.tradeDetailId as string, 2)
+                            }}
+                          >
+                            Accept
+                          </button>{' '}
+                          to confirm the trade information
+                        </p>
+                      </div>
+                    ) : (
+                      ' '
+                    )}
                     {renderOwner(owner!)}
                   </div>
                 </div>

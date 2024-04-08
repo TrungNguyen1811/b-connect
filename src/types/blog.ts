@@ -95,3 +95,20 @@ export interface IReadingList {
   userId?: User['userId']
   blog_Id: IBlogg['postId']
 }
+
+export interface IResponseTag {
+  cateId: string
+  cateName: string
+}
+
+export interface ISubmitTrade {
+  postId: string
+  tradeDetailsId: string
+  isPostOwner: boolean
+  city_Province: string
+  district: string
+  subDistrict: string
+  rendezvous: string
+  phone: string
+  note: string
+}

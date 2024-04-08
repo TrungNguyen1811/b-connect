@@ -5,10 +5,6 @@ import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 
-import CategoryList from 'src/pages/blog/category-list'
-import ReadingList from 'src/pages/blog/reading-list'
-import UpdateBlog from 'src/pages/blog/update-post'
-
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
 const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
@@ -55,8 +51,11 @@ const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/profileUserBlog'))
 const UpdateProfile = React.lazy(() => import('src/pages/blog/update-profile'))
 const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard-post'))
-const FollowingCategory = React.lazy(() => import('src/pages/blog/following-category'))
+const FollowingTags = React.lazy(() => import('src/pages/blog/following-tags'))
+const TagList = React.lazy(() => import('src/pages/blog/tag-list'))
+const ReadingList = React.lazy(() => import('src/pages/blog/reading-list'))
 const CreateBlog = React.lazy(() => import('src/pages/blog/create-blog'))
+import UpdateBlog from 'src/pages/blog/update-post'
 const BlogDetail = React.lazy(() => import('src/pages/blog/post-detail'))
 const PostInterestedManage = React.lazy(() => import('src/pages/blog/post-interested-manage'))
 const ManagePostInterester = React.lazy(() => import('src/pages/blog/manage-post-interester'))
@@ -263,7 +262,7 @@ export const ROUTES = createBrowserRouter([
       },
       {
         path: '/blog/dashboard/following_tags',
-        element: <FollowingCategory />,
+        element: <FollowingTags />,
       },
       // {
       //   path: '/blog/dashboard/manage-interester',
@@ -282,8 +281,8 @@ export const ROUTES = createBrowserRouter([
         element: <PostInterestedManage />,
       },
       {
-        path: '/blog/categories',
-        element: <CategoryList />,
+        path: '/blog/tags',
+        element: <TagList />,
       },
 
       {

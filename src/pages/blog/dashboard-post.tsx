@@ -24,10 +24,6 @@ function DashboardBlog() {
       try {
         if (user && user.userId) {
           if (checkbox) {
-            const id = '1'
-            const lockedBlogsData: IResponsePostLocked[] = await getLockedPostByUserId(id as string)
-            setLockBlogs(lockedBlogsData)
-          } else {
             const id = '0'
             const lockedBlogsData: IResponsePostLocked[] = await getLockedPostByUserId(id as string)
             setLockBlogs(lockedBlogsData)
@@ -94,14 +90,14 @@ function DashboardBlog() {
         </div>
       </div>
       <div className="mx-4 flex flex-row">
-        <nav className="mr-3 w-1/4">
+        <nav className="mr-3 md:w-[18rem]">
           <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm bg-white px-2 py-1">
               <p className="w-full font-semibold">Post</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{blogs?.length}</p>
             </div>
           </Link>
-          <Link to={'/blog/dashboard/following_categories'} className=" ">
+          <Link to={'/blog/dashboard/following_tags'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Following Category</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
@@ -110,12 +106,6 @@ function DashboardBlog() {
           <Link to={'/blog/dashboard/manage-interested'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Manage Post interested</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
-            </div>
-          </Link>
-          <Link to={'/blog/dashboard/manage-interester'} className="">
-            <div className="flex flex-row items-center rounded-sm px-2 py-1">
-              <p className="w-full font-semibold">Manage Post Interester</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
             </div>
           </Link>
@@ -130,28 +120,37 @@ function DashboardBlog() {
           </div>
 
           <div className="h-full min-h-[28rem] w-full rounded-md border-2 bg-slate-50 p-6">
-            {checkbox
-              ? lockBlogs?.map((lock, index) => (
-                  <>
-                    <Link key={index} to={`/blog/dashboard/submit-form/${lock.postId}`}>
-                      <div className="flex flex-col">
-                        <p className="text-lg">{lock.title}</p>
-                        <p className="text-red-600">{lock.status}</p>
-                      </div>
-                    </Link>
-                    <Separator className="my-2" />
-                  </>
-                ))
-              : ''}
-            {blogs ? (
+            {checkbox ? (
+              lockBlogs?.map((lock, index) => (
+                <>
+                  <Link key={index} to={`/blog/dashboard/submit-form/${lock.postId}`}>
+                    <div className="flex flex-col">
+                      <p className="text-lg">{lock.title}</p>
+                      <p className="text-red-600">{lock.status}</p>
+                    </div>
+                  </Link>
+                  <Separator className="my-2" />
+                </>
+              ))
+            ) : blogs && blogs.length > 0 ? (
               blogs?.map((blog, index) => (
                 <div className="my-4 mt-2" key={index}>
                   {blog.postData && blog.postData.postId ? (
                     <div className="flex flex-row items-center justify-between">
                       <div>
-                        <Link to={`/blog/dashboard/manage-interester/${blog.postData.postId}`}>
+                        {blog.postData.isTradePost ? (
+                          <Link
+                            className="flex flex-row items-center justify-start"
+                            to={`/blog/dashboard/manage-interester/${blog.postData.postId}`}
+                          >
+                            <p className="mr-2 text-lg font-bold text-orange-600 hover:text-orange-700">
+                              {blog.postData.title}
+                            </p>
+                            <p className="rounded-sm border-2 border-red-600 px-2 text-sm text-red-600">Trade</p>
+                          </Link>
+                        ) : (
                           <p className="text-lg font-bold text-orange-600">{blog.postData.title}</p>
-                        </Link>
+                        )}
                         <p className="flex flex-row text-sm font-semibold text-gray-500">
                           Published:{' '}
                           <p className="ml-2 font-light">{format(blog.postData.createdAt as string, 'PPP')}</p>

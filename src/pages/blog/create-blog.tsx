@@ -22,7 +22,7 @@ import { Input } from '../../components/ui/input'
 import { toast } from '../../components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
-import { postBlogApi } from 'src/api/blog/post-blog'
+import { addSocialTag, postBlogApi } from 'src/api/blog/post-blog'
 import { useAuth } from 'src/hooks/useAuth'
 import { Checkbox } from 'src/components/ui/check-box'
 import { PlateEditor } from 'src/components/ui/plate-editor'
@@ -68,17 +68,12 @@ export default function CreateBlog() {
   const [options, setOptions] = useState<Options[]>([])
   console.log('options', options)
   // const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const listCate = useMemo(() => {
+  const listTags = useMemo(() => {
     if (!selected) return
     else return selected.map((ct) => ct.label)
   }, [selected])
 
   useEffect(() => {
-    form.setValue('listCate', JSON.stringify(listCate))
-  }, [form, listCate])
-
-  useEffect(() => {
-    // Gọi hàm API trong useEffect
     getAllCategoryNoParam()
       .then((category: ICategory[]) => {
         if (category) {
@@ -148,7 +143,7 @@ export default function CreateBlog() {
       const dataBlog: FormData = {
         ...(data as FormData),
         // authorName: user.username as string,
-        listCate: data.listCate as string,
+        // listCate: data.listCate as string,
         productImages: data.productImages,
         productVideos: data.productVideos,
         isTradePost: data.isTradePost,
@@ -163,6 +158,32 @@ export default function CreateBlog() {
   }
 
   const postBlog = useMutation((data: FormData) => postBlogApi(data), {
+    onSuccess: (res) => {
+      if (res) {
+        queryClient.invalidateQueries()
+        const postId: string = res
+        const data = {
+          tagNames: listTags!,
+          postId: postId,
+        }
+        postTags.mutate(data)
+        navigate('/blog')
+      } else {
+        toast({
+          title: 'Invalid Blog response',
+          description: 'No Blog ID in the response.',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error submitting post',
+        description: error.message,
+      })
+    },
+  })
+
+  const postTags = useMutation((data: { tagNames: string[]; postId: string }) => addSocialTag(data), {
     onSuccess: (status) => {
       if (status === 200) {
         console.log('Successful!!!')
