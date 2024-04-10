@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import MetaData from '../metadata'
-import { getTopBooks } from 'src/api/books/get-book'
 import { useQuery } from '@tanstack/react-query'
 import { IResponse } from 'src/types/response'
 import { IBook } from 'src/types/books'
@@ -8,18 +7,26 @@ import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import BookDaily from './card-daily'
 import { Button } from '../ui/button'
+import { IQueryPagination } from 'src/types/requests'
+import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
+import { getManyBooks } from 'src/api/books/get-book'
+import BookGridLoading from '../book/book-grid-loading'
 
 function DailyDiscover() {
   const navigate = useNavigate()
 
-  const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
-    ['getManyBooks'], // Provide a unique key for this query
-    () => getTopBooks(), // Pass an empty object as the argument
+  const [queries, setQueries] = useState<Partial<IQueryPagination>>({
+    PageNumber: 0,
+    PageSize: 6,
+  })
+
+  const { data, isLoading, isError } = useQuery<IResponse<IBook[]>, AxiosError>(
+    [...API_GET_ALL_USER_QUERY_KEYS, queries],
+    () => getManyBooks(queries),
     {
       keepPreviousData: true,
     },
   )
-  console.log(data)
 
   const [displayedBooks, setDisplayedBooks] = useState(40)
 
@@ -31,6 +38,8 @@ function DailyDiscover() {
   }
 
   const renderBooks = React.useMemo(() => {
+    if (isLoading) return <BookGridLoading pageSize={48} className="col-span-full grid grid-cols-6 gap-4" />
+
     if (!data?.data || data.data.length === 0) {
       return (
         <div className="col-span-full row-span-full h-full w-full">
@@ -46,16 +55,18 @@ function DailyDiscover() {
     ))
   }, [data?.data, displayedBooks])
 
+  // if (isError) return <ErrorPage />
+
   return (
     <main className="mx-auto mt-7 min-h-screen w-full">
       <MetaData title="Books" />
       <div className="mx-auto max-w-7xl bg-white px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="sticky pb-7 text-center">
-            <h2 className="text-2xl text-red-600">DAILY DISCOVER</h2>
+            <h2 className="self-center p-5 text-2xl font-bold text-orange-600">DAILY DISCOVER</h2>
           </div>
           <div className="mb-8 flex w-full gap-2">
-            <section key="main.section.books" className="grid flex-1 grid-cols-5 gap-5">
+            <section key="main.section.books" className="grid flex-1 grid-cols-6 gap-5">
               {renderBooks}
             </section>
           </div>

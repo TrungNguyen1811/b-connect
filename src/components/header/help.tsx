@@ -5,7 +5,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
 function Help() {
   return (
     <Dialog>
-      <DialogTrigger className="flex">
+      <DialogTrigger className="flex flex-row items-center">
         <HelpCircle size={20} />
         <p className="hidden-on-mobile hidden-on-tablet">Help</p>
       </DialogTrigger>

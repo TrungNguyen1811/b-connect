@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Filter } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import { MultiSelect } from '../ui/multi-select'
-import { SearchCategory } from './search-categories'
 
 type Props = {
   onFilterChange?: (filter: Record<string, unknown>) => void
@@ -21,7 +20,7 @@ type Props = {
 
 const FilterSchema = z.object({
   Name: z.string().optional(),
-  Category: z.string().optional(),
+  CateIds: z.string().optional(),
   MinPrice: z.string().optional(),
   MaxPrice: z.string().optional(),
   OverRating: z.string().optional(),
@@ -36,7 +35,11 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
   })
   const { isLoading: isCategoryLoading, data: categories } = useGetAllCategory()
   const [selected, setSelected] = useState<string[]>([])
-  const ct = selected.toString()
+  const cate = selected.join(',')
+
+  useEffect(() => {
+    setValue('CateIds', selected.join(','))
+  }, [selected])
 
   const categoriesCombobox = useMemo(() => {
     if (!categories) return []
@@ -52,11 +55,10 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     const MinPrice = searchParams.get('MinPrice') || ''
     const MaxPrice = searchParams.get('MaxPrice') || ''
     const OverRating = searchParams.get('OverRating') || ''
-    const Category = searchParams.get('Category') || ''
     const Type = searchParams.get('Type') || ''
 
     setValue('Name', search)
-    setValue('Category', Category)
+    setValue('CateIds', selected.join(','))
     setValue('MinPrice', MinPrice)
     setValue('MaxPrice', MaxPrice)
     setValue('OverRating', OverRating)
@@ -65,17 +67,18 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
       onFilterChange && onFilterChange(data)
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams])
+  }, [searchParams, selected])
+
   const onSubmit = React.useCallback(
     (data: FilterForm) => {
       const searchParams = new URLSearchParams()
 
       data.Name && searchParams.set('Name', data.Name)
-      data.Category && searchParams.set('Category', data.Category)
       data.MinPrice && searchParams.set('MinPrice', data.MinPrice)
       data.MaxPrice && searchParams.set('MaxPrice', data.MaxPrice)
       data.OverRating && searchParams.set('OverRating', data.OverRating)
       data.Type && searchParams.set('Type', data.Type)
+      data.CateIds && searchParams.set('CateIds', selected.join(','))
 
       setSearchParams(searchParams, { replace: true })
 
@@ -83,12 +86,13 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
         onFilterChange(data)
       }
     },
-    [onFilterChange, setSearchParams, ct],
+    [onFilterChange, setSearchParams, selected],
   )
-  const [clearFlag, setClearFlag] = useState(false)
+
+  // const [clearFlag, setClearFlag] = useState(false)
   const onClear = React.useCallback(() => {
     reset()
-    setClearFlag((prev) => !prev)
+    // setClearFlag((prev) => !prev)
   }, [reset])
 
   return (
@@ -105,14 +109,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
             <Input placeholder="Search name of book" id="Name" {...control.register('Name')} className="bg-card" />
           </div>
           <div>
-            <Label htmlFor="Category">Category</Label>
-            <SearchCategory
-              isLoading={isCategoryLoading}
-              data={categoriesCombobox}
-              defaultValue={watch('Category')}
-              onSelection={(Category) => setValue('Category', Category)}
-              clear={clearFlag}
-            />
+            <Label htmlFor="CateIds">CateIds</Label>
             <MultiSelect options={categoriesCombobox} selected={selected} onChange={setSelected} />
           </div>
           <div>
@@ -123,14 +120,14 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               }}
               value={watch('Type')}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-white text-gray-500">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem className="hover:bg-accent" value="NEW">
+                <SelectItem className="hover:bg-accent" value="New">
                   NEW
                 </SelectItem>
-                <SelectItem className="hover:bg-accent" value="OLD">
+                <SelectItem className="hover:bg-accent" value="Old">
                   OLD
                 </SelectItem>
               </SelectContent>
@@ -138,7 +135,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
           </div>
           <div>
             <Label htmlFor="price">Price</Label>
-            <div className="-center flex flex-row">
+            <div className="flex flex-row items-center">
               <Input placeholder="From" id="MinPrice" {...control.register('MinPrice')} className="bg-card" />
               <p className="p-2">-</p>
               <Input placeholder="To" id="MaxPrice" {...control.register('MaxPrice')} className="bg-card" />
@@ -152,7 +149,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               }}
               value={watch('OverRating')}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-white text-gray-500">
                 <SelectValue placeholder="Choose OverRating" />
               </SelectTrigger>
               <SelectContent>

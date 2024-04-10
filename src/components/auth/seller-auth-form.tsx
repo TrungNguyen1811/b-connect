@@ -11,10 +11,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
-import { AxiosError } from 'axios'
 import { toast } from '../ui/use-toast'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
-import { SetIsAccountValidates } from 'src/api/agency/set-is-account-validated'
 import { RegisterAgency } from 'src/api/agency/post-register-agency'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { getUserProfileApi } from 'src/api/apis/auth/profile.api'
@@ -58,6 +56,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
   const [getDistrict, setDistrict] = useState('')
   const [checkbox, setCheckbox] = useState<boolean>(false)
   const [address, setAddress] = useState<IAddress[]>([])
+  const [showRegisterSlide, setShowRegisterSlide] = useState<boolean>(!user?.isValidated)
   const [addressDefault, setAddressDefault] = useState<IAddress | undefined>(undefined)
   useEffect(() => {
     if (address) {
@@ -97,8 +96,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
         }
         const token = localStorage.getItem('token') as string
         login({ user, token })
-        console.log(user.roles)
-        if (user?.roles && user.roles.includes(ROLE.AGENCY)) {
+        if (user?.roles && user.roles.includes(ROLE.AGENCY) && user.isValidated === true) {
           navigate('/seller')
         }
         // const agency = user?.roles?.find((role) => role === 'Agency')
@@ -112,7 +110,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
-    const address: IAddress = {
+    const newAddress: IAddress = {
       addressId: faker.string.uuid(),
       city_Province: data.city_Province,
       district: data.district,
@@ -123,60 +121,18 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
     }
 
     if (checkbox == false) {
-      await postAddress(address)
+      await postAddress(newAddress)
     }
     const mergedData = {
       businessType: data.businessType,
+      // Rendezvous: checkbox ? address.addressId : newAddress.addressId
       Rendezvous: data.rendezvous,
       agencyName: data.agencyName,
       ownerId: user?.userId,
       logoImg: data.logoImg as File,
     }
-    let error: AxiosError | null = null
     console.log('user?.isValidated', user?.isValidated)
     resetUser()
-    if (user?.isValidated == false) {
-      await SetIsAccountValidates(user?.userId as string, async (err, data) => {
-        if (err) {
-          error = err
-          return
-        } else {
-          resetUser()
-          toast({
-            title: 'Update validate success',
-            description: data,
-            variant: 'success',
-          })
-        }
-      })
-      if (!error) {
-        await RegisterAgency(mergedData, async (err, data) => {
-          if (err) {
-            toast({
-              title: err.message,
-              description: err.cause?.message,
-              variant: 'destructive',
-            })
-          } else {
-            if (!user) {
-              return
-            }
-            toast({
-              title: 'Register Success',
-              description: data,
-              variant: 'success',
-            })
-            resetUser()
-          }
-        })
-      }
-      if (error) {
-        toast({
-          title: 'Register Failed',
-          variant: 'destructive',
-        })
-      }
-    }
     if (user?.isValidated == true) {
       await RegisterAgency(mergedData, async (err, data) => {
         if (err) {
@@ -197,6 +153,12 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
           resetUser()
         }
       })
+    } else {
+      toast({
+        title: 'Please Register National ID',
+        description: 'Looks like you have not registered for a National ID yet.',
+        variant: 'destructive',
+      })
     }
 
     setIsLoading(false)
@@ -214,6 +176,16 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
       </div>
       <Carousel className="m-4 min-h-[32rem] w-full" plugins={[]}>
         <CarouselContent>
+          {showRegisterSlide && (
+            <CarouselItem className="mb-8">
+              <Card className="">
+                <CardContent className="aspect-square max-h-[28rem] w-full items-center justify-center">
+                  <IdentificationSeller />
+                </CardContent>
+              </Card>
+            </CarouselItem>
+          )}
+
           <CarouselItem className="mb-8">
             <Card>
               <CardContent className=" items-top flex aspect-square max-h-[28rem] w-full justify-center p-6">
@@ -511,104 +483,11 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
               </CardContent>
             </Card>
           </CarouselItem>
-
-          {user?.isValidated === false && (
-            <CarouselItem className="">
-              <Card className="">
-                <CardContent className="aspect-square max-h-[28rem] w-full items-center justify-center">
-                  <IdentificationSeller />
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          )}
-
           <Separator />
         </CarouselContent>
         <CarouselButtonPrevious />
         <CarouselButtonNext />
       </Carousel>
-      {/* <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="agencyName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name Shop</FormLabel>
-                <FormControl>
-                  <Input defaultValue={user?.username} disabled={isLoading} placeholder="Store A" {...field} />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="logoImg"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Logo Shop</FormLabel>
-                <FormControl>
-                  <Input type="file" accept="image/*" disabled={isLoading} {...field} />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="rendezvous"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Pickup address</FormLabel>
-                <FormControl>
-                  <Input disabled={isLoading} placeholder="ABC" {...field} />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="businessType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Business Type</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={(value) => form.setValue('businessType', value as 'Individual' | 'Company')}
-                    defaultValue={field.value}
-                  >
-                    <FormItem>
-                      <FormControl>
-                        <RadioGroupItem value="Individual" />
-                      </FormControl>
-                      <FormLabel>Individual</FormLabel>
-                    </FormItem>
-                    <FormItem>
-                      <FormControl>
-                        <RadioGroupItem value="Company" />
-                      </FormControl>
-                      <FormLabel>Company</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="mt-4 flex items-center justify-center">
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading && <Loader2 className=" h-4 w-4 animate-spin" />}
-              Submit
-            </Button>
-          </div>
-        </form>
-      </Form> */}
     </div>
   )
 }

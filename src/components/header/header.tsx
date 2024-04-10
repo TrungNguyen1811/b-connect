@@ -14,7 +14,7 @@ function Header() {
       const target = e.target as typeof e.target & {
         search: { value: string }
       }
-      nav(`/books?searchName=${target.search.value}`)
+      nav(`/books?Name=${target.search.value}`)
     },
     [nav],
   )

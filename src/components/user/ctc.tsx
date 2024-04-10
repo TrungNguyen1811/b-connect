@@ -12,6 +12,8 @@ import { Separator } from 'src/components/ui/separator'
 import { useAuth } from 'src/hooks/useAuth'
 import { ENUM_CITIZEN_ID_TYPE, ICTCBackSide, ICTCFrontSide } from 'src/types'
 import { z } from 'zod'
+import { toast } from '../ui/use-toast'
+import { registerAccountValidates } from 'src/api/agency/set-is-account-validated'
 
 const formCTCSchema = z.object({
   ctcId: z.string(),
@@ -60,7 +62,7 @@ function IdentificationSeller() {
     if (imageFS)
       return (
         <div>
-          <div>
+          <div className="w-[10vw]">
             <img src={URL.createObjectURL(imageFS)} />
           </div>
         </div>
@@ -113,6 +115,7 @@ function IdentificationSeller() {
       form.setValue('ctcAddress', fs.data[0].address)
       form.setValue('ctcSex', fs.data[0].sex)
       form.setValue('ctcNationality', fs.data[0].nationality)
+      form.setValue('ctcDob', parse(fs.data[0].dob, 'dd/MM/yyyy', new Date()))
       form.setValue('ctcDoe', parse(fs.data[0].doe, 'dd/MM/yyyy', new Date()))
       // form.setValue('ctcType', fs.data[0].type_new!);
       form.setValue('features', bs.data[0].features)
@@ -243,21 +246,22 @@ function IdentificationSeller() {
   const [isLoading, setIsLoading] = useState(false)
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
-    // await signUpApi(data, (err) => {
-    //   if (err) {
-    //     toast({
-    //       title: 'Error',
-    //       description: err.response?.data.message,
-    //       variant: 'destructive',
-    //     })
-    //     return
-    //   }
-    //   toast({
-    //     title: 'Success',
-    //     description: 'Register successfully',
-    //     variant: 'success',
-    //   })
-    // })
+    await registerAccountValidates(data, (err, result) => {
+      if (err) {
+        toast({
+          title: 'Error',
+          description: err.message,
+          variant: 'destructive',
+        })
+        return err.message
+      }
+      toast({
+        title: 'Success',
+        description: 'Register CTC successfully',
+        variant: 'success',
+      })
+      return result
+    })
     setIsLoading(false)
   }
 
@@ -265,12 +269,24 @@ function IdentificationSeller() {
     form.formState.errors && console.log(form.formState.errors)
   }, [form.formState.errors])
 
+  const resetForm = () => {
+    form.reset()
+    setImageFS(null)
+    setImageBS(null)
+  }
+
   return (
     <div className="w-[66vw] rounded-lg bg-card text-card-foreground shadow-sm">
-      <div className=" py-2">
-        <p className="text-xl">Identification Information</p>
-        <p className="text-gray-500">Manage your identification information</p>
+      <div className="flex flex-row items-center justify-between">
+        <div className=" py-2">
+          <p className="text-xl">Identification Information</p>
+          <p className="text-gray-500">Manage your identification information</p>
+        </div>
+        <Button type="button" onClick={resetForm} className="ml-4 w-32">
+          Reset
+        </Button>
       </div>
+
       <Separator />
 
       <Form {...form}>

@@ -6,7 +6,6 @@ import {
   ArrowLeftIcon,
   AsteriskIcon,
   BellDotIcon,
-  CreditCardIcon,
   Edit,
   FingerprintIcon,
   Info,
@@ -55,12 +54,6 @@ export default function Sidebar({ className }: SidebarProps) {
           icon: FingerprintIcon,
           color: 'text-red-500',
           href: '/user/account/identify',
-        },
-        {
-          title: 'Bank',
-          icon: CreditCardIcon,
-          color: 'text-red-500',
-          href: '/user/account/payment',
         },
         {
           title: 'Address',
@@ -127,7 +120,7 @@ export default function Sidebar({ className }: SidebarProps) {
               <div className="flex flex-row">
                 <Avatar>
                   <AvatarImage
-                    className={cn('h-12 w-12 rounded-full', !isOpen && 'ml-2.5 h-8 w-8 rounded-full')}
+                    className={cn('h-12 w-12 rounded-full', !isOpen && 'h-8 w-8 rounded-full')}
                     src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
                     alt={user?.fullName}
                   />

@@ -1,7 +1,7 @@
 import { format, parseISO } from 'date-fns'
 import { Plus, Star } from 'lucide-react'
 import '@smastrom/react-rating/style.css'
-import React, { useCallback, useEffect, useId, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 // import { useForm } from 'react-hook-form'
 import { useLoaderData, useLocation } from 'react-router-dom'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
@@ -94,19 +94,14 @@ function BookDetailPage() {
   }, [book, cartItems])
 
   const addReview = useCallback(
-    (review: IReview) => {
-      if (!book?.reviews) {
+    (review: IReviewResponse) => {
+      if (!bookReview) {
         return
       }
-
-      //   const updatedBook: IBook = {
-      //     ...book,
-      //     reviews: [...book.reviews, review],
-      //   }
-
-      //   setBook(updatedBook)
+      const updatedBookReview: IReviewResponse[] = [...bookReview, review]
+      setBookReview(updatedBookReview)
     },
-    [book],
+    [bookReview], // Make sure to include all dependencies of useCallback
   )
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
@@ -179,19 +174,11 @@ function BookDetailPage() {
     [],
   )
 
-  const id = useId()
-
-  const { mutateAsync, isLoading: isAddReview } = useMutation({
-    mutationFn: postRatingComment,
-    onSuccess: (_, { ratingId, userId, comment, ratingPoint }) => {
+  const { mutateAsync, isLoading: isAddReview } = useMutation<IReviewResponse, Error, IReview>(postRatingComment, {
+    onSuccess: (data: IReviewResponse) => {
       if (!book) return
       queryClient.invalidateQueries()
-      //   addReview({
-      //     ratingId: ratingId,
-      //     userId: userId,
-      //     comment,
-      //     ratingPoint,
-      //   })
+      addReview(data)
     },
   })
 
@@ -346,7 +333,7 @@ function BookDetailPage() {
                 </div>
                 <div className="flex flex-row items-center space-y-2 px-6">
                   <span className="mr-6">Quantity</span>
-                  <span>{book.stock}</span>
+                  <span>{book.quantity}</span>
                 </div>
 
                 <div className="flex px-6">

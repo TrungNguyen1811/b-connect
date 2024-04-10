@@ -1,39 +1,49 @@
-import { useQuery } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 import { ChevronRight } from 'lucide-react'
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { getTopBooks } from 'src/api/books/get-book'
-import { IBook } from 'src/types/books'
-import { IResponse } from 'src/types/response'
 import Book from './card-book'
 import { Separator } from '../ui/separator'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
+import { GetManyBooksParams } from 'src/api/books/get-book'
+import useGetTopBooks from 'src/hooks/useGetTopBook'
+import BookGridLoading from '../book/book-grid-loading'
+
+const initBookState: GetManyBooksParams = {
+  PageNumber: 1,
+  PageSize: 40,
+  Name: undefined,
+  CategoryIds: undefined,
+  MinPrice: undefined,
+  MaxPrice: undefined,
+  OverRating: undefined,
+  Type: undefined,
+}
 
 function TopBook() {
-  // const { data } = useQuery<IResponse<IBook[]>, AxiosError>(
-  //   ['Top'],
-  //   () =>
-  //     getManyBooks({
-  //       genres: 'popular',
-  //     }),
-  //   {
-  //     keepPreviousData: true,
-  //   },
-  // )
-
-  const { data } = useQuery<IResponse<IBook[]>, AxiosError>(['Top'], () => getTopBooks(), {
-    keepPreviousData: true,
+  const { data, isLoading, isError } = useGetTopBooks(initBookState, {
+    refetchOnWindowFocus: false,
+    refetchInterval: 300000,
   })
+
   console.log(data?.data)
 
   const renderBooks = useMemo(() => {
+    if (isLoading) return <BookGridLoading pageSize={8} className="carousel-item flex-none p-2 px-0.5 " />
+
     return data?.data.map((book, index) => (
       <div key={index} className={`carousel-item flex-none p-2 px-0.5 hover:scale-105`}>
         <Book book={book} />
       </div>
     ))
-  }, [data?.data])
+  }, [data?.data, isLoading])
+  // if (isError)
+  //   return (
+  //     <div>
+  //       <img src="../public/error.png" alt="Something went wrong ;v" />
+  //       <p>Something went wrong ;v</p>
+  //     </div>
+  //   )
+
   return (
     <div className=" bg-zinc-100">
       <div className="mx-auto mt-7 max-w-7xl bg-white px-4 sm:px-6 lg:px-8">

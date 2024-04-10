@@ -75,7 +75,7 @@ const AddNewAddress = () => {
         <DialogTrigger>
           <Button>Add New Address</Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="w-[30vw]">
           <div className="rounded-lg border border-gray-200 p-4">
             <div>
               <Form {...form}>
@@ -93,7 +93,7 @@ const AddNewAddress = () => {
                                 <Button
                                   variant="outline"
                                   role="combobox"
-                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                  className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
                                 >
                                   {field.value
                                     ? AddressData.find((province) => province.Name === field.value)?.Name
@@ -102,7 +102,7 @@ const AddNewAddress = () => {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
+                            <PopoverContent className="w-full p-0">
                               <Command>
                                 <CommandInput placeholder="Search city..." className="h-9" />
                                 <CommandEmpty>No city found.</CommandEmpty>
@@ -149,7 +149,7 @@ const AddNewAddress = () => {
                                 <Button
                                   variant="outline"
                                   role="combobox"
-                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                  className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
                                 >
                                   {field.value
                                     ? AddressData.find((province) => province.Name === city) // Find selected province
@@ -199,7 +199,7 @@ const AddNewAddress = () => {
                       control={form.control}
                       name="subDistrict"
                       render={({ field }) => (
-                        <FormItem className="flex flex-col">
+                        <FormItem className="flex flex-col pb-4">
                           <FormLabel className="mt-4">Wards</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
@@ -207,7 +207,7 @@ const AddNewAddress = () => {
                                 <Button
                                   variant="outline"
                                   role="combobox"
-                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                  className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
                                 >
                                   {field.value
                                     ? AddressData.find((province) => province.Name === city) // Find selected province
@@ -257,8 +257,8 @@ const AddNewAddress = () => {
                       control={form.control}
                       name="rendezvous"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="mt-4">Rendezvous</FormLabel>
+                        <FormItem className="mb-2">
+                          <FormLabel>Rendezvous</FormLabel>
                           <FormControl>
                             <Input placeholder="ABC..." {...field} />
                           </FormControl>
@@ -271,8 +271,8 @@ const AddNewAddress = () => {
                       control={form.control}
                       name="default"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="mt-4">Default</FormLabel>
+                        <FormItem className="flex flex-row items-center">
+                          <FormLabel className="mr-2 mt-2">Default</FormLabel>
                           <FormControl>
                             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>

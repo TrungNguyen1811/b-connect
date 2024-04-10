@@ -172,8 +172,8 @@ function CartPage() {
     useEffect(() => {
       const fetchAgencyName = async () => {
         try {
-          const name: IAgency = await getAgencyByAgencyId(agencyId)
-          setAgencyName(name.agencyName as string)
+          const name: IAgency | null = await getAgencyByAgencyId(agencyId)
+          setAgencyName(name?.agencyName as string)
         } catch (error) {
           console.error('Error fetching agency name:', error)
         }

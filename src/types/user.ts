@@ -46,6 +46,20 @@ export interface User {
   updatedAt?: Date
 }
 
+export interface IRegisterCTC {
+  ctcId: string
+  ctcName: string
+  ctcDob?: Date
+  ctcHome: string
+  ctcAddress: string
+  ctcSex: string
+  ctcNationality: string
+  ctcDoe: Date
+  features: string
+  issueDate: Date
+  ctcType: string
+}
+
 export enum ROLE {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',

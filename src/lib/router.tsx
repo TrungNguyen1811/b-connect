@@ -1,5 +1,6 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
+import { getAgencyByAgencyId } from 'src/api/agency/get-agency'
 import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
@@ -26,8 +27,6 @@ const UserManagerPage = React.lazy(() => import('src/pages/admin/User/UserManage
 const UserDetailPage = React.lazy(() => import('src/pages/admin/User/UserDetailPage'))
 const CategoryManagerPage = React.lazy(() => import('src/pages/admin/Category/CategoryManage'))
 
-const ManagerLayout = React.lazy(() => import('src/pages/layout/ManagerLayout'))
-
 const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
 const MyShop = React.lazy(() => import('src/pages/seller/MyShop'))
 const SubscribeSellerPage = React.lazy(() => import('src/pages/seller/SubscribeAgencyPage'))
@@ -45,6 +44,7 @@ const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
 const IdentificationUser = React.lazy(() => import('src/pages/profile/identify'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
 const AddressPage = React.lazy(() => import('src/pages/profile/addressPage'))
+const MyPurchase = React.lazy(() => import('src/pages/profile/MyPurchasePage'))
 
 const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
@@ -55,7 +55,7 @@ const FollowingTags = React.lazy(() => import('src/pages/blog/following-tags'))
 const TagList = React.lazy(() => import('src/pages/blog/tag-list'))
 const ReadingList = React.lazy(() => import('src/pages/blog/reading-list'))
 const CreateBlog = React.lazy(() => import('src/pages/blog/create-blog'))
-import UpdateBlog from 'src/pages/blog/update-post'
+const UpdateBlog = React.lazy(() => import('src/pages/blog/update-post'))
 const BlogDetail = React.lazy(() => import('src/pages/blog/post-detail'))
 const PostInterestedManage = React.lazy(() => import('src/pages/blog/post-interested-manage'))
 const ManagePostInterester = React.lazy(() => import('src/pages/blog/manage-post-interester'))
@@ -116,12 +116,12 @@ export const ROUTES = createBrowserRouter([
       },
       {
         path: 'shop/:id',
-        // loader: async ({ params }) => {
-        //   const shop = await getAgencyById(params.id as string)
-        //   return {
-        //     shop,
-        //   }
-        // },
+        loader: async ({ params }) => {
+          const shop = await getAgencyByAgencyId(params.id as string)
+          return {
+            shop,
+          }
+        },
         element: <MyShop />,
       },
       {
@@ -130,6 +130,10 @@ export const ROUTES = createBrowserRouter([
           {
             path: 'user/account/profile',
             element: <InfoAccount />,
+          },
+          {
+            path: 'user/purchase',
+            element: <MyPurchase />,
           },
           {
             path: 'user/account/identify',
@@ -230,16 +234,6 @@ export const ROUTES = createBrowserRouter([
   {
     path: '/seller/subscribe',
     element: <SubscribeSellerPage />,
-  },
-  {
-    path: '/manager',
-    element: <ManagerLayout />,
-    children: [
-      {
-        path: '/manager/dashboard',
-        element: <DashboardPage />,
-      },
-    ],
   },
   {
     element: <BlogLayout />,

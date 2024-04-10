@@ -24,7 +24,7 @@ function Book({ book }: Props) {
           <CardContent className="p-0 lg:p-2 lg:text-lg">
             <strong>{book.name}</strong>
             <div className="flex flex-row items-center justify-between">
-              <strong>{book.stock}</strong>
+              <strong>{book.quantity}</strong>
               <p className="text-xs text-red-500 lg:text-base">{formatPrice(book.price)}</p>
             </div>
           </CardContent>

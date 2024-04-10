@@ -135,9 +135,26 @@ export async function getBookById(book_Id: string) {
     .then((res) => res.data)
 }
 
+export async function GetAllBookInInventoryByName(params: Partial<IQueryPagination & IQuerySearch>) {
+  return await authAxiosClient
+    .get(`/products/SellerManager/GetAllBookInInventoryByName`, {
+      params,
+    })
+    .then((res) => {
+      const data: IBook[] = res.data
+      const pagination = res.headers['x-pagination']
+      const parseJson: IResponsePagination = JSON.parse(pagination)
+      const dataAll: IResponse<IBook[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: parseJson,
+      }
+      return dataAll
+    })
+}
 export async function GetAllBookInInventory(params: Partial<IQueryPagination & IQuerySearch>) {
   return await authAxiosClient
-    .get(`/products/BookGroup/GetAllBookInInventory`, {
+    .get(`/products/SellerManager/GetAllBookInInventory`, {
       params,
     })
     .then((res) => {
@@ -154,7 +171,12 @@ export async function GetAllBookInInventory(params: Partial<IQueryPagination & I
 }
 
 export type GetManyBooksParams = {
-  status?: 'NEW' | 'OLD'
+  Name?: string
+  CateIds?: string
+  MinPrice?: string
+  MaxPrice?: string
+  OverRating?: string
+  Type?: string
 } & Partial<IDefaultQuery>
 
 export async function getManyBooks(params: GetManyBooksParams) {
@@ -189,8 +211,8 @@ export async function getAllBooks() {
   })
 }
 
-export async function getTopBooks() {
-  return axiosClient.get('/products/get-all-book', {}).then((res) => {
+export async function getTopBooks(params: GetManyBooksParams) {
+  return axiosClient.get('/products/get-book-by-quantity', { params }).then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IBook[]> = {

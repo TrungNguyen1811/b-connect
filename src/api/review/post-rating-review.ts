@@ -1,26 +1,24 @@
 import { axiosClient } from 'src/lib/axios'
-import { IReview } from 'src/types'
+import { IReview, IReviewResponse } from 'src/types'
 
-function postRatingComment(data: IReview) {
+async function postRatingComment(data: IReview): Promise<IReviewResponse> {
   const formData = new FormData()
   formData.append('RatingId', data.ratingId)
   formData.append('UserId', data.userId)
   formData.append('RatingPoint', data.ratingPoint)
   formData.append('Comment', data.comment as string)
 
-  return axiosClient
-    .post('/Account/rate-and-comment', formData, {
+  try {
+    const response = await axiosClient.post('/Account/rate-and-comment', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
-    .then((res) => {
-      if (res) {
-        console.log(res)
-      }
-    })
-    .catch((error: Error) => {
-      throw error.message
-    })
+
+    return response.data as IReviewResponse
+  } catch (error) {
+    throw new Error('Failed to post rating comment')
+  }
 }
+
 export { postRatingComment }

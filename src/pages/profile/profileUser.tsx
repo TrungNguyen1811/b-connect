@@ -27,6 +27,7 @@ type FormData = z.infer<typeof formSchema>
 
 function InfoAccount() {
   const { user } = useAuth()
+  console.log(user)
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -115,7 +116,7 @@ function InfoAccount() {
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
-            <ResizablePanelGroup direction="horizontal" className="max-w-6xl rounded-lg border">
+            <ResizablePanelGroup direction="horizontal" className="max-w-6xl rounded-lg border-b">
               <ResizablePanel defaultSize={60}>
                 <div className="flex h-[500px] flex-col p-6">
                   <FormField
@@ -139,7 +140,7 @@ function InfoAccount() {
                       <FormItem>
                         <FormLabel className=" mb-2">Email</FormLabel>
                         <FormControl>
-                          <Input className=" w-full px-3 py-2 " placeholder="Enter your email" {...field} />
+                          <Input disabled className="w-full px-3 py-2" placeholder="Enter your email" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

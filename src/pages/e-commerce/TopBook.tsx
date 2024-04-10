@@ -1,24 +1,20 @@
 import { useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { GetManyBooksParams } from 'src/api/books/get-book'
 import BookGridLoading from 'src/components/book/book-grid-loading'
 import Book from 'src/components/landing/card-book'
 import MetaData from 'src/components/metadata'
 import Pagination from 'src/components/ui/pagination'
 import { Separator } from 'src/components/ui/separator'
-import useGetManyBooks from 'src/hooks/useGetManyBooks'
+import useGetTopBooks from 'src/hooks/useGetTopBook'
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
   PageSize: 36,
 }
 
 function TopBookPage() {
-  const param = useParams()
-  console.log(param)
-
   const [bookState, setBookState] = useState<GetManyBooksParams>(initBookState)
 
-  const { data, isLoading, isError } = useGetManyBooks(bookState, {
+  const { data, isLoading, isError } = useGetTopBooks(bookState, {
     refetchOnWindowFocus: false,
   })
 
@@ -43,12 +39,12 @@ function TopBookPage() {
     return data?._pagination?.TotalCount || 0
   }, [data?._pagination?.TotalCount])
 
-  if (isError) return <div>Something went wrong</div>
+  // if (isError) return <ErrorPage />
   return (
     <div>
       <MetaData title="Books" />
       <div className="relative flex flex-col  bg-zinc-100">
-        <p className="self-center p-5 text-xl font-bold">DAILY DISCOVER</p>
+        <p className="self-center p-5 text-2xl font-bold text-orange-600">TOP BOOK</p>
         <Separator />
         <div className="w-full">
           <div className="mx-auto max-w-7xl sm:px-6">

@@ -35,14 +35,13 @@ function AddressPage() {
       <div className="w-full">
         <div className="w-full">
           <div className="flex w-full flex-row items-center justify-between px-8">
-            <p className="text-xl font-semibold">My Addresses</p>
+            <p className="text-xl font-semibold">
+              My Addresses {''}({addresses.length})
+            </p>
             <AddNewAddress />
           </div>
           <Separator />
           <div>
-            <p className="ml-8 mt-2 text-lg">
-              Address {''}({addresses.length})
-            </p>
             {addresses.map((address, index) => (
               <div key={index} className="ml-8">
                 <div className="my-2 flex flex-row items-center justify-between">

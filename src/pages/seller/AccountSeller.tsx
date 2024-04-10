@@ -23,7 +23,7 @@ function AccountSeller() {
         <div className="flex flex-col">
           <div className="flex flex-row p-4">
             <User size={22} className="mr-2" />
-            <p className="w-36">My Profile</p>
+            <p className="w-36">Username</p>
             <p className="">{user?.username}</p>
           </div>
 

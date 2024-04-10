@@ -23,7 +23,8 @@ function DailyDiscover() {
   })
 
   const renderBooks = useMemo(() => {
-    if (isLoading) return <BookGridLoading pageSize={42} className="col-span-full grid grid-cols-6 gap-4" />
+    if (isLoading)
+      return <BookGridLoading pageSize={initBookState.PageSize!} className="col-span-full grid grid-cols-6 gap-4" />
     if (!data?.data || data.data.length === 0)
       return (
         <div className="col-span-full row-span-full w-full">
@@ -43,12 +44,12 @@ function DailyDiscover() {
     return data?._pagination?.TotalCount || 0
   }, [data?._pagination?.TotalCount])
 
-  if (isError) return <div>Something went wrong</div>
+  // if (isError) return <ErrorPage />
   return (
     <div>
       <MetaData title="Books" />
       <div className="relative flex flex-col  bg-zinc-100">
-        <p className="self-center p-5 text-xl font-bold">DAILY DISCOVER</p>
+        <p className="self-center p-5 text-2xl font-bold text-orange-600">DAILY DISCOVER</p>
         <Separator />
         <div className="w-full">
           <div className="mx-auto max-w-7xl sm:px-6">

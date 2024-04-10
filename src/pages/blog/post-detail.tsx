@@ -130,19 +130,19 @@ function BlogDetail() {
 
   const [totalComment, setTotalComment] = useState(0)
 
-  // useEffect(() => {
-  //   let commentsCount = 0
+  useEffect(() => {
+    let commentsCount = 0
 
-  //   if (blog && blog.comments) {
-  //     for (const comments of blog.comments) {
-  //       if (comments.commentId) {
-  //         commentsCount += 1
-  //       }
-  //     }
-  //   }
+    if (blog && blog.postData.commentsId) {
+      for (const comments of blog.postData.commentsId) {
+        if (comments) {
+          commentsCount += 1
+        }
+      }
+    }
 
-  //   setTotalComment(commentsCount)
-  // }, [blog])
+    setTotalComment(commentsCount)
+  }, [blog])
 
   const [commentText, setCommentText] = useState('')
 

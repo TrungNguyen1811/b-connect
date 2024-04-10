@@ -15,14 +15,14 @@ export interface IBook {
   reviews?: IReview['ratingRecordId']
   ratingId?: string
   isAvailable?: boolean | undefined
-  type?: 'NEW' | 'OLD'
+  type?: 'New' | 'Old'
   genres?: 'popular' | 'best'
   createdDate?: Date
   publishDate?: Date
 }
 export enum BOOK_TYPE {
-  NEW = 'NEW',
-  OLD = 'OLD',
+  NEW = 'New',
+  OLD = 'Old',
 }
 
 export interface IReview {
@@ -38,13 +38,13 @@ export interface IReview {
 
 export interface IReviewResponse {
   ratingRecordId?: string
-  ratingId?: string
+  ratingId: string
   userId: string
   ratingPoint: number
   comment: string
-  username?: string
-  avatarDir?: string
-  email?: string
+  username: string
+  avatarDir: string
+  email: string
   createdDate?: string
   updatedAt?: string
 }
@@ -80,7 +80,7 @@ export interface IBookTest {
   reviews?: IReview['ratingRecordId']
   ratingId?: string
   isAvailable?: boolean | undefined
-  type?: 'NEW' | 'OLD'
+  type?: 'New' | 'Old'
   genres?: 'popular' | 'best'
   createdDate?: Date
   publishDate?: Date

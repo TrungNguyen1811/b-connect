@@ -7,7 +7,7 @@ export const bookSchema = z.object({
   price: z.coerce.number().min(0),
   publishDate: z.date(),
   category: z.array(z.string()),
-  type: z.enum(['NEW', 'OLD']),
+  type: z.enum(['New', 'Old']),
   bookImg: z.any(),
   backgroundImg: z.any(),
   quantity: z.coerce.number().min(0),

@@ -33,7 +33,7 @@ function MultiSelect({ options, selected, onChange, className, ...props }: Multi
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full justify-between ${selected.length > 1 ? 'h-full' : 'h-10'}`}
+          className={`w-full justify-between bg-white text-gray-500 ${selected.length > 1 ? 'h-full' : 'h-10'}`}
           onClick={() => setOpen(!open)}
         >
           <div className="flex flex-wrap gap-1">

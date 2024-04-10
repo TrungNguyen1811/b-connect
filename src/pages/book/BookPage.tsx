@@ -12,12 +12,17 @@ import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import Pagination from 'src/components/ui/pagination'
 import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
 import { GetManyBooksParams } from 'src/api/books/get-book'
+import ErrorPage from '../error-page'
 
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
   PageSize: 40,
-  reviews: undefined,
   Name: undefined,
+  CateIds: undefined,
+  MinPrice: undefined,
+  MaxPrice: undefined,
+  OverRating: undefined,
+  Type: undefined,
 }
 function BookPage() {
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
@@ -38,7 +43,6 @@ function BookPage() {
   }, [])
 
   const [bookState, setBookState] = React.useState<GetManyBooksParams>(initBookState)
-
   const { data, isLoading, isError } = useGetManyBooks(bookState, {
     refetchOnWindowFocus: false,
   })
@@ -64,7 +68,7 @@ function BookPage() {
     return data?._pagination?.TotalCount || 0
   }, [data?._pagination?.TotalCount])
 
-  if (isError) return <div>Something went wrong</div>
+  if (isError) return <ErrorPage />
   return (
     <div className=" bg-zinc-100">
       <div className="mx-auto max-w-7xl sm:px-6">

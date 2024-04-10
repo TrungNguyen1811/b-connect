@@ -26,8 +26,8 @@ function AddBookPage() {
   const form = useForm<FormData>({ resolver: zodResolver(bookSchema) })
   const queryClient = useQueryClient()
   const typeBook = [
-    { label: 'NEW', value: 'NEW' },
-    { label: 'OLD', value: 'OLD' },
+    { label: 'NEW', value: 'New' },
+    { label: 'OLD', value: 'Old' },
   ]
 
   const { data: categories } = useGetAllCategory()

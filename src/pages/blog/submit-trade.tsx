@@ -29,7 +29,7 @@ import AddressData from 'src/components/cart/address.json'
 import { Textarea } from 'src/components/ui/text-area'
 import { Label } from 'src/components/ui/label'
 import { IAddress } from 'src/types/address'
-import { getAddressbyAddressId } from 'src/api/address/get-address'
+import { getAddressByAddressId } from 'src/api/address/get-address'
 import { Dialog, DialogContent, DialogHeader } from 'src/components/ui/dialog'
 import { IReviewUser } from 'src/types'
 import { ISubmitTrade } from 'src/types/blog'
@@ -169,7 +169,7 @@ export default function SubmitTrade() {
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const address = await getAddressbyAddressId(addressId as string)
+        const address = await getAddressByAddressId(addressId as string)
         setAddress(address)
         setCity(address.city_Province)
         setDistrict(address.district)
@@ -274,7 +274,7 @@ export default function SubmitTrade() {
   const formReview = useForm<FormReview>({
     resolver: zodResolver(formReviewSchema),
   })
-  const [city, setCity] = useState('h')
+  const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
 
   const submitTradeMutation = useMutation((formData: ISubmitTrade) => putSubmitTrade(formData), {

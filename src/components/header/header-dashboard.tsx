@@ -11,7 +11,7 @@ export default function Header() {
       <nav className="flex h-14 items-center justify-between px-4">
         <div className="hidden lg:block">
           <Link
-            to={lowercasedPath}
+            to={'/'}
             className="text-black-100 xs:text-2xl mr-4 cursor-pointer justify-center font-extrabold lg:text-3xl"
           >
             BConnect

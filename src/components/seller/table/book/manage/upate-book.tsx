@@ -31,8 +31,8 @@ export function UpdateBook() {
   const bookId = id
   const [book, setBook] = useState<IBook | undefined>(undefined)
   const typeBook = [
-    { label: 'NEW', value: 'NEW' },
-    { label: 'OLD', value: 'OLD' },
+    { label: 'NEW', value: 'New' },
+    { label: 'OLD', value: 'Old' },
   ]
 
   const { data: categories } = useGetAllCategory()

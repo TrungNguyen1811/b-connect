@@ -13,7 +13,7 @@ export function HeaderBlog() {
       const target = e.target as typeof e.target & {
         search: { value: string }
       }
-      navigate(`/blog?search=${target.search.value}`)
+      navigate(`/blog?Name=${target.search.value}`)
     },
     [navigate],
   )

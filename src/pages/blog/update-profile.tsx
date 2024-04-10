@@ -18,7 +18,7 @@ const formSchema = z.object({
   username: z.string(),
   email: z.string(),
   addressId: z.string(),
-  avatar: z.string(),
+  avatarDir: z.string(),
   fullName: z.string(),
   url: z.string(),
   bio: z.string(),
@@ -59,7 +59,7 @@ function UpdateProfile() {
       username: userDetail?.username || '',
       email: userDetail?.email || '',
       addressId: userDetail?.addressId || '',
-      avatar: userDetail?.avatar as string,
+      avatarDir: userDetail?.avatarDir as string,
       fullName: userDetail?.fullName || '',
       url: userDetail?.url || '',
       bio: userDetail?.bio || '',
@@ -205,7 +205,7 @@ function UpdateProfile() {
                   </Avatar>
                   <FormField
                     control={form.control}
-                    name="avatar"
+                    name="avatarDir"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>

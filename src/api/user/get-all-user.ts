@@ -12,13 +12,11 @@ export async function getAllUser(params: Partial<IQueryPagination & IQuerySearch
       const data: User[] = res.data
       const pagination = res.headers['x-pagination']
       const parseJson: IResponsePagination = JSON.parse(pagination)
-      console.log('a', parseJson)
       const dataAll: IResponse<User[]> = {
         data: data,
         _metadata: data,
         _pagination: parseJson,
       }
-      console.log('dataAll', dataAll)
 
       return dataAll
     })
