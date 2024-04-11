@@ -20,6 +20,12 @@ export interface IBook {
   createdDate?: Date
   publishDate?: Date
 }
+
+export interface IResponseBook {
+  item1: IBook
+  item2: number
+}
+
 export enum BOOK_TYPE {
   NEW = 'New',
   OLD = 'Old',
@@ -74,6 +80,7 @@ export interface IBookTest {
   description: string
   price: number
   quantity: number
+  stock?: number
   agencyId?: string
   agencyName?: string
   category?: string[]

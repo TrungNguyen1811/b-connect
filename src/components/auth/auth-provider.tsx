@@ -23,18 +23,13 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       setUser(JSON.parse(savedUser))
     }
   }, [])
-  // Cookies.set('refreshToken', refreshToken, { expires: 7, secure: true, sameSite: 'strict' })
 
-  // const refreshToken = Cookies.get('refreshToken')
-
-  // Cookies.remove('refreshToken')
   const login = ({ user, token }: LoginProps) => {
     setUser(user)
 
     const expiresAt = addSeconds(Date.now(), token.expiresIn)
     localStorage.setItem('user', JSON.stringify(user))
     localStorage.setItem('accessToken', token.accessToken)
-    localStorage.setItem('refreshToken', token.refreshToken)
     localStorage.setItem('expiresIn', JSON.stringify(expiresAt))
   }
 

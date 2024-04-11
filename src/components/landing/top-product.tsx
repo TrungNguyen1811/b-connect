@@ -28,7 +28,12 @@ function TopBook() {
   console.log(data?.data)
 
   const renderBooks = useMemo(() => {
-    if (isLoading) return <BookGridLoading pageSize={8} className="carousel-item flex-none p-2 px-0.5 " />
+    if (isLoading)
+      return (
+        <div className="w-full flex-row p-2 px-0.5">
+          <BookGridLoading pageSize={6} className="grid flex-1 grid-cols-6 gap-5" />
+        </div>
+      )
 
     return data?.data.map((book, index) => (
       <div key={index} className={`carousel-item flex-none p-2 px-0.5 hover:scale-105`}>

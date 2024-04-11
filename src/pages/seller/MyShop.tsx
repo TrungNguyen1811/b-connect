@@ -1,20 +1,17 @@
-import { useQuery } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import React, { useMemo, useState } from 'react'
+import { useQueries } from '@tanstack/react-query'
+import React, { useMemo } from 'react'
 import { useLoaderData } from 'react-router-dom'
-import { GetAllBookInInventory, GetManyBooksParams } from 'src/api/books/get-book'
-import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
+import { getBestSellerProductIdByNumberOfBookSold, getBestSellerProductIdByRevenue } from 'src/api/agency/get-agency'
+import { GetAllBookInInventoryByAgencyId, GetManyBooksParams } from 'src/api/books/get-book'
 import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
 import BookGridLoading from 'src/components/book/book-grid-loading'
+import Book from 'src/components/landing/card-book'
 import MetaData from 'src/components/metadata'
-import Book from 'src/components/seller/card-book'
-import { Avatar, AvatarImage } from 'src/components/ui/avatar'
 import Pagination from 'src/components/ui/pagination'
-import useGetSellerBook from 'src/hooks/useGetSellerBook'
+import { ScrollArea, ScrollBar } from 'src/components/ui/scroll-area'
+import { useCustomQuery } from 'src/hooks/useCustomQuery'
+import { IBook, IResponseBook } from 'src/types'
 import { IAgency } from 'src/types/agency'
-import { IBook } from 'src/types/books'
-import { IQueryPagination, IQuerySearch } from 'src/types/requests'
-import { IResponse } from 'src/types/response'
 
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
@@ -27,24 +24,19 @@ const initBookState: GetManyBooksParams = {
   Type: undefined,
 }
 
+const initParamState = {
+  PageNumber: 1,
+  PageSize: 40,
+}
+
 function MyShop() {
   const shop = useLoaderData() as { shop: IAgency }
 
   const [bookState, setBookState] = React.useState<GetManyBooksParams>(initBookState)
-  const { data, isLoading, isError } = useGetSellerBook(bookState, {
-    refetchOnWindowFocus: false,
-  })
-
-  const [queries, setQueries] = useState<Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }>({
-    PageNumber: 0,
-    PageSize: 6,
-  })
-
-  const topBook = useQuery<IResponse<IBook[]>, AxiosError>(
-    [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => GetAllBookInInventory(queries),
+  const { data, isLoading, isError } = useCustomQuery<IResponseBook[]>(
+    () => GetAllBookInInventoryByAgencyId(bookState, shop.shop.ownerId as string),
     {
-      keepPreviousData: true,
+      refetchOnWindowFocus: false,
     },
   )
 
@@ -60,7 +52,7 @@ function MyShop() {
         </div>
       )
     return data?.data.map((book) => {
-      return <Book key={book.productId} book={book} />
+      return <Book key={book.item1.productId} book={book.item1} />
     })
   }, [data?.data, isLoading])
 
@@ -72,6 +64,38 @@ function MyShop() {
     return data?._pagination?.TotalCount || 0
   }, [data?._pagination?.TotalCount])
 
+  const queries = [
+    { queryKey: ['topBooks'], queryFn: () => getBestSellerProductIdByNumberOfBookSold(initParamState) },
+    { queryKey: ['recommendBooks'], queryFn: () => getBestSellerProductIdByRevenue(initParamState) },
+  ]
+
+  const queryResults = useQueries({ queries })
+
+  const isLoadingTopBook = queryResults[0].isLoading
+  const isLoadingFeaturedBook = queryResults[1].isLoading
+  const dataTopBook: IBook[] = queryResults[0].data as IBook[]
+  const dataFeaturedBook = queryResults[1].data
+
+  const renderTopBooks = useMemo(() => {
+    if (isLoadingTopBook) return <BookGridLoading pageSize={8} className="carousel-item flex-none p-2 px-0.5 " />
+
+    return dataTopBook?.map((book, index) => (
+      <div key={index} className={`carousel-item hover:scale-102 flex-none`}>
+        <Book book={book} />
+      </div>
+    ))
+  }, [dataTopBook, isLoadingTopBook])
+
+  const renderFeatureBooks = useMemo(() => {
+    if (isLoadingFeaturedBook) return <BookGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
+
+    return dataFeaturedBook?.map((book, index) => (
+      <div key={index} className={`carousel-item m-2 flex-none p-4 px-0.5 hover:scale-95`}>
+        <Book book={book} />
+      </div>
+    ))
+  }, [dataFeaturedBook, isLoadingFeaturedBook])
+
   return (
     <div className="bg-accent">
       <div>
@@ -82,13 +106,11 @@ function MyShop() {
               <div className="h-36 bg-black"></div>
               <div className="">
                 <header className="">
-                  <Avatar className="">
-                    <AvatarImage
-                      src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-                      alt={shop?.shop.logoImg as string}
-                      className="absolute left-[45rem] top-28 z-10 h-28 w-28 rounded-[50%] p-2"
-                    />
-                  </Avatar>
+                  <img
+                    src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
+                    alt={shop?.shop.logoImg as string}
+                    className="absolute left-[45rem] top-28 z-10 h-28 w-28 rounded-[50%] p-2"
+                  />
                   <div className="absolute left-[16rem] top-44 h-[8rem] w-[63rem] rounded-md border-2 bg-slate-50">
                     <div className="right-0 flex flex-row items-center justify-center pt-8">
                       <p className="ml-8 py-2 text-xl font-semibold">{shop.shop.agencyName}</p>
@@ -103,8 +125,27 @@ function MyShop() {
               </div>
             </div>
           </div>
-          <div className="mt-8 flex w-full gap-2 px-16 pb-8">
-            <section key="main.section.sidebar" className="sticky top-0 h-min w-1/5 rounded-md bg-accent">
+          <div className="mt-8 flex w-[100vw] gap-2 px-32">
+            <div className="w-full">
+              <p className="text-g text-lg">TOP BOOKS</p>
+
+              <ScrollArea>
+                <div className="my-4 flex gap-3">{renderTopBooks}</div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </div>
+          </div>
+          <div className="mt-8 flex w-[100vw] gap-2 px-32 pb-8">
+            <div className="mt-5 w-full">
+              <p className="text-g my-4 text-lg">RECOMMENDED FOR YOU</p>
+              <ScrollArea>
+                <div className="flex space-x-4 pb-4 pr-4">{renderFeatureBooks}</div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </div>
+          </div>
+          <div className="mt-8 flex w-full gap-4 px-32 pb-8">
+            <section key="main.section.sidebar" className="sticky top-0 h-min w-1/6 rounded-md bg-accent">
               <BookFilterSidebar
                 onFilterChange={(data) => {
                   setBookState((prev) => ({
@@ -115,8 +156,8 @@ function MyShop() {
                 totalBooks={totalBook}
               />
             </section>
-            <div className="ml-8 w-full">
-              <section key="main.section.books" className="grid flex-1 grid-cols-5 gap-5">
+            <div className="">
+              <section key="main.section.books" className="grid flex-1 grid-cols-5 gap-4">
                 {renderBooks}
                 <div className="col-span-full mx-auto w-fit">
                   <Pagination

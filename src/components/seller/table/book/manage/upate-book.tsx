@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BOOK_TYPE, IBook } from 'src/types'
 import { z } from 'zod'
-import { bookSchema } from './validation'
+import { bookSchema, updateBookSchema } from './validation'
 import { toast } from 'src/components/ui/use-toast'
 import { Button } from 'src/components/ui/button'
 import { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField } from 'src/components/ui/form'
@@ -23,13 +23,14 @@ import { MultiSelect } from 'src/components/ui/multi-select'
 import useGetAllCategory from 'src/hooks/useGetManyCategories'
 import { IComboboxData } from 'src/components/ui/combobox'
 
-type FormData = z.infer<typeof bookSchema>
+type FormData = z.infer<typeof updateBookSchema>
 
 export function UpdateBook() {
   const queryClient = useQueryClient()
   const { id } = useParams()
   const bookId = id
   const [book, setBook] = useState<IBook | undefined>(undefined)
+  console.log('boook', book?.stock)
   const typeBook = [
     { label: 'NEW', value: 'New' },
     { label: 'OLD', value: 'Old' },
@@ -62,7 +63,7 @@ export function UpdateBook() {
       type: book?.type,
       bookImg: book?.bookImg,
       backgroundImg: book?.backgroundImg,
-      quantity: book?.quantity,
+      stock: book?.stock,
     },
   })
 
@@ -95,6 +96,7 @@ export function UpdateBook() {
       if (fetchedBook && fetchedBook.productId) {
         setBook(fetchedBook)
         form.reset(fetchedBook)
+        setSelected(fetchedBook.category!)
       } else {
         toast({
           title: 'Invalid book response',
@@ -283,7 +285,7 @@ export function UpdateBook() {
               />
               <FormField
                 control={form.control}
-                name="quantity"
+                name="stock"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center">
                     <FormLabel className="w-40 pr-2 text-right">Quantity</FormLabel>

@@ -8,12 +8,10 @@ import {
   BookTemplate,
   LayoutDashboardIcon,
   LibraryBigIcon,
-  LineChartIcon,
   ListStartIcon,
   PackageIcon,
   StoreIcon,
   TagIcon,
-  TruckIcon,
   User2Icon,
   WalletCardsIcon,
 } from 'lucide-react'
@@ -41,12 +39,6 @@ export default function SidebarSeller({ className }: SidebarProps) {
       title: 'Dashboard',
       icon: LayoutDashboardIcon,
       href: '/seller/dashboard',
-      color: 'text-orange-500',
-    },
-    {
-      title: 'Manage Delivery',
-      icon: TruckIcon,
-      href: '/seller/delivery',
       color: 'text-orange-500',
     },
     {
@@ -95,12 +87,6 @@ export default function SidebarSeller({ className }: SidebarProps) {
       color: 'text-orange-500',
     },
     {
-      title: 'Data',
-      icon: LineChartIcon,
-      href: '/seller/data',
-      color: 'text-orange-500',
-    },
-    {
       title: 'Manage Shop',
       icon: TagIcon,
       href: '/seller/shop',
@@ -131,7 +117,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative hidden h-screen border-r md:block`,
+        `relative h-screen border-r md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,
@@ -139,7 +125,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
     >
       <ArrowLeftIcon
         className={cn(
-          'absolute -right-3 top-5 cursor-pointer rounded-full border bg-background text-3xl text-foreground',
+          'absolute -right-3 top-5 z-10 cursor-pointer rounded-full border bg-background text-3xl text-foreground',
           !isOpen && 'rotate-180',
         )}
         onClick={handleToggle}
