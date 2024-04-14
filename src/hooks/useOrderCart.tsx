@@ -202,24 +202,38 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
   const userId: string = user?.userId as string
   const [cartData, setCartData] = useState<DataCart[]>([])
   const [cartId, setCartId] = useState<string>()
-  console.log('cartData', cartData)
+  const expirationDate = new Date()
+  expirationDate.setDate(expirationDate.getDate() + 7)
+  const expires = expirationDate.toUTCString()
 
   useEffect(() => {
     const fetchCartData = async () => {
       try {
         const cartDataFromServer = await getCartApi(userId)
-        console.log('cartDataFromServer', cartDataFromServer)
         setCartItems(cartDataFromServer)
-        document.cookie = `cartItems_${userId}=${JSON.stringify(cartDataFromServer)}; path=/`
+        document.cookie = `cartItems_${userId}=${JSON.stringify(cartDataFromServer)}; expires=${expires}; path=/`
       } catch (error) {
         console.error('Error fetching cart data from server:', error)
       }
     }
 
-    if (user) {
+    if (userId) {
       fetchCartData()
     }
-  }, [user, userId])
+  }, [])
+
+  useEffect(() => {
+    const storedCartItems = document.cookie.split('; ').find((row) => row.startsWith(`cartItems_${userId}=`))
+
+    if (storedCartItems) {
+      try {
+        const cartItemsArray = JSON.parse(storedCartItems.split('=')[1] || '[]')
+        setCartItems(cartItemsArray)
+      } catch (error) {
+        // Xử lý lỗi nếu cần
+      }
+    }
+  }, [userId])
 
   useEffect(() => {
     const fetchCartId = async () => {
@@ -231,14 +245,14 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
       }
     }
 
-    if (user) {
+    if (userId) {
       fetchCartId()
     }
-  }, [userId, user])
+  }, [userId])
 
   useEffect(() => {
-    document.cookie = `cartItems_${userId}=${JSON.stringify(cartItems)}; path=/`
-  }, [cartItems, userId])
+    document.cookie = `cartItems_${userId}=${JSON.stringify(cartItems)}; expires=${expires}; path=/`
+  }, [cartItems, userId, expires])
 
   useEffect(() => {
     const updateCartData = () => {
@@ -271,7 +285,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     } else {
       handleLogout()
     }
-  }, [logout, cartItems, cartData])
+  }, [logout])
 
   const saveCartToDatabase = async (cartData: DataCart[]) => {
     try {
@@ -286,6 +300,10 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
         description: 'An error occurred while saving your cart. Please try again later.',
       })
     }
+  }
+
+  const saveCartToCookie = (cart: ICart[]) => {
+    document.cookie = `cart=${JSON.stringify(cart)}; expires=${expires}; path=/`
   }
 
   const addToCart = async (_id: string) => {
@@ -306,8 +324,10 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
               : item,
           )
           setCartItems(updatedCartItems)
+          saveCartToCookie(cartItems)
         } else {
           setCartItems([...cartItems, { productId: _id, quantity: 1, stock: book.stock }])
+          saveCartToCookie(cartItems)
         }
       } else {
         console.log('Book not found or out of stock')
@@ -335,15 +355,18 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
       item.productId === _id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item,
     )
     setCartItems(updatedCartItems)
+    saveCartToCookie(cartItems)
   }
 
   const removeFromCart = (_id: string) => {
     const updatedCartItems = cartItems.filter((item) => item.productId !== _id)
     setCartItems(updatedCartItems)
+    saveCartToCookie(cartItems)
   }
 
   const clearCart = () => {
     setCartItems([])
+    saveCartToCookie(cartItems)
   }
 
   const contextValue = {
