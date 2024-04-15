@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
-import { IBook } from 'src/types'
-import { GetAllBookInInventoryByName } from 'src/api/books/get-book'
+import { IListReplyResponse } from 'src/types'
+import { getAllReviewByAgency } from 'src/api/review/get-all-review-by-bookId'
 
-export function useBookTable(columns: ColumnDef<IBook>[]) {
+export function useRatingTable(columns: ColumnDef<IListReplyResponse>[]) {
   const [queries, setQueries] = useState<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
@@ -17,15 +17,16 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     PageSize: 6,
   })
 
-  const queryController = useQuery<IResponse<IBook[]>, AxiosError>(
+  const queryController = useQuery<IResponse<IListReplyResponse[]>, AxiosError>(
     [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => GetAllBookInInventoryByName(queries),
+    () => getAllReviewByAgency(queries),
     {
       keepPreviousData: true,
     },
   )
 
-  const table = useReactTable<IBook>({
+  console.log('quee', queries)
+  const table = useReactTable<IListReplyResponse>({
     columns,
     data: queryController.data?.data || [],
     manualPagination: true,
@@ -34,7 +35,7 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
         pageIndex: queries.PageNumber || 0,
         pageSize: queries.PageSize,
       },
-      globalFilter: queries.search,
+      globalFilter: queries.BookName,
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getCoreRowModel(),
@@ -42,6 +43,20 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     getPaginationRowModel: getCoreRowModel(),
   })
   const [tableStates, setTableStates] = useState(table.initialState)
+  const setTableQueries = (newQueries: Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }) => {
+    setQueries((prevQueries) => ({
+      ...prevQueries,
+      ...newQueries,
+    }))
+  }
+
+  useEffect(() => {
+    setTableStates((prev) => ({
+      ...prev,
+      recentDays: queries.RecentDays,
+      hasReplied: queries.HasReplied,
+    }))
+  }, [queries, setTableStates])
 
   table.setOptions((prev) => ({
     ...prev,
@@ -55,10 +70,10 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     const otherFilters = tableStates.columnFilters
     setQueries((prev) => ({
       ...prev,
-      role: otherFilters?.[0]?.value,
+      ratingPoint: otherFilters?.[0]?.value,
       PageNumber: tableStates.pagination.pageIndex + 1,
       PageSize: tableStates.pagination.pageSize,
-      name: tableStates.globalFilter || undefined,
+      BookName: tableStates.globalFilter || undefined,
     }))
   }, [
     tableStates.columnFilters,
@@ -79,5 +94,7 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     table,
     tableStates,
     setTableStates,
+    queries,
+    setQueries: setTableQueries,
   }
 }

@@ -131,7 +131,7 @@ export function UpdateBookGroup({ bookGroupId }: { bookGroupId: string }) {
                           <FormLabel className="w-40 pr-2 text-right"> Description</FormLabel>
                           <FormControl>
                             <Textarea
-                              className="h-40 bg-white"
+                              className="h-40 bg-orange-50"
                               placeholder="Show more detail about bookGroup"
                               {...field}
                             />

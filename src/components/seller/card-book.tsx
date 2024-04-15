@@ -13,16 +13,14 @@ function Book({ book }: Props) {
         <Card className="xs:w-[4rem] lg:w-[12rem]">
           <CardTitle className="aspect-[1] flex-col overflow-clip rounded-t-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
-              src={
-                'https://res.cloudinary.com/dbpvdxzvi/image/upload/v1711622416/Categories/Book/c58owdoqgrqccyi8qkna.jpg'
-              }
+              src={book.bookDir}
               alt={book.name}
               className="aspect-[1] object-contain transition-all duration-300"
               style={{ width: '100%' }}
             />
           </CardTitle>
           <CardContent className="p-0 lg:p-2 lg:text-lg">
-            <strong>{book.name}</strong>
+            <p className="h-12 text-sm font-semibold">{book.name}</p>
             <div className="flex flex-row items-center justify-between">
               <strong>{book.quantity}</strong>
               <p className="text-xs text-red-500 lg:text-base">{formatPrice(book.price)}</p>

@@ -75,7 +75,7 @@ export function UpdateBook() {
       }
       return putUpdateBook(formData)
     },
-    onSuccess: (updatedBook) => {
+    onSuccess: () => {
       toast({
         title: 'Successful!!',
         description: 'Update Book Success',
@@ -202,7 +202,7 @@ export function UpdateBook() {
                   <FormItem className="flex flex-row items-start">
                     <FormLabel className="w-40 pr-2 text-right"> Description</FormLabel>
                     <FormControl>
-                      <Textarea className="h-40 bg-white" placeholder="Show more detail about book" {...field} />
+                      <Textarea className="h-40 bg-orange-50" placeholder="Show more detail about book" {...field} />
                     </FormControl>
                     <FormDescription />
                     <FormMessage />
@@ -222,7 +222,7 @@ export function UpdateBook() {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className={cn('ml-1 justify-between bg-white', !field.value && 'text-muted-foreground')}
+                            className={cn('ml-1 justify-between bg-orange-50', !field.value && 'text-muted-foreground')}
                           >
                             {field.value
                               ? typeBook.find((type) => type.value === field.value)?.label
@@ -308,7 +308,7 @@ export function UpdateBook() {
                           <Button
                             variant={'outline'}
                             className={cn(
-                              'ml-1 w-[240px] bg-white pl-3 text-left font-normal',
+                              'ml-1 w-[240px] bg-orange-50 pl-3 text-left font-normal',
                               !field.value && 'text-muted-foreground',
                             )}
                           >
@@ -327,7 +327,7 @@ export function UpdateBook() {
               />
             </div>
           </div>
-          <div className="fixed bottom-0 flex-grow border-t-2 bg-white text-right">
+          <div className="fixed bottom-0 flex-grow border-t-2 bg-orange-50 text-right">
             <div className="w-[90rem]">
               <Button className="my-2 mr-8 w-32" type="submit">
                 Cancel

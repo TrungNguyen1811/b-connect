@@ -1,67 +1,78 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { IListReplyResponse, IReply } from 'src/types'
 import { z } from 'zod'
 import { toast } from 'src/components/ui/use-toast'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from 'src/components/ui/dialog'
 import { Button } from 'src/components/ui/button'
-import { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField } from 'src/components/ui/form'
+import { Form, FormItem, FormLabel, FormControl, FormField } from 'src/components/ui/form'
 import { Textarea } from 'src/components/ui/text-area'
-import { bookGroupSchema } from './validation'
-import { addBookToBookGroup } from 'src/api/books/post-add-book'
+import { replySchema } from './validation'
+import { useAuth } from 'src/hooks/useAuth'
+import { updateReplyReview } from 'src/api/review/post-rating-review'
 
-type FormData = z.infer<typeof bookGroupSchema>
+type FormData = z.infer<typeof replySchema>
 
-export function AddBookGroup() {
+export function UpdateReplyCustomer({ data }: { data: IListReplyResponse }) {
   const queryClient = useQueryClient()
+  const { user } = useAuth()
   const form = useForm<FormData>({
-    resolver: zodResolver(bookGroupSchema),
+    resolver: zodResolver(replySchema),
+    defaultValues: {
+      ReplyText: data.reply.replyText,
+    },
   })
 
-  const { mutate: addBookGroup } = useMutation({
-    mutationFn: (data: FormData) => {
-      return addBookToBookGroup(data)
+  const { mutate: updateReply } = useMutation({
+    mutationFn: (updatedData: FormData) => {
+      const formData: IReply = {
+        replyText: updatedData.ReplyText,
+        ReplyId: data.reply.replyId,
+        ratingRecordId: data.ratingRecordId,
+        agencyId: user?.agencies[0].agencyId as string,
+      }
+      return updateReplyReview(formData)
     },
     onSuccess: () => {
       toast({
         title: 'Successful!!',
-        description: 'Add Book Group Success',
+        description: 'Update Category Success',
       })
-      // setBookGroup(updatedBookGroup)
       queryClient.invalidateQueries()
     },
     onError: () => {
       toast({
-        title: 'Error add book group',
+        title: 'Error updating book group',
       })
     },
   })
 
   const onSubmit = (data: FormData) => {
-    addBookGroup(data)
+    updateReply(data)
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add</Button>
+        <Button variant="outline">Reply</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Book</DialogTitle>
+          <DialogTitle>Reply</DialogTitle>
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="bg-gray-100 px-12 pb-16 pt-8">
+                <div className=" bg-gray-100 px-12 pb-16 pt-8">
                   <div className="mx-4">
                     <FormField
                       control={form.control}
-                      name="productId"
+                      name="ReplyText"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start">
-                          <FormLabel className="w-40 pr-2 text-right"> Description</FormLabel>
+                        <FormItem className="flex flex-row items-center">
+                          <FormLabel className="w-40 pr-2 text-right">Reply</FormLabel>
                           <FormControl>
                             <Textarea
                               className="h-40 bg-orange-50"
@@ -69,19 +80,17 @@ export function AddBookGroup() {
                               {...field}
                             />
                           </FormControl>
-                          <FormDescription />
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
                 </div>
-                <div className="fixed bottom-0 flex-grow border-t-2 bg-orange-50 text-right">
-                  <div className="w-[90rem]">
-                    <Button className="my-2 mr-8 w-32" type="submit">
+                <div className="bottom-0 flex-grow text-right">
+                  <div className="">
+                    <Button className="my-2 mr-2" type="submit">
                       Cancel
                     </Button>
-                    <Button className="my-2 mr-96 w-32" type="submit">
+                    <Button className="my-2" type="submit">
                       Save
                     </Button>
                   </div>

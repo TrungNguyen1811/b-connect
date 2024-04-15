@@ -48,7 +48,7 @@ function AddBookPage() {
 
   const { mutate: addBook } = useMutation((data: FormData) => postAddBook(data), {
     onSuccess: (data) => {
-      if (data) {
+      if (data == 'Successful') {
         toast({
           title: 'Success',
           description: 'Add Book Success!!!',
@@ -56,7 +56,7 @@ function AddBookPage() {
       } else {
         toast({
           title: 'Failed',
-          description: 'Add Book Failed!!!',
+          description: 'Add Book Failed with' + ' ' + data,
         })
       }
       queryClient.invalidateQueries()
