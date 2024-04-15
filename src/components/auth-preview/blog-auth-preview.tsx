@@ -31,12 +31,9 @@ export function AuthPreviewBlog({ className, ...prosp }: Props) {
     if (!user) return <></>
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger className="rounded-sm p-1 hover:bg-gray-300">
+        <DropdownMenuTrigger className="rounded-sm p-1 hover:bg-orange-500">
           <Avatar>
-            <AvatarImage
-              src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-              alt={user.fullName}
-            />
+            <AvatarImage src={user.avatarDir as string} alt={user.fullName} />
             <AvatarFallback>{getLabelByFullname(user.fullName)}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>

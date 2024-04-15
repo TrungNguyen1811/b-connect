@@ -23,7 +23,7 @@ export function Active() {
 
   return (
     <div>
-      <div className="rounded-lg border border-gray-300 bg-slate-50">
+      <div className="rounded-lg border border-gray-300 bg-orange-50">
         <div className="m-2">
           <p className="p-2 pb-0 text-lg font-bold">Active discussions</p>
           <div className="my flex flex-col p-2">
@@ -31,7 +31,7 @@ export function Active() {
               <Link key={index} to={`/blog/${blog.postId}`}>
                 <div className="mx-2 my-2">
                   {index < 1 && <Separator className="border-1 mb-4" />}
-                  <p className="font-semibold">{blog.title}</p>
+                  <p className="font-semibold hover:text-orange-500">{blog.title}</p>
                   <div className="flex flex-row items-center justify-start">
                     <p className="flex flex-row items-center font-light">
                       {/* {blog.like?.length} <HeartIcon size={16} className="ml-1" /> */}

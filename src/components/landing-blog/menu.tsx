@@ -20,13 +20,13 @@ export function Menu() {
       {
         title: 'Reading List',
         key: 'reading-list',
-        href: '/reading-list',
+        href: '/blog/reading-list',
         icon: 'list',
       },
       {
         title: 'Tags',
         key: 'tags',
-        href: '/following_tags',
+        href: '/blog/dashboard/following_tags',
         icon: 'tags',
       },
       {
@@ -122,7 +122,7 @@ export function Menu() {
           <ul className="list-none">
             {tags.map((tag) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-slate-300"
+                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-orange-500"
                 key={tag.cateId}
               >
                 <Link to={`c/${tag.cateName}`}>
@@ -163,7 +163,7 @@ export function Menu() {
           <ul className="list-none">
             {interested.map((i) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-1 text-sm hover:bg-slate-300"
+                className="hover-underline-animation hover:hover-underline-animation hover:bg-orange-50300 w-full rounded-md p-1 text-sm"
                 key={i.postData.postId}
               >
                 <Link className="p-1 text-base" to={`/blog/${i.postData.postId}`}>

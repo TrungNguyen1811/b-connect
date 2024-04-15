@@ -21,7 +21,7 @@ import { postBanUser } from 'src/api/admin/ban-user'
 import { toast } from '../ui/use-toast'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/selector'
 const DATE_REQUIRED_ERROR = 'Date is required.'
 
 const FormSchema = z.object({

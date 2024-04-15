@@ -18,6 +18,7 @@ import { toast } from '../ui/use-toast'
 import { profileApi } from 'src/api/apis/auth/profile.api'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Checkbox } from '../ui/check-box'
+import { IToken } from 'src/types/token'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 type FormData = z.infer<typeof LoginSchema>
@@ -35,9 +36,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
 
-    let token: string
+    let token: IToken
     let error: AxiosError | null = null
-    await loginApi(data, (err, data) => {
+    await loginApi(data, (err, result) => {
       if (err) {
         error = err
         return
@@ -46,12 +47,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           title: 'Login Success',
           variant: 'success',
         })
-        token = data!
+        token = result!
+        console.log(result)
       }
     })
 
     if (!error) {
-      await profileApi(token!, (err, user) => {
+      await profileApi(token!.accessToken, (err, user) => {
         if (err) {
           toast({
             title: err.message,
@@ -64,7 +66,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           }
           toast({
             title: 'Login Success',
-            description: JSON.stringify(user),
+            description: 'Welcome to BConnect!!!',
             variant: 'success',
           })
           login({

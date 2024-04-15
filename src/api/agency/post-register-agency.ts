@@ -4,10 +4,9 @@ import { IAgency } from 'src/types/agency'
 
 async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null, result: string | null) => void) {
   const formData = new FormData()
-  formData.append('ownerId', data.ownerId as string)
   formData.append('agencyName', data.agencyName as string)
   formData.append('logoImg', data.logoImg as File)
-  formData.append('rendezvous', data.rendezvous as string)
+  formData.append('addressId', data.addressId as string)
   formData.append('businessType', data.businessType as string)
 
   return await authAxiosClient

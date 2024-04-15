@@ -47,7 +47,7 @@
 //   }
 
 //   return (
-//     <div className="h-48 w-full rounded-lg border-2 bg-slate-50">
+//     <div className="h-48 w-full rounded-lg border-2 bg-orange-100">
 //       <div className="flex h-full flex-col justify-between p-4 pb-1">
 //         <div className="px-1">
 //           <Link to={`/blog/${tag?.cateId}`}>

@@ -1,17 +1,16 @@
 import { IResponse } from '@/types'
 
 export type IToken = {
-  tokenType: string
-  expiresIn: number
+  tokenType?: string
+  expiresIn?: number
   accessToken: string
-  refreshToken: string
+  refreshToken?: string | undefined
 }
 
-export type IRefreshToken = {
-  tokenType: string
-  expiresIn: number
-  accessToken: string
+export interface refreshTokenData {
   refreshToken: string
+  expires: Date
+  path: string
 }
 
 export type ITokenResponse = IResponse<IToken>

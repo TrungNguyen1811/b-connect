@@ -110,7 +110,7 @@ function Post({ postId }: PostProps) {
   }
 
   return (
-    <div className="border-gray-250 mt-2 max-h-[37rem] w-full rounded-md border-2 bg-slate-50">
+    <div className="border-gray-250 mt-2 max-h-[37rem] w-full rounded-md border-2 bg-orange-100">
       <Link to={`/blog/${blog?.postData.postId}`}>
         {blog?.postData.imageDir ? (
           <div className="w-full rounded-md">
@@ -139,7 +139,7 @@ function Post({ postId }: PostProps) {
                 <React.Fragment key={index}>
                   <Link
                     to={'/'}
-                    className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-50 hover:text-orange-600"
+                    className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
                   >
                     #{tag.label}
                   </Link>

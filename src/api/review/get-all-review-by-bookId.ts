@@ -1,5 +1,7 @@
-import { axiosClient } from 'src/lib/axios'
-import { IReviewResponse } from 'src/types/books'
+import { authAxiosClient, axiosClient } from 'src/lib/axios'
+import { IListReplyResponse, IReviewResponse } from 'src/types/books'
+import { IQueryPagination, IQuerySearch } from 'src/types/requests'
+import { IResponse } from 'src/types/response'
 
 function getAllReviewByBookId(bookId: string) {
   return axiosClient
@@ -13,3 +15,24 @@ function getAllReviewByBookId(bookId: string) {
     })
 }
 export default getAllReviewByBookId
+
+export type GetManyReviewParams = {
+  BookName?: string
+  RatingPoint?: string
+  HasReplied?: string
+  RecentDays?: string
+  PageNumber?: number
+  PageSize?: number
+} & Partial<IQueryPagination & IQuerySearch>
+export async function getAllReviewByAgency(params: GetManyReviewParams) {
+  return authAxiosClient.get('/Account/get-review-for-agency', { params }).then((res) => {
+    const data: IListReplyResponse[] = res.data
+    const pagination = res.headers['x-pagination']
+    const dataAll: IResponse<IListReplyResponse[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: pagination,
+    }
+    return dataAll
+  })
+}

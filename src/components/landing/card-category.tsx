@@ -1,10 +1,20 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '../ui/card'
 import { ICategory } from 'src/types'
+import { useCallback } from 'react'
 type Props = { category: ICategory }
 function Category({ category }: Props) {
+  const navigate = useNavigate()
+
+  const onSubmit = useCallback(
+    (id: string) => {
+      navigate(`/books?CategoryIds=${id}`)
+    },
+    [navigate],
+  )
   return (
-    <Link to={`/books?CateIds=${category.cateId}`} key={category.cateId}>
+    <button onClick={() => onSubmit(category.cateId as string)}>
+      {/* <Link to={`/books?CategoryIds=${category.cateId}`} key={category.cateId}> */}
       <Card className=" w-[100%]">
         <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-200 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
           <img
@@ -15,7 +25,8 @@ function Category({ category }: Props) {
           />
         </CardContent>
       </Card>
-    </Link>
+      {/* </Link> */}
+    </button>
   )
 }
 

@@ -13,10 +13,12 @@ export interface IBook {
   agencyName?: string
   category?: string[]
   reviews?: IReview['ratingRecordId']
+  rating: number
   ratingId?: string
   isAvailable?: boolean | undefined
   type?: 'New' | 'Old'
-  genres?: 'popular' | 'best'
+  numberOfBookSold?: number
+  numberOfUnitSold?: number
   createdDate?: Date
   publishDate?: Date
 }
@@ -42,19 +44,57 @@ export interface IReview {
   updatedAt?: string
 }
 
+export interface IReply {
+  ReplyId?: string
+  ratingRecordId: string
+  agencyId?: string
+  replyText: string
+}
+
 export interface IReviewResponse {
   ratingRecordId?: string
   ratingId: string
-  userId: string
+  reviewerId: string
   ratingPoint: number
   comment: string
   username: string
   avatarDir: string
   email: string
   createdDate?: string
-  updatedAt?: string
+  reply?: IReplyTest
 }
 
+export interface IReplyTest {
+  replyId: string
+  replyText: string
+  userId: string
+  createdDate: string
+  email: string
+  username: string
+  avatarDir: string
+}
+
+export interface IReplyResponse {
+  replyId: string
+  replyText: string
+  AgencyId: string
+  createdDate: Date
+  AgencyName: string
+  logoUrl: string
+}
+
+export interface IListReplyResponse {
+  ratingRecordId: string
+  bookId: string
+  bookName: string
+  ReviewerId: string
+  username: string
+  email: string
+  avatarDir: string
+  ratingPoint: string
+  comment: string
+  reply: IReplyTest
+}
 export interface IBookGroup {
   bookGroupId?: string
   bookGroupName: string
@@ -79,7 +119,7 @@ export interface IBookTest {
   backgroundImg?: File | string
   description: string
   price: number
-  quantity: number
+  quantity?: number
   stock?: number
   agencyId?: string
   agencyName?: string

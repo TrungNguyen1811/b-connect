@@ -60,7 +60,7 @@ function DailyDiscover() {
   return (
     <main className="mx-auto mt-7 min-h-screen w-full">
       <MetaData title="Books" />
-      <div className="mx-auto max-w-7xl bg-white px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl bg-orange-50 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="sticky pb-7 text-center">
             <h2 className="self-center p-5 text-2xl font-bold text-orange-600">DAILY DISCOVER</h2>

@@ -153,7 +153,7 @@ export function DataTableGrid<TData extends IBook, TValue>({
       <div className="flex flex-col">
         <div>{footer}</div>
         {selectedItems.length > 0 ? (
-          <div className="fixed bottom-0 flex-grow border-t-2 bg-white text-right">
+          <div className="fixed bottom-0 flex-grow border-t-2 bg-orange-50 text-right">
             <div className="flex w-[90rem] flex-row items-center justify-around">
               <div className="flex flex-row items-center gap-2 pl-2">
                 <Input
@@ -217,8 +217,10 @@ export function DataTableGrid<TData extends IBook, TValue>({
             />
           </div>
           <img src={item.bookDir as string} alt={item.name} className="aspect-[1/1] h-44 object-cover" />
+
           <div className="w-full px-1">
-            <p className=" text-base font-bold">{item.name}</p>
+            <p className="h-16 text-base font-semibold">{item.name}</p>
+            <div className="flex flex-grow"></div>
             <div className="mt-4 flex flex-row justify-between">
               <p className="text-red-600">{formatPrice(item.price)}</p>
               <p className="text-gray-600">Stock: {item.quantity}</p>

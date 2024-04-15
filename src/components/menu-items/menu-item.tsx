@@ -33,7 +33,7 @@ function MenuItem({ item, className, ...props }: MenuItemProps) {
   return (
     <li
       className={cn(
-        'hover-underline-animation hover:hover-underline-animation flex flex-col rounded-md p-2 hover:bg-slate-300',
+        'hover-underline-animation hover:hover-underline-animation flex flex-col rounded-md p-2 hover:bg-orange-300',
         className,
       )}
       {...props}

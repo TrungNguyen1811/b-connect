@@ -4,7 +4,7 @@ import { Image, Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
-import { postCTCApi } from 'src/api/user/ctc'
+import { postCTCApi } from 'src/api/user/nic'
 import { Button } from 'src/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
@@ -14,17 +14,17 @@ import { ENUM_CITIZEN_ID_TYPE, ICTCBackSide, ICTCFrontSide } from 'src/types'
 import { z } from 'zod'
 
 const formCTCSchema = z.object({
-  ctcId: z.string(),
-  ctcName: z.string(),
-  ctcDob: z.date(),
-  ctcHome: z.string(),
-  ctcAddress: z.string(),
-  ctcSex: z.string(),
-  ctcNationality: z.string(),
-  ctcDoe: z.date(),
+  nicId: z.string(),
+  nicName: z.string(),
+  nicDob: z.date(),
+  nicHome: z.string(),
+  nicAddress: z.string(),
+  nicSex: z.string(),
+  nicNationality: z.string(),
+  nicDoe: z.date(),
   features: z.string(),
   issueDate: z.date(),
-  ctcType: z.nativeEnum(ENUM_CITIZEN_ID_TYPE),
+  nicType: z.nativeEnum(ENUM_CITIZEN_ID_TYPE),
 })
 
 type FormData = z.infer<typeof formCTCSchema>
@@ -107,14 +107,14 @@ function IdentificationUser() {
     try {
       const [fs, bs] = await Promise.all([postCTCApi<ICTCFrontSide>(formDataFS), postCTCApi<ICTCBackSide>(formDataBS)])
 
-      form.setValue('ctcId', fs.data[0].id)
-      form.setValue('ctcName', fs.data[0].name)
-      form.setValue('ctcHome', fs.data[0].home)
-      form.setValue('ctcAddress', fs.data[0].address)
-      form.setValue('ctcSex', fs.data[0].sex)
-      form.setValue('ctcNationality', fs.data[0].nationality)
-      form.setValue('ctcDoe', parse(fs.data[0].doe, 'dd/MM/yyyy', new Date()))
-      // form.setValue('ctcType', fs.data[0].type_new!);
+      form.setValue('nicId', fs.data[0].id)
+      form.setValue('nicName', fs.data[0].name)
+      form.setValue('nicHome', fs.data[0].home)
+      form.setValue('nicAddress', fs.data[0].address)
+      form.setValue('nicSex', fs.data[0].sex)
+      form.setValue('nicNationality', fs.data[0].nationality)
+      form.setValue('nicDoe', parse(fs.data[0].doe, 'dd/MM/yyyy', new Date()))
+      // form.setValue('nicType', fs.data[0].type_new!);
       form.setValue('features', bs.data[0].features)
       form.setValue('issueDate', parse(bs.data[0].issue_date, 'dd/MM/yyyy', new Date()))
 
@@ -137,7 +137,7 @@ function IdentificationUser() {
         <div className="mr-8">
           <FormField
             control={form.control}
-            name="ctcId"
+            name="nicId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel> Citizen ID </FormLabel>
@@ -151,7 +151,7 @@ function IdentificationUser() {
           />
           <FormField
             control={form.control}
-            name="ctcName"
+            name="nicName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -165,7 +165,7 @@ function IdentificationUser() {
           />
           <FormField
             control={form.control}
-            name="ctcSex"
+            name="nicSex"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Sex</FormLabel>
@@ -179,7 +179,7 @@ function IdentificationUser() {
           />
           <FormField
             control={form.control}
-            name="ctcDob"
+            name="nicDob"
             render={({ field }) => (
               <FormItem>
                 <FormLabel> Date of Birth </FormLabel>
@@ -195,7 +195,7 @@ function IdentificationUser() {
         <div>
           <FormField
             control={form.control}
-            name="ctcHome"
+            name="nicHome"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Home</FormLabel>
@@ -209,7 +209,7 @@ function IdentificationUser() {
           />
           <FormField
             control={form.control}
-            name="ctcNationality"
+            name="nicNationality"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nationality</FormLabel>
@@ -223,7 +223,7 @@ function IdentificationUser() {
           />
           <FormField
             control={form.control}
-            name="ctcDoe"
+            name="nicDoe"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Date of End</FormLabel>
@@ -273,13 +273,13 @@ function IdentificationUser() {
         </div>
         <div className="flex h-96 flex-row">
           <div className="ml-8">
-            <p>ID: {user?.ctcId}</p>
-            <p>NAME: {user?.ctcName}</p>
-            <p>SEX: {user?.ctcSex}3</p>
-            <p>DATE OF BIRTH: {user?.ctcDob}</p>
-            <p>ADDRESS{user?.ctcAddress}</p>
-            <p>HOME: {user?.ctcHome}</p>
-            <p>NATIONALITY: {user?.ctcNationality}</p>
+            <p>ID: {user?.nicId}</p>
+            <p>NAME: {user?.nicName}</p>
+            <p>SEX: {user?.nicSex}3</p>
+            <p>DATE OF BIRTH: {user?.nicDob}</p>
+            <p>ADDRESS{user?.nicAddress}</p>
+            <p>HOME: {user?.nicHome}</p>
+            <p>NATIONALITY: {user?.nicNationality}</p>
           </div>
         </div>
       </div>

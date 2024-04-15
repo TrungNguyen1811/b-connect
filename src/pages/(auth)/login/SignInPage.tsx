@@ -18,7 +18,7 @@ function LoginPage() {
   }
 
   return (
-    <div>
+    <div className="bg-orange-200">
       <LandingButton />
       <div>
         <div
@@ -26,7 +26,7 @@ function LoginPage() {
             isLeftPanelActive ? 'right-panel-active' : ''
           }`}
         >
-          <div className="form-container sign-in-container mb-3">
+          <div className="form-container sign-in-container">
             <UserAuthForm />
           </div>
           <div className="form-container sign-up-container">

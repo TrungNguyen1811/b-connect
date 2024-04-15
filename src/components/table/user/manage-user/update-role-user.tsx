@@ -81,7 +81,7 @@ function UpdateRoleUser({ userId }: { userId: string }) {
       <DialogTrigger>
         <Button>Role</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-[30vw]">
         <DialogHeader>
           <DialogTitle>Update Role</DialogTitle>
         </DialogHeader>
@@ -99,14 +99,14 @@ function UpdateRoleUser({ userId }: { userId: string }) {
                         <Button
                           variant="outline"
                           role="combobox"
-                          className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                          className={cn('w-[20vw] justify-between', !field.value && 'text-muted-foreground')}
                         >
-                          {field.value ? roleList.find((role) => role.value === field.value)?.label : 'Select language'}
+                          {field.value ? roleList.find((role) => role.value === field.value)?.label : 'Select Role'}
                           <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
+                    <PopoverContent className="w-[20vw] p-0">
                       <Command>
                         <CommandInput placeholder="Search framework..." className="h-9" />
                         <CommandEmpty>No framework found.</CommandEmpty>

@@ -1,4 +1,4 @@
-import { IBook, IResponseBook, IResponseBookGroup } from 'src/types/books'
+import { IBook, IResponseBookGroup } from 'src/types/books'
 // import { faker } from '@faker-js/faker'
 import { IResponse, IResponsePagination } from 'src/types/response'
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
@@ -39,24 +39,47 @@ export async function GetAllBookInInventoryByName(params: Partial<IQueryPaginati
 
 export async function GetAllBookInInventoryByAgencyId(
   params: Partial<IQueryPagination & IQuerySearch>,
-  userId: string,
+  agencyId: string,
 ) {
   const data = {
     ...params,
-    userId: userId,
+    agencyId: agencyId,
   }
   return await authAxiosClient
     .get(`/products/SellerManager/GetAllBookInInventoryByAgencyId`, { params: data })
     .then((res) => {
-      const data: IResponseBook[] = res.data
+      const data: IBook[] = res.data
       const pagination = res.headers['x-pagination']
       const parseJson: IResponsePagination = JSON.parse(pagination)
-      const dataAll: IResponse<IResponseBook[]> = {
+      const dataAll: IResponse<IBook[]> = {
         data: data,
         _metadata: data,
         _pagination: parseJson,
       }
       return dataAll
+    })
+}
+
+export async function GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId(
+  params: Partial<IQueryPagination & IQuerySearch>,
+  agencyId: string,
+) {
+  const data = {
+    ...params,
+    agencyId: agencyId,
+  }
+  return await authAxiosClient
+    .get(`/products/SellerManager/GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId`, { params: data })
+    .then((res) => {
+      const data: IBook[] = res.data
+      // const pagination = res.headers['x-pagination']
+      // const parseJson: IResponsePagination = JSON.parse(pagination)
+      // const dataAll: IResponse<IBook[]> = {
+      //   data: data,
+      //   _metadata: data,
+      //   _pagination: parseJson,
+      // }
+      return data
     })
 }
 export async function GetAllBookInInventory(params: Partial<IQueryPagination & IQuerySearch>) {
@@ -79,7 +102,7 @@ export async function GetAllBookInInventory(params: Partial<IQueryPagination & I
 
 export type GetManyBooksParams = {
   Name?: string
-  CateIds?: string
+  CategoryIds?: string
   MinPrice?: string
   MaxPrice?: string
   OverRating?: string

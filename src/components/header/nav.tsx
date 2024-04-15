@@ -3,12 +3,11 @@ import { Facebook, Instagram } from 'lucide-react'
 import Notification from '../nofication/notification'
 import Help from './help'
 import AuthPreview from '../auth-preview/auth-preview'
-import { LanguageSelector } from '../language-selector'
 function Navigation() {
   return (
     <div className="m-1 flex items-center justify-between">
       <div className="flex">
-        <NavLink className={'nav-link'} to={'/seller'}>
+        <NavLink className={'nav-link'} to={'/seller/dashboard'}>
           Seller Center
         </NavLink>
         <NavLink className={'hidden-on-mobile nav-link'} to={'/'}>
@@ -26,9 +25,9 @@ function Navigation() {
         <div className="mr-4 flex items-center justify-center">
           <Help />
         </div>
-        <div className="mr-4 flex items-center justify-center">
+        {/* <div className="mr-4 flex items-center justify-center">
           <LanguageSelector />
-        </div>
+        </div> */}
         <div className="mr-4 flex items-center justify-center">
           <AuthPreview />
         </div>

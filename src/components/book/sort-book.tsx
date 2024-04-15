@@ -11,15 +11,15 @@ function SortBook() {
   //     resolver: zodResolver(FilterSchema),
   //   })
   return (
-    <div className=" mb-4 flex w-[105%] flex-row bg-gray-300 p-4">
+    <div className=" mb-4 flex w-[102%] flex-row bg-gray-300 p-4">
       <div className="mr-4 py-1">
         <p>Sort by</p>
       </div>
       <div className="flex w-[48rem] flex-row">
         <div className="mr-4  flex flex-row">
-          <div className="mx-1 bg-white px-4 py-1">Popular</div>
-          <div className="mx-1 bg-white px-4 py-1">Latest</div>
-          <div className="mx-1 bg-white px-4 py-1">Top Sale</div>
+          <div className="mx-1 bg-orange-50 px-4 py-1">Popular</div>
+          <div className="mx-1 bg-orange-50 px-4 py-1">Latest</div>
+          <div className="mx-1 bg-orange-50 px-4 py-1">Top Sale</div>
         </div>
         <div>
           <div>
@@ -31,7 +31,7 @@ function SortBook() {
             //   }}
             //   value={watch('price')}
             >
-              <SelectTrigger className="w-48 bg-slate-50">
+              <SelectTrigger className="w-48 bg-orange-100">
                 <SelectValue placeholder="Price" />
               </SelectTrigger>
               <SelectContent>

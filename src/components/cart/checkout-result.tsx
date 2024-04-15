@@ -10,6 +10,7 @@ import { ICart, IOrder, IPaymentReturnDTO, ITransaction } from 'src/types'
 import { SaveTransaction } from 'src/api/order/post-transaction'
 import { useAuth } from 'src/hooks/useAuth'
 import { getCartApi } from 'src/api/cart/get-cart'
+import ErrorPage from 'src/pages/error-page'
 
 function CheckoutResult() {
   const [searchParams] = useSearchParams()
@@ -117,7 +118,7 @@ function CheckoutResult() {
         </div>
       )
     } else {
-      if (data) {
+      if (data === 200) {
         if (user) {
           const fetchCartData = async () => {
             try {
@@ -134,12 +135,13 @@ function CheckoutResult() {
           }
         }
         return <CheckoutSuccess />
+      } else {
+        return <ErrorPage />
       }
-      return <h1 className="text-center">Something went wrong while saving data</h1>
     }
   }, [isLoadingOrder, data])
 
-  if (transaction?.paymentStatus === '00') {
+  if (!isLoadingTransaction && transaction?.paymentStatus === '00') {
     return success
   } else {
     return <CheckoutFailed />

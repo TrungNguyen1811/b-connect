@@ -4,34 +4,31 @@ import { Image, Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
-import { postCTCApi } from 'src/api/user/ctc'
 import { Button } from 'src/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
 import { Separator } from 'src/components/ui/separator'
 import { useAuth } from 'src/hooks/useAuth'
-import { ENUM_CITIZEN_ID_TYPE, ICTCBackSide, ICTCFrontSide } from 'src/types'
+import { ICTCBackSide, ICTCFrontSide } from 'src/types'
 import { z } from 'zod'
 import { toast } from '../ui/use-toast'
 import { registerAccountValidates } from 'src/api/agency/set-is-account-validated'
+import { postCTCApi } from 'src/api/user/nic'
 
 const formCTCSchema = z.object({
-  ctcId: z.string(),
-  ctcName: z.string(),
-  ctcDob: z.date(),
-  ctcHome: z.string(),
-  ctcAddress: z.string(),
-  ctcSex: z.string(),
-  ctcNationality: z.string(),
-  ctcDoe: z.date(),
-  features: z.string(),
-  issueDate: z.date(),
-  ctcType: z.nativeEnum(ENUM_CITIZEN_ID_TYPE),
+  nicId: z.string(),
+  nicName: z.string(),
+  nicDob: z.date(),
+  nicHome: z.string(),
+  nicSex: z.string(),
+  nicNationality: z.string(),
+  nicDoe: z.date(),
 })
 
 type FormData = z.infer<typeof formCTCSchema>
 function IdentificationSeller() {
   const { user } = useAuth()
+  const userId = user?.userId as string
   const form = useForm<FormData>({
     resolver: zodResolver(formCTCSchema),
     defaultValues: {},
@@ -109,18 +106,15 @@ function IdentificationSeller() {
     try {
       const [fs, bs] = await Promise.all([postCTCApi<ICTCFrontSide>(formDataFS), postCTCApi<ICTCBackSide>(formDataBS)])
 
-      form.setValue('ctcId', fs.data[0].id)
-      form.setValue('ctcName', fs.data[0].name)
-      form.setValue('ctcHome', fs.data[0].home)
-      form.setValue('ctcAddress', fs.data[0].address)
-      form.setValue('ctcSex', fs.data[0].sex)
-      form.setValue('ctcNationality', fs.data[0].nationality)
-      form.setValue('ctcDob', parse(fs.data[0].dob, 'dd/MM/yyyy', new Date()))
-      form.setValue('ctcDoe', parse(fs.data[0].doe, 'dd/MM/yyyy', new Date()))
-      // form.setValue('ctcType', fs.data[0].type_new!);
-      form.setValue('features', bs.data[0].features)
-      form.setValue('issueDate', parse(bs.data[0].issue_date, 'dd/MM/yyyy', new Date()))
-
+      form.setValue('nicId', fs.data[0].id)
+      form.setValue('nicName', fs.data[0].name)
+      form.setValue('nicHome', fs.data[0].home)
+      // form.setValue('nicAddress', fs.data[0].address)
+      form.setValue('nicSex', fs.data[0].sex)
+      form.setValue('nicNationality', fs.data[0].nationality)
+      form.setValue('nicDob', parse(fs.data[0].dob, 'dd/MM/yyyy', new Date()))
+      form.setValue('nicDoe', parse(fs.data[0].doe, 'dd/MM/yyyy', new Date()))
+      // form.setValue('nicType', fs.data[0].type_new!);
       // Return a value here if needed
     } catch (error) {
       console.error('Error:', error)
@@ -140,7 +134,7 @@ function IdentificationSeller() {
         <div className="mr-8">
           <FormField
             control={form.control}
-            name="ctcId"
+            name="nicId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel> Citizen ID </FormLabel>
@@ -154,7 +148,7 @@ function IdentificationSeller() {
           />
           <FormField
             control={form.control}
-            name="ctcName"
+            name="nicName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -168,7 +162,7 @@ function IdentificationSeller() {
           />
           <FormField
             control={form.control}
-            name="ctcSex"
+            name="nicSex"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Sex</FormLabel>
@@ -182,7 +176,7 @@ function IdentificationSeller() {
           />
           <FormField
             control={form.control}
-            name="ctcDob"
+            name="nicDob"
             render={({ field }) => (
               <FormItem>
                 <FormLabel> Date of Birth </FormLabel>
@@ -198,7 +192,7 @@ function IdentificationSeller() {
         <div>
           <FormField
             control={form.control}
-            name="ctcHome"
+            name="nicHome"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Home</FormLabel>
@@ -212,7 +206,7 @@ function IdentificationSeller() {
           />
           <FormField
             control={form.control}
-            name="ctcNationality"
+            name="nicNationality"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nationality</FormLabel>
@@ -226,7 +220,7 @@ function IdentificationSeller() {
           />
           <FormField
             control={form.control}
-            name="ctcDoe"
+            name="nicDoe"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Date of End</FormLabel>
@@ -246,7 +240,11 @@ function IdentificationSeller() {
   const [isLoading, setIsLoading] = useState(false)
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
-    await registerAccountValidates(data, (err, result) => {
+    const formData = {
+      ...data,
+      userId: userId,
+    }
+    await registerAccountValidates(formData, (err, result) => {
       if (err) {
         toast({
           title: 'Error',

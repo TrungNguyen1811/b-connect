@@ -8,7 +8,7 @@ async function UpdateAgency(data: IAgency, callback: (error: AxiosError | null, 
   formData.append('ownerId', data.ownerId as string)
   formData.append('agencyName', data.agencyName as string)
   formData.append('logoImg', data.logoImg as File)
-  formData.append('rendezvous', data.rendezvous as string)
+  formData.append('postAddress', data.postAddress as string)
   formData.append('businessType', data.businessType as string)
 
   return await authAxiosClient

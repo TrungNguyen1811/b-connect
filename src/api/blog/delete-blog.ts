@@ -7,6 +7,7 @@ export async function deletePost(id: string) {
 export async function removeUserSavedPost(postId: string) {
   return await authAxiosClient.delete(`/Post/remove-user-saved-post?postId=${postId}`).then((res) => res.data)
 }
+
 export async function deleteUserTargetedCategories(cateId: string) {
   return await authAxiosClient
     .delete(`/SocialMedia/delete-user-targeted-categories?cateId=${cateId}`)

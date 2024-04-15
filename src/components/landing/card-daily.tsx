@@ -30,16 +30,16 @@ function BookDaily({ book }: Props) {
       <Card className="w-[100%] hover:scale-105">
         <CardTitle className="aspect-[1] flex-col overflow-clip rounded-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
           <img
-            src={
-              'https://res.cloudinary.com/dbpvdxzvi/image/upload/v1711622416/Categories/Book/c58owdoqgrqccyi8qkna.jpg'
-            }
+            src={book.bookDir as string}
             alt={book.name}
             className="aspect-[1] object-contain transition-all duration-300"
             style={{ width: '100%' }}
           />
         </CardTitle>
-        <CardContent className="p-0 lg:p-2 lg:text-lg">
-          <strong>{book.name}</strong>
+        <CardContent className="h-12 p-0 lg:p-2 lg:text-lg">
+          <p className="text-sm font-semibold">
+            {book.name.length > 30 ? <p>{book.name && book.name.slice(0, 35)}...</p> : book.name}
+          </p>
         </CardContent>
         {/* <CardDescription className="p-0 lg:pl-2">{renderRatingIcon()}</CardDescription> */}
         <CardFooter className="flex flex-row place-content-between lg:p-2">

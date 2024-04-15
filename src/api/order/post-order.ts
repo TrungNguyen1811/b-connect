@@ -7,7 +7,7 @@ async function createOrder(orderData: IOrder) {
     .post('/Order/create-order', orderData, {})
     .then((response) => {
       if (response.status === 200) {
-        return response.data
+        return response.status
       } else {
         // Handle other HTTP statuses as needed
         throw new Error('Request failed with status ' + response.status)

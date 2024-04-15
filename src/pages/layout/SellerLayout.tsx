@@ -8,7 +8,8 @@ import RegisterAgency from '../seller/RegisterAgency'
 function SellerLayout() {
   const { user } = useAuth()
 
-  if (user?.roles && !user.roles.includes(ROLE.AGENCY)) {
+  console.log(user)
+  if (user?.roles && !user.roles.includes(ROLE.SELLER)) {
     return <RegisterAgency />
   }
 

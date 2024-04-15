@@ -22,7 +22,7 @@ function TagItem({ id }: { id: string }) {
   }, [id])
 
   return (
-    <div className="h-48 w-full rounded-lg border-2 bg-slate-50">
+    <div className="h-48 w-full rounded-lg border-2 bg-orange-100">
       <div className="flex flex-col p-4">
         <div className="px-1">
           <Link to={`/blog/${tag?.cateId}`}>

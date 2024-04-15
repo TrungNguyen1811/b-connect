@@ -6,7 +6,7 @@ function NotificationBlog() {
   const navigate = useNavigate()
   return (
     <Popover>
-      <PopoverTrigger className="flex items-center rounded-sm p-1.5 hover:bg-gray-300">
+      <PopoverTrigger className="flex items-center rounded-sm p-1.5 hover:bg-orange-500 hover:text-orange-200">
         <Bell size={24} />
       </PopoverTrigger>
       <PopoverContent className="w-72">

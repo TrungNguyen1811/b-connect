@@ -9,15 +9,13 @@ import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
 import { Avatar, AvatarFallback, AvatarImage } from 'src/components/ui/avatar'
 import { Button } from 'src/components/ui/button'
-import { Card, CardContent } from 'src/components/ui/card'
-import { Carousel, CarouselContent3, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
 import { Label } from 'src/components/ui/label'
 import { Separator } from 'src/components/ui/separator'
 import { useToast } from 'src/components/ui/use-toast'
 // import { useToast } from 'src/components/ui/use-toast'
 import { useOrderCart } from 'src/hooks/useOrderCart'
 import { formatPrice } from 'src/lib/utils'
-import { IBook, IReview, IReviewResponse } from 'src/types/books'
+import { IBook, IReplyTest, IReview, IReviewResponse } from 'src/types/books'
 import { Textarea } from 'src/components/ui/text-area'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -174,6 +172,21 @@ function BookDetailPage() {
     [],
   )
 
+  const renderReply = React.useCallback(
+    ({ replyId, replyText, userId, createdDate, email, username, avatarDir }: IReplyTest) => (
+      <div className="ml-16 bg-gray-100 p-5">
+        <div className="flex w-full flex-row items-center justify-between  gap-3 ">
+          <div className="text-md">{username} Response:</div>
+          <p className="text-right text-xs text-slate-300">
+            {createdDate ? `Replied at ${format(parseISO(createdDate), 'dd/MM/yyyy')}` : 'Reply date not available'}
+          </p>
+        </div>
+        <p className="ml-8 py-2 text-gray-500">{replyText}</p>
+      </div>
+    ),
+    [],
+  )
+
   const { mutateAsync, isLoading: isAddReview } = useMutation<IReviewResponse, Error, IReview>(postRatingComment, {
     onSuccess: (data: IReviewResponse) => {
       if (!book) return
@@ -185,12 +198,15 @@ function BookDetailPage() {
   const renderReviews = React.useMemo(() => {
     if (!Array.isArray(bookReview)) return null // Check if bookReview is an array
     return bookReview.map((reviewer) => (
-      <div key={reviewer.userId} className="mb-2 w-full">
-        {renderReviewer(reviewer)}
-        <p className="mt-2 w-3/4">{reviewer.comment}</p>
+      <div key={reviewer.reviewerId} className="mb-2 w-full">
+        <div>
+          {renderReviewer(reviewer)}
+          <p className="ml-8 mt-2 w-3/4">{reviewer.comment}</p>
+        </div>
+        <div>{reviewer.reply && renderReply(reviewer.reply)}</div>
       </div>
     ))
-  }, [bookReview, renderReviewer])
+  }, [bookReview, renderReviewer, renderReply])
 
   const { setValue, watch, reset, register, handleSubmit } = useForm<FormValue>({
     defaultValues: {
@@ -237,25 +253,19 @@ function BookDetailPage() {
     [book?.productId, reset, toast],
   )
 
-  const carouselImages = [
-    'https://scontent.fsgn2-9.fna.fbcdn.net/v/t45.1600-4/424651322_120205246002150776_8767697774542782332_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=1&ccb=1-7&_nc_sid=528f85&_nc_ohc=LweRdoa9jAEAX-bYyjX&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCHqTorl1lCSTqlLOCp2hBJkRtU11Kzpko4dxNZGBEoDw&oe=65EAB968',
-    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
-    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
-    'https://scontent.fsgn2-9.fna.fbcdn.net/v/t45.1600-4/424651322_120205246002150776_8767697774542782332_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=1&ccb=1-7&_nc_sid=528f85&_nc_ohc=LweRdoa9jAEAX-bYyjX&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCHqTorl1lCSTqlLOCp2hBJkRtU11Kzpko4dxNZGBEoDw&oe=65EAB968',
-    'https://scontent.fsgn2-8.fna.fbcdn.net/v/t45.1600-4/419513280_120205471361160526_3343169511649489553_n.jpg?stp=cp0_dst-jpg_p296x100_q75_spS444&_nc_cat=102&ccb=1-7&_nc_sid=528f85&_nc_ohc=JHvfwfSLJJkAX-oeOsb&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB96yJXIFeBhF3vIMF4CIl9LQZwy_b-KHfSzyyMsbt_DA&oe=65EB82E9',
-  ]
-  const [selectedImage, setSelectedImage] = useState(carouselImages[0])
+  // const carouselImages = [book?.bookDir, book?.bookDir, book?.bookDir, book?.bookDir, book?.bookDir]
+  // const [selectedImage, setSelectedImage] = useState(carouselImages[0])
 
-  // image show
-  const handleCarouselItemClick = (imageURL: React.SetStateAction<string>) => {
-    setSelectedImage(imageURL)
-  }
+  // // image show
+  // const handleCarouselItemClick = (imageURL: React.SetStateAction<string>) => {
+  //   setSelectedImage(imageURL as string)
+  // }
 
   return (
-    <div className="mx-auto min-h-screen w-full bg-zinc-100">
+    <div className="mx-auto min-h-screen w-full bg-orange-100">
       <MetaData title={book ? book.name.slice(0, 10) + '...' : ''} />
       {book && <Breadcrumb items={breadcrumb} className="mx-auto max-w-7xl py-4" />}
-      <div className="mx-auto max-w-6xl bg-white px-2 sm:px-4 lg:px-6">
+      <div className="mx-auto max-w-6xl bg-orange-50 px-2 sm:px-4 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           {book && (
             <section
@@ -265,36 +275,12 @@ function BookDetailPage() {
               <article className="ml-7 flex flex-col">
                 {/* Hiển thị ảnh được chọn từ carousel */}
                 <img
-                  src={selectedImage}
+                  src={book.bookImg as string}
                   alt="Selected Image"
                   className="rounded-sm object-cover shadow-md"
                   height={450}
                   width={450}
                 />
-
-                <div className="flex flex-row">
-                  {/* Carousel */}
-                  <Carousel className="h-[120px] w-[25rem] p-2">
-                    <CarouselContent3>
-                      {/* Render các carousel item */}
-                      {carouselImages.map((image, index) => (
-                        <CarouselItem key={index} className="basis-9/9">
-                          <Card>
-                            <CardContent
-                              className="hover: flex aspect-square h-full w-[6rem] items-center justify-center rounded-md p-0 hover:border hover:border-red-500"
-                              onClick={() => handleCarouselItemClick(image)}
-                              onMouseEnter={() => handleCarouselItemClick(image)}
-                            >
-                              <img className="rounded-sm" src={image} />
-                            </CardContent>
-                          </Card>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent3>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
-                </div>
               </article>
 
               <article className="col-span-2 ml-32 space-y-8 rounded-lg">
@@ -353,7 +339,7 @@ function BookDetailPage() {
       </div>
 
       <Separator />
-      <div className="mx-auto my-2 max-w-6xl bg-white px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+      <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="col-span-full space-y-2">
             <h1 className="text-lg font-bold">About the book</h1>
@@ -372,7 +358,7 @@ function BookDetailPage() {
         </div>
       </div>
 
-      <div className="mx-auto my-2 max-w-6xl bg-white px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+      <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.reviews'} className="w-full py-10">
             <h3 className="mb-8 text-3xl font-medium">Reviewers ({book ? bookReview?.length : 0})</h3>
@@ -410,7 +396,7 @@ function BookDetailPage() {
         </div>
       </div>
 
-      <div className="mx-auto my-2 max-w-6xl bg-white px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+      <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.buywith'} className="w-full py-10 ">
             <div className="flex items-center justify-between">
@@ -423,7 +409,7 @@ function BookDetailPage() {
         </div>
       </div>
 
-      <div className="mx-auto my-2 max-w-6xl bg-white px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+      <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.buywith'} className="w-full py-10 ">
             <div className="flex items-center justify-between">
@@ -436,7 +422,7 @@ function BookDetailPage() {
         </div>
       </div>
 
-      <div className="mx-auto my-2 max-w-6xl bg-white px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+      <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.suggest'} className="min-h-[70vh] w-full py-10">
             <h3 className="text-3xl font-medium">You might also like</h3>

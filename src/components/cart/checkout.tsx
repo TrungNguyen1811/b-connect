@@ -37,7 +37,6 @@ const CheckoutPage = () => {
   const [address, setAddress] = useState<IAddress[]>([])
   const [addressDefault, setAddressDefault] = useState<IAddress | undefined>(undefined)
 
-  console.log('addressDefault', address)
   useEffect(() => {
     if (address) {
       setAddressDefault(address[0])
@@ -209,7 +208,6 @@ const CheckoutPage = () => {
               paymentMethod: dataOrder.paymentMethod,
               products: checkoutData?.products,
             }
-
         try {
           const data = await createOrder(mergedData)
           if (data) {
@@ -263,13 +261,11 @@ const CheckoutPage = () => {
           <TableBody>
             {Object.keys(cartItemsByStore).map((seller, index) => (
               <React.Fragment key={index}>
-                {cartItemsByStore[seller].map((item, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell colSpan={4} className="font-bold">
-                      Store {item.book.agencyName}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                <TableRow>
+                  <TableCell colSpan={4} className="font-bold">
+                    {cartItemsByStore[seller][0].book.agencyName}
+                  </TableCell>
+                </TableRow>
                 {cartItemsByStore[seller].map((item, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{item.book.name}</TableCell>

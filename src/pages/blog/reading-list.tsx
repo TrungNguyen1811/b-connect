@@ -84,12 +84,12 @@ function ReadingList() {
 
     return (
       <div className="flex flex-col">
-        <p className="text-md border-1 mb-4 rounded-sm border bg-slate-50 p-2 font-semibold">My Tags</p>
+        <p className="text-md border-1 mb-4 rounded-sm border bg-orange-100 p-2 font-semibold">My Tags</p>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
           <ul className="list-none">
             {tags.map((tag) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-slate-300"
+                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-orange-300"
                 key={tag.cateId}
               >
                 <Link to={`/reading-list?category=${tag.cateId}`}>{tag.cateName}</Link>
@@ -115,7 +115,7 @@ function ReadingList() {
         <div className=" col-span-1 md:col-span-3">
           <Tags />
         </div>
-        <section className="border-1 col-span-1 mb-4 rounded-sm border bg-slate-50  md:col-span-9">
+        <section className="border-1 col-span-1 mb-4 rounded-sm border bg-orange-100  md:col-span-9">
           <SavedPostsList posts={searchKeyword ? postDetailFilter : postDetail} />
         </section>
       </main>

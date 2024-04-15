@@ -329,18 +329,18 @@ export default function SubmitTrade() {
         return (
           <p>
             Confirm receipt of goods and user{' '}
-            <button className="font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(3)}>
+            <Button className="" onClick={() => handlePutStatusTrade(3)}>
               reviews
-            </button>
+            </Button>
           </p>
         )
 
       case 3:
         return (
           <div>
-            <button className="font-normal text-red-600 underline" onClick={() => setOpen(true)}>
+            <Button className="" onClick={() => setOpen(true)}>
               Reviews
-            </button>
+            </Button>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogContent className="h-[45%]">
                 <DialogHeader className="mb-2 px-12">
@@ -419,41 +419,41 @@ export default function SubmitTrade() {
   const renderTrader = (userTrade: ITradeDetail) => {
     return (
       <div className="px-4 pb-4">
-        <div className="flex flex-row items-center">
+        {/* <div className="flex flex-row items-center">
           <Label className="text-md">TraderId:</Label>
           <p className="ml-2">{userTrade?.traderId}</p>
         </div>
         <div className="flex flex-row items-center">
           <Label className="text-md">TradeDetailId:</Label>
           <p className="ml-2">{userTrade?.details.tradeDetailId}</p>
-        </div>
-        <div className="flex flex-row items-center">
+        </div> */}
+        {/* <div className="flex flex-row items-center">
           <Label className="text-md">RatingRecordId:</Label>
           <p className="ml-2">{userTrade?.details.ratingRecordId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">RatingRecord:</Label>
+        </div> */}
+        {/* <div className="flex flex-row items-center">
+          <Label className="text-md">Rating:</Label>
           <p className="ml-2">{userTrade?.details.ratingRecord}</p>
-        </div>
-        <div className="flex flex-row items-center">
+        </div> */}
+        {/* <div className="flex flex-row items-center">
           <Label className="text-md">LockedRecordId:</Label>
           <p className="ml-2">{userTrade?.details.lockedRecordId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Status:</Label>
-          <p className="ml-2">{ITradeStatus[userTrade?.details.status as keyof typeof ITradeStatus]}</p>
-        </div>
+        </div> */}
         <div className="flex flex-row items-center">
           <Label className="text-md">IsPostOwner:</Label>
           {userTrade?.details.isPostOwner ? <p className="ml-2">True</p> : <p className="ml-2">False</p>}
         </div>
         <div className="flex flex-row items-center">
+          <Label className="text-md">Status:</Label>
+          <p className="ml-2">{ITradeStatus[userTrade?.details.status as keyof typeof ITradeStatus]}</p>
+        </div>
+        {/* <div className="flex flex-row items-center">
           <Label className="text-md">AddressId:</Label>
           <p className="ml-2">{userTrade?.details.addressId}</p>
-        </div>
-        <div className="flex flex-row items-center">
+        </div> */}
+        <div className="flex flex-row items-start">
           <Label className="text-md">Address:</Label>
-          <p className="ml-2">{userTrade?.details.address}</p>
+          <p className="ml-2">{userTrade?.address}</p>
         </div>
         <div className="flex flex-row items-center">
           <Label className="text-md">Phone:</Label>

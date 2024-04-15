@@ -30,7 +30,7 @@ export function UpdateReplyCustomer({ data }: { data: IListReplyResponse }) {
         replyText: updatedData.ReplyText,
         ReplyId: data.reply.replyId,
         ratingRecordId: data.ratingRecordId,
-        agencyId: user?.agencies[0].agencyId as string,
+        agencyId: user?.agencies?.[0]?.agencyId as string,
       }
       return updateReplyReview(formData)
     },

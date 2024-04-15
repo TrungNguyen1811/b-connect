@@ -20,7 +20,7 @@ type Props = {
 
 const FilterSchema = z.object({
   Name: z.string().optional(),
-  CateIds: z.string().optional(),
+  CategoryIds: z.string().optional(),
   MinPrice: z.string().optional(),
   MaxPrice: z.string().optional(),
   OverRating: z.string().optional(),
@@ -35,10 +35,9 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
   })
   const { isLoading: isCategoryLoading, data: categories } = useGetAllCategory()
   const [selected, setSelected] = useState<string[]>([])
-  const cate = selected.join(',')
 
   useEffect(() => {
-    setValue('CateIds', selected.join(','))
+    setValue('CategoryIds', selected.join(','))
   }, [selected])
 
   const categoriesCombobox = useMemo(() => {
@@ -56,18 +55,22 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     const MaxPrice = searchParams.get('MaxPrice') || ''
     const OverRating = searchParams.get('OverRating') || ''
     const Type = searchParams.get('Type') || ''
+    const CategoryIds = searchParams.get('CategoryIds') || ''
+
+    setSelected(CategoryIds.split(','))
 
     setValue('Name', search)
-    setValue('CateIds', selected.join(','))
+    setValue('CategoryIds', CategoryIds.split(',').join(','))
     setValue('MinPrice', MinPrice)
     setValue('MaxPrice', MaxPrice)
     setValue('OverRating', OverRating)
     setValue('Type', Type)
+
     control.handleSubmit((data) => {
       onFilterChange && onFilterChange(data)
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, selected])
+  }, [searchParams])
 
   const onSubmit = React.useCallback(
     (data: FilterForm) => {
@@ -78,7 +81,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
       data.MaxPrice && searchParams.set('MaxPrice', data.MaxPrice)
       data.OverRating && searchParams.set('OverRating', data.OverRating)
       data.Type && searchParams.set('Type', data.Type)
-      data.CateIds && searchParams.set('CateIds', selected.join(','))
+      data.CategoryIds && searchParams.set('CategoryIds', data.CategoryIds)
 
       setSearchParams(searchParams, { replace: true })
 
@@ -86,7 +89,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
         onFilterChange(data)
       }
     },
-    [onFilterChange, setSearchParams, selected],
+    [onFilterChange, setSearchParams],
   )
 
   // const [clearFlag, setClearFlag] = useState(false)
@@ -109,7 +112,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
             <Input placeholder="Search name of book" id="Name" {...control.register('Name')} className="bg-card" />
           </div>
           <div>
-            <Label htmlFor="CateIds">CateIds</Label>
+            <Label htmlFor="CategoryIds">CategoryIds</Label>
             <MultiSelect options={categoriesCombobox} selected={selected} onChange={setSelected} />
           </div>
           <div>
@@ -120,14 +123,14 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               }}
               value={watch('Type')}
             >
-              <SelectTrigger className="bg-white text-gray-500">
+              <SelectTrigger className="bg-orange-50 text-gray-500">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem className="hover:bg-accent" value="New">
+                <SelectItem className="hover:bg-orange-500" value="New">
                   NEW
                 </SelectItem>
-                <SelectItem className="hover:bg-accent" value="Old">
+                <SelectItem className="hover:bg-orange-500" value="Old">
                   OLD
                 </SelectItem>
               </SelectContent>
@@ -149,23 +152,23 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               }}
               value={watch('OverRating')}
             >
-              <SelectTrigger className="bg-white text-gray-500">
+              <SelectTrigger className="bg-orange-50 text-gray-500">
                 <SelectValue placeholder="Choose OverRating" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem className="hover:bg-accent" value="1">
+                <SelectItem className="hover:bg-orange-500" value="1">
                   <p className="flex-row">1 * and more</p>
                 </SelectItem>
-                <SelectItem className="hover:bg-accent" value="2">
+                <SelectItem className="hover:bg-orange-500" value="2">
                   <p className="flex-row">2 * and more</p>
                 </SelectItem>
-                <SelectItem className="hover:bg-accent" value="3">
+                <SelectItem className="hover:bg-orange-500" value="3">
                   <p className="flex-row">3 * and more</p>
                 </SelectItem>
-                <SelectItem className="hover:bg-accent" value="4">
+                <SelectItem className="hover:bg-orange-500" value="4">
                   <p className="flex-row">4 * and more</p>
                 </SelectItem>
-                <SelectItem className="hover:bg-accent" value="5">
+                <SelectItem className="hover:bg-orange-500" value="5">
                   <p className="flex-row">5 * and more</p>
                 </SelectItem>
               </SelectContent>

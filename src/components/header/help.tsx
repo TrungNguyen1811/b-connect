@@ -9,10 +9,10 @@ function Help() {
         <HelpCircle size={20} />
         <p className="hidden-on-mobile hidden-on-tablet">Help</p>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-[40vw]">
         <DialogHeader>
-          <DialogTitle>Do you want to find more information?</DialogTitle>
-          <DialogDescription className="flex justify-between">
+          <DialogTitle className="text-orange-500">Do you want to find more information?</DialogTitle>
+          <DialogDescription className="flex justify-around pt-8">
             <Card>
               <button>
                 <CardHeader>

@@ -139,7 +139,7 @@ function RegisterForm() {
             />
           </div>
           <div className="col-span-full">
-            <Button disabled={isLoading} type="submit" className="w-full">
+            <Button disabled={isLoading} variant="default" type="submit" className="w-full">
               {isLoading && <Loader className="mr-2 h-5 w-5 animate-spin" />}
               Register
             </Button>

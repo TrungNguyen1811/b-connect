@@ -53,6 +53,7 @@ export interface ITradeDetail {
     lockedRecord: string
     ratingRecord: string
   }
+  address?: string
   traderId: string
 }
 

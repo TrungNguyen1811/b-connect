@@ -15,12 +15,11 @@ import { toast } from '../ui/use-toast'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { RegisterAgency } from 'src/api/agency/post-register-agency'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { getUserProfileApi } from 'src/api/apis/auth/profile.api'
-import { ROLE } from 'src/types/user'
+import { ROLE, User } from 'src/types/user'
 import { Carousel, CarouselButtonNext, CarouselButtonPrevious, CarouselContent, CarouselItem } from '../ui/carousel'
 import { Card, CardContent } from '../ui/card'
 import { Separator } from '../ui/separator'
-import IdentificationSeller from '../user/ctc'
+import IdentificationSeller from '../user/nic'
 import { Checkbox } from '../ui/check-box'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from '../ui/command'
@@ -31,6 +30,7 @@ import { getAllAddress } from 'src/api/address/get-address'
 import AddressData from 'src/components/cart/address.json'
 import { faker } from '@faker-js/faker'
 import postAddress from 'src/api/address/post-address'
+import { getUserById } from 'src/api/user/get-user'
 
 const SubscribeSchema = z.object({
   agencyName: z.string().min(3),
@@ -45,8 +45,7 @@ const SubscribeSchema = z.object({
 type UserSubscribeFormProps = React.HTMLAttributes<HTMLDivElement>
 type FormData = z.infer<typeof SubscribeSchema>
 export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormProps) {
-  const { user, login } = useAuth()
-  console.log(user?.isValidated)
+  const { user, login, logout } = useAuth()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const form = useForm<FormData>({
     resolver: zodResolver(SubscribeSchema),
@@ -55,9 +54,11 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
   const [checkbox, setCheckbox] = useState<boolean>(false)
-  const [address, setAddress] = useState<IAddress[]>([])
-  const [showRegisterSlide, setShowRegisterSlide] = useState<boolean>(!user?.isValidated)
+  const [showRegisterSlide, setShowRegisterSlide] = useState<boolean>()
   const [addressDefault, setAddressDefault] = useState<IAddress | undefined>(undefined)
+  const [address, setAddress] = useState<IAddress[]>([])
+  const [users, setUsers] = useState<User>()
+
   useEffect(() => {
     if (address) {
       setAddressDefault(address[0])
@@ -82,30 +83,25 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
     getAddressById()
   }, [user?.userId])
 
-  const resetUser = async () => {
-    await getUserProfileApi((err, user) => {
-      if (err) {
-        toast({
-          title: err.message,
-          description: err.cause?.message,
-          variant: 'destructive',
-        })
+  useEffect(() => {
+    const isValidated = async () => {
+      if (user?.isValidated === true) {
+        setShowRegisterSlide(true)
       } else {
-        if (!user) {
-          return
-        }
-        const token = localStorage.getItem('token') as string
-        login({ user, token })
-        if (user?.roles && user.roles.includes(ROLE.AGENCY) && user.isValidated === true) {
-          navigate('/seller')
-        }
-        // const agency = user?.roles?.find((role) => role === 'Agency')
-        // console.log('agency', agency)
-        // if (agency === 'Agency') {
-        //   navigate('/seller')
-        // }
+        setShowRegisterSlide(false)
       }
-    })
+    }
+    isValidated()
+  }, [])
+  console.log('user', user)
+
+  const resetUser = async () => {
+    const userData = await getUserById(user?.userId as string)
+    setUsers(userData)
+    console.log('userss', user)
+    if (userData?.roles && userData.roles.includes(ROLE.SELLER) && userData.isValidated === true) {
+      navigate('/seller')
+    }
   }
 
   const onSubmit = async (data: FormData) => {
@@ -125,41 +121,41 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
     }
     const mergedData = {
       businessType: data.businessType,
-      // Rendezvous: checkbox ? address.addressId : newAddress.addressId
-      Rendezvous: data.rendezvous,
+      addressId: checkbox ? addressDefault?.addressId : newAddress.addressId,
       agencyName: data.agencyName,
-      ownerId: user?.userId,
       logoImg: data.logoImg as File,
     }
-    console.log('user?.isValidated', user?.isValidated)
+    console.log('user?.isValidated', users?.isValidated)
     resetUser()
-    if (user?.isValidated == true) {
-      await RegisterAgency(mergedData, async (err, data) => {
-        if (err) {
-          toast({
-            title: err.message,
-            description: err.cause?.message,
-            variant: 'destructive',
-          })
-        } else {
-          if (!user) {
-            return
-          }
-          toast({
-            title: 'Register Success',
-            description: data,
-            variant: 'success',
-          })
-          resetUser()
+    // if (users?.isValidated == true) {
+    await RegisterAgency(mergedData, async (err, data) => {
+      if (err) {
+        toast({
+          title: err.message,
+          description: err.cause?.message,
+          variant: 'destructive',
+        })
+      } else {
+        if (!users) {
+          return
         }
-      })
-    } else {
-      toast({
-        title: 'Please Register National ID',
-        description: 'Looks like you have not registered for a National ID yet.',
-        variant: 'destructive',
-      })
-    }
+        toast({
+          title: 'Register Success',
+          description: data,
+          variant: 'success',
+        })
+        logout()
+        navigate('/')
+        resetUser()
+      }
+    })
+    // } else {
+    //   toast({
+    //     title: 'Please Register National ID',
+    //     description: 'Looks like you have not registered for a National ID yet.',
+    //     variant: 'destructive',
+    //   })
+    // }
 
     setIsLoading(false)
     setTimeout(() => {
@@ -170,13 +166,13 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
   return (
     <div className={cn('mx-auto mt-10 grid w-[70vw]', className)} {...props}>
       <div className="mb-5 flex flex-col items-start justify-start p-0">
-        <p className="opacity-50">Subscribe Account Agency</p>
-        <h4 className="text-4xl font-extrabold">Welcome to BConnect Agency</h4>
+        <p className="opacity-50">Subscribe Account Seller</p>
+        <h4 className="text-4xl font-extrabold">Welcome to BConnect Seller</h4>
         <p className="opacity-50">Subscribe to manage your store.</p>
       </div>
       <Carousel className="m-4 min-h-[32rem] w-full" plugins={[]}>
         <CarouselContent>
-          {showRegisterSlide && (
+          {showRegisterSlide === false && (
             <CarouselItem className="mb-8">
               <Card className="">
                 <CardContent className="aspect-square max-h-[28rem] w-full items-center justify-center">
@@ -218,7 +214,11 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
                           <FormItem>
                             <FormLabel>Logo Shop</FormLabel>
                             <FormControl>
-                              <Input type="file" accept="image/*" disabled={isLoading} {...field} />
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                              />
                             </FormControl>
                             <FormDescription />
                             <FormMessage />
@@ -485,8 +485,12 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
           </CarouselItem>
           <Separator />
         </CarouselContent>
-        <CarouselButtonPrevious />
-        <CarouselButtonNext />
+        {showRegisterSlide === false && (
+          <div>
+            <CarouselButtonPrevious />
+            <CarouselButtonNext />
+          </div>
+        )}
       </Carousel>
     </div>
   )

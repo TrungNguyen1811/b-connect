@@ -36,7 +36,7 @@ function Pagination({
           key={page}
           className={cn(
             'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
-            page === currentPage ? 'bg-primary text-white ' : 'bg-white text-primary',
+            page === currentPage ? 'bg-primary text-white ' : 'bg-orange-50 text-primary',
           )}
           onClick={() => onPageChange(page)}
         >
@@ -51,7 +51,7 @@ function Pagination({
           key={page}
           className={cn(
             'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
-            page === currentPage ? 'bg-primary text-white ' : 'bg-white text-primary',
+            page === currentPage ? 'bg-primary text-white ' : 'bg-orange-50 text-primary',
           )}
           onClick={() => onPageChange(page)}
         >
@@ -66,7 +66,7 @@ function Pagination({
           key={page}
           className={cn(
             'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
-            page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
+            page === currentPage ? 'bg-primary text-white' : 'bg-orange-50 text-primary',
           )}
           onClick={() => onPageChange(page)}
         >
@@ -81,7 +81,7 @@ function Pagination({
           key={page}
           className={cn(
             'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
-            page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
+            page === currentPage ? 'bg-primary text-white' : 'bg-orange-50 text-primary',
           )}
           onClick={() => onPageChange(page)}
         >
@@ -94,7 +94,7 @@ function Pagination({
           key={page}
           className={cn(
             'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
-            page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
+            page === currentPage ? 'bg-primary text-white' : 'bg-orange-50 text-primary',
           )}
           onClick={() => onPageChange(page)}
         >
@@ -108,7 +108,7 @@ function Pagination({
           key={page}
           className={cn(
             'h-8 w-8 rounded-full hover:bg-primary/60 hover:text-white',
-            page === currentPage ? 'bg-primary text-white' : 'bg-white text-primary',
+            page === currentPage ? 'bg-primary text-white' : 'bg-orange-50 text-primary',
           )}
           onClick={() => onPageChange(page)}
         >

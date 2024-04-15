@@ -37,11 +37,11 @@ function ViewCart({ className, ...props }: Props) {
     ]
   }, [pathname])
   return (
-    <div className={cn(className, 'mx-auto my-auto min-h-[600px] bg-zinc-100')} {...props}>
+    <div className={cn(className, 'mx-auto my-auto min-h-[600px] bg-orange-100')} {...props}>
       <MetaData title="Cart" />
       {<Breadcrumb items={breadcrumb} className="mx-auto max-w-7xl py-4" />}
 
-      <div className="mx-auto max-w-screen-xl bg-white p-8">
+      <div className="mx-auto max-w-screen-xl bg-orange-50 p-8">
         <div className="flex justify-center">
           <h2 className="mb-4 content-center text-3xl font-semibold">Shopping Cart</h2>
         </div>

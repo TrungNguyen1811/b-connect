@@ -17,6 +17,7 @@ import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import useGetManyPosts from 'src/hooks/useGetManyPosts'
 import { ICategory } from 'src/types'
+import ErrorPage from '../error-page'
 
 const initPostState: GetManyPostsParams = {
   PageNumber: 0,
@@ -86,17 +87,18 @@ export default function LandingBlog() {
 
   const renderPosts = useMemo(() => {
     if (isLoading) return <PostGridLoading pageSize={8} className="h-96 " />
-    if (!data || data.length === 0)
+    if (!Array.isArray(data) || data.length === 0)
       return (
         <div className="col-span-full row-span-full h-full w-full">
           <h3 className="text-center text-slate-300">No result found</h3>
         </div>
       )
-    return data?.map((post) => {
+    return data.map((post) => {
       return <Post key={post.postData.postId} postId={post.postData.postId!} />
     })
   }, [data, isLoading])
-  if (isError) return <div>Something went wrong</div>
+
+  if (isError) return <ErrorPage />
 
   // useEffect(() => {
   //   const getAllBlogFollowOnCategory = async () => {
@@ -125,9 +127,9 @@ export default function LandingBlog() {
   if (!blogs) return <PostGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
 
   return (
-    <div className="mx-24 px-4 py-2">
+    <div className="mx-24 h-full px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
-        <div className="col-span-2 bg-zinc-100">
+        <div className="col-span-2 bg-orange-50">
           <Menu />
         </div>
         <div className="col-span-7">
@@ -162,13 +164,8 @@ export default function LandingBlog() {
             </DialogContent>
           </Dialog>
           {renderPosts}
-          {/* {blogs.data.map((blog, index) => (
-            <div className="my-4" key={index}>
-              {blog?._id && <Post id={blog._id} />}
-            </div>
-          ))} */}
         </div>
-        <div className="col-span-3 bg-zinc-100">
+        <div className="col-span-3 bg-orange-50">
           <Active />
         </div>
       </div>

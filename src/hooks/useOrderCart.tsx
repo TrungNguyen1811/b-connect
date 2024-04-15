@@ -302,8 +302,8 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     }
   }
 
-  const saveCartToCookie = (cart: ICart[]) => {
-    document.cookie = `cart=${JSON.stringify(cart)}; expires=${expires}; path=/`
+  const saveCartToCookie = (cartItems: ICart[]) => {
+    document.cookie = `cartItems_${userId}=${JSON.stringify(cartItems)}; expires=${expires}; path=/`
   }
 
   const addToCart = async (_id: string) => {

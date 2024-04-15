@@ -26,7 +26,7 @@ export function ReplyCustomer({ data }: { data: IListReplyResponse }) {
       const formData: IReply = {
         replyText: updatedData.ReplyText,
         ratingRecordId: data.ratingRecordId,
-        agencyId: user?.agencies[0].agencyId as string,
+        agencyId: user?.agencies?.[0]?.agencyId as string,
       }
       return replyReview(formData)
     },

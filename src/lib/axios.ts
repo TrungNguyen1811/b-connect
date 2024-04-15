@@ -29,31 +29,42 @@ authAxiosClient.interceptors.request.use(
   },
 )
 
-authAxiosClient.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  async (error) => {
-    const originalRequest = error.config
+// function getCookieValue(name: string) {
+//   const regex = new RegExp(`(^| )${name}=([^;]+)`)
+//   const match = document.cookie.match(regex)
+//   if (match) {
+//     return decodeURIComponent(match[2])
+//   }
+// }
+// const RefreshToken = Cookies.get('refreshToken')
 
-    if (error.response?.status === 401 && originalRequest.url !== BASED_URL + '/Account/RefreshToken') {
-      try {
-        const { data, status } = await axiosClient.post('/Account/RefreshToken', undefined, { withCredentials: true })
-        if (status === 200 || status === 201) {
-          localStorage.setItem('accessToken', data.data.accessToken)
-          return authAxiosClient(originalRequest)
-        }
+// authAxiosClient.interceptors.response.use(
+//   (response) => {
+//     return response
+//   },
+//   async (error) => {
+//     const originalRequest = error.config
 
-        throw new Error('Refresh token failed')
-      } catch (er) {
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('user')
-        localStorage.removeItem('expiresIn')
-        window.location.href = '/login'
-      }
-    }
-    return Promise.reject(error)
-  },
-)
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true
+//       try {
+//         const refresh = getCookieValue(RefreshToken!)
+//         const { data, status } = await refreshToken(refresh as string)
+//         if (status === 200 || status === 201) {
+//           localStorage.setItem('token', data)
+//           return authAxiosClient(originalRequest)
+//         }
+
+//         throw new Error('Refresh token failed')
+//       } catch (er) {
+//         localStorage.removeItem('token')
+//         localStorage.removeItem('user')
+//         // localStorage.removeItem('expiresIn')
+//         window.location.href = '/login'
+//       }
+//     }
+//     return Promise.reject(error)
+//   },
+// )
 
 export { authAxiosClient, axiosClient }

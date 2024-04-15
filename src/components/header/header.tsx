@@ -19,19 +19,19 @@ function Header() {
     [nav],
   )
   return (
-    <div className="sticky left-0 top-0 z-10 w-full flex-col items-center justify-between border bg-slate-50 md:px-12">
+    <div className="sticky left-0 top-0 z-20 w-full flex-col items-center justify-between border bg-orange-200 md:px-12">
       <Navigation />
       <div className="flex justify-evenly py-4">
         <div className="flex items-center">
           <Link
             to={'/'}
-            className="text-black-100 xs:text-md mr-4 cursor-pointer justify-center font-extrabold sm:text-lg md:text-2xl lg:text-3xl"
+            className="xs:text-md mr-4 cursor-pointer justify-center font-extrabold text-orange-900 sm:text-lg md:text-2xl lg:text-3xl"
           >
             BConnect
           </Link>
           <Link
-            to={'/'}
-            className="text-black-100 xs:text-md cursor-pointer font-extrabold sm:text-lg  md:text-2xl lg:text-3xl"
+            to={'/blog'}
+            className="xs:text-md cursor-pointer font-extrabold text-orange-900 sm:text-lg  md:text-2xl lg:text-3xl"
           >
             BSocial
           </Link>

@@ -115,10 +115,7 @@ function AuthPreview({ className, ...prosp }: Props) {
       <DropdownMenu>
         <DropdownMenuTrigger className="user-profile flex items-center justify-start gap-2">
           <Avatar>
-            <AvatarImage
-              src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-              alt={user.fullName}
-            />
+            <AvatarImage src={user.avatarDir as string} alt={user.fullName} />
             <AvatarFallback>{getLabelByFullname(user.fullName)}</AvatarFallback>
           </Avatar>
           <div className="text-start">
@@ -166,7 +163,9 @@ function AuthPreview({ className, ...prosp }: Props) {
         <div className="flex items-center justify-between gap-2">{renderUserDropdown}</div>
       ) : (
         <div>
-          <Button onClick={onLogin}>Login</Button>
+          <Button variant="outline" onClick={onLogin}>
+            Login
+          </Button>
         </div>
       )}
     </div>

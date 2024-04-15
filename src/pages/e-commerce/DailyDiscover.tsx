@@ -48,7 +48,7 @@ function DailyDiscover() {
   return (
     <div>
       <MetaData title="Books" />
-      <div className="relative flex flex-col  bg-zinc-100">
+      <div className="relative flex flex-col  bg-orange-100">
         <p className="self-center p-5 text-2xl font-bold text-orange-600">DAILY DISCOVER</p>
         <Separator />
         <div className="w-full">

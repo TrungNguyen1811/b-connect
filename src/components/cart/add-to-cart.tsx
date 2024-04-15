@@ -7,7 +7,6 @@ import { ShoppingCartIcon } from 'lucide-react'
 import { useOrderCart } from 'src/hooks/useOrderCart'
 import { IBook } from 'src/types/books'
 import { getBookById } from 'src/api/books/get-book'
-import { formatPrice } from 'src/lib/utils'
 
 function AddToCart() {
   const [open, setOpen] = useState(false)
@@ -74,11 +73,11 @@ function AddToCart() {
                             </p>
                           </p>
                         </div>
-                        <div>
+                        {/* <div>
                           <p className="text-sm text-gray-500">
-                            <span className="font-semibold text-gray-900">{formatPrice(cart.price)}</span>
+                            <span className="font-semibold text-gray-900">{formatPrice(book.price)}</span>
                           </p>
-                        </div>
+                        </div> */}
                       </li>
                     )
                   })

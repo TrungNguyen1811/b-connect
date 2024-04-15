@@ -330,7 +330,7 @@ function BlogDetail() {
   return (
     <div className="mx-32 px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
-        <div className="col-span-1 bg-zinc-100">
+        <div className="col-span-1 bg-orange-50">
           <div className="flex flex-col items-center justify-center">
             <div
               className="m-2 mt-16 flex flex-col items-center rounded-sm p-2 hover:bg-gray-300"
@@ -383,7 +383,7 @@ function BlogDetail() {
                     <React.Fragment key={index}>
                       <Link
                         to={'/'}
-                        className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-50 hover:text-orange-600"
+                        className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
                       >
                         #{tag.label}
                       </Link>
@@ -440,7 +440,7 @@ function BlogDetail() {
             </div>
           </div>
         </div>
-        <div className="col-span-3 bg-zinc-100">{/* <More /> */}</div>
+        <div className="col-span-3 bg-orange-50">{/* <More /> */}</div>
       </div>
     </div>
   )

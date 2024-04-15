@@ -23,10 +23,10 @@ export const columns: ColumnDef<User>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  {
-    accessorKey: 'fullName',
-    header: 'Full Name',
-  },
+  // {
+  //   accessorKey: 'fullName',
+  //   header: 'Full Name',
+  // },
   {
     accessorKey: 'username',
     header: 'Username',
@@ -36,8 +36,12 @@ export const columns: ColumnDef<User>[] = [
     header: 'Email',
   },
   {
-    accessorKey: 'role',
+    accessorKey: 'roles',
     header: 'Role',
+    cell: ({ getValue }) => {
+      const role = getValue() as string[]
+      return <div className="w-[4rem]">{role.join('/')}</div>
+    },
   },
   {
     id: 'action',

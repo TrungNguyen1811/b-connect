@@ -5,7 +5,7 @@ export async function postCTCApi<T>(formData: FormData) {
   return axios
     .post<unknown, AxiosResponse<ICTCResponse<T>>>('https://api.fpt.ai/vision/idr/vnm', formData, {
       headers: {
-        api_key: 't833lvdQ2FHs1Mu4X6PYKdNu1t9vXwgH',
+        api_key: 'wlsxMIUrIdukW23fxAZkWxxYOf78R7BE',
         'Content-Type': 'multipart/form-data',
       },
     })

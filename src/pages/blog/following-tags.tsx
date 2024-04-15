@@ -65,7 +65,7 @@ function FollowingTags() {
     }
 
     return (
-      <div className="h-48 w-full rounded-lg border-2 bg-slate-50">
+      <div className="h-48 w-full rounded-lg border-2 bg-orange-100">
         <div className="flex h-full flex-col justify-between p-4 pb-1">
           <div className="px-1">
             <Link to={`/blog/${tag?.cateId}`}>
@@ -108,7 +108,7 @@ function FollowingTags() {
             </div>
           </Link>
           <Link to={'/blog/dashboard/following_tags'} className=" ">
-            <div className="flex flex-row items-center rounded-sm bg-white px-2 py-1">
+            <div className="flex flex-row items-center rounded-sm bg-orange-50 px-2 py-1">
               <p className="w-full font-semibold">Following Category</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
             </div>

@@ -12,7 +12,6 @@ import {
   ListOrderedIcon,
   MapPinIcon,
   ShoppingBagIcon,
-  TicketIcon,
   UserCircle,
 } from 'lucide-react'
 import { NavItem } from 'src/types/NavItem'
@@ -88,13 +87,13 @@ export default function Sidebar({ className }: SidebarProps) {
           href: '/user/notifications/order',
           color: 'text-orange-500',
         },
+        {
+          title: 'Seller Information',
+          icon: ListOrderedIcon,
+          href: '/user/notifications/seller',
+          color: 'text-orange-500',
+        },
       ],
-    },
-    {
-      title: 'My Voucher',
-      icon: TicketIcon,
-      href: '/user/voucher',
-      color: 'text-orange-500',
     },
   ]
   return (
@@ -117,7 +116,7 @@ export default function Sidebar({ className }: SidebarProps) {
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
             <Link to="/user/profile">
-              <div className="flex flex-row">
+              <div className="flex flex-row items-center">
                 <Avatar>
                   <AvatarImage
                     className={cn('h-12 w-12 rounded-full', !isOpen && 'h-8 w-8 rounded-full')}
@@ -128,8 +127,8 @@ export default function Sidebar({ className }: SidebarProps) {
                 </Avatar>
                 <div className={cn('ml-2 text-start', !isOpen && 'hidden')}>
                   <p className="text-lg text-accent-foreground">{user?.email}</p>
-                  <p className="flex flex-row items-center">
-                    <Edit size={16} /> Edit Profile
+                  <p className="flex flex-row items-center text-sm">
+                    <Edit size={12} className="mr-1" /> Edit Profile
                   </p>
                 </div>
               </div>

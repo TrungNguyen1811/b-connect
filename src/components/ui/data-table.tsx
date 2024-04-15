@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
         </div>
       </>
     )
-  }, [columns.length, data, isLoading, table, selectedLength])
+  }, [columns.length, data, isLoading, table, selectedLength.length])
 
   return (
     <div className="rounded-md border p-2">

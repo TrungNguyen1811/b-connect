@@ -1,9 +1,10 @@
 import { createContext, useEffect, useState } from 'react'
 import { User } from '../../types'
+import { IToken } from 'src/types/token'
 
 export type LoginProps = {
   user: User
-  token: string
+  token: Pick<IToken, 'accessToken' | 'refreshToken'>
 }
 export interface AuthContextType {
   user: User | null
@@ -14,7 +15,6 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null)
-
   useEffect(() => {
     const savedUser = localStorage.getItem('user')
     if (savedUser) {
@@ -24,9 +24,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   const login = ({ user, token }: LoginProps) => {
     setUser(user)
-
     localStorage.setItem('user', JSON.stringify(user))
-    localStorage.setItem('token', token)
+    localStorage.setItem('token', token.accessToken)
   }
 
   const logout = () => {

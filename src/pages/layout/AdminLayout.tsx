@@ -6,7 +6,7 @@ import SidebarAdmin from 'src/components/admins/sidebar-admin'
 
 function AdminLayout() {
   // const { user } = useAuth()
-  // if (user.roles && user.roles.includes(ROLE.AGENCY) || user.roles && user.roles.includes(ROLE.BASEUSER)) {
+  // if (user.roles && user.roles.includes(ROLE.SELLER) || user.roles && user.roles.includes(ROLE.BASEUSER)) {
   //   return <Navigate to={''} />
   // }
   return (

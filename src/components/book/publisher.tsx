@@ -61,8 +61,8 @@ function Publishers() {
   }, [oddPublisher])
 
   return (
-    <div className=" bg-zinc-100">
-      <div className="mx-auto mt-7 max-w-7xl bg-white px-4 sm:px-6 lg:px-8">
+    <div className=" bg-orange-100">
+      <div className="mx-auto mt-7 max-w-7xl bg-orange-50 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="flex flex-row justify-between">
             <h2 className="text-2xl font-bold text-gray-900">Publisher</h2>

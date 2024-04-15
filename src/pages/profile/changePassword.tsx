@@ -48,7 +48,7 @@ function ChangePassword() {
         <Form {...formPassword}>
           <form>
             <div className="ml-4 flex flex-row items-center">
-              <div className="flex w-2/3 flex-col  rounded-md border border-2 bg-slate-50 px-4 py-8">
+              <div className="flex w-2/3 flex-col  rounded-md border border-2 bg-orange-100 px-4 py-8">
                 <p className="text-lg font-semibold">Change Password</p>
 
                 {/* <form onSubmit={formPassword.handleSubmit(onSubmitPassword)}> */}

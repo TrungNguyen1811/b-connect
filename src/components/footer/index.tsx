@@ -50,7 +50,7 @@ const ADDRESS = [
 ]
 const A = ({ items }: { items: Array<{ id: number; title: string; path: string }> }) => {
   return (
-    <ul className="text-left font-medium text-gray-500">
+    <ul className="text-left font-medium text-white">
       {items.map((item) => (
         <li key={item.id} className="mb-4">
           <Link to={item.path} className="hover:text-white">
@@ -64,7 +64,7 @@ const A = ({ items }: { items: Array<{ id: number; title: string; path: string }
 
 const B = ({ items }: { items: Array<{ id: number; title: string; path: string }> }) => {
   return (
-    <ul className="nav-link flex text-left font-medium text-gray-500">
+    <ul className="nav-link flex text-left font-medium text-white">
       {items.map((item) => (
         <li key={item.id} className="nav-link mb-4">
           <Link to={item.path} className="hover:text-white">
@@ -97,7 +97,7 @@ const renderCategory = (category: Category) => (
 
 export default function Footer() {
   return (
-    <footer className="bg-black dark:bg-gray-900">
+    <footer className="bg-orange-500 dark:bg-orange-900">
       <div className="mx-auto w-full max-w-screen-xl p-4 py-4 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
@@ -115,10 +115,10 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <hr className="border-gray-200 dark:border-gray-700 sm:mx-auto" />
+      <hr className="border-orange-700 dark:border-orange-900 sm:mx-auto" />
       <div>
-        <div className="m-5 sm:flex sm:items-center sm:justify-between">
-          <span className="mb-4 text-sm text-gray-500 dark:text-gray-400 sm:text-center">
+        <div className="mt-5 sm:flex sm:items-center sm:justify-between">
+          <span className="mb-4 text-sm text-white dark:text-gray-400 sm:text-center">
             © 2023{' '}
             <a href="#" className="hover:text-white">
               BRental™

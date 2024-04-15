@@ -106,8 +106,6 @@ export function getManyBlogBooks() {
 }
 
 export function getBlogsByUserId(id: string) {
-  // TODO: Replace this with an actual API call
-
   const blogs: IBlogg[] = Array.from({ length: 100 }, () => ({
     _id: faker.string.uuid(),
     userId: id,

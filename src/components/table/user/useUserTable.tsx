@@ -13,7 +13,7 @@ export function useUserTable(columns: ColumnDef<User>[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
   >({
-    PageNumber: 1,
+    PageNumber: 0,
     PageSize: 5,
   })
 

@@ -27,7 +27,7 @@ export async function getAllAddress(userId: string) {
     .get('/Address/get-all-user-address', {
       params: {
         PageNumber: 1,
-        PageSize: 5,
+        PageSize: 10,
         userId: userId,
       },
     })

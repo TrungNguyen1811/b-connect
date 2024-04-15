@@ -18,26 +18,26 @@ export interface User {
   agencies?: [
     {
       agencyId?: string
-      agencyName?: string
-      ownerId?: string
+      agencyName: string
+      ownerId: string
       postAddressId?: string
       logoUrl?: string
-      businessType?: 'Individual' | 'Company'
+      businessType: 'Individual' | 'Company'
     },
   ]
   blockedDate?: Date
   salt?: string
-  ctcId?: string
-  ctcName?: string
-  ctcDob?: string
-  ctcHome?: string
-  ctcAddress?: string
-  ctcSex?: string
-  ctcNationality?: string
-  ctcDoe?: string
+  nicId?: string
+  nicName?: string
+  nicDob?: string
+  nicHome?: string
+  nicAddress?: string
+  nicSex?: string
+  nicNationality?: string
+  nicDoe?: string
   features?: string
   issueDate?: string
-  ctcType?: 'old' | 'new' | 'old_back' | 'new_back' | 'cmnd_09_front' | 'cmnd_12_front' | 'cccd_12_front'
+  nicType?: 'old' | 'new' | 'old_back' | 'new_back' | 'cmnd_09_front' | 'cmnd_12_front' | 'cccd_12_front'
   interested?: IInterested['userId']
   blog?: IBlogg[]
   bio?: string
@@ -46,24 +46,25 @@ export interface User {
   updatedAt?: Date
 }
 
-export interface IRegisterCTC {
-  ctcId: string
-  ctcName: string
-  ctcDob?: Date
-  ctcHome: string
-  ctcAddress: string
-  ctcSex: string
-  ctcNationality: string
-  ctcDoe: Date
-  features: string
-  issueDate: Date
-  ctcType: string
+export interface IRegisterNIC {
+  userId: string
+  nicId: string
+  nicName: string
+  nicDob?: Date
+  nicHome: string
+  // nicAddress: string
+  nicSex: string
+  nicNationality: string
+  nicDoe: Date
+  // features: string
+  // issueDate: Date
+  // nicType: string
 }
 
 export enum ROLE {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
-  AGENCY = 'Agency',
+  SELLER = 'Seller',
   CUSTOMER = 'CUSTOMER',
   BASEUSER = 'BaseUser',
 }

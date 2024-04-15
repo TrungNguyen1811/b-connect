@@ -1,16 +1,21 @@
 import { useQueries } from '@tanstack/react-query'
 import React, { useMemo } from 'react'
 import { useLoaderData } from 'react-router-dom'
-import { getBestSellerProductIdByNumberOfBookSold, getBestSellerProductIdByRevenue } from 'src/api/agency/get-agency'
-import { GetAllBookInInventoryByAgencyId, GetManyBooksParams } from 'src/api/books/get-book'
+import { GetListBestSellerProductIdByRevenueAndAgencyId } from 'src/api/agency/get-agency'
+import {
+  GetAllBookInInventoryByAgencyId,
+  GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId,
+  GetManyBooksParams,
+} from 'src/api/books/get-book'
 import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
 import BookGridLoading from 'src/components/book/book-grid-loading'
 import Book from 'src/components/landing/card-book'
 import MetaData from 'src/components/metadata'
+import NoResultPage from 'src/components/no-result-page'
 import Pagination from 'src/components/ui/pagination'
 import { ScrollArea, ScrollBar } from 'src/components/ui/scroll-area'
 import { useCustomQuery } from 'src/hooks/useCustomQuery'
-import { IBook, IResponseBook } from 'src/types'
+import { IBook } from 'src/types'
 import { IAgency } from 'src/types/agency'
 
 const initBookState: GetManyBooksParams = {
@@ -31,10 +36,11 @@ const initParamState = {
 
 function MyShop() {
   const shop = useLoaderData() as { shop: IAgency }
+  const agencyId = shop.shop.agencyId as string
 
   const [bookState, setBookState] = React.useState<GetManyBooksParams>(initBookState)
-  const { data, isLoading, isError } = useCustomQuery<IResponseBook[]>(
-    () => GetAllBookInInventoryByAgencyId(bookState, shop.shop.ownerId as string),
+  const { data, isLoading, isError } = useCustomQuery<IBook[]>(
+    () => GetAllBookInInventoryByAgencyId(bookState, agencyId as string),
     {
       refetchOnWindowFocus: false,
     },
@@ -48,11 +54,11 @@ function MyShop() {
     if (!data?.data || data.data.length === 0)
       return (
         <div className="col-span-full row-span-full h-full w-full">
-          <h3 className="text-center text-slate-300">No result found</h3>
+          <NoResultPage />
         </div>
       )
     return data?.data.map((book) => {
-      return <Book key={book.item1.productId} book={book.item1} />
+      return <Book key={book.productId} book={book} />
     })
   }, [data?.data, isLoading])
 
@@ -65,8 +71,14 @@ function MyShop() {
   }, [data?._pagination?.TotalCount])
 
   const queries = [
-    { queryKey: ['topBooks'], queryFn: () => getBestSellerProductIdByNumberOfBookSold(initParamState) },
-    { queryKey: ['recommendBooks'], queryFn: () => getBestSellerProductIdByRevenue(initParamState) },
+    {
+      queryKey: ['topBooks'],
+      queryFn: () => GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId(initParamState, agencyId),
+    },
+    {
+      queryKey: ['recommendBooks'],
+      queryFn: () => GetListBestSellerProductIdByRevenueAndAgencyId(initParamState, agencyId),
+    },
   ]
 
   const queryResults = useQueries({ queries })
@@ -74,13 +86,15 @@ function MyShop() {
   const isLoadingTopBook = queryResults[0].isLoading
   const isLoadingFeaturedBook = queryResults[1].isLoading
   const dataTopBook: IBook[] = queryResults[0].data as IBook[]
-  const dataFeaturedBook = queryResults[1].data
+  const dataFeaturedBook: IBook[] = queryResults[1].data as IBook[]
 
   const renderTopBooks = useMemo(() => {
-    if (isLoadingTopBook) return <BookGridLoading pageSize={8} className="carousel-item flex-none p-2 px-0.5 " />
+    if (isLoadingTopBook || !Array.isArray(dataTopBook)) {
+      return <BookGridLoading pageSize={8} className="carousel-item flex-none p-2 px-0.5 " />
+    }
 
-    return dataTopBook?.map((book, index) => (
-      <div key={index} className={`carousel-item hover:scale-102 flex-none`}>
+    return dataTopBook.map((book, index) => (
+      <div key={index} className={`carousel-item hover:scale-102 flex-none px-0.5 py-2`}>
         <Book book={book} />
       </div>
     ))
@@ -90,20 +104,20 @@ function MyShop() {
     if (isLoadingFeaturedBook) return <BookGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
 
     return dataFeaturedBook?.map((book, index) => (
-      <div key={index} className={`carousel-item m-2 flex-none p-4 px-0.5 hover:scale-95`}>
+      <div key={index} className={`carousel-item hover:scale-102 flex-none px-0.5 py-2`}>
         <Book book={book} />
       </div>
     ))
   }, [dataFeaturedBook, isLoadingFeaturedBook])
 
   return (
-    <div className="bg-accent">
+    <div className="bg-orange-100">
       <div>
         <MetaData title="Shop" />
         <main>
           <div className="">
             <div className="h-[12rem]">
-              <div className="h-36 bg-black"></div>
+              <div className="h-36 bg-orange-900"></div>
               <div className="">
                 <header className="">
                   <img
@@ -111,7 +125,7 @@ function MyShop() {
                     alt={shop?.shop.logoImg as string}
                     className="absolute left-[45rem] top-28 z-10 h-28 w-28 rounded-[50%] p-2"
                   />
-                  <div className="absolute left-[16rem] top-44 h-[8rem] w-[63rem] rounded-md border-2 bg-slate-50">
+                  <div className="absolute left-[16rem] top-44 h-[8rem] w-[63rem] rounded-md border-2 bg-orange-50">
                     <div className="right-0 flex flex-row items-center justify-center pt-8">
                       <p className="ml-8 py-2 text-xl font-semibold">{shop.shop.agencyName}</p>
                     </div>
@@ -125,27 +139,26 @@ function MyShop() {
               </div>
             </div>
           </div>
-          <div className="mt-8 flex w-[100vw] gap-2 px-32">
+          <div className="mt-8 flex w-full gap-2 px-32">
             <div className="w-full">
-              <p className="text-g text-lg">TOP BOOKS</p>
-
+              <p className="text-lg font-bold text-orange-600">TOP BOOKS</p>
               <ScrollArea>
-                <div className="my-4 flex gap-3">{renderTopBooks}</div>
+                <div className="my-4 flex gap-2">{renderTopBooks}</div>
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
           </div>
-          <div className="mt-8 flex w-[100vw] gap-2 px-32 pb-8">
+          <div className="mt-8 flex w-full gap-2 px-32 pb-8">
             <div className="mt-5 w-full">
-              <p className="text-g my-4 text-lg">RECOMMENDED FOR YOU</p>
+              <p className="text-lg font-bold text-orange-600">RECOMMENDED FOR YOU</p>
               <ScrollArea>
-                <div className="flex space-x-4 pb-4 pr-4">{renderFeatureBooks}</div>
+                <div className="my-4 flex gap-2">{renderFeatureBooks}</div>
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
           </div>
           <div className="mt-8 flex w-full gap-4 px-32 pb-8">
-            <section key="main.section.sidebar" className="sticky top-0 h-min w-1/6 rounded-md bg-accent">
+            <section key="main.section.sidebar" className="sticky top-0 h-min w-1/6 rounded-md bg-orange-100">
               <BookFilterSidebar
                 onFilterChange={(data) => {
                   setBookState((prev) => ({

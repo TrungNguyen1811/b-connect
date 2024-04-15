@@ -18,7 +18,7 @@ const initBookState: GetManyBooksParams = {
   PageNumber: 1,
   PageSize: 40,
   Name: undefined,
-  CateIds: undefined,
+  CategoryIds: undefined,
   MinPrice: undefined,
   MaxPrice: undefined,
   OverRating: undefined,
@@ -70,15 +70,15 @@ function BookPage() {
 
   if (isError) return <ErrorPage />
   return (
-    <div className=" bg-zinc-100">
-      <div className="mx-auto max-w-7xl sm:px-6">
+    <div className=" bg-orange-100">
+      <div className="mx-auto max-w-7xl sm:px-4">
         <main className="mx-auto min-h-screen w-full">
           <MetaData title="Books" />
           <Breadcrumb items={breadcrumb} className="w-full pt-4" />
           <CarouselAdv />
           <Publishers />
           <div className="mt-8 flex w-full gap-2 pb-8">
-            <section key="main.section.sidebar" className="sticky top-28 h-min w-1/5 rounded-md bg-accent">
+            <section key="main.section.sidebar" className="sticky top-28 h-min w-1/6 rounded-md bg-orange-100">
               <BookFilterSidebar
                 onFilterChange={(data) => {
                   setBookState((prev) => ({
@@ -89,9 +89,9 @@ function BookPage() {
                 totalBooks={totalBook}
               />
             </section>
-            <div className="ml-8">
+            <div className="ml-4">
               <SortBook />
-              <section key="main.section.books" className="ml-4 grid flex-1 grid-cols-5 gap-12">
+              <section key="main.section.books" className="ml-4 grid flex-1 grid-cols-5 gap-2">
                 {renderBooks}
                 <div className="col-span-full mx-auto w-fit">
                   <Pagination

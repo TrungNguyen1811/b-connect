@@ -11,10 +11,10 @@ import { Avatar, AvatarImage } from 'src/components/ui/avatar'
 import { User } from 'src/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'src/components/ui/use-toast'
-import { profileApi } from 'src/api/apis/auth/profile.api'
 import { useEffect, useState } from 'react'
 import { useAuth } from 'src/hooks/useAuth'
 import { updateUserProfileApi } from 'src/api/user/post-user'
+import { getUserById } from 'src/api/user/get-user'
 
 const formSchema = z.object({
   username: z.string().optional(),
@@ -42,32 +42,20 @@ function InfoAccount() {
   const token = localStorage.getItem('token') as string
   const fetchDataAndUpdateForm = async () => {
     try {
-      await profileApi(token!, (err, fetchedUser) => {
-        if (err) {
-          toast({
-            title: err.message,
-            description: err.cause?.message,
-            variant: 'destructive',
-          })
-        } else {
-          if (!users) {
-            return
-          }
-          if (fetchedUser && fetchedUser.userId) {
-            setUser(fetchedUser)
-            form.reset(fetchedUser)
-            toast({
-              title: 'Success',
-              variant: 'success',
-            })
-          } else {
-            toast({
-              title: 'Invalid users response',
-              description: 'No users ID in the response.',
-            })
-          }
-        }
-      })
+      const userData = await getUserById(user?.userId as string)
+      if (userData) {
+        setUser(userData)
+        form.reset(userData)
+        toast({
+          title: 'Success',
+          variant: 'success',
+        })
+      } else {
+        toast({
+          title: 'Invalid users response',
+          description: 'No users ID in the response.',
+        })
+      }
     } catch (error) {
       toast({
         title: 'Error users detail',
@@ -112,6 +100,7 @@ function InfoAccount() {
         <p className="text-xl">My Profile</p>
         <p className="text-gray-500">Manage and protect your account</p>
       </div>
+
       <Separator />
       <div>
         <Form {...form}>
@@ -165,7 +154,7 @@ function InfoAccount() {
               <ResizablePanel defaultSize={40}>
                 <div className="flex h-[200px] flex-col items-center p-6 pt-24">
                   <Avatar className="h-24 w-24">
-                    <AvatarImage src={user?.avatarDir as string}></AvatarImage>
+                    <AvatarImage src={users?.avatarDir as string} className="" />
                   </Avatar>
                   <FormField
                     control={form.control}
