@@ -7,7 +7,7 @@ function UserLayout() {
       <div>
         <SideBar />
       </div>
-      <div className="p-4">
+      <div className="w-full bg-orange-50 p-4">
         <Outlet />
       </div>
     </div>

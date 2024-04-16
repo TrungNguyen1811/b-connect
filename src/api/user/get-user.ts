@@ -14,3 +14,24 @@ export async function getUserByUserName(username: string) {
     return data
   })
 }
+
+export async function getTotalSpend(data: { year: string; month: string; customerId: string }) {
+  const setData = {
+    ...data,
+    month: parseInt(data.month),
+    year: parseInt(data.year),
+  }
+  return authAxiosClient
+    .get(`/Order/total-spend?Year=${setData.year}&Month=${setData.month}&customerId=${setData.customerId}`)
+    .then((res) => {
+      const data = res.data
+      return data
+    })
+}
+
+export async function getCompareMonth(customerId: string) {
+  return authAxiosClient.get(`/Order/compare-spend-this-month-to-last-month?customerId=${customerId}`).then((res) => {
+    const data = res.data
+    return data
+  })
+}

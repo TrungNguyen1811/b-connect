@@ -35,3 +35,19 @@ export interface IPaymentReturnDTO {
   amount: number
   signature: string
 }
+export interface IResponseItemsOrder {
+  bookId: string
+  bookName: string
+  price: number
+  quantity: number
+  status: string
+  agencyId: string
+  agencyName: string
+  bookDir: string
+}
+export interface IResponseOrder {
+  orderId: string
+  totalPrice: number
+  date: string
+  items: IResponseItemsOrder[]
+}
