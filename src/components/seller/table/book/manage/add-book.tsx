@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { CalendarIcon, CheckIcon, SortAscIcon } from 'lucide-react'
+import { CalendarIcon, CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { postAddBook } from 'src/api/books/post-add-book'
 import { Button } from 'src/components/ui/button'
@@ -32,6 +32,7 @@ function AddBookPage() {
 
   const { data: categories } = useGetAllCategory()
   const [selected, setSelected] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     form.setValue('category', selected)
@@ -48,18 +49,22 @@ function AddBookPage() {
 
   const { mutate: addBook } = useMutation((data: FormData) => postAddBook(data), {
     onSuccess: (data) => {
-      if (data == 'Successful') {
-        toast({
-          title: 'Success',
-          description: 'Add Book Success!!!',
-        })
-      } else {
-        toast({
-          title: 'Failed',
-          description: 'Add Book Failed with' + ' ' + data,
-        })
-      }
-      queryClient.invalidateQueries()
+      setIsLoading(true)
+      setTimeout(() => {
+        setIsLoading(false)
+        if (data == 'Successful') {
+          toast({
+            title: 'Success',
+            description: 'Add Book Success!!!',
+          })
+        } else {
+          toast({
+            title: 'Failed',
+            description: 'Add Book Failed with' + ' ' + data,
+          })
+        }
+        queryClient.invalidateQueries()
+      }, 2000)
     },
     onError: (error: Error) => {
       toast({
@@ -282,11 +287,8 @@ function AddBookPage() {
           </div>
           <div className="fixed bottom-0 flex-grow border-t-2 bg-white text-right">
             <div className="w-[90rem]">
-              <Button className="my-2 mr-8 w-32" type="submit">
-                Cancel
-              </Button>
-              <Button className="my-2 mr-96 w-32" type="submit">
-                Save
+              <Button disabled={isLoading} className="my-2 mr-96 w-32" type="submit">
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Submit'}
               </Button>
             </div>
           </div>

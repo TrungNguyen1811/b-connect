@@ -329,4 +329,71 @@
     height: 1px;
     overflow: hidden;
   }
+
+  // chat
+  .label {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    height: 54px;
+    width: 54px;
+    background: #ea580c;
+    text-align: center;
+    line-height: 54px;
+    border-radius: 54px;
+    font-size: 54px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.label i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s ease;
+}
+
+.label i.fas {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#click:checked ~ .label i.fas {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+#click:checked ~ .label i.fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.wrapper-chat {
+  position: fixed;
+  right: 30px;
+  bottom: 80px;
+  max-height: 400px;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+#click:checked ~ .wrapper-chat {
+  opacity: 1;
+  bottom: 80px;
+  pointer-events: auto;
+}
+
+#click {
+  display: none;
 }

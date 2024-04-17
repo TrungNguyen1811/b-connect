@@ -5,6 +5,7 @@ import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
+import { ChatLayout } from 'src/pages/chat/chat-layout'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -115,6 +116,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: 'checkout-failed',
         element: <CheckoutFailed />,
+      },
+      {
+        path: 'chat',
+        element: <ChatLayout defaultLayout={undefined} navCollapsedSize={0} />,
       },
       {
         path: 'shop/:id',
