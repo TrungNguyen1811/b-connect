@@ -38,6 +38,7 @@ const BookManagerPage = React.lazy(() => import('src/pages/seller/book/BookManag
 const AddBookPage = React.lazy(() => import('src/components/seller/table/book/manage/add-book'))
 const BookGroupManagerPage = React.lazy(() => import('src/pages/seller/book/BookGroupManagerPage'))
 const BookGroupDetailManagerPage = React.lazy(() => import('src/pages/seller/book/BookGroupDetailManagerPage'))
+const OrderManagerPage = React.lazy(() => import('src/pages/seller/OrderManage'))
 const ReplyReviewPage = React.lazy(() => import('src/pages/seller/ReplyReviewPage'))
 
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
@@ -229,6 +230,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/seller/manage/group-of-book/:id',
         element: <BookGroupDetailManagerPage />,
+      },
+      {
+        path: '/seller/manage/order',
+        element: <OrderManagerPage />,
       },
       {
         path: '/seller/rating',

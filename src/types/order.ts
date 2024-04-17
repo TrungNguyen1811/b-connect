@@ -51,3 +51,31 @@ export interface IResponseOrder {
   date: string
   items: IResponseItemsOrder[]
 }
+
+export interface IResponseAgencyOrder {
+  orderId: string
+  customerId: string
+  total_Price: number
+  status: string
+  paymentMethod: string
+  quantity: number
+  notes: string
+  createdDate: string
+  transactionId: string
+  addressId: string
+}
+
+export interface IResponseAgencyOrderDetail {
+  orderId: string
+  customerId: string
+  customerName: string
+  bookName: string[]
+  status: string
+  paymentMethod: string
+  quantity: number
+  price: number
+  notes: string
+  transactionId: string
+  address: string
+  createdDate: string
+}

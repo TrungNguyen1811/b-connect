@@ -34,3 +34,13 @@ export function formatDuration(days: number, hours: number, minutes: number, sec
 
   return format(date, 'D.HH:mm:ss')
 }
+
+export function formatDate(formDate: Date) {
+  return (
+    formDate.getFullYear() +
+    '/' +
+    ('0' + (formDate.getMonth() + 1)).slice(-2) +
+    '/' +
+    ('0' + formDate.getDate()).slice(-2)
+  )
+}
