@@ -1,15 +1,18 @@
 export interface Message {
   id: string
+  senderId?: string
   avatar: string
-  name: string
-  message: string
+  username: string
+  messageText: string
+  sentDate?: string
 }
 
 export interface UserChat {
   id?: string
+  userId: string
   avatar: string
-  messages: Message[]
-  name: string
+  chatHistory?: Message[]
+  username: string
 }
 
 export interface UserChatReply {

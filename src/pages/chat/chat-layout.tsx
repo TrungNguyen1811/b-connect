@@ -4,8 +4,8 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from 'src/compon
 import { cn } from 'src/lib/utils'
 import { Chat } from './chat'
 import { Sidebar } from './chat-side-bar'
-import { useEffect, useState } from 'react'
-import { getChatUsers } from 'src/api/chat/get-chat'
+import { useCallback, useEffect, useState } from 'react'
+import { getChatMessages } from 'src/api/chat/get-chat'
 import { UserChat } from 'src/types/chat'
 import { MessageCircle, XIcon } from 'lucide-react'
 
@@ -23,18 +23,27 @@ export function ChatLayout({
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed)
   const [userData, setUserData] = useState<UserChat[]>()
   const [selectedUser, setSelectedUser] = useState<UserChat>()
-
   useEffect(() => {
     const fetchListUser = async () => {
-      const listUser = await getChatUsers()
+      const listUser = await getChatMessages()
       setUserData(listUser)
     }
     fetchListUser()
-  }, [])
+  }, [selectedUser])
 
-  const handleSelected = (value: UserChat) => {
-    setSelectedUser(value)
-  }
+  useEffect(() => {
+    if (userData && userData.length > 0 && !selectedUser) {
+      setSelectedUser(userData[0])
+    }
+  }, [userData, selectedUser])
+
+  const handleSelected = useCallback(
+    (value: UserChat) => {
+      setSelectedUser(value)
+    },
+    [setSelectedUser],
+  )
+
   return (
     <div>
       <input type="checkbox" id="click" />
@@ -62,17 +71,18 @@ export function ChatLayout({
           <Sidebar
             isCollapsed={isCollapsed}
             links={userData?.map((user) => ({
-              name: user.name,
-              messages: user.messages ?? [],
+              userId: user.userId as string,
+              username: user.username,
+              chatHistory: user.chatHistory ?? [],
               avatar: user.avatar,
-              variant: selectedUser?.name === user.name ? 'grey' : 'ghost',
+              variant: selectedUser?.username === user.username ? 'grey' : 'ghost',
             }))}
             onSetSelectedUser={handleSelected}
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-          <Chat messages={selectedUser?.messages} selectedUser={selectedUser as UserChat} />
+          <Chat messages={selectedUser?.chatHistory} selectedUser={selectedUser as UserChat} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

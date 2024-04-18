@@ -8,16 +8,16 @@ export async function getChatUsers() {
   })
 }
 
-export async function getUserChat() {
-  return authAxiosClient.get(`/Chat/GetUserChat`).then((res) => {
+export async function getOwnChat(chatUserId: string) {
+  return authAxiosClient.get(`/Chat/GetOwnChat?chatUserId=${chatUserId}`).then((res) => {
     const data: UserChat = res.data
     return data
   })
 }
 
-export async function getChatMessages(id: string, chatUserId: string) {
-  return authAxiosClient.get(`/Chat/GetChatMessages?id=${id}&chatUserId=${chatUserId}`).then((res) => {
-    const data = res.data
+export async function getChatMessages() {
+  return authAxiosClient.get(`/Chat/GetChatMessages`).then((res) => {
+    const data: UserChat[] = res.data
     return data
   })
 }

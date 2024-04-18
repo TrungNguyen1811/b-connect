@@ -9,8 +9,9 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from 'src/co
 interface SidebarProps {
   isCollapsed: boolean
   links?: {
-    name: string
-    messages: Message[]
+    userId: string
+    username: string
+    chatHistory: Message[]
     avatar: string
   }[]
   onClick?: () => void
@@ -41,18 +42,18 @@ export function Sidebar({ links, isCollapsed, onSetSelectedUser }: SidebarProps)
                     onClick={() => onSetSelectedUser(link)}
                     className={cn(
                       buttonVariants({ variant: 'outline', size: 'icon' }),
-                      'h-11 w-11 md:h-16 md:w-16',
+                      ' h-11 w-11 px-0 md:h-16 md:w-16',
                       'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white',
                     )}
                   >
                     <Avatar className="flex items-center justify-center">
                       <AvatarImage src={link.avatar} alt={link.avatar} width={6} height={6} className="h-10 w-10 " />
                     </Avatar>{' '}
-                    <span className="sr-only">{link.name}</span>
+                    <span className="sr-only">{link.username}</span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="right" className="flex items-center gap-4">
-                  {link.name}
+                  {link.username}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -62,19 +63,19 @@ export function Sidebar({ links, isCollapsed, onSetSelectedUser }: SidebarProps)
               key={index}
               className={cn(
                 buttonVariants({ variant: 'outline', size: 'lg' }),
-                'shrink dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
-                'justify-start gap-4',
+                'shrink px-0 dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
+                'justify-start gap-1 px-1',
               )}
             >
               <Avatar className="flex items-center justify-center">
                 <AvatarImage src={link.avatar} alt={link.avatar} width={6} height={6} className="h-10 w-10 " />
               </Avatar>
-              <div className="max-w-28 flex flex-col">
-                <span>{link.name}</span>
-                {link.messages.length > 0 && (
+              <div className="max-w-20 flex flex-col">
+                <span className="text-xs">{link.username}</span>
+                {link.chatHistory.length > 0 && (
                   <span className="truncate text-xs text-zinc-300 ">
-                    {link.messages[link.messages.length - 1].name.split(' ')[0]}:{' '}
-                    {link.messages[link.messages.length - 1].message}
+                    {link.chatHistory[link.chatHistory.length - 1].username.split(' ')[0]}:{' '}
+                    {link.chatHistory[link.chatHistory.length - 1].messageText}
                   </span>
                 )}
               </div>

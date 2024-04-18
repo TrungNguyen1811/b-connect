@@ -1,7 +1,7 @@
 import { Message, UserChat } from 'src/types/chat'
 import { ChatList } from './chat-list'
-import React from 'react'
-import ChatTopbar from './top-bar'
+import React, { useEffect } from 'react'
+import ChatTopBar from './top-bar'
 
 interface ChatProps {
   messages?: Message[]
@@ -9,15 +9,21 @@ interface ChatProps {
 }
 
 export function Chat({ messages, selectedUser }: ChatProps) {
-  const [messagesState, setMessages] = React.useState<Message[]>(messages ?? [])
+  useEffect(() => {
+    if (messages) {
+      setMessages(messages)
+    }
+  }, [messages])
+  const [messagesState, setMessages] = React.useState<Message[]>(messages || [])
 
   const sendMessage = (newMessage: Message) => {
-    setMessages([...messagesState, newMessage])
+    setMessages((prevMessages) => [...prevMessages, newMessage])
   }
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <ChatTopbar selectedUser={selectedUser} />
+      <ChatTopBar selectedUser={selectedUser} />
+      {/* <ChatList messages={messages} selectedUser={selectedUser} sendMessage={sendMessage} /> */}
       <ChatList messages={messagesState} selectedUser={selectedUser} sendMessage={sendMessage} />
     </div>
   )
