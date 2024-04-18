@@ -12,7 +12,7 @@ const BookPage = React.lazy(() => import('src/pages/book/BookPage'))
 const BookDetailPage = React.lazy(() => import('src/pages/book/BookDetailPage'))
 const DailyDiscover = React.lazy(() => import('src/pages/e-commerce/DailyDiscover'))
 const TopBookPage = React.lazy(() => import('src/pages/e-commerce/TopBook'))
-const ViewCart = React.lazy(() => import('src/pages/cart/view-cart'))
+const ViewCart = React.lazy(() => import('src/pages/e-commerce/view-cart'))
 const CheckoutPage = React.lazy(() => import('src/components/cart/checkout'))
 const CheckoutResult = React.lazy(() => import('src/components/cart/checkout-result'))
 const CheckoutSuccess = React.lazy(() => import('src/components/cart/success'))
@@ -40,6 +40,8 @@ const BookGroupManagerPage = React.lazy(() => import('src/pages/seller/book/Book
 const BookGroupDetailManagerPage = React.lazy(() => import('src/pages/seller/book/BookGroupDetailManagerPage'))
 const OrderManagerPage = React.lazy(() => import('src/pages/seller/OrderManage'))
 const ReplyReviewPage = React.lazy(() => import('src/pages/seller/ReplyReviewPage'))
+const AdvertisementPage = React.lazy(() => import('src/pages/seller/AdvertisementPage'))
+const CheckoutAdsResultPage = React.lazy(() => import('src/pages/seller/CheckoutAdsResultPage'))
 
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
@@ -234,6 +236,14 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/seller/manage/order',
         element: <OrderManagerPage />,
+      },
+      {
+        path: '/seller/marketing',
+        element: <AdvertisementPage />,
+      },
+      {
+        path: '/seller/ad/checkout-result',
+        element: <CheckoutAdsResultPage />,
       },
       {
         path: '/seller/rating',

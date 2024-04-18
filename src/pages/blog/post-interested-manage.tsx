@@ -116,7 +116,7 @@ function PostInterestedManage() {
             <Checkbox checked={checkbox} onCheckedChange={(checked: boolean) => setCheckbox(checked)} />
           </div>
           {checkbox ? (
-            <div className="min-h-[35rem] rounded-md border-2 bg-orange-50 p-4">
+            <div className="min-h-[35rem] rounded-md border-2 bg-white p-4">
               {lockBlogs?.map((lock, index) => (
                 <div key={index} className="">
                   <Link to={`/blog/dashboard/submit-form/${lock.postId}`}>
@@ -130,7 +130,7 @@ function PostInterestedManage() {
               ))}
             </div>
           ) : interestList && interestList.length > 0 ? (
-            <div className="min-h-[35rem] rounded-md border-2 bg-orange-50">
+            <div className="min-h-[35rem] rounded-md border-2 bg-white">
               {interestList.map((post, index) => (
                 <div key={index} className="flex w-full flex-col">
                   <div className="mx-4 p-4 pb-2">

@@ -127,7 +127,6 @@ export default function SubmitTrade() {
     if (tradeDetail) {
       const userTrade: ITradeDetail = tradeDetail.find((trade) => trade.details.isPostOwner === false) as ITradeDetail
       setInterester(userTrade)
-      console.log('interester', userTrade)
     }
   }, [tradeDetail, isOwner])
 
@@ -390,7 +389,7 @@ export default function SubmitTrade() {
         return (
           <div className="min-w-[33vw] px-4 pb-4">
             <div className="text-red-600">Interested person has not confirmed</div>
-            <div className="">{renderTrader(userTrader)}</div>
+            {/* <div className="">{renderTrader(userTrader)}</div> */}
           </div>
         )
 
@@ -406,7 +405,7 @@ export default function SubmitTrade() {
                   to confirm the trade information
                 </p>
               </div>
-              {renderTrader(userTrader)}
+              {/* {renderTrader(userTrader)} */}
             </div>
           </div>
         )
@@ -418,7 +417,7 @@ export default function SubmitTrade() {
 
   const renderTrader = (userTrade: ITradeDetail) => {
     return (
-      <div className="px-4 pb-4">
+      <div className="px-4 pb-4 sm:h-[16rem] sm:w-[16rem] md:h-[32rem] md:w-[32rem]">
         {/* <div className="flex flex-row items-center">
           <Label className="text-md">TraderId:</Label>
           <p className="ml-2">{userTrade?.traderId}</p>
@@ -472,12 +471,12 @@ export default function SubmitTrade() {
       <div className="flex flex-row justify-center">
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
-            <div className="rounded-md border-2">
+            <div className="rounded-md border-2 bg-white">
               <p className="m-4 text-lg font-medium">Interester</p> {interester && renderTraderComponent(interester)}{' '}
               {interester && renderTrader(interester)}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
-            <div className="rounded-md border-2">
+            <div className="rounded-md border-2 bg-white">
               <p className="m-4 text-lg font-medium">Owner</p>
               {userTrade?.details.status == 0 || userTrade?.details.status == 1 ? (
                 <div className="min-w-[33vw] px-4 pb-4">

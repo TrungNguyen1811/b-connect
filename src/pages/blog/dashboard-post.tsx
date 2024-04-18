@@ -18,18 +18,19 @@ function DashboardBlog() {
   const [lockBlogs, setLockBlogs] = useState<IResponsePostLocked[]>()
   const [checkbox, setCheckbox] = useState<boolean>(false)
   const queryClient = useQueryClient()
+  console.log('blogs', blogs)
+  console.log('lockBlogs', lockBlogs)
+  console.log('checkbox', checkbox)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (user && user.userId) {
-          if (checkbox) {
-            const id = '0'
-            const lockedBlogsData: IResponsePostLocked[] = await getLockedPostByUserId(id as string)
-            setLockBlogs(lockedBlogsData)
-            const blogsData: IResponsePost[] = await getPostByUserId(user.userId)
-            setBlogs(blogsData)
-          }
+          const id = '0'
+          const lockedBlogsData: IResponsePostLocked[] = await getLockedPostByUserId(id as string)
+          setLockBlogs(lockedBlogsData)
+          const blogsData: IResponsePost[] = await getPostByUserId(user.userId)
+          setBlogs(blogsData)
         }
       } catch (error) {
         console.error('Error fetching data:', error)

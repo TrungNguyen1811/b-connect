@@ -100,7 +100,7 @@ function FollowingTags() {
         <p className="p-4 text-3xl font-bold">Dashboard {'>>'} Following Tags</p>
       </div>
       <div className="mx-4 flex flex-row">
-        <nav className="mr-3 w-2/5">
+        <nav className="mr-3 w-64">
           <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Post</p>
