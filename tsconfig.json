@@ -24,8 +24,11 @@
     "rootDir": ".",
     "jsx": "react-jsx",
     "paths": {
-      "src/*": ["./src/*"]
-    }
+      "src/*": ["./src/*"],
+      "radix-ui/react-select": ["relative/path/to/module"]
+    },
+    "types": ["vite/client", "node"]
   },
-  "include": ["./src", "vite-env.d.ts"]
+  "include": ["src", "src/types","./src", "vite-env.d.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
