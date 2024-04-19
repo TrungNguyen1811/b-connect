@@ -22,6 +22,16 @@ function BookTable() {
           }}
           setSearchQuery={(value) => {
             table.setGlobalFilter(value.search)
+            table.setColumnFilters(() => [
+              {
+                id: 'type',
+                value: value.type,
+              },
+              {
+                id: 'cate',
+                value: value.cate,
+              },
+            ])
           }}
         />
       </div>

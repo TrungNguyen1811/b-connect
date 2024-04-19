@@ -228,7 +228,7 @@ export default function UpdateBlog() {
       <div className="flex flex-row">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <ScrollArea className="ml-52 flex h-[35rem] w-[50rem] flex-row justify-between rounded-lg border-2 bg-orange-50 px-4 py-2">
+            <ScrollArea className="ml-52 flex h-[35rem] w-[50rem] flex-row justify-between rounded-lg border-2 bg-white px-4 py-2">
               <div className="rounded-lg border-gray-400 px-12 py-6">
                 <div className="flex flex-row items-center justify-stretch">
                   <FormField

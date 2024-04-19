@@ -48,7 +48,7 @@ function ChangePassword() {
         <Form {...formPassword}>
           <form>
             <div className="ml-4 flex flex-row items-center">
-              <div className="flex w-2/3 flex-col  rounded-md border border-2 bg-orange-100 px-4 py-8">
+              <div className="flex w-2/3 flex-col  rounded-md border border-2 bg-white px-4 py-8">
                 <p className="text-lg font-semibold">Change Password</p>
 
                 {/* <form onSubmit={formPassword.handleSubmit(onSubmitPassword)}> */}
@@ -103,9 +103,9 @@ function ChangePassword() {
                 <p className="">
                   If your account was created using social account authentication, you may prefer to add an email log
                   in. If you signed up with a social media account, please reset the password for your primary email
-                  address (trung4atlam@gmail.com) in order to enable this. Please note that email login is in addition
-                  to social login rather than a replacement for it, so your authenticated social account will continue
-                  to be linked to your account.
+                  address in order to enable this. Please note that email login is in addition to social login rather
+                  than a replacement for it, so your authenticated social account will continue to be linked to your
+                  account.
                 </p>
               </div>
             </div>

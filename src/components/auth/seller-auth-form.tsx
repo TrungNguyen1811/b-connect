@@ -30,7 +30,8 @@ import { getAllAddress } from 'src/api/address/get-address'
 import AddressData from 'src/components/cart/address.json'
 import { faker } from '@faker-js/faker'
 import postAddress from 'src/api/address/post-address'
-import { getUserById } from 'src/api/user/get-user'
+import { IToken } from 'src/types/token'
+import { profileApi } from 'src/api/apis/auth/profile.api'
 
 const SubscribeSchema = z.object({
   agencyName: z.string().min(3),
@@ -95,15 +96,6 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
   }, [])
   console.log('user', user)
 
-  const resetUser = async () => {
-    const userData = await getUserById(user?.userId as string)
-    setUsers(userData)
-    console.log('userss', user)
-    if (userData?.roles && userData.roles.includes(ROLE.SELLER) && userData.isValidated === true) {
-      navigate('/seller')
-    }
-  }
-
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
     const newAddress: IAddress = {
@@ -125,37 +117,42 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
       agencyName: data.agencyName,
       logoImg: data.logoImg as File,
     }
-    console.log('user?.isValidated', users?.isValidated)
-    resetUser()
-    // if (users?.isValidated == true) {
-    await RegisterAgency(mergedData, async (err, data) => {
-      if (err) {
-        toast({
-          title: err.message,
-          description: err.cause?.message,
-          variant: 'destructive',
+
+    if (user?.isValidated == true) {
+      let token: IToken
+      await RegisterAgency(mergedData, async (err, result) => {
+        token = result!
+        await profileApi(token.accessToken!, (err, user) => {
+          if (err) {
+            toast({
+              title: err.message,
+              description: err.cause?.message,
+              variant: 'destructive',
+            })
+          } else {
+            if (!user) {
+              return
+            }
+            login({
+              user,
+              token,
+            })
+            if (user?.roles && user?.roles.includes(ROLE.SELLER) && user.isValidated === true) {
+              navigate('/seller/dashboard')
+            }
+          }
         })
-      } else {
-        if (!users) {
-          return
+        if (user?.roles && user?.roles.includes(ROLE.SELLER) && user.isValidated === true) {
+          navigate('/seller')
         }
-        toast({
-          title: 'Register Success',
-          description: data,
-          variant: 'success',
-        })
-        logout()
-        navigate('/')
-        resetUser()
-      }
-    })
-    // } else {
-    //   toast({
-    //     title: 'Please Register National ID',
-    //     description: 'Looks like you have not registered for a National ID yet.',
-    //     variant: 'destructive',
-    //   })
-    // }
+      })
+    } else {
+      toast({
+        title: 'Please Register National ID',
+        description: 'Looks like you have not registered for a National ID yet.',
+        variant: 'destructive',
+      })
+    }
 
     setIsLoading(false)
     setTimeout(() => {

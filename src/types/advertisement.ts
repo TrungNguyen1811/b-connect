@@ -6,7 +6,7 @@ export interface ITopBanner {
   bannerTitle: string
   price: number
 }
-export interface IRelevantBanner {
+export interface IRelevantBooks {
   bookId: string
   imageDir: string
   title: string
@@ -31,4 +31,12 @@ export enum Duration {
   WEEK = 'Week',
   MONTH = 'Month',
   YEAR = 'Year',
+}
+
+export interface ICheckList {
+  id?: string
+  tradeDetailsId?: string
+  target?: string
+  bookOwnerUploadDir: File
+  middleUploadDir: File
 }

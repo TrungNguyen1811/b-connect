@@ -196,12 +196,12 @@ function BlogDetail() {
         </div>
         <div className="flex w-full flex-col">
           <div className=" border-1 w-9/10 flex flex-col rounded-md border">
-            <div className="my-2 ml-4 flex flex-row items-center">
-              <p className="mr-2 text-lg font-bold">{userName}</p>
-              <p className="text-sm font-light">{createDate ? format(new Date(createDate), 'PPpp') : 'N/A'}</p>
+            <div className="my-2 ml-4 flex flex-row items-center justify-between">
+              <p className="text-md mr-2 font-bold">User01{userName}</p>
+              <p className="mr-2 text-sm font-light">{createDate ? format(new Date(createDate), 'PPpp') : 'N/A'}</p>
             </div>
             <div>
-              <p className="ml-4">{content}</p>
+              <p className="mb-2 ml-8">{content}</p>
             </div>
           </div>
           <div className="m-4 flex flex-row">

@@ -30,6 +30,9 @@ import { ScrollArea } from '../ui/scroll-area'
 import { Input } from '../ui/input'
 import postAddress from 'src/api/address/post-address'
 import { Checkbox } from '../ui/check-box'
+import { postCartApi } from 'src/api/cart/post-cart'
+import { DataCart } from 'src/hooks/useOrderCart'
+import { getCartIdApi } from 'src/api/cart/get-cart-id'
 
 type FormData = z.infer<typeof CartSchema>
 
@@ -47,14 +50,65 @@ const CheckoutPage = () => {
     resolver: zodResolver(CartSchema),
   })
   const { user } = useAuth()
+  const userId = user?.userId
   const [checkoutUrl, setCheckoutUrl] = useState<string>('')
   const { state } = useParams()
   const [order, setOrder] = useState<ICart[]>([])
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
   const [checkbox, setCheckbox] = useState<boolean>(false)
+  const [cartData, setCartData] = useState<DataCart[]>([])
+  const [cartId, setCartId] = useState<string>()
 
-  // const provinces = Object.keys(AddressData)
+  useEffect(() => {
+    const fetchCartId = async () => {
+      try {
+        const fetchedCartId = await getCartIdApi(userId as string)
+        setCartId(fetchedCartId)
+      } catch (error) {
+        console.error('Error retrieving cartId:', error)
+      }
+    }
+
+    if (userId) {
+      fetchCartId()
+    }
+  }, [userId])
+
+  useEffect(() => {
+    const updateCartData = () => {
+      if (order && order.length > 0) {
+        const updatedCartData = order.map((book) => ({
+          productId: book.productId as string,
+          cartId: cartId || '',
+          quantity: book.quantity,
+        }))
+        setCartData(updatedCartData)
+      } else {
+        setCartData([])
+      }
+    }
+
+    updateCartData()
+  }, [order, cartId])
+
+  useEffect(() => {
+    const saveData = async () => {
+      if (order.length > 0) {
+        await saveCartToDatabase(cartData)
+      }
+    }
+
+    saveData()
+  }, [cartData])
+
+  const saveCartToDatabase = async (cartData: DataCart[]) => {
+    try {
+      await postCartApi(cartData)
+    } catch (error) {
+      console.error('Error saving cart to the database:', error)
+    }
+  }
 
   const [checkoutData, setCheckoutData] = useState<ICheckout | null>(null)
   // const navigate = useNavigate()

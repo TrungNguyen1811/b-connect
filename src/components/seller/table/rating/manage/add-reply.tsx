@@ -54,7 +54,7 @@ export function ReplyCustomer({ data }: { data: IListReplyResponse }) {
       <DialogTrigger asChild>
         <Button variant="outline">Reply</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="w-[50vw]">
         <DialogHeader>
           <DialogTitle>Reply</DialogTitle>
         </DialogHeader>
@@ -62,7 +62,7 @@ export function ReplyCustomer({ data }: { data: IListReplyResponse }) {
           <div className="grid flex-1 gap-2">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className=" bg-gray-100 px-12 pb-16 pt-8">
+                <div className=" bg-gray-100">
                   <div className="mx-4">
                     <FormField
                       control={form.control}

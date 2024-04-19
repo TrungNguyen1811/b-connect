@@ -23,6 +23,12 @@ import { Rating } from '@smastrom/react-rating'
 import { postRatingComment } from 'src/api/review/post-rating-review'
 import { useAuth } from 'src/hooks/useAuth'
 import getAllReviewByBookId from 'src/api/review/get-all-review-by-bookId'
+import BookGridLoading from 'src/components/book/book-grid-loading'
+import useGetManyBooks from 'src/hooks/useGetManyBooks'
+import { useCustomQueryDetail } from 'src/hooks/useCustomQueryDetail'
+import { getRelevantBooks } from 'src/api/advertisement/get-top-banner'
+import { IRelevantBooks } from 'src/types/advertisement'
+import CardBook from 'src/components/card-book'
 
 type FormValue = {
   comment: string
@@ -49,14 +55,14 @@ function BookDetailPage() {
     }
   }, [book?.productId])
 
-  // const { data: relatedBooks, isLoading } = useGetManyBooks(
-  //   {
-  //     category: book?.category?.length && book.category.length > 0 ? book.category[0]._id : '',
-  //   },
-  //   {
-  //     enabled: !!book?.category,
-  //   },
-  // )
+  const { data: relatedBooks, isLoading } = useGetManyBooks(
+    {
+      CategoryIds: book?.category?.length && book.category.length > 0 ? book.category[0] : '',
+    },
+    {
+      enabled: !!book?.category,
+    },
+  )
 
   const queryClient = useQueryClient()
   const { pathname } = useLocation()
@@ -74,17 +80,6 @@ function BookDetailPage() {
     }
   }
 
-  // const renderRelatedBooks = React.useMemo(() => {
-  //   if (isLoading) return <BookGridLoading pageSize={4} />
-
-  //   if (!relatedBooks?.data) return null
-
-  //   const _relatedBooks =
-  //     relatedBooks?.data.slice(0, relatedBooks?.data.length > 4 ? 4 : relatedBooks?.data.length) || []
-
-  //   return _relatedBooks?.map((book) => <Book key={book._id} book={book} />)
-  // }, [isLoading, relatedBooks?.data])
-
   const bookInCartAmount = useMemo(() => {
     if (!book) return 0
     const bookInCart = cartItems.find((item) => item.productId === book.productId)
@@ -99,8 +94,25 @@ function BookDetailPage() {
       const updatedBookReview: IReviewResponse[] = [...bookReview, review]
       setBookReview(updatedBookReview)
     },
-    [bookReview], // Make sure to include all dependencies of useCallback
+    [bookReview],
   )
+
+  const {
+    data: relevantData,
+    isLoading: isLoadingRelevant,
+    isError,
+  } = useCustomQueryDetail<IRelevantBooks[]>(() => getRelevantBooks(), {
+    refetchOnWindowFocus: false,
+  })
+  const renderRelevantBooks = useMemo(() => {
+    if (isLoadingRelevant) return <BookGridLoading pageSize={4} />
+
+    if (!relevantData) return null
+
+    const _relevantBooks = relevantData?.slice(0, relevantData?.length > 4 ? 4 : relevantData?.length) || []
+
+    return _relevantBooks?.map((book: IRelevantBooks) => <CardBook key={book.bookId} book={book} />)
+  }, [isLoadingRelevant, relevantData])
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     const paths = pathname.split('/')
@@ -120,7 +132,7 @@ function BookDetailPage() {
       },
       {
         key: 'book',
-        label: book?.name ?? '', // Handle book.name when book is null
+        label: book?.name ?? '',
       },
     ]
   }, [book, pathname])
@@ -225,6 +237,7 @@ function BookDetailPage() {
   //   ))
   // }, [book?.genres])
 
+  console.log(book)
   const handleReviewSubmit = useCallback(
     ({ ratingPoint, comment }: FormValue) => {
       const payload = {
@@ -283,7 +296,7 @@ function BookDetailPage() {
                 />
               </article>
 
-              <article className="col-span-2 ml-32 space-y-8 rounded-lg">
+              <article className="col-span-2 ml-32 space-y-4 rounded-lg">
                 <div className="space-y-4">
                   <h3 className="text-3xl font-medium tracking-wide">
                     {book.name}
@@ -305,7 +318,7 @@ function BookDetailPage() {
                 </div>
 
                 <div className="space-y-6 px-6">
-                  <h1 className="text-xl">
+                  <h1 className="text-2xl text-red-500">
                     <span className="font-bold">{formatPrice(book.price)}</span>
                   </h1>
                 </div>
@@ -314,15 +327,15 @@ function BookDetailPage() {
                   <span>Shipping</span>
                 </div>
                 <div className="space-y-2 px-6">
-                  <span>Type</span>
+                  <span className="mr-2">Type:</span>
                   <span>{book.type}</span>
                 </div>
                 <div className="flex flex-row items-center space-y-2 px-6">
-                  <span className="mr-6">Quantity</span>
-                  <span>{book.quantity}</span>
+                  <span className="mr-6 mt-2">Stock:</span>
+                  <span className="">{book.stock}</span>
                 </div>
 
-                <div className="flex px-6">
+                <div className="flex px-6 pt-8">
                   <Button disabled={book.isAvailable} onClick={handleAddToCart}>
                     <Plus className="mr-2" />
                     {bookInCartAmount > 0 ? `Add 1 (Have ${bookInCartAmount} in cart)` : 'Add to Cart'}
@@ -338,7 +351,8 @@ function BookDetailPage() {
         </div>
       </div>
 
-      <Separator />
+      <Separator className="mt-6" />
+
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="col-span-full space-y-2">
@@ -346,8 +360,8 @@ function BookDetailPage() {
             <div className="ml-4">
               <p className="text-md font-bold">Book Specifications:</p>
               {/* <p className="text-base text-slate-500">{book?.category}</p> */}
-              <p className="text-base text-slate-500">{book?.author}</p>
-              <p className="text-base text-slate-500">{book?.type}</p>
+              <p className="text-base text-slate-500">Author: {book?.author}</p>
+              <p className="text-base text-slate-500">Type: {book?.type}</p>
             </div>
             <div className="ml-4">
               <p className="text-md font-bold">Book Description:</p>
@@ -356,6 +370,12 @@ function BookDetailPage() {
             {/* <ul className="flex gap-1">{renderGenres}</ul> */}
           </div>
         </div>
+      </div>
+
+      <div>
+        <Avatar>
+          <AvatarImage src={book?.agencyId} />
+        </Avatar>
       </div>
 
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
@@ -426,7 +446,7 @@ function BookDetailPage() {
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.suggest'} className="min-h-[70vh] w-full py-10">
             <h3 className="text-3xl font-medium">You might also like</h3>
-            {/* <div className="h-30 flex gap-3 py-4">{renderRelatedBooks}</div> */}
+            <div className="h-30 flex gap-3 py-4">{renderRelevantBooks}</div>
           </section>
         </div>
       </div>

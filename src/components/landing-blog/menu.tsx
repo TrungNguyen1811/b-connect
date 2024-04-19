@@ -26,7 +26,7 @@ export function Menu() {
       {
         title: 'Tags',
         key: 'tags',
-        href: '/blog/dashboard/following_tags',
+        href: '/blog/tags',
         icon: 'tags',
       },
       {

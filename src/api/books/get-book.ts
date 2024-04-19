@@ -19,9 +19,9 @@ export async function getBookById(book_Id: string) {
     })
 }
 
-export async function GetAllBookInInventoryByName(params: Partial<IQueryPagination & IQuerySearch>) {
+export async function SearchBookInInventory(params: Partial<IQueryPagination & IQuerySearch>) {
   return await authAxiosClient
-    .get(`/products/SellerManager/GetAllBookInInventoryByName`, {
+    .get(`/products/SellerManager/SearchBookInInventory`, {
       params,
     })
     .then((res) => {
@@ -82,7 +82,7 @@ export async function GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId(
       return data
     })
 }
-export async function GetAllBookInInventory(params: Partial<IQueryPagination & IQuerySearch>) {
+export async function GetAllBookInInventory(params: GetManyBooksParams) {
   return await authAxiosClient
     .get(`/products/SellerManager/GetAllBookInInventory`, {
       params,

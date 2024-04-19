@@ -14,7 +14,7 @@ function TagList() {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
     setSearchParams({ q: searchQuery })
-    navigate(`/search?category=${encodeURIComponent(searchQuery)}`)
+    navigate(`/blog/tags?q=${encodeURIComponent(searchQuery)}`)
   }
 
   useEffect(() => {

@@ -83,7 +83,7 @@ function ReadingList() {
     }, [user])
 
     return (
-      <div className="flex flex-col">
+      <div className="flex min-h-[37rem] flex-col">
         <p className="text-md border-1 mb-4 rounded-sm border bg-orange-100 p-2 font-semibold">My Tags</p>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
           <ul className="list-none">

@@ -1,5 +1,5 @@
 import { authAxiosClient } from 'src/lib/axios'
-import { IRelevantBanner, ITopBanner } from 'src/types/advertisement'
+import { IRelevantBooks, ITopBanner } from 'src/types/advertisement'
 
 async function getTopBanner() {
   return authAxiosClient.get('/ad/get-top-banners').then((res) => {
@@ -12,15 +12,16 @@ async function getTopBanner() {
   })
 }
 export { getTopBanner }
+import { AxiosResponse } from 'axios' // Assuming you're using axios for HTTP requests
 
-async function getRelevantBanner() {
-  return authAxiosClient.get('/ad/get-relevant-books').then((res) => {
+async function getRelevantBooks(): Promise<IRelevantBooks[]> {
+  return authAxiosClient.get('/ad/get-relevant-books').then((res: AxiosResponse<IRelevantBooks[]>) => {
     if (res.status === 200) {
-      const data: IRelevantBanner[] = res.data
-      return data
+      return res.data
     } else {
-      return 'Error with status code' + res.status + '(' + res.data + ')'
+      throw new Error('Error with status code ' + res.status + '(' + res.data + ')')
     }
   })
 }
-export { getRelevantBanner }
+
+export { getRelevantBooks }

@@ -5,7 +5,7 @@ import TailwindIndicator from 'src/components/tailwind-indicator'
 
 export default function BlogLayout() {
   return (
-    <div className="h-full bg-orange-50 font-sans antialiased">
+    <div className="h-min-screen bg-orange-50 font-sans antialiased">
       <MetaData title="Blog" />
       <HeaderBlog />
       <Outlet />

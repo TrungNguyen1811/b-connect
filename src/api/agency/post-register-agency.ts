@@ -1,8 +1,9 @@
 import { AxiosError } from 'axios'
 import { authAxiosClient } from 'src/lib/axios'
 import { IAgency } from 'src/types/agency'
+import { IToken } from 'src/types/token'
 
-async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null, result: string | null) => void) {
+async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null, result: IToken | null) => void) {
   const formData = new FormData()
   formData.append('agencyName', data.agencyName as string)
   formData.append('logoImg', data.logoImg as File)
@@ -17,7 +18,10 @@ async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null
     })
     .then((err) => {
       if (err.status === 200) {
-        callback(null, err.data)
+        const token: IToken = {
+          accessToken: err.data,
+        }
+        callback(null, token)
       }
     })
     .catch((error) => {

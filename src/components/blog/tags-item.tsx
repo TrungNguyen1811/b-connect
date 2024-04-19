@@ -22,14 +22,14 @@ function TagItem({ id }: { id: string }) {
   }, [id])
 
   return (
-    <div className="h-48 w-full rounded-lg border-2 bg-orange-100">
+    <div className="h-48 w-full rounded-lg border-2 bg-white">
       <div className="flex flex-col p-4">
         <div className="px-1">
-          <Link to={`/blog/${tag?.cateId}`}>
+          <Link to={`/blog/c/${tag?.cateName}`}>
             <p className="font-semibold">{tag?.cateName}</p>
           </Link>
         </div>
-        <div className="p-1">
+        <div className="h-16 p-1">
           <p className="text-sm font-light">
             {tag?.description && tag.description.length > 50 ? `${tag.description.slice(0, 100)}...` : tag?.description}
           </p>

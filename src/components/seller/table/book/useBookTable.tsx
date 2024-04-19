@@ -6,7 +6,7 @@ import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
 import { IBook } from 'src/types'
-import { GetAllBookInInventoryByName } from 'src/api/books/get-book'
+import { SearchBookInInventory } from 'src/api/books/get-book'
 
 export function useBookTable(columns: ColumnDef<IBook>[]) {
   const [queries, setQueries] = useState<
@@ -19,7 +19,7 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
 
   const queryController = useQuery<IResponse<IBook[]>, AxiosError>(
     [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => GetAllBookInInventoryByName(queries),
+    () => SearchBookInInventory(queries),
     {
       keepPreviousData: true,
     },
@@ -55,7 +55,8 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     const otherFilters = tableStates.columnFilters
     setQueries((prev) => ({
       ...prev,
-      role: otherFilters?.[0]?.value,
+      type: otherFilters?.[0]?.value,
+      cate: otherFilters?.[1]?.value,
       PageNumber: tableStates.pagination.pageIndex + 1,
       PageSize: tableStates.pagination.pageSize,
       name: tableStates.globalFilter || undefined,

@@ -28,7 +28,7 @@ function TopBook() {
     if (isLoading)
       return (
         <div className="w-full flex-row p-2 px-0.5">
-          <BookGridLoading pageSize={6} className="grid flex-1 grid-cols-6 gap-5" />
+          <BookGridLoading pageSize={6} className="grid grid-cols-6 gap-5" />
         </div>
       )
 

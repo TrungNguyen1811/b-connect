@@ -65,14 +65,14 @@ export function UpdateReplyCustomer({ data }: { data: IListReplyResponse }) {
           <div className="grid flex-1 gap-2">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className=" bg-gray-100 px-12 pb-16 pt-8">
+                <div className=" ">
                   <div className="mx-4">
                     <FormField
                       control={form.control}
                       name="ReplyText"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-center">
-                          <FormLabel className="w-40 pr-2 text-right">Reply</FormLabel>
+                        <FormItem className="flex flex-row items-center justify-between">
+                          <FormLabel className="pr-2 text-right">Reply</FormLabel>
                           <FormControl>
                             <Textarea
                               className="h-40 bg-orange-50"

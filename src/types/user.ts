@@ -50,7 +50,7 @@ export interface IRegisterNIC {
   userId: string
   nicId: string
   nicName: string
-  nicDob?: Date
+  nicDob: Date
   nicHome: string
   // nicAddress: string
   nicSex: string
@@ -138,4 +138,6 @@ export interface IReviewUser {
   tradeDetailsId: string
   comment: string
   ratingPoint: string
+  // video: File
+  // image: File
 }

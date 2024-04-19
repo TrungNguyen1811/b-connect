@@ -90,7 +90,11 @@ function MyShop() {
 
   const renderTopBooks = useMemo(() => {
     if (isLoadingTopBook || !Array.isArray(dataTopBook)) {
-      return <BookGridLoading pageSize={8} className="carousel-item flex-none p-2 px-0.5 " />
+      return (
+        <div className="w-full flex-row p-2 px-0.5">
+          <BookGridLoading pageSize={6} className="grid grid-cols-6 gap-5" />
+        </div>
+      )
     }
 
     return dataTopBook.map((book, index) => (
@@ -101,7 +105,12 @@ function MyShop() {
   }, [dataTopBook, isLoadingTopBook])
 
   const renderFeatureBooks = useMemo(() => {
-    if (isLoadingFeaturedBook) return <BookGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
+    if (isLoadingFeaturedBook)
+      return (
+        <div className="w-full flex-row p-2 px-0.5">
+          <BookGridLoading pageSize={6} className="grid grid-cols-6 gap-5" />
+        </div>
+      )
 
     return dataFeaturedBook?.map((book, index) => (
       <div key={index} className={`carousel-item hover:scale-102 flex-none px-0.5 py-2`}>
@@ -170,7 +179,7 @@ function MyShop() {
               />
             </section>
             <div className="">
-              <section key="main.section.books" className="grid flex-1 grid-cols-5 gap-4">
+              <section key="main.section.books" className="grid  flex-1 grid-cols-5 gap-4">
                 {renderBooks}
                 <div className="col-span-full mx-auto w-fit">
                   <Pagination

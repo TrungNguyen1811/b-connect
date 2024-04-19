@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
@@ -7,6 +7,7 @@ import {
   ITradeDetail,
   getPostTraderByPostId,
   getTradeDetailByPostId,
+  postAddBookCheckList,
   postRateUserPostTrade,
   putSetTradeStatus,
   putSubmitTrade,
@@ -30,10 +31,16 @@ import { Textarea } from 'src/components/ui/text-area'
 import { Label } from 'src/components/ui/label'
 import { IAddress } from 'src/types/address'
 import { getAddressByAddressId } from 'src/api/address/get-address'
-import { Dialog, DialogContent, DialogHeader } from 'src/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from 'src/components/ui/dialog'
 import { IReviewUser } from 'src/types'
 import { ISubmitTrade } from 'src/types/blog'
+import { ReactTags, Tag } from 'react-tag-autocomplete'
+import './style.css'
 
+interface Options {
+  readonly value: string
+  readonly label: string
+}
 export const ITradeStatus = {
   0: 'Unsubmitted',
   1: 'Submitted',
@@ -55,6 +62,8 @@ const formSchema = z.object({
 const formReviewSchema = z.object({
   comment: z.string(),
   ratingPoint: z.string(),
+  image: z.any().optional(),
+  video: z.any().optional(),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -193,6 +202,88 @@ export default function SubmitTrade() {
     }
   }, [address])
 
+  const Targets = () => {
+    const reactTags = useRef(null)
+    const [selected, setSelected] = useState<Tag[]>([])
+    const [options, setOptions] = useState<Options[]>([])
+    const listTags = useMemo(() => {
+      if (!selected) return
+      else return selected.map((ct) => ct.label)
+    }, [selected])
+
+    const onAdd = useCallback(
+      (newTag: Tag) => {
+        setSelected([...selected, newTag])
+      },
+      [selected],
+    )
+
+    const onDelete = useCallback(
+      (tagIndex: number) => {
+        setSelected(selected.filter((_, i) => i !== tagIndex))
+      },
+      [selected],
+    )
+
+    const postTarget = useMutation(
+      (data: { targets: string[]; tradeDetailsId: string }) => postAddBookCheckList(data),
+      {
+        onSuccess: (status) => {
+          if (status === 200) {
+            console.log('Successful!!!')
+            toast({
+              title: 'Successful!!!',
+              description: 'Add Target Success!',
+            })
+            queryClient.invalidateQueries()
+          } else {
+            toast({
+              title: 'Invalid Target response',
+              description: 'No Target in the response.',
+            })
+          }
+        },
+        onError: (error: Error) => {
+          toast({
+            title: 'Error Submitting Target',
+            description: error.message,
+          })
+        },
+      },
+    )
+    const onSubmitTarget = async () => {
+      const data = {
+        targets: listTags!,
+        tradeDetailsId: userTrade?.details.tradeDetailId as string,
+      }
+      postTarget.mutate(data)
+    }
+    return (
+      <Dialog>
+        <DialogTrigger className="flex">
+          <Button>Targets</Button>
+        </DialogTrigger>
+        <DialogContent className="h-[12rem] w-[36rem]">
+          <DialogHeader className="font-semibold">Add 3 targets that require book review</DialogHeader>
+          <ReactTags
+            labelText="Add to 3 targets"
+            selected={selected}
+            suggestions={options}
+            onAdd={onAdd}
+            onDelete={onDelete}
+            noOptionsText="No matching target"
+            delimiterKeys={[',', 'Enter']}
+            allowNew={true}
+            ref={reactTags}
+          />
+          <div className="flex flex-row justify-between">
+            <Button onClick={() => onSubmitTarget()}>Submit</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   const tradeStatus = useMutation((formData: ISetTradeStatus) => putSetTradeStatus(formData), {
     onSuccess: (formData) => {
       if (formData) {
@@ -255,6 +346,8 @@ export default function SubmitTrade() {
       tradeDetailsId: partnerTrade?.details.tradeDetailId as string,
       comment: data.comment,
       ratingPoint: data.ratingPoint,
+      // video: data.video,
+      // image: data.image,
     }
     reviewUser.mutate(formData)
   }
@@ -327,21 +420,21 @@ export default function SubmitTrade() {
       case 2:
         return (
           <p>
-            Confirm receipt of goods and user{' '}
+            {/* Confirm receipt of goods and user{' '}
             <Button className="" onClick={() => handlePutStatusTrade(3)}>
               reviews
-            </Button>
+            </Button> */}
           </p>
         )
 
       case 3:
         return (
           <div>
-            <Button className="" onClick={() => setOpen(true)}>
+            <Button className="ml-4" onClick={() => setOpen(true)}>
               Reviews
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>
-              <DialogContent className="h-[45%]">
+              <DialogContent className="h-[70vh] w-[40vw]">
                 <DialogHeader className="mb-2 px-12">
                   <p className="text-4xl font-extrabold">Feedback</p>
                 </DialogHeader>
@@ -368,13 +461,49 @@ export default function SubmitTrade() {
                           <FormItem>
                             <FormLabel className="mt-4">Comment</FormLabel>
                             <FormControl>
-                              <Input placeholder="ABC..." {...field} />
+                              <Textarea className="h-32" placeholder="ABC..." {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      <Button type="submit" className="w-full">
+                      {/* <FormField
+                        control={formReview.control}
+                        name="image"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="mt-4">Image</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="ABC..."
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => field.onChange(e.target.value?.[0] || '')}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={formReview.control}
+                        name="video"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="mt-4">Video</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="ABC..."
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => field.onChange(e.target.value?.[0] || '')}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      /> */}
+                      <Button type="submit" className="mt-4 w-full">
                         Submit
                       </Button>
                     </form>
@@ -389,7 +518,6 @@ export default function SubmitTrade() {
         return (
           <div className="min-w-[33vw] px-4 pb-4">
             <div className="text-red-600">Interested person has not confirmed</div>
-            {/* <div className="">{renderTrader(userTrader)}</div> */}
           </div>
         )
 
@@ -405,7 +533,6 @@ export default function SubmitTrade() {
                   to confirm the trade information
                 </p>
               </div>
-              {/* {renderTrader(userTrader)} */}
             </div>
           </div>
         )
@@ -467,17 +594,24 @@ export default function SubmitTrade() {
   }
 
   return (
-    <div className="mx-32">
+    <div className="mx-32 min-h-[42rem]">
       <div className="flex flex-row justify-center">
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2 bg-white">
-              <p className="m-4 text-lg font-medium">Interester</p> {interester && renderTraderComponent(interester)}{' '}
+              <p className="m-4 text-lg font-medium">Interester</p> {interester && renderTraderComponent(interester)}
               {interester && renderTrader(interester)}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
             <div className="rounded-md border-2 bg-white">
-              <p className="m-4 text-lg font-medium">Owner</p>
+              <div className="flex flex-row items-center justify-between pr-4">
+                <p className="m-4 text-lg font-medium">Owner</p>
+                {userTrade?.details.status == 0 || userTrade?.details.status == 1 || userTrade?.details.status == 2 ? (
+                  <Targets />
+                ) : (
+                  ''
+                )}
+              </div>
               {userTrade?.details.status == 0 || userTrade?.details.status == 1 ? (
                 <div className="min-w-[33vw] px-4 pb-4">
                   <Form {...form}>
@@ -707,9 +841,17 @@ export default function SubmitTrade() {
         ) : (
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2">
-              <p className="m-4 text-lg font-medium">Interester</p>
+              <div className="flex flex-row items-center justify-between pr-4">
+                <p className="m-4 text-lg font-medium">Interester</p>
+                {userTrade?.details.status == 0 || userTrade?.details.status == 1 || userTrade?.details.status == 2 ? (
+                  <Targets />
+                ) : (
+                  ''
+                )}
+              </div>
               {userTrade?.details.status === 0 || userTrade?.details.status == 1 ? (
                 <div className="min-w-[33vw] px-4 pb-4">
+                  <Targets />
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                       <FormField

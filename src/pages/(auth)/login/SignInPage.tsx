@@ -18,7 +18,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="bg-orange-200">
+    <div className="min-h-[47rem] bg-orange-200">
       <LandingButton />
       <div>
         <div

@@ -65,14 +65,14 @@ function FollowingTags() {
     }
 
     return (
-      <div className="h-48 w-full rounded-lg border-2 bg-orange-100">
+      <div className="h-48 w-full rounded-lg border-2 bg-white">
         <div className="flex h-full flex-col justify-between p-4 pb-1">
           <div className="px-1">
             <Link to={`/blog/${tag?.cateId}`}>
               <p className="font-semibold">#{tag?.cateName}</p>
             </Link>
           </div>
-          <div className="p-1">
+          <div className="h-24 p-1">
             <p className="text-sm font-light">
               {tag?.description ? (
                 tag.description.length > 99 ? (
@@ -85,7 +85,6 @@ function FollowingTags() {
               )}
             </p>
           </div>
-          <div className="h-full flex-grow-0"></div>
           <div className="flex flex-row items-end justify-between p-1 py-2">
             <Button onClick={() => onDelete(id as string)}>Following</Button>
           </div>
@@ -95,7 +94,7 @@ function FollowingTags() {
   }
 
   return (
-    <div className="mx-28">
+    <div className="mx-28 min-h-[43rem]">
       <div className="mb-4 flex flex-col">
         <p className="p-4 text-3xl font-bold">Dashboard {'>>'} Following Tags</p>
       </div>

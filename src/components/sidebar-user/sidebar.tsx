@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useSidebar } from 'src/hooks/useSidebar'
-import { cn } from 'src/lib/utils'
+import { cn, getLabelByFullname } from 'src/lib/utils'
 import { SideNav } from './side-nav'
 import {
   ArrowLeftIcon,
@@ -15,7 +15,7 @@ import {
   UserCircle,
 } from 'lucide-react'
 import { NavItem } from 'src/types/NavItem'
-import { Avatar, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { useAuth } from 'src/hooks/useAuth'
 import { Link } from 'react-router-dom'
 
@@ -119,14 +119,14 @@ export default function Sidebar({ className }: SidebarProps) {
               <div className="flex flex-row items-center">
                 <Avatar>
                   <AvatarImage
-                    className={cn('h-12 w-12 rounded-full', !isOpen && 'h-8 w-8 rounded-full')}
-                    src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
+                    className={cn('h-14 w-14 rounded-full', !isOpen && 'h-8 w-8 rounded-full')}
+                    src={user?.avatarDir as string}
                     alt={user?.fullName}
                   />
-                  {/* <AvatarFallback>{getLabelByFullname(user.fullName)}</AvatarFallback> */}
+                  <AvatarFallback>{getLabelByFullname(user?.fullName)}</AvatarFallback>
                 </Avatar>
                 <div className={cn('ml-2 text-start', !isOpen && 'hidden')}>
-                  <p className="text-lg text-accent-foreground">{user?.email}</p>
+                  <p className="text-md text-accent-foreground">{user?.email}</p>
                   <p className="flex flex-row items-center text-sm">
                     <Edit size={12} className="mr-1" /> Edit Profile
                   </p>

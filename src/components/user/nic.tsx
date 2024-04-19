@@ -14,6 +14,8 @@ import { z } from 'zod'
 import { toast } from '../ui/use-toast'
 import { registerAccountValidates } from 'src/api/agency/set-is-account-validated'
 import { postCTCApi } from 'src/api/user/nic'
+import { profileApi } from 'src/api/apis/auth/profile.api'
+import { IToken } from 'src/types/token'
 
 const formCTCSchema = z.object({
   nicId: z.string(),
@@ -34,6 +36,7 @@ function IdentificationSeller() {
     defaultValues: {},
   })
 
+  const { login } = useAuth()
   const [imageFS, setImageFS] = useState<File | null>(null)
   const [imageBS, setImageBS] = useState<File | null>(null)
 
@@ -244,7 +247,8 @@ function IdentificationSeller() {
       ...data,
       userId: userId,
     }
-    await registerAccountValidates(formData, (err, result) => {
+    let token: IToken
+    await registerAccountValidates(formData, async (err, result) => {
       if (err) {
         toast({
           title: 'Error',
@@ -257,6 +261,25 @@ function IdentificationSeller() {
         title: 'Success',
         description: 'Register CTC successfully',
         variant: 'success',
+      })
+      token = result!
+
+      await profileApi(token.accessToken!, (err, user) => {
+        if (err) {
+          toast({
+            title: err.message,
+            description: err.cause?.message,
+            variant: 'destructive',
+          })
+        } else {
+          if (!user) {
+            return
+          }
+          login({
+            user,
+            token,
+          })
+        }
       })
       return result
     })

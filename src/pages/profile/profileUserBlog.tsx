@@ -56,8 +56,8 @@ function ProfileUser() {
         <MetaData title="Profile" />
         <main>
           <div className="">
-            <div className="h-[24rem]">
-              <div className="h-40 bg-black"></div>
+            <div className="h-[20rem]">
+              <div className="h-40 bg-orange-950"></div>
               <div className="">
                 <header className="">
                   <Avatar className="">
@@ -67,7 +67,7 @@ function ProfileUser() {
                       className="absolute left-[44rem] top-20 z-10 h-32 w-32 rounded-[50%] p-2"
                     />
                   </Avatar>
-                  <div className="absolute left-[16rem] top-36 h-[18rem] w-[63rem] rounded-md border-2 bg-orange-100">
+                  <div className="absolute left-[16rem] top-36 h-[14rem] w-[63rem] rounded-md border-2 bg-orange-100">
                     <div className="right-0 flex flex-row items-center justify-center pt-16">
                       <p className="ml-20 text-xl font-semibold">{userData?.username}</p>{' '}
                       {isCurrentUser ? (
@@ -84,11 +84,13 @@ function ProfileUser() {
                       )}
                     </div>
                     <div>
-                      <p className="px-36 py-4 text-center text-lg">Hello 👋, my name is {userData?.fullName} I am a</p>
+                      <p className="px-36 py-4 text-center text-lg">
+                        Hello 👋, my name is {userData?.fullName} I am a Trader
+                      </p>
                     </div>
                     <div className="flex flex-row items-center justify-center">
-                      <p className="px-4">Add: {userData?.addressId}</p>
-                      <p className="px-4">Joined on: {userData?.createdAt?.toISOString()}</p>
+                      <p className="px-4">Add: 123 Abcd, Hoa Hai, Ngu Hanh Son, Da Nang{userData?.addressId}</p>
+                      <p className="px-4">Joined on: 15/04/2024{userData?.createdAt?.toISOString()}</p>
                       {/* <p className="px-4">Shopee: {user?.username}</p> */}
                     </div>
                   </div>

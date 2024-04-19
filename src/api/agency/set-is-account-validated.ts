@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
+import { IToken } from 'src/types/token'
 import { IRegisterNIC } from 'src/types/user'
 
 async function SetIsAccountValidates(
@@ -28,13 +29,16 @@ export { SetIsAccountValidates }
 
 async function registerAccountValidates(
   data: IRegisterNIC,
-  callback: (error: AxiosError | null, result: IRegisterNIC | null) => void,
+  callback: (error: AxiosError | null, result: IToken | null) => void,
 ) {
   return await axiosClient
     .put(`/Account/set-is-account-validated`, data)
     .then((err) => {
       if (err.status === 200) {
-        callback(null, err.data)
+        const token: IToken = {
+          accessToken: err.data,
+        }
+        callback(null, token)
       }
     })
     .catch((error) => {

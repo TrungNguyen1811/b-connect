@@ -67,13 +67,21 @@ export const columns: ColumnDef<IBook>[] = [
     // },
   },
   {
-    accessorKey: 'quantity',
-    header: 'Quantity',
+    accessorKey: 'stock',
+    header: 'Stock',
     cell: ({ getValue }) => {
-      const quantity = getValue() as string
-      return <p className="w-[8rem]">{quantity}</p>
+      const stock = getValue() as string
+      return <p className="w-[8rem]">{stock}</p>
     },
   },
+  // {
+  //   accessorKey: 'category',
+  //   header: 'category',
+  //   cell: ({ getValue }) => {
+  //     const category = getValue() as string
+  //     return <p className="w-[8rem]">{category}</p>
+  //   },
+  // },
   {
     header: 'Action',
     id: 'action',
