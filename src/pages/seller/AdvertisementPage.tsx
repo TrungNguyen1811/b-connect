@@ -28,9 +28,10 @@ import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popov
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import { cn } from 'src/lib/utils'
+import { cn, formatPrice } from 'src/lib/utils'
 import { Duration, ICheckoutAds, ITopBanner } from 'src/types/advertisement'
 import { z } from 'zod'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'src/components/ui/table'
 
 const displaySchema = z.object({
   bookId: z.string().optional(),
@@ -224,17 +225,26 @@ function AdvertisementPage() {
                 <p className="text-lg font-semibold">Top 10 stores will have banners displayed next week</p>
                 <p className="text-xs italic">Stores outside the top 10 will receive refunds early next week</p>
                 <div className="flex flex-row items-start justify-between">
-                  <div className="border-1 m-4 border p-4">
-                    <tr>
-                      <th className="text-md">Title Banner</th>
-                      <th className="text-md pl-16">Price</th>
-                    </tr>
-                    {banners?.map((banner, index) => (
-                      <tr key={index}>
-                        <td className="text-md font-semibold">{banner.bannerTitle}</td>
-                        <td className="pl-16 text-center text-red-600">{banner.price}</td>
-                      </tr>
-                    ))}
+                  <div className="border-1 m-4 w-2/3 border p-4">
+                    <Table className="">
+                      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[100px]">Title Banner</TableHead>
+                          <TableHead className="text-right">Price</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {banners?.map((banner, index) => (
+                          <TableRow key={index}>
+                            <TableCell className="text-md font-semibold">{banner.bannerTitle}</TableCell>
+                            <TableCell className="pl-16 text-center text-red-600">
+                              {formatPrice(banner.price)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                   <div className="mr-24">
                     <Form {...form}>
@@ -270,7 +280,7 @@ function AdvertisementPage() {
                           render={({ field }) => (
                             <FormItem className="flex flex-row items-center justify-start gap-2">
                               <FormLabel className=" w-24">BookId</FormLabel>
-                              <Input className="w-80" placeholder="bid" {...field} />
+                              <Input className="w-80" placeholder="book id" {...field} />
                             </FormItem>
                           )}
                         />
@@ -330,7 +340,6 @@ function AdvertisementPage() {
                             <PopoverTrigger asChild>
                               <FormControl>
                                 <Button
-                                  variant="outline"
                                   role="combobox"
                                   className={cn(
                                     'ml-2 w-48 justify-between bg-white',

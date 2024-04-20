@@ -29,11 +29,11 @@ export const columns: ColumnDef<IResponseAgencyOrder>[] = [
   },
   {
     accessorKey: 'quantity',
-    header: 'quantity',
+    header: 'Quantity',
   },
   {
     accessorKey: 'total_Price',
-    header: 'total_Price',
+    header: 'Total Price',
   },
   {
     accessorKey: 'status',

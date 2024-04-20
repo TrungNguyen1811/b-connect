@@ -76,6 +76,11 @@ function AddBookPage() {
   const onSubmit = (data: FormData) => {
     addBook(data)
   }
+
+  const [file, setFile] = useState<File[]>()
+  useEffect(() => {
+    form.setValue('bookImg', file!)
+  }, [file])
   return (
     <div className="h-full ">
       <Form {...form}>
@@ -91,14 +96,23 @@ function AddBookPage() {
                     <FormLabel className="w-40 pr-2 text-right">Book Img</FormLabel>
                     <FormControl>
                       <Input
+                        multiple
                         type="file"
                         accept="image/*"
-                        onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                        onChange={(e) => {
+                          const files = e.target.files
+                          if (files) {
+                            const fileList = Array.from(files)
+                            setFile(fileList)
+                            // field.onChange(fileList)
+                          }
+                        }}
                       />
                     </FormControl>
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="backgroundImg"
@@ -178,7 +192,7 @@ function AddBookPage() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             role="combobox"
                             className={cn('ml-1 justify-between bg-white', !field.value && 'text-muted-foreground')}
                           >
@@ -264,7 +278,7 @@ function AddBookPage() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant={'outline'}
+                            variant={'secondary'}
                             className={cn(
                               'ml-1 w-[240px] bg-white pl-3 text-left font-normal',
                               !field.value && 'text-muted-foreground',

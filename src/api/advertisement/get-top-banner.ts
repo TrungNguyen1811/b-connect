@@ -14,10 +14,11 @@ async function getTopBanner() {
 export { getTopBanner }
 import { AxiosResponse } from 'axios' // Assuming you're using axios for HTTP requests
 
-async function getRelevantBooks(): Promise<IRelevantBooks[]> {
-  return authAxiosClient.get('/ad/get-relevant-books').then((res: AxiosResponse<IRelevantBooks[]>) => {
+async function getRelevantBooks(bookId: string): Promise<IRelevantBooks[]> {
+  return authAxiosClient.get(`/ad/get-relevant-books?bookId=${bookId}`).then((res: AxiosResponse<IRelevantBooks[]>) => {
     if (res.status === 200) {
-      return res.data
+      const data: IRelevantBooks[] = res.data
+      return data
     } else {
       throw new Error('Error with status code ' + res.status + '(' + res.data + ')')
     }

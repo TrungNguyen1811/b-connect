@@ -37,11 +37,6 @@ export { getOrderHistoryApi }
 
 export type GetManyOrderParams = {
   Address?: string
-  MinPrice?: number
-  MaxPrice?: number
-  Method?: string
-  QuantityMin?: number
-  QuantityMax?: number
   BookName?: string
   CustomerName?: string
   OrderId?: string
@@ -51,8 +46,8 @@ export type GetManyOrderParams = {
   PageNumber?: number
   PageSize?: number
 } & Partial<IQueryPagination & IQuerySearch>
-async function getAllOrderOfAgency(params: GetManyOrderParams) {
-  return await authAxiosClient.get(`/Order/GetAllOrderOfAgency`, { params }).then((response) => {
+async function SearchOrders(params: GetManyOrderParams) {
+  return await authAxiosClient.get(`/Order/SearchOrders`, { params }).then((response) => {
     const data: IResponseAgencyOrder[] = response.data
     const pagination = response.headers['x-pagination']
     const parseJson: IResponsePagination = JSON.parse(pagination)
@@ -64,7 +59,7 @@ async function getAllOrderOfAgency(params: GetManyOrderParams) {
     return dataAll
   })
 }
-export { getAllOrderOfAgency }
+export { SearchOrders }
 
 async function getOrderDetail(orderId: string) {
   return await authAxiosClient.get(`/Order/GetOrderDetail?id=${orderId}`).then((response) => {

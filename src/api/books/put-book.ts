@@ -19,8 +19,10 @@ async function putUpdateBook(data: IBookTest) {
   } else {
     formData.append('Category', data.category || '')
   }
-  if (data.bookImg instanceof File) {
-    formData.append('BookImg', data.bookImg)
+  if (Array.isArray(data?.bookImg)) {
+    for (let i = 0; i < data.bookImg.length; i++) {
+      formData.append('BookImg', data.bookImg[i])
+    }
   }
   if (data.backgroundImg instanceof File) {
     formData.append('BackgroundImg', data.backgroundImg)

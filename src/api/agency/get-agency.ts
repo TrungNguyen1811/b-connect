@@ -1,5 +1,5 @@
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
-import { IAgency, IAgencyAnalyst } from 'src/types/agency'
+import { IAgency, IAgencyAnalyst, IAgencyAnalystByTime } from 'src/types/agency'
 import { IBook } from 'src/types/books'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
@@ -26,6 +26,20 @@ async function getAgencyAnalyst() {
   })
 }
 export { getAgencyAnalyst }
+
+async function getAgencyAnalystByTime(startDate: string, endDate: string) {
+  return authAxiosClient
+    .get(`/Account/GetAgencyAnalystByTime?startDate=${startDate}&endDate=${endDate}`)
+    .then((res) => {
+      if (res.status === 200) {
+        const agency: IAgencyAnalystByTime = res.data
+        return agency
+      } else {
+        return res.data
+      }
+    })
+}
+export { getAgencyAnalystByTime }
 
 // async function getAgencyRevenueByTime(startDate: string, endDate: string) {
 //   return authAxiosClient

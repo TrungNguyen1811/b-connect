@@ -109,7 +109,7 @@ function UpdateRoleUser({ userId }: { userId: string }) {
                     <PopoverContent className="w-[20vw] p-0">
                       <Command>
                         <CommandInput placeholder="Search framework..." className="h-9" />
-                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandEmpty>No role found.</CommandEmpty>
                         <CommandGroup>
                           {roleList.map((role) => (
                             <CommandItem

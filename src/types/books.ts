@@ -3,7 +3,7 @@ export interface IBook {
   name: string
   author: string
   bookDir?: string
-  bookImg?: File | string
+  bookImg: File[] | string
   backgroundImg?: File | string
   description: string
   price: number
@@ -115,7 +115,7 @@ export interface IBookTest {
   name: string
   author: string
   bookDir?: string
-  bookImg?: File | string
+  bookImg?: File[] | string
   backgroundImg?: File | string
   description: string
   price: number

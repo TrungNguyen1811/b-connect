@@ -6,7 +6,7 @@ import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
 import { IResponseAgencyOrder } from 'src/types'
-import { GetManyOrderParams, getAllOrderOfAgency } from 'src/api/order/get-order'
+import { GetManyOrderParams, SearchOrders } from 'src/api/order/get-order'
 import { useLocation } from 'react-router-dom'
 
 export function useOrderTable(columns: ColumnDef<IResponseAgencyOrder>[]) {
@@ -36,7 +36,7 @@ export function useOrderTable(columns: ColumnDef<IResponseAgencyOrder>[]) {
 
   const queryController = useQuery<IResponse<IResponseAgencyOrder[]>, AxiosError>(
     [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => getAllOrderOfAgency(queries),
+    () => SearchOrders(queries),
     {
       keepPreviousData: true,
     },

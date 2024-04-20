@@ -46,7 +46,7 @@ export function RatingTableToolbar({
     from: subDays(new Date(), 20),
     to: new Date(),
   })
-
+  console.log('formatDate(date?.from as Date)', formatDate(date?.from as Date))
   useEffect(() => {
     setSearchQuery &&
       setSearchQuery({
