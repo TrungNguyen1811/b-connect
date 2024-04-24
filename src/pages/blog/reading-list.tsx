@@ -84,7 +84,7 @@ function ReadingList() {
 
     return (
       <div className="flex min-h-[37rem] flex-col">
-        <p className="text-md border-1 mb-4 rounded-sm border bg-orange-100 p-2 font-semibold">My Tags</p>
+        <p className="text-md border-1 mb-4 rounded-sm border bg-white p-2 font-semibold">My Tags</p>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
           <ul className="list-none">
             {tags.map((tag) => (
@@ -115,7 +115,7 @@ function ReadingList() {
         <div className=" col-span-1 md:col-span-3">
           <Tags />
         </div>
-        <section className="border-1 col-span-1 mb-4 rounded-sm border bg-orange-100  md:col-span-9">
+        <section className="border-1 col-span-1 mb-4 rounded-sm border bg-white  md:col-span-9">
           <SavedPostsList posts={searchKeyword ? postDetailFilter : postDetail} />
         </section>
       </main>

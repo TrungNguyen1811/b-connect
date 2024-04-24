@@ -52,20 +52,27 @@ export interface IResponseOrder {
   items: IResponseItemsOrder[]
 }
 
-export interface IResponseAgencyOrder {
-  orderId: string
+export interface IResponseOrderAgency {
   customerId: string
-  total_Price: number
-  status: string
+  customerName: string
   paymentMethod: string
+  orderId: string
+  totalPrice: number
+  date: string
+  bookName: string[]
+  price: number
   quantity: number
+  status: string
+  agencyId: string
+  agencyName: string
+  bookDir: string
   notes: string
-  createdDate: string
   transactionId: string
-  addressId: string
+  address: string
+  createdDate: string
 }
 
-export interface IResponseAgencyOrderDetail {
+export interface IResponseOrderAgencyDetail {
   orderId: string
   customerId: string
   customerName: string

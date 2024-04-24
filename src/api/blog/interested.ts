@@ -229,8 +229,16 @@ async function putCheckList(data: ICheckList) {
   formData.append('id', data.id || '')
   formData.append('tradeDetailsId', data.tradeDetailsId || '')
   formData.append('target', data.target || '')
-  formData.append('bookOwnerUploadDir', data.bookOwnerUploadDir)
-  formData.append('middleUploadDir', data.middleUploadDir)
+  if (data?.bookOwnerUploadDir instanceof File) {
+    formData.append('bookOwnerUploadDir', data?.bookOwnerUploadDir)
+  } else {
+    console.log('data?.bookOwnerUploadDir is not logic object File')
+  }
+  if (data?.middleUploadDir instanceof File) {
+    formData.append('middleUploadDir', data?.middleUploadDir)
+  } else {
+    console.log('data?.middleUploadDir is not logic object File')
+  }
   return await authAxiosClient
     .put('/trading/update-check-list', formData, {
       headers: {

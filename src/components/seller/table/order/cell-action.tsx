@@ -7,11 +7,11 @@ import {
 import { Button } from 'src/components/ui/button'
 import { CopyCheckIcon, CopyIcon, MoreHorizontal } from 'lucide-react'
 import { useState } from 'react'
-import { IResponseAgencyOrder } from 'src/types/order'
+import { IResponseOrderAgency } from 'src/types/order'
 import { useNavigate } from 'react-router-dom'
 
 interface CellActionProps {
-  data: IResponseAgencyOrder
+  data: IResponseOrderAgency
 }
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const orderId = data.orderId
@@ -28,7 +28,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   }
   return (
     <div className="flex w-40 flex-row gap-2">
-      <Button onClick={() => navigate(`/manage/order/${orderId}`)}>View Detail</Button>
+      <Button onClick={() => navigate(`/seller/manage/order/${orderId}`)}>View Detail</Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

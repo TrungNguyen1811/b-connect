@@ -23,7 +23,7 @@ function BookShouldByWith({ book }: Props) {
   )
 
   const relatedBooks = React.useMemo(() => {
-    if (isLoadingShouldBuyWithBooks || !book || !shouldByWithBooks || shouldByWithBooks?.data.length < 2) return []
+    if (isLoadingShouldBuyWithBooks || !book || !shouldByWithBooks) return []
 
     const arr = shouldByWithBooks?.data.filter((b) => b.productId !== book?.productId).slice(0, 3) || []
     arr.unshift(book)
@@ -71,7 +71,7 @@ function BookShouldByWith({ book }: Props) {
 
   return (
     <div className="flex flex-row items-center gap-4 py-8">
-      {renderShouldByWith}
+      {renderShouldByWith && renderShouldByWith}
       {relatedBooks.length > 0 && (
         <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-border px-4 py-8">
           <Button variant={'default'} className="" onClick={addShouldBuyWithToCart}>

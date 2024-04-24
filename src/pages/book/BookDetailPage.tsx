@@ -3,7 +3,7 @@ import { Plus, Star } from 'lucide-react'
 import '@smastrom/react-rating/style.css'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 // import { useForm } from 'react-hook-form'
-import { useLoaderData, useLocation } from 'react-router-dom'
+import { Link, useLoaderData, useLocation } from 'react-router-dom'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
@@ -27,6 +27,10 @@ import BookShouldByWith from './BookShouldByWith'
 import BookRelevant from './BookRelevant'
 import { Carousel, CarouselContent3, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
 import { Card, CardContent } from 'src/components/ui/card'
+import { IAgency } from 'src/types/agency'
+import { getAgencyByAgencyId, getPercentageReplyByAgencyId } from 'src/api/agency/get-agency'
+import { UserChatReply } from 'src/types/chat'
+import { postChatMessage } from 'src/api/chat/post-chat'
 
 type FormValue = {
   comment: string
@@ -41,6 +45,19 @@ function BookDetailPage() {
   useEffect(() => {
     setBook(data.book)
   }, [data])
+
+  const [agency, setAgency] = useState<IAgency>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const agency = (await getAgencyByAgencyId(book?.agencyId as string)) as IAgency
+      setAgency(agency)
+    }
+    if (book?.productId) {
+      fetchData()
+    }
+  }, [book?.agencyId])
+
+  const percent = getPercentageReplyByAgencyId(book?.agencyId as string)
 
   const [bookReview, setBookReview] = useState<IReviewResponse[]>([])
   useEffect(() => {
@@ -235,6 +252,25 @@ function BookDetailPage() {
     setSelectedImage(imageURL as string)
   }
 
+  const query = useQueryClient()
+  const { mutate: postMessage } = useMutation({
+    mutationFn: (formData: UserChatReply) => {
+      return postChatMessage(formData)
+    },
+    onSuccess: (newMessage) => {
+      query.invalidateQueries()
+    },
+  })
+
+  const onSubmit = () => {
+    console.log('bbbok', book?.agencyId)
+    const formData: UserChatReply = {
+      receiverId: book?.agencyId as string,
+      messageText: 'hi',
+    }
+    postMessage(formData)
+  }
+
   return (
     <div className="mx-auto min-h-screen w-full bg-orange-100">
       <MetaData title={book ? book.name.slice(0, 10) + '...' : ''} />
@@ -341,6 +377,7 @@ function BookDetailPage() {
               {/* <p className="text-base text-slate-500">{book?.category}</p> */}
               <p className="text-base text-slate-500">Author: {book?.author}</p>
               <p className="text-base text-slate-500">Type: {book?.type}</p>
+              <p className="text-base text-slate-500">Category: {book?.category?.join(',')}</p>
             </div>
             <div className="ml-4">
               <p className="text-md font-bold">Book Description:</p>
@@ -351,10 +388,36 @@ function BookDetailPage() {
         </div>
       </div>
 
-      <div>
-        <Avatar>
-          <AvatarImage src={book?.agencyId} />
-        </Avatar>
+      <div className="mx-auto my-2 flex max-w-6xl flex-row items-center justify-between  bg-orange-50 p-4 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+        <div className="flex flex-row">
+          <Avatar className="mr-1 h-16 w-16">
+            {/* <AvatarImage src={agency?.logoImg as string} /> */}
+            <AvatarImage src="https://scontent.fdad7-1.fna.fbcdn.net/v/t45.1600-4/408957050_120208360688070402_8892427179558757879_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=ISv-9zSdGvAAb68O3WA&_nc_ht=scontent.fdad7-1.fna&oh=00_AfCrQV1nJeHjnsNTY_l2EJj-N6CEP3RgWlSnj2G6cCTVJw&oe=662C06B3" />
+          </Avatar>
+          <div>
+            <p className="ml-2 text-base font-semibold">{agency?.agencyName}</p>
+            <p>
+              <Link
+                className="ml-2 rounded-sm border px-2 py-1 text-xs text-gray-500 hover:bg-orange-400 hover:text-white"
+                to={`/shop/${book?.agencyId}`}
+              >
+                View Shop
+              </Link>
+              <button
+                onClick={() => onSubmit()}
+                className="ml-2 rounded-sm border px-2 py-1 text-xs text-gray-500 hover:bg-orange-400 hover:text-white"
+              >
+                Chat Now
+              </button>
+            </p>
+          </div>
+        </div>
+        <div className="mx-16 flex flex-row gap-16 text-gray-500">
+          <p>Rating: 5</p>
+          <p>Product: 13</p>
+          <p>Response: 0%</p>
+          <p>Join: 2024/02/22</p>
+        </div>
       </div>
 
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">

@@ -1,4 +1,4 @@
-import { IResponseAgencyOrder, IResponseAgencyOrderDetail, IResponseOrder } from 'src/types/order'
+import { IResponseOrderAgency, IResponseOrderAgencyDetail, IResponseOrder } from 'src/types/order'
 import { authAxiosClient, axiosClient } from '../../lib/axios'
 import { IResponse, IResponsePagination } from 'src/types/response'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
@@ -48,10 +48,10 @@ export type GetManyOrderParams = {
 } & Partial<IQueryPagination & IQuerySearch>
 async function SearchOrders(params: GetManyOrderParams) {
   return await authAxiosClient.get(`/Order/SearchOrders`, { params }).then((response) => {
-    const data: IResponseAgencyOrder[] = response.data
+    const data: IResponseOrderAgency[] = response.data
     const pagination = response.headers['x-pagination']
     const parseJson: IResponsePagination = JSON.parse(pagination)
-    const dataAll: IResponse<IResponseAgencyOrder[]> = {
+    const dataAll: IResponse<IResponseOrderAgency[]> = {
       data: data,
       _metadata: data,
       _pagination: parseJson,
@@ -63,7 +63,7 @@ export { SearchOrders }
 
 async function getOrderDetail(orderId: string) {
   return await authAxiosClient.get(`/Order/GetOrderDetail?id=${orderId}`).then((response) => {
-    const data: IResponseAgencyOrderDetail = response.data
+    const data: IResponseOrderAgencyDetail = response.data
     return data
   })
 }

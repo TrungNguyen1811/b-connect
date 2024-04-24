@@ -15,7 +15,10 @@ export interface IResponseTraderList {
 export enum ITradeStatus {
   Unsubmitted = 0,
   Submitted = 1,
-  OnDelivery = 2,
-  Successful = 3,
-  Cancel = 4,
+  OnDeliveryToMiddle = 2,
+  MiddleReceived = 3,
+  WaitFoeCheckListConfirm = 4,
+  Cancel = 5,
+  OnDeliveryToTrader = 6,
+  Successful = 7,
 }

@@ -44,9 +44,12 @@ interface Options {
 export const ITradeStatus = {
   0: 'Unsubmitted',
   1: 'Submitted',
-  2: 'OnDelivery',
-  3: 'Successful',
-  4: 'Cancel',
+  2: 'OnDeliveryToMiddle',
+  3: 'MiddleReceived',
+  4: 'WaitFoeCheckListConfirm',
+  5: 'Cancel',
+  6: 'OnDeliveryToTrader',
+  7: 'Successful',
 }
 
 const formSchema = z.object({
@@ -254,7 +257,7 @@ export default function SubmitTrade() {
     const onSubmitTarget = async () => {
       const data = {
         targets: listTags!,
-        tradeDetailsId: userTrade?.details.tradeDetailId as string,
+        tradeDetailsId: partnerTrade?.details.tradeDetailId as string,
       }
       postTarget.mutate(data)
     }
@@ -599,18 +602,49 @@ export default function SubmitTrade() {
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2 bg-white">
-              <p className="m-4 text-lg font-medium">Interester</p> {interester && renderTraderComponent(interester)}
+              <div className="flex flex-row items-center justify-between pr-4">
+                <p className="m-4 text-lg font-medium">Interester</p>
+                {userTrade?.details.status == 0 ||
+                userTrade?.details.status == 1 ||
+                userTrade?.details.status == 2 ||
+                userTrade?.details.status == 3 ||
+                userTrade?.details.status == 4 ? (
+                  <Button
+                    onClick={() => navigate(`/blog/dashboard/check-list/view/${interester?.details.tradeDetailId}`)}
+                  >
+                    View Check List
+                  </Button>
+                ) : (
+                  ''
+                )}
+              </div>
+              {interester && renderTraderComponent(interester)}
               {interester && renderTrader(interester)}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
             <div className="rounded-md border-2 bg-white">
               <div className="flex flex-row items-center justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Owner</p>
-                {userTrade?.details.status == 0 || userTrade?.details.status == 1 || userTrade?.details.status == 2 ? (
-                  <Targets />
-                ) : (
-                  ''
-                )}
+                <div className="flex flex-row items-center gap-2">
+                  {userTrade?.details.status == 0 ||
+                  userTrade?.details.status == 1 ||
+                  userTrade?.details.status == 2 ? (
+                    <Targets />
+                  ) : (
+                    ''
+                  )}
+                  {userTrade?.details.status == 0 ||
+                  userTrade?.details.status == 1 ||
+                  userTrade?.details.status == 2 ||
+                  userTrade?.details.status == 3 ||
+                  userTrade?.details.status == 4 ? (
+                    <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+                      Check List
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                </div>
               </div>
               {userTrade?.details.status == 0 || userTrade?.details.status == 1 ? (
                 <div className="min-w-[33vw] px-4 pb-4">
@@ -843,15 +877,29 @@ export default function SubmitTrade() {
             <div className="rounded-md border-2">
               <div className="flex flex-row items-center justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Interester</p>
-                {userTrade?.details.status == 0 || userTrade?.details.status == 1 || userTrade?.details.status == 2 ? (
-                  <Targets />
-                ) : (
-                  ''
-                )}
+                <div className="flex flex-row items-center gap-2">
+                  {userTrade?.details.status == 0 ||
+                  userTrade?.details.status == 1 ||
+                  userTrade?.details.status == 2 ? (
+                    <Targets />
+                  ) : (
+                    ''
+                  )}
+                  {userTrade?.details.status == 0 ||
+                  userTrade?.details.status == 1 ||
+                  userTrade?.details.status == 2 ||
+                  userTrade?.details.status == 3 ||
+                  userTrade?.details.status == 4 ? (
+                    <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+                      Check List
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                </div>
               </div>
               {userTrade?.details.status === 0 || userTrade?.details.status == 1 ? (
                 <div className="min-w-[33vw] px-4 pb-4">
-                  <Targets />
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                       <FormField
@@ -1077,7 +1125,20 @@ export default function SubmitTrade() {
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
             <div className="rounded-md border-2">
-              <p className="m-4 text-lg font-medium">Owner</p>
+              <div className="flex flex-row items-center justify-between pr-4">
+                <p className="m-4 text-lg font-medium">Owner</p>
+                {userTrade?.details.status == 0 ||
+                userTrade?.details.status == 1 ||
+                userTrade?.details.status == 2 ||
+                userTrade?.details.status == 3 ||
+                userTrade?.details.status == 4 ? (
+                  <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${owner?.details.tradeDetailId}`)}>
+                    View Check List
+                  </Button>
+                ) : (
+                  ''
+                )}
+              </div>
               {owner && renderTraderComponent(owner)}
               {owner && renderTrader(owner)}
             </div>

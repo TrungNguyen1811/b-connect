@@ -145,7 +145,7 @@ function ManagePostInterester() {
   }, [user])
 
   return (
-    <div className="mx-28">
+    <div className="mx-28 h-[43rem]">
       <div className="mb-4 flex flex-col">
         <p className="p-4 text-3xl font-bold">Dashboard {'>>'} Manage Post Interester</p>
       </div>

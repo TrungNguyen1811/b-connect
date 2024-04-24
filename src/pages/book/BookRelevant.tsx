@@ -1,5 +1,4 @@
-import { PlusIcon } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { getRelevantBooks } from 'src/api/advertisement/get-top-banner'
 import BookGridLoading from 'src/components/book/book-grid-loading'
 import CardBook from 'src/components/card-book'
@@ -19,19 +18,28 @@ function BookRelevant({ book }: Props) {
     },
   )
 
+  const [datas, setData] = useState<IRelevantBooks[]>()
+  useEffect(() => {
+    const a = async () => {
+      const b = (await getRelevantBooks(book?.productId as string)) as IRelevantBooks[]
+      setData(b)
+    }
+    a()
+  }, [book?.productId])
+  console.log('datas', datas)
+
   const renderBookRelevant = React.useMemo(() => {
-    if (isLoading || !Array.isArray(data)) return <BookGridLoading pageSize={4} />
-    return data.map((book) => (
+    if (isLoading || !Array.isArray(datas)) return <BookGridLoading pageSize={4} />
+    return datas.map((book) => (
       <React.Fragment key={book.bookId}>
         <CardBook book={book} />
-        <PlusIcon />
       </React.Fragment>
     ))
-  }, [isLoading, data])
+  }, [isLoading, datas])
 
   if (!book) return null
 
-  return <div className="grid grid-cols-10 place-items-center py-4">{renderBookRelevant}</div>
+  return <div className="grid grid-cols-4 gap-4 py-4">{renderBookRelevant}</div>
 }
 
 export default BookRelevant

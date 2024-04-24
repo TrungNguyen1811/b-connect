@@ -64,6 +64,8 @@ const BlogDetail = React.lazy(() => import('src/pages/blog/post-detail'))
 const PostInterestedManage = React.lazy(() => import('src/pages/blog/post-interested-manage'))
 const ManagePostInterester = React.lazy(() => import('src/pages/blog/manage-post-interester'))
 const SubmitTrade = React.lazy(() => import('src/pages/blog/submit-trade'))
+const CheckListPage = React.lazy(() => import('src/pages/blog/check-list'))
+const CheckListViewPage = React.lazy(() => import('src/pages/blog/view-check-list'))
 
 export const ROUTES = createBrowserRouter([
   {
@@ -237,6 +239,10 @@ export const ROUTES = createBrowserRouter([
         path: '/seller/manage/order',
         element: <OrderManagerPage />,
       },
+      // {
+      //   path: '/seller/manage/order/view/:id',
+      //   element: <OrderDetailPage />,
+      // },
       {
         path: '/seller/marketing',
         element: <AdvertisementPage />,
@@ -289,6 +295,14 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/blog/dashboard/submit-form/:id',
         element: <SubmitTrade />,
+      },
+      {
+        path: '/blog/dashboard/check-list/:id',
+        element: <CheckListPage />,
+      },
+      {
+        path: '/blog/dashboard/check-list/view/:id',
+        element: <CheckListViewPage />,
       },
       {
         path: '/blog/dashboard/manage-interested',

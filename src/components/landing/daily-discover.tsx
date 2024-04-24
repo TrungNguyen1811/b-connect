@@ -17,7 +17,7 @@ function DailyDiscover() {
 
   const [queries, setQueries] = useState<Partial<IQueryPagination>>({
     PageNumber: 0,
-    PageSize: 6,
+    PageSize: 40,
   })
 
   const { data, isLoading, isError } = useQuery<IResponse<IBook[]>, AxiosError>(

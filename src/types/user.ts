@@ -65,6 +65,7 @@ export enum ROLE {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
   SELLER = 'Seller',
+  STAFF = 'Staff',
   CUSTOMER = 'CUSTOMER',
   BASEUSER = 'BaseUser',
 }

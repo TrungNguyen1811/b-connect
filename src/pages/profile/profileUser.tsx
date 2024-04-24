@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from 'src/hooks/useAuth'
 import { updateUserProfileApi } from 'src/api/user/post-user'
 import { getUserById } from 'src/api/user/get-user'
+import { Loader2 } from 'lucide-react'
 
 const formSchema = z.object({
   username: z.string().optional(),
@@ -27,7 +28,8 @@ type FormData = z.infer<typeof formSchema>
 
 function InfoAccount() {
   const { user } = useAuth()
-  console.log(user)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,6 +77,7 @@ function InfoAccount() {
       })
       setUser(updateUser)
       queryClient.invalidateQueries()
+      setIsLoading(false)
     },
     onError: () => {
       toast({
@@ -91,6 +94,7 @@ function InfoAccount() {
       phone: data.phone ?? '',
       avatarDir: data.avatarDir ?? '',
     }
+    setIsLoading(true)
     updateUser(updatedData)
   }
 
@@ -175,7 +179,7 @@ function InfoAccount() {
                     )}
                   />
                   <Button type="submit" className=" mt-5 px-4 py-2  ">
-                    Save
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <p>Save</p>}
                   </Button>
                 </div>
               </ResizablePanel>

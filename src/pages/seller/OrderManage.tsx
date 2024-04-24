@@ -28,13 +28,13 @@ function OrderManagerPage() {
   return (
     <div className="mx-4">
       <MetaData title={'Manage Order'} />
-      <Tabs defaultValue="1" className="mt-4 w-full">
+      <Tabs defaultValue="Done" className="mt-4 w-full">
         <TabsList className="flex w-full  justify-evenly self-center bg-orange-100">
-          <TabsTrigger value="1">
-            <Link to={'?type=1'}>All</Link>
+          <TabsTrigger value="Done">
+            <Link to={'?type=Done'}>Done</Link>
           </TabsTrigger>
-          <TabsTrigger value="2">
-            <Link to={'?type=2'}>On Delivery</Link>
+          <TabsTrigger value="OnGoing">
+            <Link to={'?type=OnGoing'}>OnGoing</Link>
           </TabsTrigger>
           <TabsTrigger value="3">
             <Link to={'?type=3'}>Complete</Link>

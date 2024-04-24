@@ -3,12 +3,12 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Table as ITable } from '@tanstack/table-core'
 import { Table, TableBody, TableCell, TableHeader, TableRow } from './table'
 import { CircleOffIcon } from 'lucide-react'
-import { IResponseAgencyOrder } from 'src/types'
+import { IResponseOrderAgency } from 'src/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import BlockGridLoading from '../book/block-grid-loading'
 
-interface DataTableProps<TData extends IResponseAgencyOrder, TValue> {
+interface DataTableProps<TData extends IResponseOrderAgency, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   header?: React.ReactNode
@@ -17,7 +17,7 @@ interface DataTableProps<TData extends IResponseAgencyOrder, TValue> {
   table: ITable<TData>
 }
 
-export function DataTableOrderGrid<TData extends IResponseAgencyOrder, TValue>({
+export function DataTableOrderGrid<TData extends IResponseOrderAgency, TValue>({
   columns,
   data,
   footer,

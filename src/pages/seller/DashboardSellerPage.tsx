@@ -81,7 +81,7 @@ export default function DashboardSellerPage() {
     }
   }, [agencyAnalyst?.revenueByMonths])
   const dataRevenueByMonths = {
-    labels: revenueByMonths.map((d) => d.value),
+    labels: revenueByMonths.map((d) => d.label),
     datasets: [
       {
         label: 'month',
@@ -98,14 +98,14 @@ export default function DashboardSellerPage() {
   const revenueByDays = useMemo(() => {
     if (!agencyAnalyst?.revenueByDays) return []
     else {
-      return Object.entries(agencyAnalyst.revenueByDays).map<Value>(([month, revenue]) => ({
-        label: month,
+      return Object.entries(agencyAnalyst.revenueByDays).map<Value>(([day, revenue]) => ({
+        label: day,
         value: revenue,
       }))
     }
   }, [agencyAnalyst?.revenueByDays])
   const dataRevenueByDays = {
-    labels: revenueByDays.map((d) => d.value),
+    labels: revenueByDays.map((d) => d.label),
     datasets: [
       {
         label: 'day',
@@ -285,7 +285,6 @@ export default function DashboardSellerPage() {
   }, [date?.from, date?.to, date])
 
   const [revenueByTime, setRevenueByTime] = useState<IAgencyAnalystByTime>()
-  console.log('revenueByTime', revenueByTime)
 
   useEffect(() => {
     const getData = async () => {
@@ -302,14 +301,15 @@ export default function DashboardSellerPage() {
   const convertRevenueByTime = useMemo(() => {
     if (!revenueByTime) return []
     else {
-      return Object.entries(revenueByTime).map<Value>(([time, revenue]) => ({
+      return Object.entries(revenueByTime.revenueByTimeInput!).map<Value>(([time, revenue]) => ({
         label: time,
         value: revenue,
       }))
     }
   }, [revenueByTime])
+
   const dataRevenueByTime = {
-    labels: convertRevenueByTime.map((d) => d.value),
+    labels: convertRevenueByTime.map((d) => d.label),
     datasets: [
       {
         label: 'time',
@@ -497,7 +497,9 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisMonthRevenue)}</div>
-                  <p className="text-xs text-muted-foreground">Average: {agencyAnalyst?.avgMonthRevenue}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Average: {formatPrice(agencyAnalyst?.avgMonthRevenue).split('.')}
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -520,7 +522,9 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisDayRevenue)}</div>
-                  <p className="text-xs text-muted-foreground">Average: {agencyAnalyst?.avgDayRevenue}</p>{' '}
+                  <p className="text-sm text-muted-foreground">
+                    Average: {formatPrice(agencyAnalyst?.avgDayRevenue).split('.')}
+                  </p>{' '}
                 </CardContent>
               </Card>
               <Card>
@@ -541,7 +545,9 @@ export default function DashboardSellerPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="gap-1 text-2xl font-bold">Average: {agencyAnalyst?.percentThisMonthToAvgMonth}%</div>
+                  <div className="gap-1 text-2xl font-bold">
+                    Average: {Math.floor(agencyAnalyst?.percentThisMonthToAvgMonth as number)}%
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     Highest: {agencyAnalyst?.percentThisMonthToHighestMonth}%
                   </p>
@@ -565,10 +571,7 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">Average:{agencyAnalyst?.percentThisDayToAvgDay}%</div>
-                  <p className="text-xs text-muted-foreground">
-                    {' '}
-                    Highest: {agencyAnalyst?.percentThisDayToHighestDay}%
-                  </p>
+                  <p className="text-xs text-muted-foreground">Highest: {agencyAnalyst?.percentThisDayToHighestDay}%</p>
                 </CardContent>
               </Card>
             </div>

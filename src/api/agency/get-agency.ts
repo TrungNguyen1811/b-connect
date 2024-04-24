@@ -15,8 +15,20 @@ async function getAgencyByAgencyId(userId: string) {
 }
 export { getAgencyByAgencyId }
 
+async function getPercentageReplyByAgencyId(agencyId: string) {
+  return axiosClient.get(`/Account/percentage-reply-by-agency?agencyId=${agencyId}`).then((res) => {
+    if (res.status === 200) {
+      const agency = res.data
+      return agency
+    } else {
+      return null
+    }
+  })
+}
+export { getPercentageReplyByAgencyId }
+
 async function getAgencyAnalyst() {
-  return authAxiosClient.get(`/Account/GetAgencyAnalyst`).then((res) => {
+  return authAxiosClient.get(`/Account/Get-Agency-Analyst`).then((res) => {
     if (res.status === 200) {
       const agency: IAgencyAnalyst = res.data
       return agency
@@ -29,7 +41,7 @@ export { getAgencyAnalyst }
 
 async function getAgencyAnalystByTime(startDate: string, endDate: string) {
   return authAxiosClient
-    .get(`/Account/GetAgencyAnalystByTime?startDate=${startDate}&endDate=${endDate}`)
+    .get(`/Account/Get-Agency-Analyst-By-Time?startDate=${startDate}&endDate=${endDate}`)
     .then((res) => {
       if (res.status === 200) {
         const agency: IAgencyAnalystByTime = res.data
