@@ -9,11 +9,14 @@ import { getAllCategory } from 'src/api/categories/get-category'
 import Category from './card-category'
 import { ChevronRight } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
+import { useTranslation } from 'react-i18next'
 
 function Categories() {
   const { data } = useQuery<IResponse<ICategory[]>, AxiosError>(['FeatureCategory'], () => getAllCategory(), {
     keepPreviousData: true,
   })
+
+  const { t } = useTranslation('translation')
 
   const renderCategories = (categories: ICategory[]) => {
     return categories.map((category, index) => (
@@ -37,9 +40,9 @@ function Categories() {
       <div className="mx-auto mt-7 max-w-7xl bg-orange-50 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="flex flex-row justify-between">
-            <h2 className="text-2xl font-bold  text-orange-500">Category</h2>
+            <h2 className="text-2xl font-bold  text-orange-500">{t('category')}</h2>
             <Link to="/" className="flex items-center text-sm  text-orange-500">
-              Browse all category
+              {t('Browseallcategory')}
               <span className="ml-1">
                 <ChevronRight size={10} />
               </span>

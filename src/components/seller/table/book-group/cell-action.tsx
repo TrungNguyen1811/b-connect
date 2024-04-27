@@ -14,6 +14,16 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { deleteBookGroup } from 'src/api/books/delete-book'
 import { UpdateBookGroup } from './manage/upate-book-group'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from 'src/components/ui/alert-dialog'
 
 interface CellActionProps {
   data: IResponseBookGroup
@@ -21,6 +31,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const bookGroupId = data.bookGroupId
   const [copyId, setCopyId] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const queryClient = useQueryClient()
@@ -54,6 +65,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   })
   const onDelete = () => {
     mutate(bookGroupId as string)
+    setOpen(false)
   }
 
   const onCopyId = () => {
@@ -98,12 +110,27 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <Edit className="mr-2 h-4 w-4" />
             <div className="flex gap-2 ">Edit</div>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={onDelete}>
+          <DropdownMenuItem onClick={() => setOpen(true)}>
             <DeleteIcon className="mr-2 h-4 w-4" />
             <div className="flex gap-2 ">Delete</div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <AlertDialog open={open}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your account and remove your data from our
+              servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onDelete}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

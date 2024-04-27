@@ -7,6 +7,7 @@ import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import { GetManyBooksParams } from 'src/api/books/get-book'
 import useGetTopBooks from 'src/hooks/useGetTopBook'
 import BookGridLoading from '../book/book-grid-loading'
+import { useTranslation } from 'react-i18next'
 
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
@@ -24,6 +25,8 @@ function TopBook() {
     refetchOnWindowFocus: false,
     refetchInterval: 300000,
   })
+  const { t } = useTranslation('translation')
+
   const renderBooks = useMemo(() => {
     if (isLoading)
       return (
@@ -51,9 +54,9 @@ function TopBook() {
       <div className="mx-auto mt-7 max-w-7xl bg-orange-50 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="flex flex-row justify-between">
-            <h2 className="text-2xl font-bold  text-orange-500">Top Book</h2>
+            <h2 className="text-2xl font-bold  text-orange-500">{t('TopBook')}</h2>
             <Link to="/top-book" className="flex items-center text-sm  text-orange-500">
-              Browse all books
+              {t('Browseallcategory')}
               <span className="ml-1">
                 <ChevronRight size={10} />
               </span>
