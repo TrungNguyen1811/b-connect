@@ -35,8 +35,8 @@ export enum Duration {
 
 export interface ICheckList {
   id?: string
-  tradeDetailsId?: string
-  target?: string
-  bookOwnerUploadDir: File
-  middleUploadDir: File
+  tradeDetailsId: string
+  target: string
+  bookOwnerUploadDir?: File | string
+  middleUploadDir?: File | string
 }

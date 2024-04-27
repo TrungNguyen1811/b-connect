@@ -6,7 +6,7 @@ import { Input } from 'src/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { Button } from 'src/components/ui/button'
 import { cn } from 'src/lib/utils'
-import { CalendarHeart } from 'lucide-react'
+import { CalendarHeart, Loader2 } from 'lucide-react'
 import {
   addDays,
   differenceInDays,
@@ -74,10 +74,6 @@ function BanUser({ userId }: { userId: string }) {
       })
     },
   })
-
-  if (banUser.isLoading) {
-    return <div className="loader">Updating...</div>
-  }
 
   if (banUser.isError) {
     return <div className="error">{`Error: ${banUser.error}`}</div>
@@ -193,8 +189,8 @@ function BanUser({ userId }: { userId: string }) {
                 </FormItem>
               )}
             />
-            <Button className="mt-4" type="submit">
-              Submit
+            <Button disabled={banUser.isLoading} className="my-2" type="submit">
+              {banUser.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Submit
             </Button>
           </form>
         </Form>

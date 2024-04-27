@@ -58,7 +58,11 @@ export default function CreateBlog() {
 
   const onAdd = useCallback(
     (newTag: Tag) => {
-      setSelected([...selected, newTag])
+      if (selected.length > 3) {
+        toast({
+          title: 'The limit for a post is 4 tags',
+        })
+      } else setSelected([...selected, newTag])
     },
     [selected],
   )
@@ -111,7 +115,7 @@ export default function CreateBlog() {
           <XIcon size={24} />
           <DialogClose />
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="w-[32rem]">
           <DialogHeader>
             <DialogTitle className="pb-4 text-xl font-bold">You have unsaved changes</DialogTitle>
             <Separator />
@@ -324,7 +328,7 @@ export default function CreateBlog() {
                 />
                 <div className="mb-4">
                   <ReactTags
-                    labelText="Add to 4 tags"
+                    labelText="Add up to 4 tags"
                     selected={selected}
                     suggestions={options}
                     onAdd={onAdd}

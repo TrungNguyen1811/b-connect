@@ -1,13 +1,16 @@
 import { HelpCircle, PhoneCall, Mail } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { useTranslation } from 'react-i18next'
 
 function Help() {
+  const { t } = useTranslation('translation')
+
   return (
     <Dialog>
       <DialogTrigger className="flex flex-row items-center">
         <HelpCircle size={20} />
-        <p className="hidden-on-mobile hidden-on-tablet">Help</p>
+        <p className="hidden-on-mobile hidden-on-tablet">{t('Help')}</p>
       </DialogTrigger>
       <DialogContent className="w-[40vw]">
         <DialogHeader>

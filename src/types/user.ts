@@ -27,14 +27,6 @@ export interface User {
   ]
   blockedDate?: Date
   salt?: string
-  nicId?: string
-  nicName?: string
-  nicDob?: string
-  nicHome?: string
-  nicAddress?: string
-  nicSex?: string
-  nicNationality?: string
-  nicDoe?: string
   features?: string
   issueDate?: string
   nicType?: 'old' | 'new' | 'old_back' | 'new_back' | 'cmnd_09_front' | 'cmnd_12_front' | 'cccd_12_front'
@@ -44,6 +36,16 @@ export interface User {
   url?: string
   createdAt?: Date
   updatedAt?: Date
+}
+
+export interface INIC {
+  id: string
+  name: string
+  sex: string
+  doB: string
+  address: string
+  home: string
+  nationality: string
 }
 
 export interface IRegisterNIC {
@@ -62,10 +64,9 @@ export interface IRegisterNIC {
 }
 
 export enum ROLE {
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
+  ADMIN = 'Admin',
   SELLER = 'Seller',
-  CUSTOMER = 'CUSTOMER',
+  STAFF = 'Staff',
   BASEUSER = 'BaseUser',
 }
 

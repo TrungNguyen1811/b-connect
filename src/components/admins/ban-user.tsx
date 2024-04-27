@@ -6,7 +6,7 @@ import { Input } from '../ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { cn } from 'src/lib/utils'
-import { CalendarHeart } from 'lucide-react'
+import { CalendarHeart, Loader2 } from 'lucide-react'
 import {
   addDays,
   differenceInDays,
@@ -76,7 +76,11 @@ function BanUser({ userId }: { userId: string }) {
   })
 
   if (banUser.isLoading) {
-    return <div className="loader">Updating...</div>
+    return (
+      <Button variant="outline" type="button" className="mr-10 w-[10rem]">
+        {<Loader2 className="mr-2 h-4 w-4 animate-spin" />} Loading...
+      </Button>
+    )
   }
 
   if (banUser.isError) {

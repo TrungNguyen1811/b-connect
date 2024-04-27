@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckIcon, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { UpdateAgency } from 'src/api/agency/put-agency'
+import { UpdateAgency } from 'src/api/seller/put-agency'
 import { ProfileShopSchema } from 'src/components/seller/schema/profile-shop'
 import { Avatar, AvatarImage } from 'src/components/ui/avatar'
 import { Button } from 'src/components/ui/button'
@@ -21,10 +21,12 @@ import { IAgency } from 'src/types/agency'
 import AddressData from 'src/components/cart/address.json'
 import { getAddressByAddressId } from 'src/api/address/get-address'
 import { IAddress } from 'src/types/address'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 type FormData = Zod.infer<typeof ProfileShopSchema>
 function ProfileSeller() {
   const { user } = useAuth()
+  const queryClient = useQueryClient()
   const [isEdit, setIsEdit] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [city, setCity] = useState('')
@@ -64,10 +66,26 @@ function ProfileSeller() {
 
   const navigate = useNavigate()
 
-  const onSubmit = async (data: FormData) => {
-    console.log('Form submitted with data:', data)
+  const updateAgency = useMutation({
+    mutationFn: (data: IAgency) => {
+      return UpdateAgency(data)
+    },
+    onSuccess: () => {
+      toast({
+        title: 'Successful!!',
+        description: 'Add Book Group Success',
+      })
+      // setBookGroup(updatedBookGroup)
+      queryClient.invalidateQueries()
+    },
+    onError: () => {
+      toast({
+        title: 'Error add book group',
+      })
+    },
+  })
 
-    setIsLoading(true)
+  const onSubmit = async (data: FormData) => {
     const address = {
       postAddress: data.city_Province + ', ' + data.district + ', ' + data.subDistrict + ', ' + data.rendezvous,
     }
@@ -81,28 +99,7 @@ function ProfileSeller() {
       businessType: data.businessType,
     }
 
-    await UpdateAgency(formData, (err, result) => {
-      if (err) {
-        toast({
-          title: err.message,
-          description: err.cause?.message,
-          variant: 'destructive',
-        })
-      } else {
-        if (!user) {
-          return
-        }
-        console.log(result)
-        toast({
-          title: 'Register Success',
-          variant: 'success',
-        })
-      }
-    })
-    setIsLoading(false)
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    updateAgency.mutate(formData)
   }
 
   return (
@@ -386,8 +383,8 @@ function ProfileSeller() {
                     )}
                   />
                   <div className="mt-8 flex flex-row">
-                    <Button type="submit" className="ml-40 mr-6 w-20">
-                      Save
+                    <Button disabled={updateAgency.isLoading} className="my-2" type="submit">
+                      {updateAgency.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Save
                     </Button>
                     <Button onClick={() => setIsEdit(false)} className="w-20">
                       Cancel

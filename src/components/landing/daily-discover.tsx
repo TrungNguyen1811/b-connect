@@ -11,13 +11,15 @@ import { IQueryPagination } from 'src/types/requests'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
 import { getManyBooks } from 'src/api/books/get-book'
 import BookGridLoading from '../book/book-grid-loading'
+import { useTranslation } from 'react-i18next'
 
 function DailyDiscover() {
   const navigate = useNavigate()
+  const { t } = useTranslation('translation')
 
   const [queries, setQueries] = useState<Partial<IQueryPagination>>({
     PageNumber: 0,
-    PageSize: 6,
+    PageSize: 40,
   })
 
   const { data, isLoading, isError } = useQuery<IResponse<IBook[]>, AxiosError>(
@@ -63,7 +65,7 @@ function DailyDiscover() {
       <div className="mx-auto max-w-7xl bg-orange-50 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="sticky pb-7 text-center">
-            <h2 className="self-center p-5 text-2xl font-bold text-orange-600">DAILY DISCOVER</h2>
+            <h2 className="self-center p-5 text-2xl font-bold text-orange-600">{t('DAILYDISCOVER')}</h2>
           </div>
           <div className="mb-8 flex w-full gap-2">
             <section key="main.section.books" className="grid flex-1 grid-cols-6 gap-5">
@@ -72,7 +74,7 @@ function DailyDiscover() {
           </div>
           {data?.data && data.data.length > displayedBooks && (
             <div className="text-center">
-              <Button onClick={handleSeeMoreClick}>See More</Button>
+              <Button onClick={handleSeeMoreClick}>{t('SeeMore')}</Button>
             </div>
           )}
         </div>

@@ -34,17 +34,17 @@ function LoginPage() {
           </div>
           <div className="overlay-container">
             <div className="overlay">
-              <div className="overlay-panel overlay-left">
+              <div className="overlay-panel overlay-left text-xl">
                 <h1>Welcome Back!</h1>
                 <p>To keep connected with us please login with your personal info</p>
-                <button onClick={handleSignInClick} className="ghost">
+                <button onClick={handleSignInClick} className="ghost text-lg hover:text-orange-200">
                   Sign In
                 </button>
               </div>
-              <div className="overlay-panel overlay-right">
+              <div className="overlay-panel overlay-right text-xl">
                 <h1>Hello, Friend!</h1>
                 <p>{"Don't"} have an account yet?</p>
-                <button onClick={handleSignUpClick} className="ghost">
+                <button onClick={handleSignUpClick} className="ghost text-lg hover:text-orange-700">
                   Sign Up Here!
                 </button>
               </div>

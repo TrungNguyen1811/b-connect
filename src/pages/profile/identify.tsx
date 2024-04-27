@@ -4,13 +4,17 @@ import { Image, Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
-import { postCTCApi } from 'src/api/user/nic'
+import { registerAccountValidates, updateNicData } from 'src/api/seller/set-is-account-validated'
+import { profileApi } from 'src/api/apis/auth/profile.api'
+import { getNICApi, postNICApi } from 'src/api/user/nic'
 import { Button } from 'src/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
 import { Separator } from 'src/components/ui/separator'
+import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import { ENUM_CITIZEN_ID_TYPE, ICTCBackSide, ICTCFrontSide } from 'src/types'
+import { ENUM_CITIZEN_ID_TYPE, ICTCBackSide, ICTCFrontSide, INIC } from 'src/types'
+import { IToken } from 'src/types/token'
 import { z } from 'zod'
 
 const formCTCSchema = z.object({
@@ -29,11 +33,20 @@ const formCTCSchema = z.object({
 
 type FormData = z.infer<typeof formCTCSchema>
 function IdentificationUser() {
-  const { user } = useAuth()
+  const { user, login } = useAuth()
   const form = useForm<FormData>({
     resolver: zodResolver(formCTCSchema),
     defaultValues: {},
   })
+  const [isUpdate, setIsUpdate] = useState<boolean>(false)
+  const [getNic, setNic] = useState<INIC>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const getNic = (await getNICApi()) as INIC
+      setNic(getNic)
+    }
+    fetchData()
+  }, [])
 
   const [imageFS, setImageFS] = useState<File | null>(null)
   const [imageBS, setImageBS] = useState<File | null>(null)
@@ -105,7 +118,7 @@ function IdentificationUser() {
     formDataBS.append('image', imageBS)
 
     try {
-      const [fs, bs] = await Promise.all([postCTCApi<ICTCFrontSide>(formDataFS), postCTCApi<ICTCBackSide>(formDataBS)])
+      const [fs, bs] = await Promise.all([postNICApi<ICTCFrontSide>(formDataFS), postNICApi<ICTCBackSide>(formDataBS)])
 
       form.setValue('nicId', fs.data[0].id)
       form.setValue('nicName', fs.data[0].name)
@@ -243,21 +256,85 @@ function IdentificationUser() {
   const [isLoading, setIsLoading] = useState(false)
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
-    // await signUpApi(data, (err) => {
-    //   if (err) {
-    //     toast({
-    //       title: 'Error',
-    //       description: err.response?.data.message,
-    //       variant: 'destructive',
-    //     })
-    //     return
-    //   }
-    //   toast({
-    //     title: 'Success',
-    //     description: 'Register successfully',
-    //     variant: 'success',
-    //   })
-    // })
+    setIsLoading(true)
+    const formData = {
+      ...data,
+      userId: user?.userId as string,
+    }
+    let token: IToken
+    if (isUpdate === true) {
+      await updateNicData(formData, async (err, result) => {
+        if (err) {
+          toast({
+            title: 'Error',
+            description: err.message,
+            variant: 'destructive',
+          })
+          return err.message
+        }
+        toast({
+          title: 'Success',
+          description: 'Register CTC successfully',
+          variant: 'success',
+        })
+        token = result!
+
+        await profileApi(token.accessToken!, (err, user) => {
+          if (err) {
+            toast({
+              title: err.message,
+              description: err.cause?.message,
+              variant: 'destructive',
+            })
+          } else {
+            if (!user) {
+              return
+            }
+            login({
+              user,
+              token,
+            })
+          }
+        })
+        return result
+      })
+    } else {
+      await registerAccountValidates(formData, async (err, result) => {
+        if (err) {
+          toast({
+            title: 'Error',
+            description: err.message,
+            variant: 'destructive',
+          })
+          return err.message
+        }
+        toast({
+          title: 'Success',
+          description: 'Register CTC successfully',
+          variant: 'success',
+        })
+        token = result!
+
+        await profileApi(token.accessToken!, (err, user) => {
+          if (err) {
+            toast({
+              title: err.message,
+              description: err.cause?.message,
+              variant: 'destructive',
+            })
+          } else {
+            if (!user) {
+              return
+            }
+            login({
+              user,
+              token,
+            })
+          }
+        })
+        return result
+      })
+    }
     setIsLoading(false)
   }
 
@@ -268,18 +345,19 @@ function IdentificationUser() {
   const Result = () => {
     return (
       <div>
-        <div className=" flex flex-row items-center justify-between">
+        <div className=" mx-8 flex flex-row items-center justify-between">
           <p className="p-4 text-2xl">Identification Information</p>
+          <Button onClick={() => setIsUpdate(true)}>Change NIC</Button>
         </div>
         <div className="flex h-96 flex-row">
-          <div className="ml-8">
-            <p>ID: {user?.nicId}</p>
-            <p>NAME: {user?.nicName}</p>
-            <p>SEX: {user?.nicSex}3</p>
-            <p>DATE OF BIRTH: {user?.nicDob}</p>
-            <p>ADDRESS{user?.nicAddress}</p>
-            <p>HOME: {user?.nicHome}</p>
-            <p>NATIONALITY: {user?.nicNationality}</p>
+          <div className="ml-16">
+            <p>ID: {getNic?.id}</p>
+            <p>NAME: {getNic?.name}</p>
+            <p>SEX: {getNic?.sex}</p>
+            <p>DATE OF BIRTH: {getNic?.doB}</p>
+            <p>ADDRESS{getNic?.address}</p>
+            <p>HOME: {getNic?.home}</p>
+            <p>NATIONALITY: {getNic?.nationality}</p>
           </div>
         </div>
       </div>
@@ -293,7 +371,7 @@ function IdentificationUser() {
         <p className="text-gray-500">Manage your identification information</p>
       </div>
       <Separator />
-      {user?.isValidated ? (
+      {user?.isValidated && isUpdate === false ? (
         <div>
           <Result />
         </div>
@@ -318,10 +396,15 @@ function IdentificationUser() {
               <div className="7/12 caret-lime-200">{renderCTC}</div>
             </div>
 
-            <Button disabled={isLoading} type="submit" className="my-6 ml-[48rem] w-32">
-              {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-              Register
-            </Button>
+            <div className="mr-8 flex flex-row justify-end gap-4">
+              <Button onClick={() => setIsUpdate(false)} className="my-6 w-24">
+                Cancel
+              </Button>
+              <Button disabled={isLoading} type="submit" className="my-6 w-24">
+                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                Register
+              </Button>
+            </div>
           </form>
         </Form>
       )}

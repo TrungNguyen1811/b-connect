@@ -1,4 +1,4 @@
-import { IResponseAgencyOrder, IResponseAgencyOrderDetail, IResponseOrder } from 'src/types/order'
+import { IResponseOrderAgency, IResponseOrderAgencyDetail, IResponseOrder } from 'src/types/order'
 import { authAxiosClient, axiosClient } from '../../lib/axios'
 import { IResponse, IResponsePagination } from 'src/types/response'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
@@ -37,11 +37,6 @@ export { getOrderHistoryApi }
 
 export type GetManyOrderParams = {
   Address?: string
-  MinPrice?: number
-  MaxPrice?: number
-  Method?: string
-  QuantityMin?: number
-  QuantityMax?: number
   BookName?: string
   CustomerName?: string
   OrderId?: string
@@ -51,12 +46,12 @@ export type GetManyOrderParams = {
   PageNumber?: number
   PageSize?: number
 } & Partial<IQueryPagination & IQuerySearch>
-async function getAllOrderOfAgency(params: GetManyOrderParams) {
-  return await authAxiosClient.get(`/Order/GetAllOrderOfAgency`, { params }).then((response) => {
-    const data: IResponseAgencyOrder[] = response.data
+async function SearchOrders(params: GetManyOrderParams) {
+  return await authAxiosClient.get(`/Order/SearchOrders`, { params }).then((response) => {
+    const data: IResponseOrderAgency[] = response.data
     const pagination = response.headers['x-pagination']
     const parseJson: IResponsePagination = JSON.parse(pagination)
-    const dataAll: IResponse<IResponseAgencyOrder[]> = {
+    const dataAll: IResponse<IResponseOrderAgency[]> = {
       data: data,
       _metadata: data,
       _pagination: parseJson,
@@ -64,11 +59,11 @@ async function getAllOrderOfAgency(params: GetManyOrderParams) {
     return dataAll
   })
 }
-export { getAllOrderOfAgency }
+export { SearchOrders }
 
 async function getOrderDetail(orderId: string) {
   return await authAxiosClient.get(`/Order/GetOrderDetail?id=${orderId}`).then((response) => {
-    const data: IResponseAgencyOrderDetail = response.data
+    const data: IResponseOrderAgencyDetail = response.data
     return data
   })
 }

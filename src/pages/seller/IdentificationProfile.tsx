@@ -1,22 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getNICApi } from 'src/api/user/nic'
 import { Separator } from 'src/components/ui/separator'
-import { useAuth } from 'src/hooks/useAuth'
+import { INIC } from 'src/types/user'
 
 function IdentificationProfile() {
-  const { user } = useAuth()
+  const [getNic, setNic] = useState<INIC>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const getNic = (await getNICApi()) as INIC
+      setNic(getNic)
+    }
+    fetchData()
+  }, [])
 
   const Result = () => {
     return (
       <div className="flex flex-row">
         <div className="mr-8">
-          <p>ID: {user?.nicId}</p>
-          <p>NAME: {user?.nicName}</p>
-          <p>SEX: {user?.nicSex}</p>
-          <p>DATE OF BIRTH: {user?.nicDob}</p>
-          <p>ADDRESS{user?.nicAddress}</p>
-          <p>HOME: {user?.nicHome}</p>
-          <p>NATIONALITY: {user?.nicNationality}</p>
+          <p>ID: {getNic?.id}</p>
+          <p>NAME: {getNic?.name}</p>
+          <p>SEX: {getNic?.sex}</p>
+          <p>DATE OF BIRTH: {getNic?.doB}</p>
+          <p>ADDRESS{getNic?.address}</p>
+          <p>HOME: {getNic?.home}</p>
+          <p>NATIONALITY: {getNic?.nationality}</p>
         </div>
       </div>
     )

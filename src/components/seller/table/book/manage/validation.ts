@@ -8,7 +8,7 @@ export const bookSchema = z.object({
   publishDate: z.date(),
   category: z.array(z.string()),
   type: z.enum(['New', 'Old']),
-  bookImg: z.any(),
+  bookImg: z.array(z.any()).max(6),
   backgroundImg: z.any(),
   quantity: z.coerce.number().min(0),
 })
@@ -20,7 +20,7 @@ export const updateBookSchema = z.object({
   publishDate: z.date(),
   category: z.array(z.string()),
   type: z.enum(['New', 'Old']),
-  bookImg: z.any(),
+  bookImg: z.array(z.any()).max(6),
   backgroundImg: z.any(),
   stock: z.coerce.number().min(0),
 })

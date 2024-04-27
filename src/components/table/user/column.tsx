@@ -40,7 +40,7 @@ export const columns: ColumnDef<User>[] = [
     header: 'Role',
     cell: ({ getValue }) => {
       const role = getValue() as string[]
-      return <div className="w-[4rem]">{role.join('/')}</div>
+      return <div className="w-[4rem]">{role}</div>
     },
   },
   {

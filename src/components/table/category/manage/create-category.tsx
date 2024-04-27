@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 'src/components/ui/dialog'
 import { toast } from 'src/components/ui/use-toast'
 import { postCategoryApi } from 'src/api/categories/post-categogy'
+import { Loader2 } from 'lucide-react'
 
 export const IMG_MAX_LIMIT = 5
 type CategoryFormValues = z.infer<typeof CategorySchema>
@@ -21,7 +22,7 @@ export function CreateCategoryForm() {
 
   const queryClient = useQueryClient()
 
-  const { mutate: addCategory } = useMutation({
+  const addCategory = useMutation({
     mutationFn: (data: CategoryFormValues) => {
       const formData = {
         ...data,
@@ -51,7 +52,7 @@ export function CreateCategoryForm() {
     },
   })
   const onSubmit = (data: CategoryFormValues) => {
-    addCategory(data)
+    addCategory.mutate(data)
   }
 
   return (
@@ -108,8 +109,8 @@ export function CreateCategoryForm() {
                 )}
               />
               <div className="mt-4">
-                <Button type="submit" className="text-xs md:text-sm">
-                  Submit
+                <Button disabled={addCategory.isLoading} className="text-xs md:text-sm" type="submit">
+                  {addCategory.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Submit
                 </Button>
               </div>
             </form>

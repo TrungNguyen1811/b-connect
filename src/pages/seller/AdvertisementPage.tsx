@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CheckIcon, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getTopBanner } from 'src/api/advertisement/get-top-banner'
@@ -28,9 +28,10 @@ import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popov
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import { cn } from 'src/lib/utils'
+import { cn, formatPrice } from 'src/lib/utils'
 import { Duration, ICheckoutAds, ITopBanner } from 'src/types/advertisement'
 import { z } from 'zod'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'src/components/ui/table'
 
 const displaySchema = z.object({
   bookId: z.string().optional(),
@@ -167,7 +168,7 @@ function AdvertisementPage() {
   const formRelevant = useForm<FormRelevantData>({
     resolver: zodResolver(relevantSchema),
   })
-  const { mutate: checkoutRelevantAds } = useMutation({
+  const checkoutRelevantAds = useMutation({
     mutationFn: (data: ICheckoutAds) => {
       return postCheckoutAds(data)
     },
@@ -205,7 +206,7 @@ function AdvertisementPage() {
     }
 
     localStorage.setItem('checkoutAdsData', JSON.stringify(formData))
-    checkoutRelevantAds(formCheckoutData)
+    checkoutRelevantAds.mutate(formCheckoutData)
   }
   return (
     <div className="mx-4">
@@ -224,17 +225,26 @@ function AdvertisementPage() {
                 <p className="text-lg font-semibold">Top 10 stores will have banners displayed next week</p>
                 <p className="text-xs italic">Stores outside the top 10 will receive refunds early next week</p>
                 <div className="flex flex-row items-start justify-between">
-                  <div className="border-1 m-4 border p-4">
-                    <tr>
-                      <th className="text-md">Title Banner</th>
-                      <th className="text-md pl-16">Price</th>
-                    </tr>
-                    {banners?.map((banner, index) => (
-                      <tr key={index}>
-                        <td className="text-md font-semibold">{banner.bannerTitle}</td>
-                        <td className="pl-16 text-center text-red-600">{banner.price}</td>
-                      </tr>
-                    ))}
+                  <div className="border-1 m-4 w-2/3 border p-4">
+                    <Table className="">
+                      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[100px]">Title Banner</TableHead>
+                          <TableHead className="text-right">Price</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {banners?.map((banner, index) => (
+                          <TableRow key={index}>
+                            <TableCell className="text-md font-semibold">{banner.bannerTitle}</TableCell>
+                            <TableCell className="pl-16 text-center text-red-600">
+                              {formatPrice(banner.price)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                   <div className="mr-24">
                     <Form {...form}>
@@ -270,7 +280,7 @@ function AdvertisementPage() {
                           render={({ field }) => (
                             <FormItem className="flex flex-row items-center justify-start gap-2">
                               <FormLabel className=" w-24">BookId</FormLabel>
-                              <Input className="w-80" placeholder="bid" {...field} />
+                              <Input className="w-80" placeholder="book id" {...field} />
                             </FormItem>
                           )}
                         />
@@ -330,7 +340,6 @@ function AdvertisementPage() {
                             <PopoverTrigger asChild>
                               <FormControl>
                                 <Button
-                                  variant="outline"
                                   role="combobox"
                                   className={cn(
                                     'ml-2 w-48 justify-between bg-white',
@@ -394,8 +403,8 @@ function AdvertisementPage() {
                         </FormItem>
                       )}
                     />
-                    <Button className="ml-40 mt-4 " type="submit">
-                      Checkout
+                    <Button disabled={checkoutRelevantAds.isLoading} className="my-2" type="submit">
+                      {checkoutRelevantAds.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Checkout
                     </Button>
                   </form>
                 </Form>

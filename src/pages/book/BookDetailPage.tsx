@@ -3,7 +3,7 @@ import { Plus, Star } from 'lucide-react'
 import '@smastrom/react-rating/style.css'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 // import { useForm } from 'react-hook-form'
-import { useLoaderData, useLocation } from 'react-router-dom'
+import { Link, useLoaderData, useLocation } from 'react-router-dom'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
@@ -23,17 +23,20 @@ import { Rating } from '@smastrom/react-rating'
 import { postRatingComment } from 'src/api/review/post-rating-review'
 import { useAuth } from 'src/hooks/useAuth'
 import getAllReviewByBookId from 'src/api/review/get-all-review-by-bookId'
-import BookGridLoading from 'src/components/book/book-grid-loading'
-import useGetManyBooks from 'src/hooks/useGetManyBooks'
-import { useCustomQueryDetail } from 'src/hooks/useCustomQueryDetail'
-import { getRelevantBooks } from 'src/api/advertisement/get-top-banner'
-import { IRelevantBooks } from 'src/types/advertisement'
-import CardBook from 'src/components/card-book'
+import BookShouldByWith from './BookShouldByWith'
+import BookRelevant from './BookRelevant'
+import { Carousel, CarouselContent3, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
+import { Card, CardContent } from 'src/components/ui/card'
+import { IAgency } from 'src/types/agency'
+import { getAgencyByAgencyId, getPercentageReplyByAgencyId } from 'src/api/seller/get-agency'
+import { UserChatReply } from 'src/types/chat'
+import { postChatMessage } from 'src/api/chat/post-chat'
 
 type FormValue = {
   comment: string
   ratingPoint: number
 }
+
 function BookDetailPage() {
   const data = useLoaderData() as { book: IBook }
   const [book, setBook] = React.useState<IBook | null>(data.book)
@@ -43,8 +46,20 @@ function BookDetailPage() {
     setBook(data.book)
   }, [data])
 
-  const [bookReview, setBookReview] = useState<IReviewResponse[]>([])
+  const [agency, setAgency] = useState<IAgency>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const agency = (await getAgencyByAgencyId(book?.agencyId as string)) as IAgency
+      setAgency(agency)
+    }
+    if (book?.productId) {
+      fetchData()
+    }
+  }, [book?.agencyId])
 
+  const percent = getPercentageReplyByAgencyId(book?.agencyId as string)
+
+  const [bookReview, setBookReview] = useState<IReviewResponse[]>([])
   useEffect(() => {
     const fetchData = async () => {
       const review: IReviewResponse[] = await getAllReviewByBookId(book?.productId as string)
@@ -54,15 +69,6 @@ function BookDetailPage() {
       fetchData()
     }
   }, [book?.productId])
-
-  const { data: relatedBooks, isLoading } = useGetManyBooks(
-    {
-      CategoryIds: book?.category?.length && book.category.length > 0 ? book.category[0] : '',
-    },
-    {
-      enabled: !!book?.category,
-    },
-  )
 
   const queryClient = useQueryClient()
   const { pathname } = useLocation()
@@ -96,23 +102,6 @@ function BookDetailPage() {
     },
     [bookReview],
   )
-
-  const {
-    data: relevantData,
-    isLoading: isLoadingRelevant,
-    isError,
-  } = useCustomQueryDetail<IRelevantBooks[]>(() => getRelevantBooks(), {
-    refetchOnWindowFocus: false,
-  })
-  const renderRelevantBooks = useMemo(() => {
-    if (isLoadingRelevant) return <BookGridLoading pageSize={4} />
-
-    if (!relevantData) return null
-
-    const _relevantBooks = relevantData?.slice(0, relevantData?.length > 4 ? 4 : relevantData?.length) || []
-
-    return _relevantBooks?.map((book: IRelevantBooks) => <CardBook key={book.bookId} book={book} />)
-  }, [isLoadingRelevant, relevantData])
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     const paths = pathname.split('/')
@@ -227,16 +216,6 @@ function BookDetailPage() {
     },
   })
 
-  // const renderGenres = React.useMemo(() => {
-  //   return book?.genres?.map((genre) => (
-  //     <Link to={`/books?genres=${genre}`} key={genre}>
-  //       <p isPressable colors={'secondary'}>
-  //         {genre}
-  //       </p>
-  //     </Link>
-  //   ))
-  // }, [book?.genres])
-
   console.log(book)
   const handleReviewSubmit = useCallback(
     ({ ratingPoint, comment }: FormValue) => {
@@ -266,13 +245,31 @@ function BookDetailPage() {
     [book?.productId, reset, toast],
   )
 
-  // const carouselImages = [book?.bookDir, book?.bookDir, book?.bookDir, book?.bookDir, book?.bookDir]
-  // const [selectedImage, setSelectedImage] = useState(carouselImages[0])
+  const carouselImages = book?.bookImg as string
+  const arrayImages = carouselImages.split(',')
+  const [selectedImage, setSelectedImage] = useState(arrayImages[0])
+  const handleCarouselItemClick = (imageURL: React.SetStateAction<string>) => {
+    setSelectedImage(imageURL as string)
+  }
 
-  // // image show
-  // const handleCarouselItemClick = (imageURL: React.SetStateAction<string>) => {
-  //   setSelectedImage(imageURL as string)
-  // }
+  const query = useQueryClient()
+  const { mutate: postMessage } = useMutation({
+    mutationFn: (formData: UserChatReply) => {
+      return postChatMessage(formData)
+    },
+    onSuccess: (newMessage) => {
+      query.invalidateQueries()
+    },
+  })
+
+  const onSubmit = () => {
+    console.log('bbbok', book?.agencyId)
+    const formData: UserChatReply = {
+      receiverId: book?.agencyId as string,
+      messageText: 'hi',
+    }
+    postMessage(formData)
+  }
 
   return (
     <div className="mx-auto min-h-screen w-full bg-orange-100">
@@ -286,14 +283,32 @@ function BookDetailPage() {
               className="grid w-full grid-cols-1 place-items-start gap-4 py-2 md:grid-cols-3 md:gap-6"
             >
               <article className="ml-7 flex flex-col">
-                {/* Hiển thị ảnh được chọn từ carousel */}
-                <img
-                  src={book.bookImg as string}
-                  alt="Selected Image"
-                  className="rounded-sm object-cover shadow-md"
-                  height={450}
-                  width={450}
-                />
+                <img src={selectedImage} alt="Selected Image" className="h-96 rounded-sm object-cover shadow-md" />
+
+                <div className="flex flex-row">
+                  {/* Carousel */}
+                  <Carousel className="h-[120px] w-[25rem] p-2">
+                    <CarouselContent3>
+                      {/* Render các carousel item */}
+                      {Array.isArray(arrayImages) &&
+                        arrayImages.map((image, index) => (
+                          <CarouselItem key={index} className="basis-9/9">
+                            <Card>
+                              <CardContent
+                                className="hover: flex aspect-square h-full w-[6rem] items-center justify-center rounded-md p-0 hover:border hover:border-red-500"
+                                onClick={() => handleCarouselItemClick(image)}
+                                onMouseEnter={() => handleCarouselItemClick(image)}
+                              >
+                                <img className="rounded-sm" src={image} />
+                              </CardContent>
+                            </Card>
+                          </CarouselItem>
+                        ))}
+                    </CarouselContent3>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </Carousel>
+                </div>
               </article>
 
               <article className="col-span-2 ml-32 space-y-4 rounded-lg">
@@ -362,6 +377,7 @@ function BookDetailPage() {
               {/* <p className="text-base text-slate-500">{book?.category}</p> */}
               <p className="text-base text-slate-500">Author: {book?.author}</p>
               <p className="text-base text-slate-500">Type: {book?.type}</p>
+              <p className="text-base text-slate-500">Category: {book?.category?.join(',')}</p>
             </div>
             <div className="ml-4">
               <p className="text-md font-bold">Book Description:</p>
@@ -372,10 +388,36 @@ function BookDetailPage() {
         </div>
       </div>
 
-      <div>
-        <Avatar>
-          <AvatarImage src={book?.agencyId} />
-        </Avatar>
+      <div className="mx-auto my-2 flex max-w-6xl flex-row items-center justify-between  bg-orange-50 p-4 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+        <div className="flex flex-row">
+          <Avatar className="mr-1 h-16 w-16">
+            {/* <AvatarImage src={agency?.logoImg as string} /> */}
+            <AvatarImage src="https://scontent.fdad7-1.fna.fbcdn.net/v/t45.1600-4/408957050_120208360688070402_8892427179558757879_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=ISv-9zSdGvAAb68O3WA&_nc_ht=scontent.fdad7-1.fna&oh=00_AfCrQV1nJeHjnsNTY_l2EJj-N6CEP3RgWlSnj2G6cCTVJw&oe=662C06B3" />
+          </Avatar>
+          <div>
+            <p className="ml-2 text-base font-semibold">{agency?.agencyName}</p>
+            <p>
+              <Link
+                className="ml-2 rounded-sm border px-2 py-1 text-xs text-gray-500 hover:bg-orange-400 hover:text-white"
+                to={`/shop/${book?.agencyId}`}
+              >
+                View Shop
+              </Link>
+              <button
+                onClick={() => onSubmit()}
+                className="ml-2 rounded-sm border px-2 py-1 text-xs text-gray-500 hover:bg-orange-400 hover:text-white"
+              >
+                Chat Now
+              </button>
+            </p>
+          </div>
+        </div>
+        <div className="mx-16 flex flex-row gap-16 text-gray-500">
+          <p>Rating: 5</p>
+          <p>Product: 13</p>
+          <p>Response: 0%</p>
+          <p>Join: 2024/02/22</p>
+        </div>
       </div>
 
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
@@ -422,31 +464,33 @@ function BookDetailPage() {
             <div className="flex items-center justify-between">
               <h3 className="text-3xl font-medium">Usually buy with</h3>
             </div>
-            {/* <div>
+            <div>
               <BookShouldByWith book={book} />
-            </div> */}
+            </div>
           </section>
         </div>
       </div>
 
-      <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
+      {/* <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.buywith'} className="w-full py-10 ">
             <div className="flex items-center justify-between">
               <h3 className="text-3xl font-medium">From the same shop</h3>
             </div>
-            {/* <div>
+            <div>
               <BookShop book={book} />
-            </div> */}
+            </div>
           </section>
         </div>
-      </div>
+      </div> */}
 
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.suggest'} className="min-h-[70vh] w-full py-10">
             <h3 className="text-3xl font-medium">You might also like</h3>
-            <div className="h-30 flex gap-3 py-4">{renderRelevantBooks}</div>
+            <div className="h-30 flex gap-3 py-4">
+              <BookRelevant book={book} />
+            </div>
           </section>
         </div>
       </div>

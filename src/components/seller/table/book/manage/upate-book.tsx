@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popov
 import { cn } from 'src/lib/utils'
 import { format } from 'date-fns'
 import { Calendar } from 'src/components/ui/calendar'
-import { CalendarIcon, CheckIcon, SortAscIcon } from 'lucide-react'
+import { CalendarIcon, CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
 import { Textarea } from 'src/components/ui/text-area'
 import { getBookById } from 'src/api/books/get-book'
@@ -52,6 +52,7 @@ export function UpdateBook() {
       }))
   }, [categories])
 
+  const bookImageDefault = book?.bookImg as string
   const form = useForm<FormData>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
@@ -61,13 +62,13 @@ export function UpdateBook() {
       price: book?.price,
       publishDate: book?.publishDate,
       type: book?.type,
-      bookImg: book?.bookImg,
+      bookImg: bookImageDefault.split(','),
       backgroundImg: book?.backgroundImg,
       stock: book?.stock,
     },
   })
 
-  const { mutate: updateBook } = useMutation({
+  const updateBook = useMutation({
     mutationFn: (updatedData: FormData) => {
       const formData = {
         ...updatedData,
@@ -95,7 +96,12 @@ export function UpdateBook() {
       const fetchedBook: IBook = await getBookById(bookId as string)
       if (fetchedBook && fetchedBook.productId) {
         setBook(fetchedBook)
-        form.reset(fetchedBook)
+        const bookImgs = fetchedBook.bookImg as string
+        const reset = {
+          ...fetchedBook,
+          bookImg: bookImgs.split(','),
+        }
+        form.reset(reset)
         setSelected(fetchedBook.category!)
       } else {
         toast({
@@ -114,8 +120,13 @@ export function UpdateBook() {
     fetchDataAndUpdateForm()
   }, [bookId]) // Add key as dependency
 
+  const [file, setFile] = useState<File[]>()
+  useEffect(() => {
+    form.setValue('bookImg', file!)
+  }, [file])
+
   const onSubmit = (data: FormData) => {
-    updateBook(data)
+    updateBook.mutate(data)
   }
 
   return (
@@ -133,9 +144,17 @@ export function UpdateBook() {
                     <FormLabel className="w-40 pr-2 text-right">Book Img</FormLabel>
                     <FormControl>
                       <Input
+                        multiple
                         type="file"
                         accept="image/*"
-                        onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                        onChange={(e) => {
+                          const files = e.target.files
+                          if (files) {
+                            const fileList = Array.from(files)
+                            setFile(fileList)
+                            // field.onChange(fileList)
+                          }
+                        }}
                       />
                     </FormControl>
                   </FormItem>
@@ -220,7 +239,7 @@ export function UpdateBook() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
+                            variant={'secondary'}
                             role="combobox"
                             className={cn('ml-1 justify-between bg-orange-50', !field.value && 'text-muted-foreground')}
                           >
@@ -306,7 +325,7 @@ export function UpdateBook() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant={'outline'}
+                            variant={'secondary'}
                             className={cn(
                               'ml-1 w-[240px] bg-orange-50 pl-3 text-left font-normal',
                               !field.value && 'text-muted-foreground',
@@ -332,8 +351,8 @@ export function UpdateBook() {
               <Button className="my-2 mr-8 w-32" type="submit">
                 Cancel
               </Button>
-              <Button className="my-2 mr-96 w-32" type="submit">
-                Save
+              <Button disabled={updateBook.isLoading} className="my-2 mr-96 w-32" type="submit">
+                {updateBook.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
               </Button>
             </div>
           </div>

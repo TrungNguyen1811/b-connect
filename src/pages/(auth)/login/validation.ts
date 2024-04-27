@@ -10,8 +10,7 @@ export const LoginSchema = z.object({
       message: 'Invalid email format',
     }),
   password: z.string().refine((value) => passwordRegex.test(value), {
-    message:
-      'Password must contain at least one special character, one uppercase letter, one lowercase letter, and one number',
+    message: 'Password must less contain characters, 1 uppercase, 1 lowercase, 1 number',
   }),
   remember: z.boolean(),
 })

@@ -11,6 +11,7 @@ import { Textarea } from 'src/components/ui/text-area'
 import { replySchema } from './validation'
 import { useAuth } from 'src/hooks/useAuth'
 import { updateReplyReview } from 'src/api/review/post-rating-review'
+import { Loader2 } from 'lucide-react'
 
 type FormData = z.infer<typeof replySchema>
 
@@ -24,7 +25,7 @@ export function UpdateReplyCustomer({ data }: { data: IListReplyResponse }) {
     },
   })
 
-  const { mutate: updateReply } = useMutation({
+  const updateReply = useMutation({
     mutationFn: (updatedData: FormData) => {
       const formData: IReply = {
         replyText: updatedData.ReplyText,
@@ -49,7 +50,7 @@ export function UpdateReplyCustomer({ data }: { data: IListReplyResponse }) {
   })
 
   const onSubmit = (data: FormData) => {
-    updateReply(data)
+    updateReply.mutate(data)
   }
 
   return (
@@ -90,8 +91,8 @@ export function UpdateReplyCustomer({ data }: { data: IListReplyResponse }) {
                     <Button className="my-2 mr-2" type="submit">
                       Cancel
                     </Button>
-                    <Button className="my-2" type="submit">
-                      Save
+                    <Button disabled={updateReply.isLoading} className="" type="submit">
+                      {updateReply.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Submit
                     </Button>
                   </div>
                 </div>

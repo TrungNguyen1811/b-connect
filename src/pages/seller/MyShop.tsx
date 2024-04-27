@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query'
 import React, { useMemo } from 'react'
 import { useLoaderData } from 'react-router-dom'
-import { GetListBestSellerProductIdByRevenueAndAgencyId } from 'src/api/agency/get-agency'
+import { GetListBestSellerProductIdByRevenueAndAgencyId } from 'src/api/seller/get-agency'
 import {
   GetAllBookInInventoryByAgencyId,
   GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId,
@@ -120,7 +120,7 @@ function MyShop() {
   }, [dataFeaturedBook, isLoadingFeaturedBook])
 
   return (
-    <div className="bg-orange-100">
+    <div className="bg-orange-50">
       <div>
         <MetaData title="Shop" />
         <main>
@@ -134,7 +134,7 @@ function MyShop() {
                     alt={shop?.shop.logoImg as string}
                     className="absolute left-[45rem] top-28 z-10 h-28 w-28 rounded-[50%] p-2"
                   />
-                  <div className="absolute left-[16rem] top-44 h-[8rem] w-[63rem] rounded-md border-2 bg-orange-50">
+                  <div className="absolute left-[16rem] top-44 h-[8rem] w-[63rem] rounded-md border-2 bg-orange-100">
                     <div className="right-0 flex flex-row items-center justify-center pt-8">
                       <p className="ml-8 py-2 text-xl font-semibold">{shop.shop.agencyName}</p>
                     </div>
@@ -167,7 +167,7 @@ function MyShop() {
             </div>
           </div>
           <div className="mt-8 flex w-full gap-4 px-32 pb-8">
-            <section key="main.section.sidebar" className="sticky top-0 h-min w-1/6 rounded-md bg-orange-100">
+            <section key="main.section.sidebar" className="sticky top-0 h-min w-1/6 rounded-md bg-orange-50">
               <BookFilterSidebar
                 onFilterChange={(data) => {
                   setBookState((prev) => ({

@@ -11,7 +11,7 @@ import MetaData from 'src/components/metadata'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { Button } from 'src/components/ui/button'
 import { cn } from 'src/lib/utils'
-import { CheckIcon, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from 'src/components/ui/command'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import AddressData from 'src/components/cart/address.json'
@@ -42,7 +42,7 @@ const AddNewAddress = () => {
   // const provinces = Object.keys(AddressData)
   // const navigate = useNavigate()
 
-  const { mutate: addAddress } = useMutation(postAddress, {
+  const addAddress = useMutation(postAddress, {
     onSuccess: () => {
       toast({
         title: 'Add new address success',
@@ -54,7 +54,7 @@ const AddNewAddress = () => {
     },
   })
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = (data: FormData) => {
     const address: IAddress = {
       addressId: faker.string.uuid(),
       city_Province: data.city_Province,
@@ -65,7 +65,7 @@ const AddNewAddress = () => {
       userId: user?.userId as string,
     }
 
-    await addAddress(address)
+    addAddress.mutate(address)
   }
 
   return (
@@ -281,8 +281,8 @@ const AddNewAddress = () => {
                       )}
                     />
                   </>
-                  <Button type="submit" className="mt-4 w-full">
-                    Save
+                  <Button disabled={addAddress.isLoading} className="my-2" type="submit">
+                    {addAddress.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Save
                   </Button>
                 </form>
               </Form>

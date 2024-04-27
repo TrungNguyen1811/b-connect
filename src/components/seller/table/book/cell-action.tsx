@@ -13,6 +13,16 @@ import { toast } from 'src/components/ui/use-toast'
 import { useState } from 'react'
 import { deleteBook } from 'src/api/books/delete-book'
 import { useNavigate } from 'react-router-dom'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from 'src/components/ui/alert-dialog'
 
 interface CellActionProps {
   data: IBook
@@ -21,6 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const bookId = data.productId
   const [copyId, setCopyId] = useState<boolean>(false)
   const navigate = useNavigate()
+  const [open, setOpen] = useState<boolean>(false)
 
   const queryClient = useQueryClient()
 
@@ -53,6 +64,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   })
   const onDelete = () => {
     mutate(bookId as string)
+    setOpen(false)
   }
 
   const onCopyId = () => {
@@ -93,12 +105,27 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <View className="mr-2 h-4 w-4" />
             <div className="flex gap-2 ">Preview</div>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={onDelete}>
+          <DropdownMenuItem onClick={() => setOpen(true)}>
             <DeleteIcon className="mr-2 h-4 w-4" />
             <div className="flex gap-2 ">Delete</div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <AlertDialog open={open}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your account and remove your data from our
+              servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onDelete}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

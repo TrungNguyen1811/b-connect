@@ -10,6 +10,7 @@ import { postUpdateBanUser } from 'src/api/admin/ban-user'
 import { toast } from 'src/components/ui/use-toast'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 
 const FormSchema = z.object({
   reason: z.string(),
@@ -47,10 +48,6 @@ function UpdateBanUser({ userId }: { userId: string }) {
     },
   })
 
-  if (banUser.isLoading) {
-    return <div className="loader">Updating...</div>
-  }
-
   if (banUser.isError) {
     return <div className="error">{`Error: ${banUser.error}`}</div>
   }
@@ -87,8 +84,8 @@ function UpdateBanUser({ userId }: { userId: string }) {
                 </FormItem>
               )}
             />
-            <Button className="mt-4" type="submit">
-              Submit
+            <Button disabled={banUser.isLoading} className="my-2" type="submit">
+              {banUser.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Submit
             </Button>
           </form>
         </Form>

@@ -1,9 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from 'src/components/ui/check-box'
 import { CellAction } from './cell-action'
-import { IResponseAgencyOrder } from 'src/types/order'
+import { IResponseOrderAgency } from 'src/types/order'
 
-export const columns: ColumnDef<IResponseAgencyOrder>[] = [
+export const columns: ColumnDef<IResponseOrderAgency>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -24,20 +24,28 @@ export const columns: ColumnDef<IResponseAgencyOrder>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'Book',
+    accessorKey: 'customerName',
+    header: 'Customer',
+  },
+  {
+    accessorKey: 'bookName',
     header: 'Book',
   },
   {
     accessorKey: 'quantity',
-    header: 'quantity',
+    header: 'Quantity',
   },
   {
-    accessorKey: 'total_Price',
-    header: 'total_Price',
+    accessorKey: 'price',
+    header: 'Total Price',
   },
   {
     accessorKey: 'status',
     header: 'Status',
+  },
+  {
+    accessorKey: 'createdDate',
+    header: 'Date',
   },
   {
     header: 'Action',

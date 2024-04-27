@@ -33,6 +33,10 @@ function AddBookPage() {
   const { data: categories } = useGetAllCategory()
   const [selected, setSelected] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [file, setFile] = useState<File[]>()
+  useEffect(() => {
+    form.setValue('bookImg', file!)
+  }, [file])
 
   useEffect(() => {
     form.setValue('category', selected)
@@ -47,24 +51,21 @@ function AddBookPage() {
       }))
   }, [categories])
 
-  const { mutate: addBook } = useMutation((data: FormData) => postAddBook(data), {
+  const addBook = useMutation((data: FormData) => postAddBook(data), {
     onSuccess: (data) => {
-      setIsLoading(true)
-      setTimeout(() => {
-        setIsLoading(false)
-        if (data == 'Successful') {
-          toast({
-            title: 'Success',
-            description: 'Add Book Success!!!',
-          })
-        } else {
-          toast({
-            title: 'Failed',
-            description: 'Add Book Failed with' + ' ' + data,
-          })
-        }
-        queryClient.invalidateQueries()
-      }, 2000)
+      if (data == 'Successful') {
+        toast({
+          title: 'Success',
+          description: 'Add Book Success!!!',
+        })
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Add Book Failed with' + ' ' + data,
+        })
+      }
+      queryClient.invalidateQueries()
+      setIsLoading(false)
     },
     onError: (error: Error) => {
       toast({
@@ -73,9 +74,11 @@ function AddBookPage() {
       })
     },
   })
+
   const onSubmit = (data: FormData) => {
-    addBook(data)
+    addBook.mutate(data)
   }
+
   return (
     <div className="h-full ">
       <Form {...form}>
@@ -91,14 +94,23 @@ function AddBookPage() {
                     <FormLabel className="w-40 pr-2 text-right">Book Img</FormLabel>
                     <FormControl>
                       <Input
+                        multiple
                         type="file"
                         accept="image/*"
-                        onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                        onChange={(e) => {
+                          const files = e.target.files
+                          if (files) {
+                            const fileList = Array.from(files)
+                            setFile(fileList)
+                            // field.onChange(fileList)
+                          }
+                        }}
                       />
                     </FormControl>
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="backgroundImg"
@@ -178,7 +190,7 @@ function AddBookPage() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             role="combobox"
                             className={cn('ml-1 justify-between bg-white', !field.value && 'text-muted-foreground')}
                           >
@@ -264,7 +276,7 @@ function AddBookPage() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant={'outline'}
+                            variant={'secondary'}
                             className={cn(
                               'ml-1 w-[240px] bg-white pl-3 text-left font-normal',
                               !field.value && 'text-muted-foreground',
@@ -287,8 +299,8 @@ function AddBookPage() {
           </div>
           <div className="fixed bottom-0 flex-grow border-t-2 bg-white text-right">
             <div className="w-[90rem]">
-              <Button disabled={isLoading} className="my-2 mr-96 w-32" type="submit">
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Submit'}
+              <Button disabled={addBook.isLoading} className="my-2 mr-96 w-32" type="submit">
+                {addBook.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
               </Button>
             </div>
           </div>

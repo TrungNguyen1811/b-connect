@@ -20,6 +20,7 @@ import {
 import { Button } from 'src/components/ui/button'
 import { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
+import { Loader2 } from 'lucide-react'
 
 type FormData = z.infer<typeof UpdateCategorySchema>
 
@@ -36,7 +37,7 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
     },
   })
 
-  const { mutate: updateCategory } = useMutation({
+  const updateCategory = useMutation({
     mutationFn: (updatedData: FormData) => {
       const formData = {
         ...updatedData,
@@ -91,7 +92,7 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
 
     console.log('data.image', data.image as File)
 
-    updateCategory(data)
+    updateCategory.mutate(data)
   }
 
   return (
@@ -162,8 +163,8 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
 
                 <div className="space-y-2">
                   <DialogFooter className="sm:justify-start">
-                    <Button type="submit" className="w-full">
-                      Submit
+                    <Button disabled={updateCategory.isLoading} type="submit" className="w-full">
+                      {updateCategory.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Submit
                     </Button>
                     <DialogClose>Close</DialogClose>
                   </DialogFooter>

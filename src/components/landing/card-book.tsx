@@ -11,10 +11,8 @@ function Book({ book }: Props) {
     if (book.ratingId && book.rating) {
       const icons = []
       for (let i = 0; i < book.rating; i++) {
-        icons.push(<Star key={i} size={10} className="mr-1" />)
+        icons.push(<Star key={i} size={10} className="mr-1 text-orange-600" />)
       }
-      console.log('icons', icons)
-
       return <div className="flex">{icons}</div>
     }
 
@@ -41,7 +39,7 @@ function Book({ book }: Props) {
           <CardFooter className="flex flex-row place-content-between px-2">
             <p className="text-xs text-red-500 lg:text-base">{formatPrice(book.price)}</p>
           </CardFooter>
-          <div className="my-1 flex flex-row items-center justify-between px-4">
+          <div className="my-1 mr-2 flex flex-row items-center justify-between">
             <div className="p-0 lg:pl-2">{renderRatingIcon()}</div>
             <div className="text-xs font-extralight">{book.numberOfBookSold} sold</div>
           </div>

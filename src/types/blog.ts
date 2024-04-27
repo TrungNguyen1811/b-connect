@@ -57,7 +57,7 @@ export interface IBlogg {
   likeId?: string
 }
 
-export interface IBlogResponse {
+export interface IPostResponse {
   postId?: string
   userId: string
   authorName?: string
@@ -77,7 +77,7 @@ export interface IBlogResponse {
 }
 
 export interface IResponsePost {
-  postData: IBlogResponse
+  postData: IPostResponse
   username: string
   avatarDir: string
   tags: Tag[]

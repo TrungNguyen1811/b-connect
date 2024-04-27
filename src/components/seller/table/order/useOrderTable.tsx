@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
-import { IResponseAgencyOrder } from 'src/types'
-import { GetManyOrderParams, getAllOrderOfAgency } from 'src/api/order/get-order'
+import { IResponseOrderAgency } from 'src/types'
+import { GetManyOrderParams, SearchOrders } from 'src/api/order/get-order'
 import { useLocation } from 'react-router-dom'
 
-export function useOrderTable(columns: ColumnDef<IResponseAgencyOrder>[]) {
+export function useOrderTable(columns: ColumnDef<IResponseOrderAgency>[]) {
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const type = searchParams.get('type')
@@ -19,11 +19,6 @@ export function useOrderTable(columns: ColumnDef<IResponseAgencyOrder>[]) {
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any } & GetManyOrderParams
   >({
     Address: undefined,
-    MinPrice: undefined,
-    MaxPrice: undefined,
-    Method: undefined,
-    QuantityMin: undefined,
-    QuantityMax: undefined,
     BookName: undefined,
     CustomerName: undefined,
     Status: undefined,
@@ -34,15 +29,15 @@ export function useOrderTable(columns: ColumnDef<IResponseAgencyOrder>[]) {
     PageSize: 6,
   })
 
-  const queryController = useQuery<IResponse<IResponseAgencyOrder[]>, AxiosError>(
+  const queryController = useQuery<IResponse<IResponseOrderAgency[]>, AxiosError>(
     [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => getAllOrderOfAgency(queries),
+    () => SearchOrders(queries),
     {
       keepPreviousData: true,
     },
   )
 
-  const table = useReactTable<IResponseAgencyOrder>({
+  const table = useReactTable<IResponseOrderAgency>({
     columns,
     data: queryController.data?.data || [],
     manualPagination: true,
@@ -74,6 +69,7 @@ export function useOrderTable(columns: ColumnDef<IResponseAgencyOrder>[]) {
       CustomerName: queries.CustomerName,
       Address: queries.Address,
       OrderId: queries.OrderId,
+      Status: queries.Status,
     }))
   }, [queries])
 

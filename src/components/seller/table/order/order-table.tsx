@@ -15,7 +15,11 @@ function OrderTable() {
   const [endDate, setEndDate] = useState<string>()
   const [search, setSearch] = useState<string>()
   const [label, setLabel] = useState<string>('')
+  const [type, setType] = useState<string>('')
 
+  const handleType = (value: string) => {
+    setType(value)
+  }
   const handleLabelChange = (value: string) => {
     setLabel(value)
   }
@@ -36,8 +40,9 @@ function OrderTable() {
       startDate: startDate,
       endDate: endDate,
       [label]: search,
+      Status: type,
     }))
-  }, [startDate, setTableStates, endDate, label, search])
+  }, [startDate, setTableStates, endDate, label, search, type])
 
   console.log('quee', queries)
 
@@ -59,6 +64,7 @@ function OrderTable() {
           onStartDateChange={handleStartDateChange}
           onEndDateChange={handleEndDateChange}
           onSetLabelChange={handleLabelChange}
+          type={handleType}
         />
       </div>
     )

@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from 'src/components/ui/check-box'
-import { IListReplyResponse } from 'src/types'
+import { IListReplyResponse, IReplyResponse } from 'src/types'
 import { CellAction } from './cell-action'
 
 export const columns: ColumnDef<IListReplyResponse>[] = [
@@ -52,7 +52,15 @@ export const columns: ColumnDef<IListReplyResponse>[] = [
     header: 'comment',
     cell: ({ getValue }) => {
       const comment = getValue() as string
-      return <p className="w-[28rem]">{comment}</p>
+      return <p className="w-[8rem]">{comment}</p>
+    },
+  },
+  {
+    accessorKey: 'reply',
+    header: 'Reply',
+    cell: ({ getValue }) => {
+      const reply = getValue() as IReplyResponse
+      return <p className="w-[8rem]">{reply.replyText}</p>
     },
   },
   {

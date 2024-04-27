@@ -28,7 +28,7 @@ export function Sidebar({ links, isCollapsed, onSetSelectedUser }: SidebarProps)
         <div className="flex items-center justify-between p-2">
           <div className="flex items-center gap-2 text-2xl">
             <p className="text-lg font-medium">Chats</p>
-            <span className="text-lg text-zinc-300">({links?.length})</span>
+            {links?.length ? <span className="text-lg text-zinc-300">({links?.length})</span> : ''}
           </div>
         </div>
       )}

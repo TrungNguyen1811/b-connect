@@ -218,7 +218,7 @@ export interface IResponsePostLocked {
   title: string
 }
 export async function getLockedPostByUserId(id: string) {
-  return authAxiosClient.get(`/Post/trading/get-locked-post-by-userId?traderType=${id}`).then((res) => {
+  return authAxiosClient.get(`/trading/get-locked-post-by-userId?traderType=${id}`).then((res) => {
     const data: IResponsePostLocked[] = res.data
     return data
   })

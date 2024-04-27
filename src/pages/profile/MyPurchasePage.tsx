@@ -33,8 +33,6 @@ function MyPurchase() {
   const searchParams = new URLSearchParams(location.search)
   const type = searchParams.get('type')
 
-  console.log('type', type)
-
   useEffect(() => {
     const fetch = async () => {
       const compare = await getCompareMonth(user?.userId as string)
@@ -49,7 +47,6 @@ function MyPurchase() {
       refetchOnWindowFocus: false,
     },
   )
-  console.log('data', data)
 
   const onSubmit = async (data: FormData) => {
     const formData = {
@@ -191,7 +188,7 @@ function MyPurchase() {
                   </div>
                   <Button type="submit">Check</Button>
                 </div>
-                <p className="text-sm italic text-orange-500">&rdquo;{mess}&rdquo;</p>
+                {mess ? <p className="text-sm italic text-orange-500">&rdquo;{mess}&rdquo;</p> : ''}
               </form>
             </Form>
           </CardContent>

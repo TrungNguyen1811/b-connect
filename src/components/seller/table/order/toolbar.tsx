@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { cn, formatDate } from 'src/lib/utils'
 import SearchInput from 'src/components/ui/search-input'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
-import { IResponseAgencyOrder } from 'src/types'
+import { IResponseOrderAgency } from 'src/types'
 import { DateRange } from 'react-day-picker'
 import { format, subDays } from 'date-fns'
 import { Popover, PopoverTrigger, PopoverContent } from 'src/components/ui/popover'
@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from 'src/components/ui/dropdown-menu'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from 'src/components/ui/command'
+import { useLocation } from 'react-router-dom'
 export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>
   queries: Partial<IQueryPagination & IQuerySearch> & Record<string, unknown> & GetManyOrderParams
@@ -29,6 +30,7 @@ export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLD
   onEndDateChange?: (value: string) => void
   onSearchChange?: (value: string) => void
   onSetLabelChange?: (value: string) => void
+  type?: (value: string) => void
 }
 
 export function RatingTableToolbar({
@@ -40,13 +42,14 @@ export function RatingTableToolbar({
   onEndDateChange,
   onSearchChange,
   onSetLabelChange,
+  type,
   ...props
-}: DataTableToolbarProps<IResponseAgencyOrder>) {
+}: DataTableToolbarProps<IResponseOrderAgency>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: subDays(new Date(), 20),
     to: new Date(),
   })
-
+  console.log('formatDate(date?.from as Date)', formatDate(date?.from as Date))
   useEffect(() => {
     setSearchQuery &&
       setSearchQuery({
@@ -78,6 +81,19 @@ export function RatingTableToolbar({
     }
   }, [label])
 
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const types = searchParams.get('type')
+
+  useEffect(() => {
+    setSearchQuery &&
+      setSearchQuery({
+        ...queries,
+        Status: types as string,
+      })
+    type && type(types as string)
+  }, [types])
+
   const handleSearchInputChange = useCallback(
     (value: string) => {
       setSearchQuery &&
@@ -88,14 +104,8 @@ export function RatingTableToolbar({
       onSearchChange && onSearchChange(value)
       onSetLabelChange && onSetLabelChange(newLabel)
     },
-    [newLabel, onSearchChange, queries],
+    [newLabel, onSearchChange, queries, type],
   )
-
-  // MinPrice?: number
-  // MaxPrice?: number
-  // Method?: string
-  // QuantityMin?: number
-  // QuantityMax?: number
 
   return (
     <div className={cn('flex items-center justify-between border-b border-card', className)} {...props}>
