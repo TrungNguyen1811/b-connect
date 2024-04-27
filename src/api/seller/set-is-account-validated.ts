@@ -46,3 +46,20 @@ async function registerAccountValidates(
     })
 }
 export { registerAccountValidates }
+
+async function updateNicData(data: IRegisterNIC, callback: (error: AxiosError | null, result: IToken | null) => void) {
+  return await axiosClient
+    .put(`/Account/update-nic-data`, data)
+    .then((err) => {
+      if (err.status === 200) {
+        const token: IToken = {
+          accessToken: err.data,
+        }
+        callback(null, token)
+      }
+    })
+    .catch((error) => {
+      callback(error, null)
+    })
+}
+export { updateNicData }

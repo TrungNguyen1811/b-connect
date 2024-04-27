@@ -1,14 +1,14 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from 'src/components/ui/check-box'
-import { User } from 'src/types'
 import { CellAction } from './cell-action'
+import { IPostResponse } from 'src/types/blog'
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<IPostResponse>[] = [
   {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
@@ -23,29 +23,26 @@ export const columns: ColumnDef<User>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: 'fullName',
-  //   header: 'Full Name',
-  // },
   {
-    accessorKey: 'username',
-    header: 'Username',
+    accessorKey: 'postId',
+    header: 'PostId',
   },
   {
-    accessorKey: 'email',
-    header: 'Email',
+    accessorKey: 'userId',
+    header: 'UserId',
   },
   {
-    accessorKey: 'roles',
-    header: 'Role',
-    cell: ({ getValue }) => {
-      const role = getValue() as string[]
-      return <div className="w-[4rem]">{role}</div>
-    },
+    accessorKey: 'title',
+    header: 'Title',
   },
   {
-    id: 'action',
+    accessorKey: 'createdAt',
+    header: 'Created At',
+  },
+
+  {
     header: 'Action',
+    id: 'action',
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ]

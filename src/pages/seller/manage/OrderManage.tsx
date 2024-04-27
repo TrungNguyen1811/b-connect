@@ -28,19 +28,34 @@ function OrderManagerPage() {
   return (
     <div className="mx-4">
       <MetaData title={'Manage Order'} />
-      <Tabs defaultValue="Done" className="mt-4 w-full">
+      <Tabs defaultValue="All" className="mt-4 w-full">
         <TabsList className="flex w-full  justify-evenly self-center bg-orange-100">
-          <TabsTrigger value="Done">
-            <Link to={'?type=Done'}>Done</Link>
+          <TabsTrigger value="All">
+            <Link to={'?type=All'}>All</Link>
           </TabsTrigger>
-          <TabsTrigger value="OnGoing">
-            <Link to={'?type=OnGoing'}>OnGoing</Link>
+          <TabsTrigger value="Unpaid">
+            <Link to={'?type=Unpaid'}>Unpaid</Link>
           </TabsTrigger>
-          <TabsTrigger value="3">
-            <Link to={'?type=3'}>Complete</Link>
+          <TabsTrigger value="To ship">
+            <Link to={'?type=To ship'}>To ship</Link>
           </TabsTrigger>
-          <TabsTrigger value="4">
-            <Link to={'?type=4'}>Cancel</Link>
+          <TabsTrigger value="Shipping">
+            <Link to={'?type=Shipping'}>Shipping</Link>
+          </TabsTrigger>
+          <TabsTrigger value="Completed">
+            <Link to={'?type=Completed'}>Completed</Link>
+          </TabsTrigger>
+          <TabsTrigger value="Cancellation">
+            <Link to={'?type=Cancellation'}>Cancellation</Link>
+          </TabsTrigger>{' '}
+          <TabsTrigger value="Return/Refund">
+            <Link to={'?type=Return/Refund'}>Return/Refund</Link>
+          </TabsTrigger>{' '}
+          <TabsTrigger value="Failed">
+            <Link to={'?type=Failed'}>Failed Delivery</Link>
+          </TabsTrigger>
+          <TabsTrigger value="Other">
+            <Link to={'?type=Other'}>Other</Link>
           </TabsTrigger>
         </TabsList>
         <TabsContent value={type as string}>

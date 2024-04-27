@@ -10,6 +10,7 @@ import { Input } from 'src/components/ui/input'
 import { Textarea } from 'src/components/ui/text-area'
 import { bookGroupSchema } from './validation'
 import { postAddBookGroup } from 'src/api/books/post-add-book'
+import { Loader2 } from 'lucide-react'
 
 type FormData = z.infer<typeof bookGroupSchema>
 
@@ -19,7 +20,7 @@ export function AddBookGroup() {
     resolver: zodResolver(bookGroupSchema),
   })
 
-  const { mutate: addBookGroup } = useMutation({
+  const addBookGroup = useMutation({
     mutationFn: (updatedData: FormData) => {
       return postAddBookGroup(updatedData)
     },
@@ -39,7 +40,7 @@ export function AddBookGroup() {
   })
 
   const onSubmit = (data: FormData) => {
-    addBookGroup(data)
+    addBookGroup.mutate(data)
   }
 
   return (
@@ -110,8 +111,8 @@ export function AddBookGroup() {
                     <Button className="my-2 ml-40 mr-2 w-16" type="submit">
                       Cancel
                     </Button>
-                    <Button className="my-2 w-16" type="submit">
-                      Save
+                    <Button disabled={addBookGroup.isLoading} className="my-2 mr-96 w-32" type="submit">
+                      {addBookGroup.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
                     </Button>
                   </div>
                 </div>

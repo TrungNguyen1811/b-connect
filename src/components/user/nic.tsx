@@ -12,8 +12,8 @@ import { useAuth } from 'src/hooks/useAuth'
 import { ICTCBackSide, ICTCFrontSide } from 'src/types'
 import { z } from 'zod'
 import { toast } from '../ui/use-toast'
-import { registerAccountValidates } from 'src/api/agency/set-is-account-validated'
-import { postCTCApi } from 'src/api/user/nic'
+import { registerAccountValidates } from 'src/api/seller/set-is-account-validated'
+import { postNICApi } from 'src/api/user/nic'
 import { profileApi } from 'src/api/apis/auth/profile.api'
 import { IToken } from 'src/types/token'
 
@@ -107,7 +107,7 @@ function IdentificationSeller() {
     formDataBS.append('image', imageBS)
 
     try {
-      const [fs, bs] = await Promise.all([postCTCApi<ICTCFrontSide>(formDataFS), postCTCApi<ICTCBackSide>(formDataBS)])
+      const [fs, bs] = await Promise.all([postNICApi<ICTCFrontSide>(formDataFS), postNICApi<ICTCBackSide>(formDataBS)])
 
       form.setValue('nicId', fs.data[0].id)
       form.setValue('nicName', fs.data[0].name)

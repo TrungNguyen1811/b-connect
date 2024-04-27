@@ -163,12 +163,16 @@ function Post({ postId }: PostProps) {
         </button>
         <div className="flex flex-row items-center">
           {blog?.postData.isTradePost ? (
-            <div className="flex flex-row items-center">
-              <div className="my-2 mr-0 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
-                <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
+            blog.postData.isLock ? (
+              <div className=" flex flex-row items-center gap-1">
+                <HandshakeIcon size={24} />
+                <p className="text-xs text-gray-600">Lock</p>
               </div>
-              <p className="text-sm font-light">{interesterList.length}</p>
-            </div>
+            ) : (
+              <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
+                <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
+              </div>
+            )
           ) : (
             ''
           )}

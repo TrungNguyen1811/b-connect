@@ -1,10 +1,13 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
-import { getAgencyByAgencyId } from 'src/api/agency/get-agency'
+import { getAgencyByAgencyId } from 'src/api/seller/get-agency'
 import { getPostByIdApi } from 'src/api/blog/get-blog'
 import { getBookById } from 'src/api/books/get-book'
+import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
+import StaffLayout from 'src/pages/layout/StaffLayout'
+import TradeManagerPage from 'src/components/staff/book/TradeManagePage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -34,12 +37,13 @@ const DashboardSellerPage = React.lazy(() => import('src/pages/seller/DashboardS
 const AccountSeller = React.lazy(() => import('src/pages/seller/AccountSeller'))
 const ProfileSeller = React.lazy(() => import('src/pages/seller/ProfileSeller'))
 const IdentificationProfile = React.lazy(() => import('src/pages/seller/IdentificationProfile'))
-const BookManagerPage = React.lazy(() => import('src/pages/seller/book/BookManagerPage'))
+const BookManagerPage = React.lazy(() => import('src/pages/seller/manage/BookManagerPage'))
 const AddBookPage = React.lazy(() => import('src/components/seller/table/book/manage/add-book'))
-const BookGroupManagerPage = React.lazy(() => import('src/pages/seller/book/BookGroupManagerPage'))
-const BookGroupDetailManagerPage = React.lazy(() => import('src/pages/seller/book/BookGroupDetailManagerPage'))
-const OrderManagerPage = React.lazy(() => import('src/pages/seller/OrderManage'))
-const ReplyReviewPage = React.lazy(() => import('src/pages/seller/ReplyReviewPage'))
+const BookGroupManagerPage = React.lazy(() => import('src/pages/seller/manage/BookGroupManagerPage'))
+const BookGroupDetailManagerPage = React.lazy(() => import('src/pages/seller/manage/BookGroupDetailManagerPage'))
+const OrderManagerPage = React.lazy(() => import('src/pages/seller/manage/OrderManage'))
+const OrderDetailPage = React.lazy(() => import('src/components/seller/table/order/manage/view-order-detail'))
+const ReplyReviewPage = React.lazy(() => import('src/pages/seller/manage/ReplyReviewPage'))
 const AdvertisementPage = React.lazy(() => import('src/pages/seller/AdvertisementPage'))
 const CheckoutAdsResultPage = React.lazy(() => import('src/pages/seller/CheckoutAdsResultPage'))
 
@@ -196,6 +200,19 @@ export const ROUTES = createBrowserRouter([
     ],
   },
   {
+    path: '/staff',
+    element: <StaffLayout />,
+    children: [
+      {
+        path: '/staff/dashboard',
+      },
+      {
+        path: '/staff/trade',
+        element: <TradeManagerPage />,
+      },
+    ],
+  },
+  {
     path: '/seller',
     element: <SellerLayout />,
     children: [
@@ -239,10 +256,14 @@ export const ROUTES = createBrowserRouter([
         path: '/seller/manage/order',
         element: <OrderManagerPage />,
       },
-      // {
-      //   path: '/seller/manage/order/view/:id',
-      //   element: <OrderDetailPage />,
-      // },
+      {
+        path: '/seller/manage/order/view/:id',
+        loader: async ({ params }) => {
+          const order = await getOrderDetail(params.id as string)
+          return { order }
+        },
+        element: <OrderDetailPage />,
+      },
       {
         path: '/seller/marketing',
         element: <AdvertisementPage />,

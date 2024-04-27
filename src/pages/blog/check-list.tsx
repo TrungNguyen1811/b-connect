@@ -59,7 +59,7 @@ function CheckListItemForm({
               name="middleUploadDir"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center gap-4">
-                  <FormLabel>UploadDir:</FormLabel>
+                  <FormLabel>MiddleUploadDir:</FormLabel>
                   <img src={checkList.middleUploadDir as string} className="h-16" />
                   <FormControl>
                     <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
@@ -146,7 +146,7 @@ function CheckListPage() {
               checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
               id={id as string}
               target={target}
-              isStaff={user?.roles?.includes(ROLE.STAFF) || false}
+              isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
               onSubmit={handleSubmitForm}
             />
           </div>

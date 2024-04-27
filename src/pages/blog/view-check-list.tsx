@@ -21,17 +21,14 @@ function CheckListItemForm({
     <>
       <div className="my-4 flex flex-row items-center gap-4">
         <div className="text-md w-48 font-semibold">Target: {target}</div>
-        {isStaff ? (
-          <div className="flex flex-row items-center gap-4">
-            <p className="text-md font-semibold">UploadDir:</p>
-            <img src={checkList.middleUploadDir as string} className="h-16" />
-          </div>
-        ) : (
-          <div className="flex flex-row items-center gap-4">
-            <p className="text-md font-semibold">UploadDir:</p>
-            <img src={checkList.bookOwnerUploadDir as string} className="h-16" />
-          </div>
-        )}
+        <div className="flex flex-row items-center gap-4">
+          <p className="text-md font-semibold">MiddleUploadDir:</p>
+          <img src={checkList.middleUploadDir as string} className="h-16" />
+        </div>
+        <div className="flex flex-row items-center gap-4">
+          <p className="text-md font-semibold">UploadDir:</p>
+          <img src={checkList.bookOwnerUploadDir as string} className="h-16" />
+        </div>
         <Button type="submit">Request new image</Button>
       </div>
     </>

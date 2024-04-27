@@ -5,5 +5,5 @@ export interface IAddress {
   subDistrict: string
   rendezvous: string
   default?: boolean
-  userId: string
+  userId?: string
 }

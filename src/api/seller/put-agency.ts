@@ -1,8 +1,7 @@
-import { AxiosError } from 'axios'
 import { authAxiosClient } from 'src/lib/axios'
 import { IAgency } from 'src/types/agency'
 
-async function UpdateAgency(data: IAgency, callback: (error: AxiosError | null, result: string | null) => void) {
+async function UpdateAgency(data: IAgency) {
   const formData = new FormData()
   formData.append('agencyId', data.agencyId as string)
   formData.append('ownerId', data.ownerId as string)
@@ -19,11 +18,11 @@ async function UpdateAgency(data: IAgency, callback: (error: AxiosError | null, 
     })
     .then((err) => {
       if (err.status === 200) {
-        callback(null, err.data)
+        return err.data
       }
     })
-    .catch((error) => {
-      callback(error, null)
+    .catch((error: Error) => {
+      throw error.message
     })
 }
 

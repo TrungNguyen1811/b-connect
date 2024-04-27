@@ -350,9 +350,16 @@ function BlogDetail() {
               <BookMarkedIcon size={24} className={isSaved ? ' text-orange-400 ' : ''} />
             </div>
             {blog?.postData.isTradePost ? (
-              <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
-                <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
-              </div>
+              blog.postData.isLock ? (
+                <div className="m-2 flex flex-col items-center p-3">
+                  <HandshakeIcon size={24} />
+                  <p className="text-xs text-gray-600">Exchanged</p>
+                </div>
+              ) : (
+                <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
+                  <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
+                </div>
+              )
             ) : (
               ''
             )}

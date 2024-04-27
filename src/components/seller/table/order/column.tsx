@@ -24,6 +24,10 @@ export const columns: ColumnDef<IResponseOrderAgency>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: 'customerName',
+    header: 'Customer',
+  },
+  {
     accessorKey: 'bookName',
     header: 'Book',
   },
@@ -38,6 +42,10 @@ export const columns: ColumnDef<IResponseOrderAgency>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
+  },
+  {
+    accessorKey: 'createdDate',
+    header: 'Date',
   },
   {
     header: 'Action',

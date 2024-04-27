@@ -18,7 +18,7 @@ import {
   BarController,
   ArcElement,
 } from 'chart.js'
-import { getAgencyAnalyst, getAgencyAnalystByTime } from 'src/api/agency/get-agency'
+import { getAgencyAnalyst, getAgencyAnalystByTime } from 'src/api/seller/get-agency'
 import { Popover, PopoverTrigger, PopoverContent } from 'src/components/ui/popover'
 import { Button } from 'src/components/ui/button'
 import { Calendar } from 'src/components/ui/calendar'
@@ -387,7 +387,9 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.totalRevenue)}</div>
-                  <p className="text-xs text-muted-foreground">This month: {agencyAnalyst?.thisMonthRevenue}</p>
+                  <p className="text-xs text-muted-foreground">
+                    This month: {formatPrice(agencyAnalyst?.thisMonthRevenue)}
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -452,7 +454,7 @@ export default function DashboardSellerPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{agencyAnalyst?.totalRevenue}</div>
+                  <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.totalRevenue)}</div>
                   <p className="text-xs text-muted-foreground">High month: {agencyAnalyst?.highestMonthRevenue}</p>
                 </CardContent>
               </Card>

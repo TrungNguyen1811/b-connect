@@ -6,7 +6,7 @@ import { getBookById } from 'src/api/books/get-book'
 import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom'
 import { DeleteIcon } from 'lucide-react'
-import { getAgencyByAgencyId } from 'src/api/agency/get-agency'
+import { getAgencyByAgencyId } from 'src/api/seller/get-agency'
 import { IAgency } from 'src/types/agency'
 
 function CartPage() {

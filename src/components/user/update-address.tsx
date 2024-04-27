@@ -9,15 +9,17 @@ import MetaData from 'src/components/metadata'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { Button } from 'src/components/ui/button'
 import { cn } from 'src/lib/utils'
-import { CheckIcon, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from 'src/components/ui/command'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import AddressData from 'src/components/cart/address.json'
 import { Input } from 'src/components/ui/input'
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
-import putAddress from 'src/api/address/put-address'
 import { getAddressByAddressId } from 'src/api/address/get-address'
 import { Checkbox } from '../ui/check-box'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from '../ui/use-toast'
+import { putAddress } from 'src/api/address/put-address'
 
 export const AddressSchema = z.object({
   city_Province: z.string(),
@@ -33,6 +35,7 @@ type FormData = z.infer<typeof AddressSchema>
 
 const UpdateAddress = ({ addressId }: Props) => {
   const { user } = useAuth()
+  const queryClient = useQueryClient()
   const [address, setAddress] = useState<IAddress>()
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
@@ -77,7 +80,22 @@ const UpdateAddress = ({ addressId }: Props) => {
     }
   }, [address])
 
-  const onSubmit = async (data: FormData) => {
+  const updateAddress = useMutation({
+    mutationFn: (data: IAddress) => {
+      return putAddress(data)
+    },
+    onSuccess: () => {
+      toast({
+        title: 'Update address success',
+      }),
+        queryClient.invalidateQueries()
+    },
+    onError: (error: Error) => {
+      throw error.message
+    },
+  })
+
+  const onSubmit = (data: FormData) => {
     const address: IAddress = {
       addressId: addressId,
       city_Province: data.city_Province,
@@ -88,7 +106,7 @@ const UpdateAddress = ({ addressId }: Props) => {
       userId: user?.userId as string,
     }
 
-    await putAddress(address)
+    updateAddress.mutate(address)
   }
 
   return (
@@ -301,8 +319,8 @@ const UpdateAddress = ({ addressId }: Props) => {
                       </FormItem>
                     )}
                   />
-                  <Button className="mt-4" type="submit">
-                    Submit
+                  <Button disabled={updateAddress.isLoading} className="my-2" type="submit">
+                    {updateAddress.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Add
                   </Button>
                 </form>
               </Form>

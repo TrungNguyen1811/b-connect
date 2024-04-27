@@ -19,6 +19,7 @@ import { profileApi } from 'src/api/apis/auth/profile.api'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Checkbox } from '../ui/check-box'
 import { IToken } from 'src/types/token'
+import { ROLE } from 'src/types'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 type FormData = z.infer<typeof LoginSchema>
@@ -73,12 +74,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             user,
             token,
           })
-          // if (user.role === ROLE.ADMIN) {
-          //   navigate('/admin/dashboard')
-          // } else {
-          //   navigate('/')
-          // }
-          navigate('/')
+          if (user?.roles?.includes(ROLE.STAFF) === true) {
+            navigate('/staff/trade')
+          } else {
+            navigate('/')
+          }
+          // navigate('/')
         }
       })
     }

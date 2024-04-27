@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CheckIcon, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getAllRole } from 'src/api/admin/get-role'
@@ -50,19 +50,19 @@ function UpdateRoleUser({ userId }: { userId: string }) {
       if (formData === 'Successful!') {
         toast({
           title: 'Success',
-          description: 'Update User Success!!!',
+          description: 'Update Role User Success!!!',
         })
       } else {
         toast({
           title: 'Failed',
-          description: 'Update User Failed!!!',
+          description: 'Update Role User Failed!!!',
         })
       }
       queryClient.invalidateQueries()
     },
     onError: (error: Error) => {
       toast({
-        title: 'Error Update User',
+        title: 'Error Update Role User',
         description: error.message,
       })
     },
@@ -137,8 +137,8 @@ function UpdateRoleUser({ userId }: { userId: string }) {
                 </FormItem>
               )}
             />
-            <Button className="mt-4" type="submit">
-              Update
+            <Button disabled={updateRole.isLoading} className="my-2" type="submit">
+              {updateRole.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Update
             </Button>
           </form>
         </Form>

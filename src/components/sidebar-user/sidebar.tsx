@@ -34,6 +34,8 @@ export default function Sidebar({ className }: SidebarProps) {
     setTimeout(() => setStatus(false), 500)
   }
 
+  console.log('userData', user)
+
   const NavItems: NavItem[] = [
     {
       title: 'My Profile',
@@ -71,7 +73,7 @@ export default function Sidebar({ className }: SidebarProps) {
     {
       title: 'My Purchase',
       icon: ShoppingBagIcon,
-      href: '/user/purchase',
+      href: '/user/purchase?type=1',
       color: 'text-orange-500',
     },
     {

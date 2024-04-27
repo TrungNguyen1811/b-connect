@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popov
 import { cn } from 'src/lib/utils'
 import { format } from 'date-fns'
 import { Calendar } from 'src/components/ui/calendar'
-import { CalendarIcon, CheckIcon, SortAscIcon } from 'lucide-react'
+import { CalendarIcon, CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
 import { Textarea } from 'src/components/ui/text-area'
 import { getBookById } from 'src/api/books/get-book'
@@ -68,7 +68,7 @@ export function UpdateBook() {
     },
   })
 
-  const { mutate: updateBook } = useMutation({
+  const updateBook = useMutation({
     mutationFn: (updatedData: FormData) => {
       const formData = {
         ...updatedData,
@@ -126,7 +126,7 @@ export function UpdateBook() {
   }, [file])
 
   const onSubmit = (data: FormData) => {
-    updateBook(data)
+    updateBook.mutate(data)
   }
 
   return (
@@ -351,8 +351,8 @@ export function UpdateBook() {
               <Button className="my-2 mr-8 w-32" type="submit">
                 Cancel
               </Button>
-              <Button className="my-2 mr-96 w-32" type="submit">
-                Save
+              <Button disabled={updateBook.isLoading} className="my-2 mr-96 w-32" type="submit">
+                {updateBook.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
               </Button>
             </div>
           </div>

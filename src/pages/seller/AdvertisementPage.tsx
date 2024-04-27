@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CheckIcon, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getTopBanner } from 'src/api/advertisement/get-top-banner'
@@ -168,7 +168,7 @@ function AdvertisementPage() {
   const formRelevant = useForm<FormRelevantData>({
     resolver: zodResolver(relevantSchema),
   })
-  const { mutate: checkoutRelevantAds } = useMutation({
+  const checkoutRelevantAds = useMutation({
     mutationFn: (data: ICheckoutAds) => {
       return postCheckoutAds(data)
     },
@@ -206,7 +206,7 @@ function AdvertisementPage() {
     }
 
     localStorage.setItem('checkoutAdsData', JSON.stringify(formData))
-    checkoutRelevantAds(formCheckoutData)
+    checkoutRelevantAds.mutate(formCheckoutData)
   }
   return (
     <div className="mx-4">
@@ -403,8 +403,8 @@ function AdvertisementPage() {
                         </FormItem>
                       )}
                     />
-                    <Button className="ml-40 mt-4 " type="submit">
-                      Checkout
+                    <Button disabled={checkoutRelevantAds.isLoading} className="my-2" type="submit">
+                      {checkoutRelevantAds.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Checkout
                     </Button>
                   </form>
                 </Form>

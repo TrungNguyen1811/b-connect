@@ -16,11 +16,12 @@ import { useAuth } from 'src/hooks/useAuth'
 import { updateUserProfileApi } from 'src/api/user/post-user'
 import { getUserById } from 'src/api/user/get-user'
 import { Loader2 } from 'lucide-react'
+import validator from 'validator'
 
 const formSchema = z.object({
   username: z.string().optional(),
   email: z.string().optional(),
-  phone: z.string().optional(),
+  phone: z.string().refine(validator.isMobilePhone),
   avatarDir: z.any().optional(),
 })
 

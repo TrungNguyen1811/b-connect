@@ -202,7 +202,7 @@ export function DataTableGrid<TData extends IBook, TValue>({
 
     return data.map((item, index) => (
       <div
-        className={`mb-4 w-40 rounded-md border p-1 ${
+        className={`mb-4 w-48 rounded-md border p-1 ${
           selectedItems.includes(item.productId as string) ? 'bg-gray-200' : ''
         }`}
         key={index}
@@ -219,7 +219,7 @@ export function DataTableGrid<TData extends IBook, TValue>({
           <img src={item.bookDir as string} alt={item.name} className="aspect-[1/1] h-44 object-cover" />
 
           <div className="w-full px-1">
-            <p className="h-16 text-base font-semibold">{item.name}</p>
+            <p className="h-12 text-base font-semibold">{item.name}</p>
             <div className="flex flex-grow"></div>
             <div className="mt-4 flex flex-row justify-between">
               <p className="text-red-600">{formatPrice(item.price)}</p>
@@ -258,7 +258,7 @@ export function DataTableGrid<TData extends IBook, TValue>({
           ))} */}
         </TableHeader>
         <TableBody>
-          <div className="col-span-full grid grid-cols-6 p-4 px-8">{renderBody}</div>
+          <div className=" grid flex-1 grid-cols-5 p-4 px-8">{renderBody}</div>
         </TableBody>
       </Table>
       {renderFooter}

@@ -28,7 +28,7 @@ import BookRelevant from './BookRelevant'
 import { Carousel, CarouselContent3, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
 import { Card, CardContent } from 'src/components/ui/card'
 import { IAgency } from 'src/types/agency'
-import { getAgencyByAgencyId, getPercentageReplyByAgencyId } from 'src/api/agency/get-agency'
+import { getAgencyByAgencyId, getPercentageReplyByAgencyId } from 'src/api/seller/get-agency'
 import { UserChatReply } from 'src/types/chat'
 import { postChatMessage } from 'src/api/chat/post-chat'
 

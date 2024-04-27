@@ -60,7 +60,12 @@ function ChangePassword() {
                       <FormItem>
                         <FormLabel className=" mb-2">Currently Password</FormLabel>
                         <FormControl>
-                          <Input className=" w-full px-3 py-2 " placeholder="Enter your username" {...field} />
+                          <Input
+                            className=" w-full px-3 py-2"
+                            type="password"
+                            placeholder="Enter old password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -75,7 +80,12 @@ function ChangePassword() {
                       <FormItem>
                         <FormLabel className=" mb-2">Confirm Password</FormLabel>
                         <FormControl>
-                          <Input className=" w-full px-3 py-2 " placeholder="Enter your username" {...field} />
+                          <Input
+                            className=" w-full px-3 py-2"
+                            type="password"
+                            placeholder="Enter confirm password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -90,7 +100,12 @@ function ChangePassword() {
                       <FormItem>
                         <FormLabel className=" mb-2">New Password</FormLabel>
                         <FormControl>
-                          <Input className=" w-full px-3 py-2 " placeholder="Enter your username" {...field} />
+                          <Input
+                            className=" w-full px-3 py-2"
+                            type="password"
+                            placeholder="Enter new password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

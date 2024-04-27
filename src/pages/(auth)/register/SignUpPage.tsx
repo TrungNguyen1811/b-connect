@@ -42,7 +42,7 @@ function SignUpPage() {
                 </button>
               </div>
               <div className="overlay-panel overlay-right">
-                <h1>Hello, Friend!</h1>
+                <p className="text-lg">Hello, Friend!</p>
                 <p>{"Don't"} have an account yet?</p>
                 <button onClick={handleSignUpClick} className="ghost">
                   Sign Up Here!
