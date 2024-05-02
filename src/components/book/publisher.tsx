@@ -11,6 +11,7 @@ import Publisher from './card-publisher'
 import { getAllUser } from 'src/api/user/get-all-user'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
+import { useTranslation } from 'react-i18next'
 
 function Publishers() {
   const [queries, setQueries] = useState<
@@ -60,14 +61,16 @@ function Publishers() {
     return []
   }, [oddPublisher])
 
+  const { t } = useTranslation()
+
   return (
     <div className=" bg-orange-100">
       <div className="mx-auto mt-7 max-w-7xl bg-orange-50 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="flex flex-row justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">Publisher</h2>
-            <Link to="/" className="flex items-center text-sm text-gray-900">
-              Browse all publisher
+            <h2 className="text-2xl font-bold text-orange-600"> {t('Publisher')}</h2>
+            <Link to="/" className="flex items-center text-sm text-orange-600">
+              {t('Browseallcategory')}
               <span className="ml-1">
                 <ChevronRight size={10} />
               </span>

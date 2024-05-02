@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Filter } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import { MultiSelect } from '../ui/multi-select'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   onFilterChange?: (filter: Record<string, unknown>) => void
@@ -98,25 +99,31 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     // setClearFlag((prev) => !prev)
   }, [reset])
 
+  const { t } = useTranslation()
+
   return (
     <React.Fragment key={'sidebar.filter'}>
-      {totalBooks && <p className="text-sm text-slate-500">{totalBooks} books found</p>}
+      {totalBooks && (
+        <p className="text-sm text-slate-500">
+          {totalBooks} {t('booksfound')}
+        </p>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div>
           <span className="my-2 flex flex-row items-center py-3">
-            <Filter /> <p className="pl-2 text-lg font-extrabold">Search Filter </p>
+            <Filter /> <p className="pl-2 text-lg font-extrabold">{t('SearchFilter')} </p>
           </span>
           <Separator />
           <div aria-label="Name">
-            <Label htmlFor="Name">Find book</Label>
-            <Input placeholder="Search name of book" id="Name" {...control.register('Name')} className="bg-card" />
+            <Label htmlFor="Name">{t('Findbook')}</Label>
+            <Input placeholder={t('Search name of book')} id="Name" {...control.register('Name')} className="bg-card" />
           </div>
           <div>
-            <Label htmlFor="CategoryIds">CategoryIds</Label>
+            <Label htmlFor="CategoryIds">{t('Category')}</Label>
             <MultiSelect options={categoriesCombobox} selected={selected} onChange={setSelected} />
           </div>
           <div>
-            <Label htmlFor="Type">Type</Label>
+            <Label htmlFor="Type">{t('Type')}</Label>
             <Select
               onValueChange={(value) => {
                 setValue('Type', value)
@@ -124,28 +131,28 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               value={watch('Type')}
             >
               <SelectTrigger className="bg-orange-50 text-gray-500">
-                <SelectValue placeholder="Type" />
+                <SelectValue placeholder={t('Type')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem className="hover:bg-orange-500" value="New">
-                  NEW
+                  {t('NEW')}
                 </SelectItem>
                 <SelectItem className="hover:bg-orange-500" value="Old">
-                  OLD
+                  {t('OLD')}
                 </SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <Label htmlFor="price">Price</Label>
+            <Label htmlFor="price">{t('Price')}</Label>
             <div className="flex flex-row items-center">
-              <Input placeholder="From" id="MinPrice" {...control.register('MinPrice')} className="bg-card" />
+              <Input placeholder={t('From')} id="MinPrice" {...control.register('MinPrice')} className="bg-card" />
               <p className="p-2">-</p>
-              <Input placeholder="To" id="MaxPrice" {...control.register('MaxPrice')} className="bg-card" />
+              <Input placeholder={t('To')} id="MaxPrice" {...control.register('MaxPrice')} className="bg-card" />
             </div>
           </div>
           <div>
-            <Label htmlFor="OverRating">OverRating</Label>
+            <Label htmlFor="OverRating">{t('OverRating')}</Label>
             <Select
               onValueChange={(value) => {
                 setValue('OverRating', value)
@@ -153,23 +160,23 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               value={watch('OverRating')}
             >
               <SelectTrigger className="bg-orange-50 text-gray-500">
-                <SelectValue placeholder="Choose OverRating" />
+                <SelectValue placeholder={t('ChooseOverRating')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem className="hover:bg-orange-500" value="1">
-                  <p className="flex-row">1 * and more</p>
+                  <p className="flex-row">1 {t('andmore')}</p>
                 </SelectItem>
                 <SelectItem className="hover:bg-orange-500" value="2">
-                  <p className="flex-row">2 * and more</p>
+                  <p className="flex-row">2 {t('andmore')}</p>
                 </SelectItem>
                 <SelectItem className="hover:bg-orange-500" value="3">
-                  <p className="flex-row">3 * and more</p>
+                  <p className="flex-row">3 {t('andmore')}</p>
                 </SelectItem>
                 <SelectItem className="hover:bg-orange-500" value="4">
-                  <p className="flex-row">4 * and more</p>
+                  <p className="flex-row">4 {t('andmore')}</p>
                 </SelectItem>
                 <SelectItem className="hover:bg-orange-500" value="5">
-                  <p className="flex-row">5 * and more</p>
+                  <p className="flex-row">5 {t('andmore')}</p>
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -177,9 +184,9 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
         </div>
         <Separator />
         <div className="flex justify-between">
-          <Button type="submit">Find now</Button>
+          <Button type="submit">{t('Findnow')}</Button>
           <Button variant={'ghost'} type="button" onClick={onClear} className="">
-            Clear
+            {t('Clear')}
           </Button>
         </div>
       </form>

@@ -17,5 +17,22 @@
   "SellerCenter": "Seller Center",
   "Followuson": "Follow us on",
   "Notifications": "Notifications",
-  "Help": "Help"
+  "Help": "Help",
+  "Publisher": "Publisher",
+  "booksfound": "books found",
+  "SearchFilter":"Search Filter",
+  "Findbook":"Find book",
+  "NEW": "NEW",
+  "OLD": "OLD",
+  "Price": "Price",
+  "OverRating": "OverRating",
+  "andmore": " * and more",
+  "Findnow": "Find now",
+  "Clear": "Clear",
+  "Category": "Category",
+  "Type": "Type",
+  "From": "From",
+  "To": "To",
+  "ChooseOverRating": "Choose OverRating",
+  "Searchnameofbook": "Search name of book"
 }
