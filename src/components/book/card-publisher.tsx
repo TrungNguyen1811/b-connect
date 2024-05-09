@@ -8,8 +8,9 @@ type Props = { user: User }
 function Publisher({ user }: Props) {
   const renderPublisher = React.useMemo(() => {
     // if (user?.roles === 'Seller') {
+    console.log('agencies', user)
     return (
-      <Link to={'/'} key={user.userId}>
+      <Link to={`/shop/${user.userId}`} key={user.userId}>
         <Card className="my-0.5 w-36">
           <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-200 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img

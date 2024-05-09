@@ -7,12 +7,15 @@ import { useAuth } from 'src/hooks/useAuth'
 import { getUserTargetedTags } from 'src/api/blog/get-blog'
 import { IResponsePost, IResponseTag } from 'src/types/blog'
 import { getPostInterestedByUser } from 'src/api/blog/interested'
+import { useTranslation } from 'react-i18next'
 
 export function Menu() {
+  const { t } = useTranslation()
+
   const menu = React.useMemo<IMenuItem[]>(() => {
     return [
       {
-        title: 'Home',
+        title: t('home'),
         key: 'home',
         href: '/home',
         icon: 'home',

@@ -1,5 +1,6 @@
 import { PlusIcon } from 'lucide-react'
 import React, { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getAllBookOfBookGroupByBookId } from 'src/api/books/get-book'
 import BookGridLoading from 'src/components/book/book-grid-loading'
 import Book from 'src/components/landing/card-book'
@@ -15,6 +16,7 @@ type Props = {
 }
 
 function BookShouldByWith({ book }: Props) {
+  const { t } = useTranslation()
   const { data: shouldByWithBooks, isLoading: isLoadingShouldBuyWithBooks } = useCustomQuery<IBook[]>(
     () => getAllBookOfBookGroupByBookId(book?.productId as string),
     {
@@ -75,10 +77,14 @@ function BookShouldByWith({ book }: Props) {
       {relatedBooks.length > 0 && (
         <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-border px-4 py-8">
           <Button variant={'default'} className="" onClick={addShouldBuyWithToCart}>
-            <p>Add {totalShouldBuyWith}</p>
+            <p>
+              {t('add')} {totalShouldBuyWith}
+            </p>
           </Button>
           <p className="text-xl font-bold">{formatPrice(totalPriceShouldBuyWith)}</p>
-          <p className="text-sm text-gray-500">for {relatedBooks.length} books</p>
+          <p className="text-sm text-gray-500">
+            {t('for')} {relatedBooks.length} {t('Books')}
+          </p>
         </div>
       )}
     </div>

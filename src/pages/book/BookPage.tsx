@@ -13,6 +13,7 @@ import Pagination from 'src/components/ui/pagination'
 import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
 import { GetManyBooksParams } from 'src/api/books/get-book'
 import ErrorPage from '../error-page'
+import { useTranslation } from 'react-i18next'
 
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
@@ -25,17 +26,19 @@ const initBookState: GetManyBooksParams = {
   Type: undefined,
 }
 function BookPage() {
+  const { t } = useTranslation()
+
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     return [
       {
-        label: 'Home',
+        label: t('home'),
         key: 'home',
         href: '/',
         icon: 'home',
       },
       {
         key: 'books',
-        label: 'Books',
+        label: t('book'),
         href: '/books',
         icon: 'book',
       },
@@ -69,6 +72,7 @@ function BookPage() {
   }, [data?._pagination?.TotalCount])
 
   if (isError) return <ErrorPage />
+
   return (
     <div className=" bg-orange-100">
       <div className="mx-auto max-w-7xl sm:px-4">

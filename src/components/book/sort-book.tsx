@@ -1,25 +1,27 @@
 import React from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/selector'
 import { Label } from '../ui/label'
+import { useTranslation } from 'react-i18next'
 // const FilterSchema = z.object({
 //   price: z.string().optional(),
 // })
 // type FilterForm = z.infer<typeof FilterSchema>
 
 function SortBook() {
+  const { t } = useTranslation()
   //   const { handleSubmit, setValue, watch } = useForm<FilterForm>({
   //     resolver: zodResolver(FilterSchema),
   //   })
   return (
     <div className=" mb-4 flex w-[102%] flex-row bg-gray-300 p-4">
       <div className="mr-4 py-1">
-        <p>Sort by</p>
+        <p>{t('sort')}</p>
       </div>
       <div className="flex w-[48rem] flex-row">
         <div className="mr-4  flex flex-row">
-          <div className="mx-1 bg-orange-50 px-4 py-1">Popular</div>
-          <div className="mx-1 bg-orange-50 px-4 py-1">Latest</div>
-          <div className="mx-1 bg-orange-50 px-4 py-1">Top Sale</div>
+          <div className="mx-1 rounded-sm bg-orange-50 px-4 py-1">{t('popular')}</div>
+          <div className="mx-1 rounded-sm bg-orange-50 px-4 py-1">{t('laster')}</div>
+          <div className="mx-1 rounded-sm bg-orange-50 px-4 py-1">{t('top-sale')}</div>
         </div>
         <div>
           <div>
@@ -31,15 +33,15 @@ function SortBook() {
             //   }}
             //   value={watch('price')}
             >
-              <SelectTrigger className="w-48 bg-orange-100">
-                <SelectValue placeholder="Price" />
+              <SelectTrigger className="w-48 bg-orange-50">
+                <SelectValue placeholder={t('Price')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem className="hover:bg-accent" value="LOW">
-                  Price: Low to High
+                  {t('sort-price')}
                 </SelectItem>
                 <SelectItem className="hover:bg-accent" value="HIGH">
-                  Price: High to Low
+                  {t('sort-price-d')}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -48,9 +50,9 @@ function SortBook() {
         </div>
       </div>
 
-      <div className="mx-1">
-        <div className="ml-50 my-1 ">1/10</div>
-      </div>
+      {/* <div className="mx-1">
+        <div className="ml-54 my-1 ">1/10</div>
+      </div> */}
     </div>
   )
 }

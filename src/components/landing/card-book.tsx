@@ -3,10 +3,12 @@ import { Card, CardContent, CardFooter, CardTitle } from '../ui/card'
 import { IBook } from 'src/types'
 import { formatPrice } from 'src/lib/utils'
 import { Star } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 // import { Star } from 'lucide-react'
 
 type Props = { book: IBook }
 function Book({ book }: Props) {
+  const { t } = useTranslation()
   const renderRatingIcon = () => {
     if (book.ratingId && book.rating) {
       const icons = []
@@ -41,7 +43,9 @@ function Book({ book }: Props) {
           </CardFooter>
           <div className="my-1 mr-2 flex flex-row items-center justify-between">
             <div className="p-0 lg:pl-2">{renderRatingIcon()}</div>
-            <div className="text-xs font-extralight">{book.numberOfBookSold} sold</div>
+            <div className="text-xs font-extralight">
+              {book.numberOfBookSold} {t('sold')}
+            </div>
           </div>
         </Card>
       </Link>

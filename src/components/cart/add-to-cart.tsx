@@ -7,11 +7,12 @@ import { ShoppingCartIcon } from 'lucide-react'
 import { useOrderCart } from 'src/hooks/useOrderCart'
 import { IBook } from 'src/types/books'
 import { getBookById } from 'src/api/books/get-book'
+import { useTranslation } from 'react-i18next'
 
 function AddToCart() {
   const [open, setOpen] = useState(false)
   const maxOrdersToShow = 5
-
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { cartItems } = useOrderCart()
   const [bookData, setBookData] = useState<IBook[]>([])
@@ -43,7 +44,6 @@ function AddToCart() {
       <HoverCard>
         <HoverCardTrigger>
           <Button variant={'outline'} onClick={() => setOpen(!open)} className="px-2">
-            <span className="sr-only">New orders added</span>
             <ShoppingCartIcon />
             {totalQuantity > 0 && (
               <span className="absolute -right-1 -top-1 rounded-full bg-red-500 px-1.5 py-0.5 text-xs text-white">
@@ -56,7 +56,7 @@ function AddToCart() {
         <HoverCardContent>
           <div className="flex h-full w-full flex-col py-2 ">
             <div className="px-4 sm:px-6">
-              <h2 className="text-lg font-medium text-gray-900">New orders added</h2>
+              <h2 className="text-lg font-medium text-gray-900">{t('New orders added')}</h2>
             </div>
             <div className="mt-6 px-4 sm:px-6">
               <ul className="space-y-4">
@@ -93,7 +93,7 @@ function AddToCart() {
                   ) : null}
                   <div className="flex-shrink-0">
                     <Button size={'sm'} className={'mx-4 px-2'} variant={'secondary'} onClick={onViewCart}>
-                      View Cart
+                      {t('view-cart')}
                     </Button>
                   </div>
                 </li>

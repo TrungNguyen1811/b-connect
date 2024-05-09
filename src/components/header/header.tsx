@@ -4,9 +4,11 @@ import { Input } from '../ui/input'
 import AddToCart from '../cart/add-to-cart'
 import { Link, useNavigate } from 'react-router-dom'
 import Navigation from './nav'
+import { useTranslation } from 'react-i18next'
 
 function Header() {
   const nav = useNavigate()
+  const { t } = useTranslation()
 
   const onSubmit = useCallback(
     (e: React.SyntheticEvent) => {
@@ -41,7 +43,7 @@ function Header() {
             <div className="relative">
               <Search className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search"
+                placeholder={t('search')}
                 name="search"
                 className="w-[80%] pr-12 sm:w-[24rem] md:w-[32rem] lg:w-[48rem]"
               />

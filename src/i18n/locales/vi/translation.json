@@ -24,6 +24,8 @@
   "Findbook":"Tìm sách",
   "NEW": "MỚI",
   "OLD": "CŨ",
+  "New": "MỚI",
+  "Old": "CŨ",
   "Price": "Giá",
   "OverRating": "Đánh giá",
   "andmore": " * trở lên",
@@ -34,12 +36,43 @@
   "From": "Từ",
   "To": "Đến",
   "ChooseOverRating": "Chọn phạm vi đánh giá",
-  "Searchnameofbook": "Tìm tên sách"
+  "Searchnameofbook": "Tìm tên sách",
+  "search" : "Tìm kiếm",
+  "home": "Trang chủ",
+  "book": "Sách",
+  "sort": "Sắp xếp theo",
+  "popular": "Phổ biến",
+  "latest": "Mới nhất",
+  "top-sale": "Bán chạy",
+  "sort-price": "Giá: Thấp đến Cao",
+  "sort-price-d": "Giá: Cao đến thấp",
+  "sold": "đã bán",
+  "rating": "đánh giá",
+  "by": "Tác giả:",
+  "Shipping": "Vận chuyển",
+  "Stock": "Kho hàng",
+  "about-book": "Thông tin về sách",
+  "book-spec": "Thông số sách",
+  "author": "Tác giả",
+  "book-description": "Mô tả sách",
+  "Rating": "Đánh giá",
+  "Product": "Sản phẩm",
+  "Response": "Phản hồi",
+  "Join": "Tham gia",
+  "Reviewers": "Đánh giá",
+  "your-review": "Đánh giá của bạn",
+  "Save": "Lưu",
+  "usually": "Thường mua với",
+  "add": "Thêm",
+  "for": "cho",
+  "books": "Sách",
+  "Books": "sách",
+  "also-like": "Có thể bạn sẽ thích",
+  "buy-now": "Mua ngay",
+  "Have": "Có",
+  "in-cart": "trong giỏ hàng",
+  "add-to-cart": "Thêm vào giỏ hàng",
+  "New orders added": "Sản phẩm mới thêm",
+  "view-cart": "Xem giỏ hàng"
 
-
-
-
-
-
-  
 }

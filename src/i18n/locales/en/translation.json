@@ -34,5 +34,49 @@
   "From": "From",
   "To": "To",
   "ChooseOverRating": "Choose OverRating",
-  "Searchnameofbook": "Search name of book"
+  "Searchnameofbook": "Search name of book",
+  "search" : "Search",
+  "home": "Home",
+  "book": "Books",
+  "sort": "Sort by",
+  "popular": "Popular",
+  "latest": "Latest",
+  "top-sale": "Top Sale",
+  "sort-price": "Price: Low to High",
+  "sort-price-d": "Price: High to Low",
+  "sold": "sold",
+  "rating": "rating",
+  "by": "By",
+  "Shipping": "Shipping",
+  "Stock": "Stock",
+  "about-book": "About the book",
+  "book-spec": "Book Specifications",
+  "author": "Author",
+  "book-description": "Book Description",
+  "Rating": "Rating",
+  "Product": "Product",
+  "Response": "Response",
+  "Join": "Join",
+  "Reviewers": "Reviewers",
+  "your-review": "Your review",
+  "Save": "Save",
+  "usually": "Usually buy with",
+  "add": "Add",
+  "for": "for",
+  "books": "Books",
+  "Books": "books",
+  "also-like": "You might also like",
+  "buy-now": "Buy now",
+  "Have": "Have",
+  "in-cart": "in cart",
+  "add-to-cart": "Add to Cart",
+  "New orders added": "New orders added",
+  "view-cart": "View Cart"
+
+
+
+
+
+
+
 }

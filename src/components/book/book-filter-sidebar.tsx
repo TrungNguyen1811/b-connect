@@ -116,7 +116,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
           <Separator />
           <div aria-label="Name">
             <Label htmlFor="Name">{t('Findbook')}</Label>
-            <Input placeholder={t('Search name of book')} id="Name" {...control.register('Name')} className="bg-card" />
+            <Input placeholder={t('Searchnameofbook')} id="Name" {...control.register('Name')} className="bg-card" />
           </div>
           <div>
             <Label htmlFor="CategoryIds">{t('Category')}</Label>

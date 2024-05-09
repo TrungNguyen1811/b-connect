@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Separator } from '../ui/separator'
 import { useQuery } from '@tanstack/react-query'
 import { IResponse } from 'src/types/response'
-import { User } from 'src/types'
+import { ROLE, User } from 'src/types'
 import { AxiosError } from 'axios'
 import { ChevronRight } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
@@ -28,14 +28,20 @@ function Publishers() {
       keepPreviousData: true,
     },
   )
+  console.log('u', data?.data)
+
+  const agency = React.useMemo(() => {
+    return data?.data.filter((a) => a.roles?.includes(ROLE.SELLER))
+  }, [data?.data])
+  console.log('a', agency)
 
   const evenPublisher = React.useMemo(() => {
-    return data?.data.filter((_, index) => index % 2 === 0)
-  }, [data?.data])
+    return agency?.filter((_, index) => index % 2 === 0)
+  }, [agency])
 
   const oddPublisher = React.useMemo(() => {
-    return data?.data.filter((_, index) => index % 2 !== 0)
-  }, [data?.data])
+    return agency?.filter((_, index) => index % 2 !== 0)
+  }, [agency])
 
   const renderEvenPublisher = React.useMemo(() => {
     if (evenPublisher != null)
