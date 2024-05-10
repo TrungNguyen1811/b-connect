@@ -131,10 +131,10 @@ function AuthPreview({ className, ...prosp }: Props) {
               Profile
             </DropdownMenuItem>
           </Link>
-          <Link to="/profile/orders">
+          <Link to="/user/purchase?type=1">
             <DropdownMenuItem>
               <LucideTruck className="mr-2 h-4 w-4" />
-              Order history
+              My purchase
             </DropdownMenuItem>
           </Link>
           <Link to="/transaction">
