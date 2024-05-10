@@ -18,6 +18,7 @@ import {
 import { NavItem } from 'src/types/NavItem'
 import { useAuth } from 'src/hooks/useAuth'
 import { SideNav } from '../sidebar-user/side-nav'
+import { useTranslation } from 'react-i18next'
 
 interface SidebarProps {
   className?: string
@@ -26,7 +27,7 @@ interface SidebarProps {
 export default function SidebarSeller({ className }: SidebarProps) {
   const { isOpen, toggle } = useSidebar()
   const [status, setStatus] = useState(false)
-
+  const { t } = useTranslation()
   const { user } = useAuth()
   const handleToggle = () => {
     setStatus(true)
@@ -36,38 +37,38 @@ export default function SidebarSeller({ className }: SidebarProps) {
 
   const NavItems: NavItem[] = [
     {
-      title: 'Dashboard',
+      title: t('dashboard'),
       icon: LayoutDashboardIcon,
       href: '/seller/dashboard',
       color: 'text-orange-500',
     },
     {
-      title: 'Manage Order',
+      title: t('manageOrder'),
       icon: PackageIcon,
       href: '/seller/manage/order?type=Done',
       color: 'text-orange-500',
     },
     {
-      title: 'Manage Book',
+      title: t('manageBook'),
       icon: BookIcon,
       href: '/seller/manage/books',
       color: 'text-orange-500',
       isChildren: true,
       children: [
         {
-          title: 'All of Books',
+          title: t('allOfBooks'),
           icon: BookTemplate,
           href: '/seller/manage/books',
           color: 'text-orange-500',
         },
         {
-          title: 'Add book',
+          title: t('addBook'),
           icon: BookPlusIcon,
           href: '/seller/manage/books/new',
           color: 'text-orange-500',
         },
         {
-          title: 'All Book Groups',
+          title: t('allBookGroups'),
           icon: LibraryBigIcon,
           href: '/seller/manage/book-groups',
           color: 'text-orange-500',
@@ -75,38 +76,38 @@ export default function SidebarSeller({ className }: SidebarProps) {
       ],
     },
     {
-      title: 'Marketing Channel',
+      title: t('marketingChannel'),
       icon: TagIcon,
       href: '/seller/marketing',
       color: 'text-orange-500',
     },
     {
-      title: 'Finance',
+      title: t('finance'),
       icon: WalletCardsIcon,
       href: '/seller/finance',
       color: 'text-orange-500',
     },
     {
-      title: 'Manage Shop',
+      title: t('manageShop'),
       icon: TagIcon,
       href: '/seller/shop',
       color: 'text-orange-500',
       isChildren: true,
       children: [
         {
-          title: 'Account',
+          title: t('account'),
           icon: User2Icon,
           href: '/seller/account',
           color: 'text-orange-500',
         },
         {
-          title: 'Profile Shop',
+          title: t('profileShop'),
           icon: StoreIcon,
           href: '/seller/profile',
           color: 'text-orange-500',
         },
         {
-          title: 'Rating Shop',
+          title: t('ratingShop'),
           icon: ListStartIcon,
           href: '/seller/rating',
           color: 'text-orange-500',
@@ -133,7 +134,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
-            <p className={cn('px-6 pb-4 text-3xl font-extrabold', !isOpen && 'hidden')}>Overview</p>
+            <p className={cn('px-6 pb-4 text-3xl font-extrabold', !isOpen && 'hidden')}>{t('overview')}</p>
             <SideNav
               className="text-background opacity-0 transition-all duration-300 group-hover:z-50 group-hover:ml-4 group-hover:rounded group-hover:bg-foreground group-hover:p-2 group-hover:opacity-100"
               items={NavItems}

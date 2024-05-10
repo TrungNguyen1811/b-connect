@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
@@ -7,25 +8,10 @@ import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function BookManagerPage() {
-  // const [categories, setCategories] = useState<ICategory[]>([])
+  const { t } = useTranslation()
 
-  // useEffect(() => {
-  //   const getCategories = async () => {
-  //     try {
-  //       const cate = await getAllCategoryNoParam()
-  //       setBlogList(cate.data)
-  //     } catch (error) {
-  //       console.error('Error fetching cate:', error)
-  //     }
-  //   }
-
-  //   getCategories()
-  // }, [])
-
-  // console.log('${data?.data.length', blogList)
-
-  const title = `Manage Book`
-  const description = 'Manage Book  (Server side table functionalities.)'
+  const title = t('manageBook')
+  const description = t('titleManageBook')
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     return [

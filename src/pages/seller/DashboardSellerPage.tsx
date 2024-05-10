@@ -25,6 +25,7 @@ import { Calendar } from 'src/components/ui/calendar'
 import { addDays, format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { CalendarIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 ChartJS.register(
   LinearScale,
@@ -59,9 +60,8 @@ interface INumberOfBookANdUnitSoldByMonth {
 }
 
 export default function DashboardSellerPage() {
+  const { t } = useTranslation()
   const [agencyAnalyst, setAgencyAnalyst] = useState<IAgencyAnalyst>()
-  const [agencyAnalystByTime, setAgencyAnalystByTime] = useState<IAgencyAnalystByTime>()
-
   useEffect(() => {
     const fetchData = async () => {
       const data = (await getAgencyAnalyst()) as IAgencyAnalyst
@@ -84,7 +84,7 @@ export default function DashboardSellerPage() {
     labels: revenueByMonths.map((d) => d.label),
     datasets: [
       {
-        label: 'month',
+        label: t('month'),
         data: revenueByMonths.map((d) => d.value),
         backgroundColor: 'orange',
         borderColor: 'orange',
@@ -108,7 +108,7 @@ export default function DashboardSellerPage() {
     labels: revenueByDays.map((d) => d.label),
     datasets: [
       {
-        label: 'day',
+        label: t('day'),
         data: revenueByDays.map((d) => d.value),
         backgroundColor: 'orange',
         borderColor: 'orange',
@@ -120,7 +120,7 @@ export default function DashboardSellerPage() {
 
   // type
   const pie = {
-    labels: ['Old', 'New'],
+    labels: [t('Old'), t('New')],
     datasets: [
       {
         label: 'Revenue',
@@ -149,7 +149,7 @@ export default function DashboardSellerPage() {
     labels: revenueByCategory.map((dt) => dt.label),
     datasets: [
       {
-        label: 'percentage',
+        label: t('percentage'),
         data: revenueByCategory.map((dt) => dt.value.percentage),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -159,7 +159,7 @@ export default function DashboardSellerPage() {
         yAxisID: 'percentage',
       },
       {
-        label: 'revenue',
+        label: t('revenue'),
         data: revenueByCategory.map((dt) => dt.value.revenue),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -206,7 +206,7 @@ export default function DashboardSellerPage() {
     labels: numberOfBookANdUnitSoldByMonth.map((dt) => dt.label),
     datasets: [
       {
-        label: 'Book Sold',
+        label: t('bookSold'),
         data: numberOfBookANdUnitSoldByMonth.map((dt) => dt.value.numberOfBookSold),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -215,7 +215,7 @@ export default function DashboardSellerPage() {
         type: 'line' as const,
       },
       {
-        label: 'Unit Sold',
+        label: t('unitSold'),
         data: numberOfBookANdUnitSoldByMonth.map((dt) => dt.value.numberOfUnitSold),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -246,7 +246,7 @@ export default function DashboardSellerPage() {
     labels: numberOfBookANdUnitSoldByDay.map((dt) => dt.label),
     datasets: [
       {
-        label: 'Book Sold',
+        label: t('bookSold'),
         data: numberOfBookANdUnitSoldByDay.map((dt) => dt.value.numberOfBookSold),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -255,7 +255,7 @@ export default function DashboardSellerPage() {
         type: 'line' as const,
       },
       {
-        label: 'Unit Sold',
+        label: t('unitSold'),
         data: numberOfBookANdUnitSoldByDay.map((dt) => dt.value.numberOfUnitSold),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -326,7 +326,7 @@ export default function DashboardSellerPage() {
     <ScrollArea className="h-full w-full">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight">Hi, Welcome back 👋</h2>
+          <h2 className="text-3xl font-bold tracking-tight">{t('overview')} 👋</h2>
           <div className="hidden items-center space-x-2 md:flex">
             <Popover>
               <PopoverTrigger asChild>
@@ -364,14 +364,14 @@ export default function DashboardSellerPage() {
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="overview">{t('overview')}</TabsTrigger>
+            <TabsTrigger value="analytics">{t('analytics')}</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('totalRevenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -388,13 +388,13 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.totalRevenue)}</div>
                   <p className="text-xs text-muted-foreground">
-                    This month: {formatPrice(agencyAnalyst?.thisMonthRevenue)}
+                    {t('thisMonth')}: {formatPrice(agencyAnalyst?.thisMonthRevenue)}
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Book</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('totalBook')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -417,7 +417,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('totalSales')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -434,12 +434,14 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">+{agencyAnalyst?.totalBookSold}</div>
-                  <p className="text-xs text-muted-foreground">Unit Sale: {agencyAnalyst?.totalUnitSold}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('unitSale')}: {agencyAnalyst?.totalUnitSold}
+                  </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('revenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -455,14 +457,16 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.totalRevenue)}</div>
-                  <p className="text-xs text-muted-foreground">High month: {agencyAnalyst?.highestMonthRevenue}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('highMonth')}: {agencyAnalyst?.highestMonthRevenue}
+                  </p>
                 </CardContent>
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>{t('overview')}</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <Bar data={dataRevenueByTime} options={optionRevenueBytime}></Bar>
@@ -470,7 +474,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Revenue by Type Book</CardTitle>
+                  <CardTitle>{t('revenueByTypeBook')}</CardTitle>
                   {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
                 </CardHeader>
                 <CardContent>
@@ -483,7 +487,7 @@ export default function DashboardSellerPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">This Month Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('thisMonthRevenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -500,13 +504,13 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisMonthRevenue)}</div>
                   <p className="text-sm text-muted-foreground">
-                    Average: {formatPrice(agencyAnalyst?.avgMonthRevenue).split('.')}
+                    {t('average')}: {formatPrice(agencyAnalyst?.avgMonthRevenue).split('.')}
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">This Day Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('thisDayRevenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -525,13 +529,13 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisDayRevenue)}</div>
                   <p className="text-sm text-muted-foreground">
-                    Average: {formatPrice(agencyAnalyst?.avgDayRevenue).split('.')}
-                  </p>{' '}
+                    {t('average')}: {formatPrice(agencyAnalyst?.avgDayRevenue).split('.')}
+                  </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Compare This Month</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('compareThisMonth')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -548,16 +552,16 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="gap-1 text-2xl font-bold">
-                    Average: {Math.floor(agencyAnalyst?.percentThisMonthToAvgMonth as number)}%
+                    {t('average')}: {Math.floor(agencyAnalyst?.percentThisMonthToAvgMonth as number)}%
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Highest: {agencyAnalyst?.percentThisMonthToHighestMonth}%
+                    {t('highest')}: {agencyAnalyst?.percentThisMonthToHighestMonth}%
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Compare This Day</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('compareThisDay')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -572,15 +576,19 @@ export default function DashboardSellerPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Average:{agencyAnalyst?.percentThisDayToAvgDay}%</div>
-                  <p className="text-xs text-muted-foreground">Highest: {agencyAnalyst?.percentThisDayToHighestDay}%</p>
+                  <div className="text-2xl font-bold">
+                    {t('average')}:{agencyAnalyst?.percentThisDayToAvgDay}%
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {t('highest')}: {agencyAnalyst?.percentThisDayToHighestDay}%
+                  </p>
                 </CardContent>
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>{t('overview')}</CardTitle>
                 </CardHeader>
                 <CardContent className="mt-12">
                   <Bar data={dataRevenueByMonths} options={optionRevenueByMonths}></Bar>
@@ -588,7 +596,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Revenue by Category</CardTitle>
+                  <CardTitle>{t('revenueByCategory')}</CardTitle>
                   {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
                 </CardHeader>
                 <CardContent>
@@ -598,7 +606,7 @@ export default function DashboardSellerPage() {
             </div>
             <Card className="col-span-4 md:col-span-3">
               <CardHeader>
-                <CardTitle>Number of Book by month</CardTitle>
+                <CardTitle>{t('numberBookByMonth')}</CardTitle>
                 {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
               </CardHeader>
               <CardContent>
@@ -612,7 +620,7 @@ export default function DashboardSellerPage() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Number of Book by day</CardTitle>
+                  <CardTitle>{t('numberBookByDay')}</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <Chart
@@ -624,7 +632,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Revenue by Day</CardTitle>
+                  <CardTitle>{t('revenueByDay')}</CardTitle>
                   {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
                 </CardHeader>
                 <CardContent className="mt-12">

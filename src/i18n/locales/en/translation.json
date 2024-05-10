@@ -71,12 +71,57 @@
   "in-cart": "in cart",
   "add-to-cart": "Add to Cart",
   "New orders added": "New orders added",
-  "view-cart": "View Cart"
-
-
-
-
-
+  "view-cart": "View Cart",
+  "welcome": "Hi, Welcome back",
+  "overview": "Overview",
+  "analytics": "Analytics",
+  "totalRevenue": "Total Revenue",
+  "thisMonth": "This month",
+  "totalBook": "Total Book",
+  "totalSales": "Total Sales",
+  "unitSale": "Unit Sale",
+  "revenue": "Revenue",
+  "highMonth": "High month",
+  "revenueByTypeBook": "Revenue by Type Book",
+  "thisMonthRevenue": "thisMonthRevenue",
+  "average": "average",
+  "thisDayRevenue": "thisDayRevenue",
+  "compareThisMonth": "compareThisMonth",
+  "compareThisDay": "compareThisDay",
+  "highest": "highest",
+  "revenueByCategory": "revenueByCategory",
+  "numberBookByMonth": "numberBookByMonth",
+  "numberBookByDay": "numberBookByDay",
+  "revenueByDay": "revenueByDay",
+  "month": "month",
+  "day": "day",
+  "bookSold": "Book Sold",
+  "unitSold": "Unit Sold",
+  "percentage": "percentage",
+  "dashboard": "Dashboard",
+  "manageOrder": "Manage Order",
+  "allOfBooks": "All of Books",
+  "addBook": "Add book",
+  "allBookGroups": "All Book Groups",
+  "manageBook": "Manage Book",
+  "marketingChannel": "Marketing Channel",
+  "finance": "Finance",
+  "manageShop": "Manage Shop",
+  "account": "Account",
+  "profileShop": "Profile Shop",
+  "ratingShop": "Rating Shop",
+  "all": "All",
+  "unpaid": "Unpaid",
+  "toShip": "To ship",
+  "shipping": "Shipping",
+  "completed":  "Completed",
+  "cancellation": "Cancellation",
+  "return/Refund": "Return/Refund",
+  "failedDelivery": "Failed Delivery",
+  "other": "other",
+  "search...": "Search...",
+  "titleManageBook": "Manage Book (Server side table functionalities.)"
+  
 
 
 }

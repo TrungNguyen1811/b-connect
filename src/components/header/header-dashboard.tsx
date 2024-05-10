@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { UserNav } from './nav-dashboard'
 import { useAuth } from 'src/hooks/useAuth'
+import { LanguageSelector } from '../language-selector'
 
 export default function Header() {
   const { user } = useAuth()
@@ -18,6 +19,7 @@ export default function Header() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
+          <LanguageSelector />
           <UserNav />
         </div>
       </nav>
