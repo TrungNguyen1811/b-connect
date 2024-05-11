@@ -72,7 +72,7 @@ function ProfileUser() {
                     {isCurrentUser ? (
                       <Button
                         onClick={() => {
-                          navigate('/setting/profile')
+                          navigate('/blog/setting/profile')
                         }}
                         className="ml-5"
                       >

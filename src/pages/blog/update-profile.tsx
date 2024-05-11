@@ -149,7 +149,7 @@ function UpdateProfile() {
         {/* <form onSubmit={form.handleSubmit(onSubmit)}> */}
         <form>
           <div className="mt-8 flex flex-row justify-between">
-            <div className="mx-4 mb-8 flex w-1/2 flex-col rounded-md border border-2 bg-orange-100 px-4 py-8">
+            <div className="mx-4 mb-8 flex w-1/2 flex-col rounded-md border-2 bg-white px-4 py-8">
               <p className="text-lg font-semibold">User</p>
               <div className="py-2">
                 <FormField
@@ -222,7 +222,7 @@ function UpdateProfile() {
                 </div>
               </div>
             </div>
-            <div className="mx-4 mb-8 flex w-1/2 flex-col rounded-md border border-2 bg-orange-100 px-4 py-8">
+            <div className="mx-4 mb-8 flex w-1/2 flex-col rounded-md border-2 bg-white px-4 py-8">
               <p className="text-lg font-semibold">Basic</p>
               <div className="py-2">
                 <FormField
@@ -281,7 +281,7 @@ function UpdateProfile() {
         <Form {...formPassword}>
           <form>
             <div className="ml-4 flex flex-row items-center">
-              <div className="flex w-2/3 flex-col  rounded-md border border-2 bg-orange-100 px-4 py-8">
+              <div className="flex w-2/3 flex-col  rounded-md border-2 bg-white px-4 py-8">
                 <p className="text-lg font-semibold">Change Password</p>
 
                 {/* <form onSubmit={formPassword.handleSubmit(onSubmitPassword)}> */}

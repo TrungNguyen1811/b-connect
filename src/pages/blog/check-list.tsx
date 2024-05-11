@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
@@ -12,6 +13,11 @@ import { useAuth } from 'src/hooks/useAuth'
 import { ICheckList } from 'src/types/advertisement'
 import { ROLE } from 'src/types/user'
 import { z } from 'zod'
+
+function isImage(url: string) {
+  console.log('test', /\.(jpeg|jpg|gif|png)$/i.test(url))
+  return /\.(jpeg|jpg|gif|png)$/i.test(url)
+}
 
 const formSchema = z.object({
   //   tradeDetailsId: z.string(),
@@ -26,13 +32,17 @@ function CheckListItemForm({
   target,
   checkList,
   isStaff,
+  loading,
   onSubmit,
+  onImageChange,
 }: {
   id: string
   target: string
   isStaff: boolean
+  loading: boolean
   checkList: ICheckList
   onSubmit: (data: ICheckList) => void
+  onImageChange: (value: React.SetStateAction<string>) => void
 }) {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -60,9 +70,25 @@ function CheckListItemForm({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center gap-4">
                   <FormLabel>MiddleUploadDir:</FormLabel>
-                  <img src={checkList.middleUploadDir as string} className="h-16" />
+                  {checkList.middleUploadDir &&
+                    (isImage(checkList.middleUploadDir as string) ? (
+                      <img
+                        src={checkList.middleUploadDir as string}
+                        className="h-16 w-12"
+                        onClick={() => onImageChange(checkList.middleUploadDir as string)}
+                        onMouseEnter={() => onImageChange(checkList.middleUploadDir as string)}
+                      />
+                    ) : (
+                      <video
+                        src={checkList.middleUploadDir as string}
+                        className="h-16 w-12 rounded-md"
+                        onClick={() => onImageChange(checkList.middleUploadDir as string)}
+                        onMouseEnter={() => onImageChange(checkList.middleUploadDir as string)}
+                        controls
+                      ></video>
+                    ))}
                   <FormControl>
-                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
+                    <Input type="file" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
                   </FormControl>
                 </FormItem>
               )}
@@ -74,15 +100,34 @@ function CheckListItemForm({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center gap-4">
                   <FormLabel>UploadDir:</FormLabel>
-                  <img src={checkList.bookOwnerUploadDir as string} className="h-16" />
+                  {checkList.bookOwnerUploadDir &&
+                    (isImage(checkList.bookOwnerUploadDir as string) ? (
+                      <img
+                        src={checkList.bookOwnerUploadDir as string}
+                        className="h-16 w-12"
+                        onClick={() => onImageChange(checkList.bookOwnerUploadDir as string)}
+                        onMouseEnter={() => onImageChange(checkList.bookOwnerUploadDir as string)}
+                      />
+                    ) : (
+                      <video
+                        src={checkList.bookOwnerUploadDir as string}
+                        className="h-16 w-12 rounded-md"
+                        onClick={() => onImageChange(checkList.bookOwnerUploadDir as string)}
+                        onMouseEnter={() => onImageChange(checkList.bookOwnerUploadDir as string)}
+                        controls
+                      ></video>
+                    ))}
                   <FormControl>
-                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
+                    <Input type="file" onChange={(e) => field.onChange(e.target.files?.[0] || null)} />
                   </FormControl>
                 </FormItem>
               )}
             />
           )}
-          <Button type="submit">Submit</Button>
+          {/* <Button type="submit">Submit</Button> */}
+          <Button disabled={loading} className="mt-2" type="submit">
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
+          </Button>
         </div>
       </form>
     </Form>
@@ -95,6 +140,7 @@ function CheckListPage() {
   const [checkList, setCheckList] = useState<ICheckList[]>()
   const [targets, setTarget] = useState<string[]>()
   const queryClient = useQueryClient()
+  const [selectedImage, setSelectedImage] = useState<string>()
 
   useEffect(() => {
     const fetchCheckList = async () => {
@@ -137,8 +183,11 @@ function CheckListPage() {
     submitCheckList.mutate(formData)
   }
 
+  const handleImageChange = (value: React.SetStateAction<string>) => {
+    setSelectedImage(value as string)
+  }
   return (
-    <div className="mx-32 min-h-[42rem]">
+    <div className="mx-16 flex min-h-[42rem] flex-row items-center justify-start">
       <div>
         {targets?.map((target, index) => (
           <div key={index}>
@@ -148,9 +197,22 @@ function CheckListPage() {
               target={target}
               isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
               onSubmit={handleSubmitForm}
+              onImageChange={handleImageChange}
+              loading={submitCheckList.isLoading}
             />
           </div>
         ))}
+      </div>
+      <div className="mx-auto">
+        {isImage(selectedImage as string) ? (
+          <img src={selectedImage} alt="Selected Image" className="max-w-[32rem] rounded-sm object-cover shadow-md" />
+        ) : (
+          <video
+            controls
+            src={selectedImage}
+            className="w-[32rem] max-w-[32rem] rounded-sm object-cover shadow-md"
+          ></video>
+        )}
       </div>
     </div>
   )

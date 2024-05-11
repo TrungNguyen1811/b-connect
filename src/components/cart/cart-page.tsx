@@ -192,7 +192,7 @@ function CartPage() {
             <TableRow>
               <TableCell>
                 <input type="checkbox" checked={selectAll} onChange={handleSelectAllChange} />
-              </TableCell>{' '}
+              </TableCell>
               <TableHead>Product</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Quantity</TableHead>

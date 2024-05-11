@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon, StoreIcon } from 'lucide-react'
 import { z } from 'zod'
 import { CartSchema } from './validation-cart'
 import { useForm } from 'react-hook-form'
@@ -11,7 +11,6 @@ import { checkout, createOrder } from 'src/api/order/post-order'
 import { useAuth } from 'src/hooks/useAuth'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { Table, TableBody, TableCell, TableHead, TableRow } from '../ui/table'
 import { Separator } from '../ui/separator'
 import { Button } from '../ui/button'
 import { faker } from '@faker-js/faker'
@@ -59,6 +58,22 @@ const CheckoutPage = () => {
   const [checkbox, setCheckbox] = useState<boolean>(false)
   const [cartData, setCartData] = useState<DataCart[]>([])
   const [cartId, setCartId] = useState<string>()
+  useEffect(() => {
+    const fetchCartId = async () => {
+      try {
+        form.setValue('city_Province', addressDefault?.city_Province as string)
+        form.setValue('district', addressDefault?.district as string)
+        form.setValue('subDistrict', addressDefault?.subDistrict as string)
+        form.setValue('rendezvous', addressDefault?.rendezvous as string)
+      } catch (error) {
+        console.error('Error retrieving cartId:', error)
+      }
+    }
+
+    if (checkbox === true) {
+      fetchCartId()
+    }
+  }, [checkbox])
 
   useEffect(() => {
     const fetchCartId = async () => {
@@ -237,14 +252,13 @@ const CheckoutPage = () => {
     if (dataOrder) {
       const address: IAddress = {
         addressId: faker.string.uuid(),
-        city_Province: dataOrder.city_Province,
-        district: dataOrder.district,
-        subDistrict: dataOrder.subDistrict,
-        rendezvous: dataOrder.rendezvous,
+        city_Province: dataOrder.city_Province as string,
+        district: dataOrder.district as string,
+        subDistrict: dataOrder.subDistrict as string,
+        rendezvous: dataOrder.rendezvous as string,
         default: true,
         userId: user?.userId as string,
       }
-
       if (checkbox == false) {
         await postAddress(address)
       }
@@ -304,43 +318,45 @@ const CheckoutPage = () => {
     <div className="p-4">
       <MetaData title="Checkout" />
       <div className="mx-24 rounded-lg border border-gray-200 p-4">
-        <Table>
-          <TableHead className="">
-            <TableRow className="">
-              <TableCell>Product</TableCell>
-              <TableCell>Unit Price</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Item Subtotal</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+        <div className="w-full">
+          <div className="flex w-full flex-row py-2 text-center font-medium">
+            <p className="w-2/5 pl-8 text-start">Product</p>
+            <p className="w-1/5 ">Unit Price</p>
+            <p className="w-1/5 ">Amount</p>
+            <p className="w-1/5 ">Item Subtotal</p>
+          </div>
+          <div>
             {Object.keys(cartItemsByStore).map((seller, index) => (
               <React.Fragment key={index}>
-                <TableRow>
-                  <TableCell colSpan={4} className="font-bold">
+                <div className="border-1 mb-4 rounded-sm border p-4">
+                  <div className="flex flex-row items-center gap-1 pb-4 pt-0">
+                    <StoreIcon size={20} className="text-orange-600" />
                     {cartItemsByStore[seller][0].book.agencyName}
-                  </TableCell>
-                </TableRow>
-                {cartItemsByStore[seller].map((item, idx) => (
-                  <TableRow key={idx} className="w-full items-start">
-                    <TableCell className="flex w-2/5 flex-row items-center justify-start gap-4">
-                      <div className="flex flex-row gap-2">
-                        <img src={item.book.bookImg as string} className="h-12 w-12" />
-                        {item.book.name}
+                  </div>
+                  {cartItemsByStore[seller].map((item, idx) => (
+                    <div key={idx}>
+                      <div className="mb-2 flex w-full flex-row text-center">
+                        <p className="flex w-2/5 flex-row items-center justify-start gap-4">
+                          <div className="flex flex-row gap-2">
+                            <img src={item.book.bookImg as string} className="h-12 w-12" alt="Book" />
+                            {item.book.name}
+                          </div>
+                          <p className="font-light">Type: {item.book.type}</p>
+                        </p>
+                        <p className="w-1/5">{formatPrice(item.book.price)}</p>
+                        <p className="w-1/5">
+                          <p className="p-2">{item.quantity}</p>
+                        </p>
+                        <p className="w-1/5">{formatPrice(item.book.price * item.quantity)}</p>
                       </div>
-                      <p className="font-light">Type: {item.book.type}</p>
-                    </TableCell>
-                    <TableCell className="w-1/5">{formatPrice(item.book.price)}</TableCell>
-                    <TableCell className="w-1/5">
-                      <p className="p-2">{item.quantity}</p>
-                    </TableCell>
-                    <TableCell className="w-1/5">{formatPrice(item.book.price * item.quantity)}</TableCell>
-                  </TableRow>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </React.Fragment>
             ))}
-          </TableBody>
-        </Table>
+          </div>
+        </div>
+
         <Separator />
         <div>
           <Form {...form}>
@@ -451,7 +467,7 @@ const CheckoutPage = () => {
                                           onSelect={() => {
                                             form.setValue('district', district.Name)
                                             const dis = form.getValues('district')
-                                            setDistrict(dis)
+                                            setDistrict(dis as string)
                                           }}
                                         >
                                           {district.Name}

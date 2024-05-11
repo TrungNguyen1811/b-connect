@@ -23,7 +23,7 @@ export function Active() {
 
   return (
     <div>
-      <div className="rounded-lg border border-gray-300 bg-orange-50">
+      <div className="rounded-lg border border-gray-300 bg-white">
         <div className="m-2">
           <p className="p-2 pb-0 text-lg font-bold">Active discussions</p>
           <div className="my flex flex-col p-2">

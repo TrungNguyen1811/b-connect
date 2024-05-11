@@ -207,7 +207,7 @@ export const ROUTES = createBrowserRouter([
         path: '/staff/dashboard',
       },
       {
-        path: '/staff/trade',
+        path: '/staff/manage/trade',
         element: <TradeManagerPage />,
       },
     ],
