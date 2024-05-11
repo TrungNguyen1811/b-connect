@@ -9,6 +9,14 @@ import { Separator } from 'src/components/ui/separator'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponsePost } from 'src/types/blog'
 import { IResponseInteresterList } from 'src/types/interester'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from 'src/components/ui/dialog'
 
 function ManagePostInterester() {
   const { user } = useAuth()
@@ -48,9 +56,9 @@ function ManagePostInterester() {
     reloadPost()
   }, [])
 
-  const acceptTrade = async (postId: string, interesterId: string) => {
+  const acceptTrade = async (postId: string, interesterId: string, isUsingMiddle: boolean) => {
     // response portId
-    await postAcceptTrade(postId, interesterId)
+    await postAcceptTrade(postId, interesterId, isUsingMiddle)
     const postData: IResponsePost = await getPostByIdApi(id as string)
     setPostData(postData)
   }
@@ -71,7 +79,28 @@ function ManagePostInterester() {
           </div>
         </div>
         <div>
-          <Button onClick={() => acceptTrade(id as string, userId)}>Accept</Button>
+          <Dialog>
+            <DialogTrigger>
+              <Button>Accept</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader className="w-60">
+                <DialogTitle>Do you want to use a middle to make the exchange more secure?</DialogTitle>
+                <DialogDescription className="flex flex-row items-center justify-start gap-4">
+                  <Button variant="default" className="w-16" onClick={() => acceptTrade(id as string, userId, true)}>
+                    Yes
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="w-16"
+                    onClick={() => acceptTrade(id as string, userId, false)}
+                  >
+                    No
+                  </Button>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     ),

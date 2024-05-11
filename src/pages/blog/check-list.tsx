@@ -32,21 +32,46 @@ function CheckListItemForm({
   target,
   checkList,
   isStaff,
-  loading,
-  onSubmit,
+  // loading,
+  // onSubmit,
   onImageChange,
 }: {
   id: string
   target: string
   isStaff: boolean
-  loading: boolean
+  // loading: boolean
   checkList: ICheckList
-  onSubmit: (data: ICheckList) => void
+  // onSubmit: (data: ICheckList) => void
   onImageChange: (value: React.SetStateAction<string>) => void
 }) {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
   })
+
+  const queryClient = useQueryClient()
+  const submitCheckList = useMutation((formData: ICheckList) => putCheckList(formData), {
+    onSuccess: (formData) => {
+      if (formData) {
+        toast({
+          title: 'Success',
+          description: 'Submit Target Success!!!',
+        })
+        queryClient.invalidateQueries()
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Submit Target Failed!!!',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Submit Target',
+        description: error.message,
+      })
+    },
+  })
+
   const handleSubmit = (data: FormData) => {
     const formData: ICheckList = {
       ...data,
@@ -54,8 +79,7 @@ function CheckListItemForm({
       target: target,
       tradeDetailsId: id as string,
     }
-    console.log('formData', formData)
-    onSubmit(formData)
+    submitCheckList.mutate(formData)
   }
 
   return (
@@ -125,8 +149,8 @@ function CheckListItemForm({
             />
           )}
           {/* <Button type="submit">Submit</Button> */}
-          <Button disabled={loading} className="mt-2" type="submit">
-            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
+          <Button disabled={submitCheckList.isLoading} className="mt-2" type="submit">
+            {submitCheckList.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
           </Button>
         </div>
       </form>
@@ -139,7 +163,6 @@ function CheckListPage() {
   const { user } = useAuth()
   const [checkList, setCheckList] = useState<ICheckList[]>()
   const [targets, setTarget] = useState<string[]>()
-  const queryClient = useQueryClient()
   const [selectedImage, setSelectedImage] = useState<string>()
 
   useEffect(() => {
@@ -157,32 +180,6 @@ function CheckListPage() {
     }
   }, [checkList])
 
-  const submitCheckList = useMutation((formData: ICheckList) => putCheckList(formData), {
-    onSuccess: (formData) => {
-      if (formData) {
-        toast({
-          title: 'Success',
-          description: 'Submit Target Success!!!',
-        })
-        queryClient.invalidateQueries()
-      } else {
-        toast({
-          title: 'Failed',
-          description: 'Submit Target Failed!!!',
-        })
-      }
-    },
-    onError: (error: Error) => {
-      toast({
-        title: 'Error Submit Target',
-        description: error.message,
-      })
-    },
-  })
-  const handleSubmitForm = (formData: ICheckList) => {
-    submitCheckList.mutate(formData)
-  }
-
   const handleImageChange = (value: React.SetStateAction<string>) => {
     setSelectedImage(value as string)
   }
@@ -196,9 +193,9 @@ function CheckListPage() {
               id={id as string}
               target={target}
               isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
-              onSubmit={handleSubmitForm}
+              // onSubmit={handleSubmitForm}
               onImageChange={handleImageChange}
-              loading={submitCheckList.isLoading}
+              // loading={submitCheckList.isLoading}
             />
           </div>
         ))}

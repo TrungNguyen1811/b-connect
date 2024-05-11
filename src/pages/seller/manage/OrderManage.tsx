@@ -9,7 +9,7 @@ function OrderManagerPage() {
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const type = searchParams.get('type')
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   return (
     <div className="mx-4">
       <MetaData title={'Manage Order'} />

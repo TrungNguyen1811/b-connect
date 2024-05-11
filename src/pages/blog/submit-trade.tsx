@@ -9,6 +9,7 @@ import {
   getTradeDetailByPostId,
   postAddBookCheckList,
   postRateUserPostTrade,
+  postReportUserPostTrade,
   putSetTradeStatus,
   putSubmitTrade,
 } from 'src/api/blog/interested'
@@ -32,10 +33,11 @@ import { Label } from 'src/components/ui/label'
 import { IAddress } from 'src/types/address'
 import { getAddressByAddressId } from 'src/api/address/get-address'
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from 'src/components/ui/dialog'
-import { IReviewUser, ROLE } from 'src/types'
+import { IReportUser, IReviewUser, ROLE } from 'src/types'
 import { ISubmitTrade } from 'src/types/blog'
 import { ReactTags, Tag } from 'react-tag-autocomplete'
 import './style.css'
+import Evidence from 'src/components/blog/evidence'
 
 interface Options {
   readonly value: string
@@ -69,8 +71,14 @@ const formReviewSchema = z.object({
   video: z.any().optional(),
 })
 
+const formReportSchema = z.object({
+  reason: z.string(),
+  video: z.any(),
+})
+
 type FormData = z.infer<typeof formSchema>
 type FormReview = z.infer<typeof formReviewSchema>
+type FormReport = z.infer<typeof formReportSchema>
 
 export default function SubmitTrade() {
   const { id } = useParams()
@@ -89,6 +97,7 @@ export default function SubmitTrade() {
   const [address, setAddress] = useState<IAddress>()
   const [addressId, setAddressId] = useState<string>()
   const [open, setOpen] = useState(false)
+  const [openReport, setOpenReport] = useState(false)
 
   useEffect(() => {
     const fetchTradeDetail = async () => {
@@ -306,10 +315,10 @@ export default function SubmitTrade() {
         })
       }
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
         title: 'Error Update User',
-        description: error.message,
+        description: error.response.data,
       })
     },
   })
@@ -353,10 +362,43 @@ export default function SubmitTrade() {
       tradeDetailsId: partnerTrade?.details.tradeDetailId as string,
       comment: data.comment,
       ratingPoint: data.ratingPoint,
-      // video: data.video,
-      // image: data.image,
     }
+    putStatusTrade(partnerTrade?.details.tradeDetailId as string, 7)
     reviewUser.mutate(formData)
+  }
+
+  const reportUser = useMutation((formData: IReportUser) => postReportUserPostTrade(formData), {
+    onSuccess: (formData) => {
+      if (formData) {
+        toast({
+          title: 'Success',
+          description: 'Report User Success!!!',
+        })
+        queryClient.invalidateQueries()
+        setOpenReport(false)
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Report User Failed!!!',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Report User',
+        description: error.message,
+      })
+    },
+  })
+
+  const onSubmitReport = async (data: FormReport) => {
+    const formData: IReportUser = {
+      tradeDetailsId: partnerTrade?.details.tradeDetailId as string,
+      reason: data.reason,
+      video: data.video,
+    }
+    putStatusTrade(partnerTrade?.details.tradeDetailId as string, 7)
+    reportUser.mutate(formData)
   }
 
   const form = useForm<FormData>({
@@ -372,6 +414,9 @@ export default function SubmitTrade() {
   })
   const formReview = useForm<FormReview>({
     resolver: zodResolver(formReviewSchema),
+  })
+  const formReport = useForm<FormReport>({
+    resolver: zodResolver(formReportSchema),
   })
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
@@ -415,7 +460,7 @@ export default function SubmitTrade() {
     submitTradeMutation.mutate(formData)
   }
 
-  const renderTraderComponent = (userTrader: ITradeDetail) => {
+  const renderTraderComponent = (userTrader: ITradeDetail, partnerTrade: ITradeDetail) => {
     const status = userTrader?.details.status
     const tradeDetailId = userTrader?.details.tradeDetailId
 
@@ -426,19 +471,43 @@ export default function SubmitTrade() {
     switch (status) {
       case 2:
         return (
-          <p>
-            {/* Confirm receipt of goods and user{' '}
-            <Button className="" onClick={() => handlePutStatusTrade(3)}>
-              reviews
-            </Button> */}
-          </p>
+          <div className="mt-4 flex flex-row gap-2">
+            <Targets />
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}>
+              View Check List
+            </Button>
+          </div>
         )
-
       case 3:
         return (
-          <div>
-            <Button className="ml-4" onClick={() => setOpen(true)}>
-              Reviews
+          <div className="mt-4 flex flex-row gap-2">
+            <Evidence tradeDetailsId={tradeDetailId} />
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}>
+              View Check List
+            </Button>
+          </div>
+        )
+
+      case 4:
+        return (
+          <div className="mt-4 flex flex-row gap-2">
+            <Evidence tradeDetailsId={tradeDetailId} />
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}>
+              View Check List
+            </Button>
+          </div>
+        )
+
+      case 6:
+      case 7:
+        return (
+          <div className="mt-4 flex justify-end gap-2">
+            <Evidence tradeDetailsId={tradeDetailId} />
+            <Button className="" onClick={() => setOpen(true)}>
+              Feedback
+            </Button>
+            <Button className="" onClick={() => setOpenReport(true)}>
+              Report
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogContent className="h-[70vh] w-[40vw]">
@@ -474,42 +543,53 @@ export default function SubmitTrade() {
                           </FormItem>
                         )}
                       />
-                      {/* <FormField
-                        control={formReview.control}
-                        name="image"
+                      <Button type="submit" className="mt-4 w-full">
+                        Submit
+                      </Button>
+                    </form>
+                  </Form>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <Dialog open={openReport} onOpenChange={setOpenReport}>
+              <DialogContent className="h-[70vh] w-[40vw]">
+                <DialogHeader className="mb-2 px-12">
+                  <p className="text-4xl font-extrabold">Report</p>
+                </DialogHeader>
+                <div className="flex flex-col">
+                  <Form {...formReport}>
+                    <form onSubmit={formReport.handleSubmit(onSubmitReport)}>
+                      <FormField
+                        control={formReport.control}
+                        name="reason"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="mt-4">Image</FormLabel>
+                            <FormLabel className="mt-4">Reason</FormLabel>
                             <FormControl>
-                              <Input
-                                placeholder="ABC..."
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => field.onChange(e.target.value?.[0] || '')}
-                              />
+                              <Input placeholder="Reason..." {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                       <FormField
-                        control={formReview.control}
+                        control={formReport.control}
                         name="video"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="mt-4">Video</FormLabel>
+                            <FormLabel className="mb-2">Video</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="ABC..."
+                                className="py-0"
                                 type="file"
-                                accept="image/*"
-                                onChange={(e) => field.onChange(e.target.value?.[0] || '')}
+                                accept="video/*"
+                                onChange={(e) => field.onChange(e.target.files?.[0] || null)}
                               />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
-                      /> */}
+                      />
                       <Button type="submit" className="mt-4 w-full">
                         Submit
                       </Button>
@@ -523,24 +603,49 @@ export default function SubmitTrade() {
 
       case 0:
         return (
-          <div className="min-w-[33vw] px-4 pb-4">
-            <div className="text-red-600">Interested person has not confirmed</div>
+          <div className="mt-4 min-w-[33vw] px-4 pb-4">
+            <div className="flex flex-col items-end justify-end gap-2">
+              <div className="flex flex-row justify-end gap-2">
+                <Targets />
+                <Button
+                  onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}
+                >
+                  View Check List
+                </Button>
+              </div>
+              <div className=" text-red-600">Interested person has not confirmed</div>
+            </div>
           </div>
         )
 
       case 1:
         return (
-          <div className="min-w-[33vw] px-4 pb-4">
-            <div className="">
-              <div className="flex flex-row items-center">
+          <div className="mt-4 min-w-[33vw] px-4 pb-4">
+            {userTrader.details.isUsingMiddle ? (
+              <div className="flex flex-col items-end justify-end gap-2">
+                <div className="flex flex-row justify-end gap-2">
+                  <Targets />
+                  <Button
+                    onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}
+                  >
+                    View Check List
+                  </Button>
+                </div>
                 <p className="ml-4">
-                  <button className="font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(2)}>
+                  <button className="mr-1 font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(2)}>
                     Accept
-                  </button>{' '}
+                  </button>
                   to confirm the trade information
                 </p>
               </div>
-            </div>
+            ) : (
+              <p className="ml-4 flex justify-end">
+                <button className="mr-1 font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(6)}>
+                  Accept
+                </button>
+                to confirm the trade information
+              </p>
+            )}
           </div>
         )
 
@@ -552,26 +657,6 @@ export default function SubmitTrade() {
   const renderTrader = (userTrade: ITradeDetail) => {
     return (
       <div className="px-4 pb-4 sm:h-[16rem] sm:w-[16rem] md:h-[32rem] md:w-[32rem]">
-        {/* <div className="flex flex-row items-center">
-          <Label className="text-md">TraderId:</Label>
-          <p className="ml-2">{userTrade?.traderId}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">TradeDetailId:</Label>
-          <p className="ml-2">{userTrade?.details.tradeDetailId}</p>
-        </div> */}
-        {/* <div className="flex flex-row items-center">
-          <Label className="text-md">RatingRecordId:</Label>
-          <p className="ml-2">{userTrade?.details.ratingRecordId}</p>
-        </div> */}
-        {/* <div className="flex flex-row items-center">
-          <Label className="text-md">Rating:</Label>
-          <p className="ml-2">{userTrade?.details.ratingRecord}</p>
-        </div> */}
-        {/* <div className="flex flex-row items-center">
-          <Label className="text-md">LockedRecordId:</Label>
-          <p className="ml-2">{userTrade?.details.lockedRecordId}</p>
-        </div> */}
         <div className="flex flex-row items-center">
           <Label className="text-md">IsPostOwner:</Label>
           {userTrade?.details.isPostOwner ? <p className="ml-2">True</p> : <p className="ml-2">False</p>}
@@ -580,10 +665,6 @@ export default function SubmitTrade() {
           <Label className="text-md">Status:</Label>
           <p className="ml-2">{ITradeStatus[userTrade?.details.status as keyof typeof ITradeStatus]}</p>
         </div>
-        {/* <div className="flex flex-row items-center">
-          <Label className="text-md">AddressId:</Label>
-          <p className="ml-2">{userTrade?.details.addressId}</p>
-        </div> */}
         <div className="flex flex-row items-start">
           <Label className="text-md">Address:</Label>
           <p className="ml-2">{userTrade?.address}</p>
@@ -606,32 +687,11 @@ export default function SubmitTrade() {
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
             <div className="rounded-md border-2 bg-white">
-              <div className="flex flex-row items-center justify-between pr-4">
+              <div className="flex flex-row items-start justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Interester</p>
-                <div className="flex flex-row items-center gap-2">
-                  {userTrade?.details.status == 0 ||
-                  userTrade?.details.status == 1 ||
-                  userTrade?.details.status == 2 ? (
-                    <Targets />
-                  ) : (
-                    ''
-                  )}
-                  {userTrade?.details.status == 0 ||
-                  userTrade?.details.status == 1 ||
-                  userTrade?.details.status == 2 ||
-                  userTrade?.details.status == 3 ||
-                  userTrade?.details.status == 4 ? (
-                    <Button
-                      onClick={() => navigate(`/blog/dashboard/check-list/view/${interester?.details.tradeDetailId}`)}
-                    >
-                      View Check List
-                    </Button>
-                  ) : (
-                    ''
-                  )}
-                </div>
+                {interester && renderTraderComponent(interester, userTrade as ITradeDetail)}
               </div>
-              {interester && renderTraderComponent(interester)}
+              {/* {interester && renderTraderComponent(interester)} */}
               {interester && renderTrader(interester)}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
@@ -646,6 +706,13 @@ export default function SubmitTrade() {
                   userTrade?.details.status == 4 ? (
                     <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
                       Check List
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                  {userTrade?.details.status == 3 ? (
+                    <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+                      Evidence
                     </Button>
                   ) : (
                     ''
@@ -1126,28 +1193,8 @@ export default function SubmitTrade() {
             <div className="rounded-md border-2">
               <div className="flex flex-row items-center justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Owner</p>
-                <div className="flex flex-row items-center gap-2">
-                  {userTrade?.details.status == 0 ||
-                  userTrade?.details.status == 1 ||
-                  userTrade?.details.status == 2 ? (
-                    <Targets />
-                  ) : (
-                    ''
-                  )}
-                  {userTrade?.details.status == 0 ||
-                  userTrade?.details.status == 1 ||
-                  userTrade?.details.status == 2 ||
-                  userTrade?.details.status == 3 ||
-                  userTrade?.details.status == 4 ? (
-                    <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${owner?.details.tradeDetailId}`)}>
-                      View Check List
-                    </Button>
-                  ) : (
-                    ''
-                  )}
-                </div>
+                {owner && renderTraderComponent(owner, userTrade as ITradeDetail)}
               </div>
-              {owner && renderTraderComponent(owner)}
               {owner && renderTrader(owner)}
             </div>
           </div>

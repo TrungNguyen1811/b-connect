@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 function Header() {
   const nav = useNavigate()
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   const onSubmit = useCallback(
     (e: React.SyntheticEvent) => {

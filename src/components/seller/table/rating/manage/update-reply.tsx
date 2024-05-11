@@ -38,13 +38,13 @@ export function UpdateReplyCustomer({ data }: { data: IListReplyResponse }) {
     onSuccess: () => {
       toast({
         title: 'Successful!!',
-        description: 'Update Category Success',
+        description: 'Reply Success',
       })
       queryClient.invalidateQueries()
     },
     onError: () => {
       toast({
-        title: 'Error updating book group',
+        title: 'Error updating reply',
       })
     },
   })

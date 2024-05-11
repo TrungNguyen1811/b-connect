@@ -6,7 +6,7 @@
 // import LoginPage from 'src/pages/(auth)/register/SignUpPage'
 
 // export const Hero = () => {
-//   const { t } = useTranslation()
+//   const { t } = useTranslation('translation')
 
 //   return (
 //     <div className="flex min-h-screen bg-gradient-to-b from-lime-300 to-lime-500">

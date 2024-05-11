@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 function AddToCart() {
   const [open, setOpen] = useState(false)
   const maxOrdersToShow = 5
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   const navigate = useNavigate()
   const { cartItems } = useOrderCart()
   const [bookData, setBookData] = useState<IBook[]>([])

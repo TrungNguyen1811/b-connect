@@ -27,7 +27,7 @@ interface SidebarProps {
 export default function SidebarSeller({ className }: SidebarProps) {
   const { isOpen, toggle } = useSidebar()
   const [status, setStatus] = useState(false)
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   const { user } = useAuth()
   const handleToggle = () => {
     setStatus(true)

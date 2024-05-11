@@ -67,7 +67,7 @@ function Publishers() {
     return []
   }, [oddPublisher])
 
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   return (
     <div className=" bg-orange-100">

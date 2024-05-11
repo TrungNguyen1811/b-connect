@@ -115,3 +115,9 @@ export interface ISubmitTrade {
   phone: string
   note: string
 }
+
+export interface IEvidence {
+  tradeDetailsId: string
+  deliveryCode: string
+  video: File
+}

@@ -16,7 +16,7 @@ type Props = {
 }
 
 function BookShouldByWith({ book }: Props) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   const { data: shouldByWithBooks, isLoading: isLoadingShouldBuyWithBooks } = useCustomQuery<IBook[]>(
     () => getAllBookOfBookGroupByBookId(book?.productId as string),
     {

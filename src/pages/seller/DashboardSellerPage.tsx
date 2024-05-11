@@ -60,7 +60,7 @@ interface INumberOfBookANdUnitSoldByMonth {
 }
 
 export default function DashboardSellerPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   const [agencyAnalyst, setAgencyAnalyst] = useState<IAgencyAnalyst>()
   useEffect(() => {
     const fetchData = async () => {

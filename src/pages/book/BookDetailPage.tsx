@@ -133,7 +133,7 @@ function BookDetailPage() {
     },
     [bookReview],
   )
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     const paths = pathname.split('/')

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 // type FilterForm = z.infer<typeof FilterSchema>
 
 function SortBook() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   //   const { handleSubmit, setValue, watch } = useForm<FilterForm>({
   //     resolver: zodResolver(FilterSchema),
   //   })

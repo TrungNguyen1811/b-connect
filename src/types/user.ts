@@ -139,6 +139,11 @@ export interface IReviewUser {
   tradeDetailsId: string
   comment: string
   ratingPoint: string
-  // video: File
-  // image: File
+}
+
+export interface IReportUser {
+  evidenceId?: string
+  tradeDetailsId: string
+  reason: string
+  video: File
 }

@@ -1,7 +1,24 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getCheckList } from 'src/api/blog/interested'
+import {
+  ISetTradeStatus,
+  ITradeDetail,
+  getCheckList,
+  getTradeDetailById,
+  putSetTradeStatus,
+} from 'src/api/blog/interested'
 import { Button } from 'src/components/ui/button'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from 'src/components/ui/dialog'
+import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import { ICheckList } from 'src/types/advertisement'
 import { ROLE } from 'src/types/user'
@@ -29,9 +46,8 @@ function CheckListItemForm({
   return (
     <div className="flex flex-row items-center">
       <div className="my-4 flex flex-row items-center gap-4">
-        <div className="text-md w-48 font-semibold">Target: {target}</div>
-        <div className="flex flex-row items-center gap-4">
-          <p className="text-md font-semibold">MiddleUploadDir:</p>
+        <div className="text-md w-48 font-semibold">{target}</div>
+        <div className="flex flex-col items-center gap-4">
           {checkList.middleUploadDir &&
             (isImage(checkList.middleUploadDir as string) ? (
               <img
@@ -50,8 +66,7 @@ function CheckListItemForm({
               ></video>
             ))}
         </div>
-        <div className="flex flex-row items-center gap-4">
-          <p className="text-md font-semibold">UploadDir:</p>
+        <div className="flex flex-col items-center gap-4">
           {checkList.bookOwnerUploadDir &&
             (isImage(checkList.bookOwnerUploadDir as string) ? (
               <img
@@ -70,7 +85,6 @@ function CheckListItemForm({
               ></video>
             ))}
         </div>
-        <Button type="submit">Request new image</Button>
       </div>
     </div>
   )
@@ -80,6 +94,7 @@ function CheckListViewPage() {
   const { id } = useParams()
   const { user } = useAuth()
   const [checkList, setCheckList] = useState<ICheckList[]>()
+  const [tradeDetail, setTradeDetail] = useState<ITradeDetail>()
   const [targets, setTarget] = useState<string[]>()
   const [selectedImage, setSelectedImage] = useState<string>()
 
@@ -89,6 +104,14 @@ function CheckListViewPage() {
       setCheckList(checkList)
     }
     fetchCheckList()
+  }, [id])
+
+  useEffect(() => {
+    const fetchTradeDetail = async () => {
+      const tradeDetail = await getTradeDetailById(id as string)
+      setTradeDetail(tradeDetail)
+    }
+    fetchTradeDetail()
   }, [id])
 
   useEffect(() => {
@@ -102,30 +125,106 @@ function CheckListViewPage() {
     setSelectedImage(value as string)
   }
 
+  const queryClient = useQueryClient()
+  const tradeStatus = useMutation((formData: ISetTradeStatus) => putSetTradeStatus(formData), {
+    onSuccess: (formData) => {
+      if (formData) {
+        toast({
+          title: 'Success',
+          description: 'Accept Trade Success!!!',
+        })
+        queryClient.invalidateQueries()
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Accept Trade Failed!!!',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error Accept Trade',
+        description: error.message,
+      })
+    },
+  })
+
+  const putStatusTrade = async (tradeDetailsId: string, status: number) => {
+    const data: ISetTradeStatus = {
+      postId: '988d635c-7cb1-40ee-88b8-cb9d6ea9eb69',
+      tradeDetailsId: tradeDetailsId,
+      updatedStatus: status,
+    }
+    tradeStatus.mutate(data)
+  }
+
+  const handlePutStatusTrade = (newStatus: number) => {
+    putStatusTrade(id as string, newStatus)
+  }
+
   return (
-    <div className="mx-16 flex min-h-[42rem] flex-row items-center justify-start">
-      <div>
-        {targets?.map((target, index) => (
-          <div key={index}>
-            <CheckListItemForm
-              checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
-              id={id as string}
-              target={target}
-              isStaff={user?.roles?.includes(ROLE.STAFF) || false}
-              onImageChange={handleImageChange}
-            />
+    <div>
+      <div className="mx-16 flex min-h-[42rem] flex-row items-center justify-start">
+        <div>
+          <div className="my-4 flex flex-row items-center gap-4 text-lg font-medium">
+            <p className="w-48">Target</p>
+            <p>Middle</p>
+            <p>Trader</p>
           </div>
-        ))}
-      </div>
-      <div className="mx-auto">
-        {isImage(selectedImage as string) ? (
-          <img src={selectedImage} alt="Selected Image" className="max-w-[32rem]  rounded-sm object-cover shadow-md" />
+          <div>
+            {targets?.map((target, index) => (
+              <div key={index}>
+                <CheckListItemForm
+                  checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
+                  id={id as string}
+                  target={target}
+                  isStaff={user?.roles?.includes(ROLE.STAFF) || false}
+                  onImageChange={handleImageChange}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mx-auto flex flex-row">
+          <div className="mx-auto">
+            {isImage(selectedImage as string) ? (
+              <img
+                src={selectedImage}
+                alt="Selected Image"
+                className="max-w-[40rem]  rounded-sm object-cover shadow-md"
+              />
+            ) : (
+              <video
+                controls
+                src={selectedImage}
+                className="w-[40rem] max-w-[40rem] rounded-sm object-cover shadow-md"
+              ></video>
+            )}
+          </div>
+        </div>
+        {tradeDetail?.details.status && tradeDetail?.details.status < 6 ? (
+          <Dialog>
+            <DialogTrigger>
+              <Button>Accept</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader className="w-60">
+                <DialogTitle>Do you want to accept?</DialogTitle>
+                <DialogDescription className="flex flex-row items-center justify-start gap-4">
+                  <Button variant="default" className="w-16" onClick={() => handlePutStatusTrade(6)}>
+                    Yes
+                  </Button>
+                  <Button variant="destructive" className="w-16">
+                    <Button>
+                      <DialogClose>No</DialogClose>
+                    </Button>
+                  </Button>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         ) : (
-          <video
-            controls
-            src={selectedImage}
-            className="w-[32rem] max-w-[32rem] rounded-sm object-cover shadow-md"
-          ></video>
+          'Accepted'
         )}
       </div>
     </div>

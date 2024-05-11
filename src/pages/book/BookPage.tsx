@@ -26,7 +26,7 @@ const initBookState: GetManyBooksParams = {
   Type: undefined,
 }
 function BookPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     return [

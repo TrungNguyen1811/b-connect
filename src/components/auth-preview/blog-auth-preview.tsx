@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { LanguageSelector } from '../language-selector'
 
 type Props = React.HtmlHTMLAttributes<HTMLDivElement>
 export function AuthPreviewBlog({ className, ...prosp }: Props) {
@@ -87,6 +88,7 @@ export function AuthPreviewBlog({ className, ...prosp }: Props) {
         <div className="flex flex-row items-center justify-between gap-4">
           <Button onClick={() => navigate('/blog/create-post')}>Create Post</Button>
           <NotificationBlog />
+          <LanguageSelector />
           {renderUserDropDown}
         </div>
       ) : (

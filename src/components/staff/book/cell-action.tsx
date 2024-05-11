@@ -139,9 +139,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             {isInterester?.details.status === 2 ? (
-              <Button onClick={() => handlePutStatusTrade(isInterester?.details.tradeDetailId as string)}>
+              <button onClick={() => handlePutStatusTrade(isInterester?.details.tradeDetailId as string)}>
                 Received isInterester
-              </Button>
+              </button>
             ) : (
               <button onClick={() => navigate(`/blog/dashboard/check-list/${isInterester?.details.tradeDetailId}`)}>
                 Update Interester

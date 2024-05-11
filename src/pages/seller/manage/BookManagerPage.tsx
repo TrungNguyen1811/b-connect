@@ -8,7 +8,7 @@ import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function BookManagerPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   const title = t('manageBook')
   const description = t('titleManageBook')

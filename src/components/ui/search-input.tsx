@@ -9,7 +9,7 @@ type Props = {
 } & Omit<InputProps, 'value' | 'onChange'>
 
 function SearchInput({ value, onChange, ...props }: Props) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   const [search, setSearch] = useState<string>(value)
   const debouncedValue = useDebounce<string>(search, 500)
 

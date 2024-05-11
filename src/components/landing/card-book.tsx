@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 type Props = { book: IBook }
 function Book({ book }: Props) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
   const renderRatingIcon = () => {
     if (book.ratingId && book.rating) {
       const icons = []

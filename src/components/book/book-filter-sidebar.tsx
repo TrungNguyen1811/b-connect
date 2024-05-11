@@ -99,7 +99,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
     // setClearFlag((prev) => !prev)
   }, [reset])
 
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   return (
     <React.Fragment key={'sidebar.filter'}>

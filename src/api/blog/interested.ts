@@ -1,8 +1,8 @@
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { ICheckList } from 'src/types/advertisement'
-import { IResponsePost, ISubmitTrade } from 'src/types/blog'
+import { IEvidence, IResponsePost, ISubmitTrade } from 'src/types/blog'
 import { IResponseInteresterList, IResponseTraderList } from 'src/types/interester'
-import { IReviewUser } from 'src/types/user'
+import { IReportUser, IReviewUser } from 'src/types/user'
 
 export async function getAllPosts() {
   return axiosClient.get('/Post/get-all-post').then((res) => {
@@ -19,7 +19,7 @@ export async function getPostInterestedByUser() {
 }
 
 async function getPostInterestByPostId(postId: string) {
-  return axiosClient.get(`/trading/get-post-interest-by-post-id?postId=${postId}`).then((res) => {
+  return axiosClient.get(`/trading/get-post-interesters-by-post-id?postId=${postId}`).then((res) => {
     const intereters: IResponseInteresterList[] = res.data
     return intereters
   })
@@ -28,7 +28,7 @@ export { getPostInterestByPostId }
 
 async function getPostTraderByPostId(postId: string) {
   return authAxiosClient
-    .get(`/trading/get-traderId-by-postId?postId=${postId}`, {
+    .get(`/trading/get-trader-ids-by-postId?postId=${postId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -48,6 +48,8 @@ export interface ITradeDetail {
     phone: string
     note: string
     isPostOwner: boolean
+    isUsingMiddle: boolean
+    isCheckListValid: string
     ratingRecordId: string
     status: number
     address: string
@@ -65,6 +67,14 @@ async function getTradeDetailByPostId(postId: string) {
   })
 }
 export { getTradeDetailByPostId }
+
+async function getTradeDetailById(tradeDeatailsId: string) {
+  return authAxiosClient.get(`/trading/get-trade-details-by-id?tradeDeatailsId=${tradeDeatailsId}`).then((res) => {
+    const trade: ITradeDetail = res.data
+    return trade
+  })
+}
+export { getTradeDetailById }
 
 async function getCheckList(traderId: string) {
   return authAxiosClient.get(`/trading/get-check-list-by-trade-details-id?id=${traderId}`).then((res) => {
@@ -99,11 +109,12 @@ async function postInterestedPost(data: string) {
 }
 export { postInterestedPost }
 
-async function postAcceptTrade(postId: string, interesterId: string) {
+async function postAcceptTrade(postId: string, interesterId: string, isUsingMiddle: boolean) {
   return await authAxiosClient
     .post('/trading/accept-trade', {
       postId: postId,
       interesterId: interesterId,
+      isUsingMiddle: isUsingMiddle,
     })
     .then((response) => {
       if (response.status === 200) {
@@ -120,19 +131,35 @@ async function postAcceptTrade(postId: string, interesterId: string) {
 }
 export { postAcceptTrade }
 
-async function postRateUserPostTrade(trade: IReviewUser) {
-  // const formData = new FormData()
-  // formData.append('revieweeId', trade.revieweeId)
-  // formData.append('ratingPoint', trade.ratingPoint)
-  // formData.append('tradeDetailsId', trade.tradeDetailsId)
-  // formData.append('comment', trade.comment)
-  // if (trade.image instanceof File) {
-  //   formData.append('image', trade.image)
-  // }
-  // if (trade.video instanceof File) {
-  //   formData.append('video', trade.video)
-  // }
+async function postEvidenceTrade(trade: IEvidence) {
+  const formData = new FormData()
+  formData.append('tradeDetailsId', trade.tradeDetailsId)
+  formData.append('deliveryCode', trade.deliveryCode)
+  if (trade.video instanceof File) {
+    formData.append('video', trade.video)
+  }
 
+  return await authAxiosClient
+    .post('/trading/submit-delivery-evidence', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      throw error
+    })
+}
+
+export { postEvidenceTrade }
+
+async function postRateUserPostTrade(trade: IReviewUser) {
   return await authAxiosClient
     .post('/trading/rate-user-post-trade', trade)
     .then((response) => {
@@ -148,6 +175,34 @@ async function postRateUserPostTrade(trade: IReviewUser) {
 }
 
 export { postRateUserPostTrade }
+
+async function postReportUserPostTrade(trade: IReportUser) {
+  const formData = new FormData()
+  formData.append('tradeDetailsId', trade.tradeDetailsId)
+  formData.append('reason', trade.reason)
+  if (trade.video instanceof File) {
+    formData.append('video', trade.video)
+  }
+
+  return await authAxiosClient
+    .post('/trading/submit-trade-report', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      throw error
+    })
+}
+
+export { postReportUserPostTrade }
 
 async function postAddUserTargetedCategory(tags: string) {
   return await authAxiosClient
@@ -214,7 +269,7 @@ async function putSetTradeStatus(data: ISetTradeStatus) {
         return response.data
       } else {
         // Handle other HTTP statuses as needed
-        throw new Error('Request failed with status ' + response.status)
+        throw new Error('Request failed with status ' + response.status + 'Cause:' + response.data)
       }
     })
     .catch((error) => {

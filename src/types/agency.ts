@@ -2,6 +2,7 @@ export interface IAgency {
   agencyId?: string
   ownerId?: string
   agencyName?: string
+  GHTKTokenCode?: string
   logoImg: File | string
   postAddress?: string
   addressId?: string

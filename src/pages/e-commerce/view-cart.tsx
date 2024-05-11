@@ -19,7 +19,7 @@ function ViewCart({ className, ...props }: Props) {
   const { cartItems } = useOrderCart()
 
   const { pathname } = useLocation()
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     const paths = pathname.split('/')

@@ -10,7 +10,7 @@ import { getPostInterestedByUser } from 'src/api/blog/interested'
 import { useTranslation } from 'react-i18next'
 
 export function Menu() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('translation')
 
   const menu = React.useMemo<IMenuItem[]>(() => {
     return [
