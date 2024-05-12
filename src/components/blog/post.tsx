@@ -4,12 +4,12 @@ import { getPostByIdApi, getUserSavedPosts } from 'src/api/blog/get-blog'
 import { IResponsePost } from 'src/types/blog'
 import { AvatarImage } from '../ui/avatar'
 import { Separator } from '../ui/separator'
-import { BookMarkedIcon, HandshakeIcon, MessageCircleIcon } from 'lucide-react'
+import { BookMarkedIcon, HandshakeIcon, HeartIcon, MessageCircleIcon } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponseInteresterList } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
-import { addNewSavedPost } from 'src/api/blog/post-blog'
+import { addNewSavedPost, postLikePost } from 'src/api/blog/post-blog'
 import { removeUserSavedPost } from 'src/api/blog/delete-blog'
 
 interface PostProps {
@@ -21,6 +21,7 @@ function Post({ postId }: PostProps) {
   const [blog, setBlog] = useState<IResponsePost>()
   const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isSaved, setIsSaved] = useState<boolean>(false)
+  const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isInterested, setIsInterested] = useState<boolean>(false)
   const [postInterestId, setPostInterestId] = useState<string | undefined>(undefined) // Sử dụng kiểu union để cho phép giá trị undefined
 
@@ -70,11 +71,23 @@ function Post({ postId }: PostProps) {
     }
   }
 
+  const likePost = async () => {
+    if (blog) {
+      await postLikePost(blog.postData.postId as string).then((res) => {
+        if (res === true) {
+          setIsLiked(true)
+        } else {
+          setIsLiked(false)
+        }
+      })
+    }
+  }
+
   useEffect(() => {
     const fetchInterestStatus = async () => {
       try {
         const interesters = await getPostInterestByPostId(postId)
-        setInteresterList(interesters) // Cập nhật state interesterList sau khi lấy dữ liệu từ API
+        setInteresterList(interesters)
         const userInterest = interesters.find((interester) => interester.userId === user?.userId)
         if (userInterest) {
           setIsInterested(true)
@@ -141,7 +154,7 @@ function Post({ postId }: PostProps) {
                     to={'/'}
                     className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
                   >
-                    #{tag.label}
+                    #{tag.cateName}
                   </Link>
                 </React.Fragment>
               ))}
@@ -155,22 +168,32 @@ function Post({ postId }: PostProps) {
       </Link>
       <Separator />
       <div className="flex flex-row items-center justify-between">
-        <button
-          className="ml-12  flex flex-row items-center text-sm font-light"
-          onClick={() => navigate(`/blog/${blog?.postData.postId}`)}
-        >
-          <MessageCircleIcon size={20} className="mr-1" /> Add Comment
-        </button>
+        <div className="ml-2 flex flex-row items-center justify-start gap-2">
+          <div
+            className="m-2 my-0 flex flex-row items-center gap-1 rounded-sm p-1 py-0 hover:bg-gray-300"
+            onClick={() => likePost()}
+          >
+            <HeartIcon size={16} className={isLiked ? ' text-orange-400 ' : ''} />
+            {blog?.likesCount}
+          </div>
+          <button
+            className="flex flex-row items-center text-sm font-light"
+            onClick={() => navigate(`/blog/${blog?.postData.postId}`)}
+          >
+            <MessageCircleIcon size={16} className="mr-1" /> Add Comment
+          </button>
+        </div>
+
         <div className="flex flex-row items-center">
           {blog?.postData.isTradePost ? (
             blog.postData.isLock ? (
               <div className=" flex flex-row items-center gap-1">
-                <HandshakeIcon size={24} />
+                <HandshakeIcon size={20} />
                 <p className="text-xs text-gray-600">Lock</p>
               </div>
             ) : (
-              <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
-                <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
+              <div className="m-2 my-0 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
+                <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
               </div>
             )
           ) : (

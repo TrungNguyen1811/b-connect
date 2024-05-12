@@ -25,7 +25,7 @@ import { ICategory } from 'src/types'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
-import { IResponsePost } from 'src/types/blog'
+import { IListCate, IResponsePost } from 'src/types/blog'
 import { addSocialTag, updateBlogApi } from 'src/api/blog/post-blog'
 import { Checkbox } from 'src/components/ui/check-box'
 import { ReactTags, Tag } from 'react-tag-autocomplete'
@@ -47,7 +47,7 @@ export default function UpdateBlog() {
   const [post, setPost] = useState<IResponsePost | null>(data.post)
   useEffect(() => {
     setPost(data.post)
-    setSelected(data.post.tags)
+    setTagCate(data.post.tags)
   }, [data])
 
   const initialValue = useMemo(() => {
@@ -72,7 +72,17 @@ export default function UpdateBlog() {
     readonly label: string
   }
   const [selected, setSelected] = useState<Tag[]>([])
+  const [getTagCate, setTagCate] = useState<IListCate[]>([])
   const [options, setOptions] = useState<Options[]>([])
+
+  useEffect(() => {
+    const validCategories = getTagCate.filter((tag) => tag.cateId !== undefined)
+    const categoryOptions: Options[] = validCategories.map((cat) => ({
+      value: cat.cateId!,
+      label: cat.cateName,
+    }))
+    setSelected(categoryOptions)
+  }, [getTagCate])
 
   const reactTags = useRef(null)
   const onAdd = useCallback(

@@ -1,21 +1,19 @@
 import { Link } from 'react-router-dom'
 import { Card, CardContent } from '../ui/card'
-import { User } from 'src/types/user'
 import React from 'react'
+import { IAgency } from 'src/types/agency'
 
-type Props = { user: User }
+type Props = { seller: IAgency }
 
-function Publisher({ user }: Props) {
+function Publisher({ seller }: Props) {
   const renderPublisher = React.useMemo(() => {
-    // if (user?.roles === 'Seller') {
-    console.log('agencies', user)
     return (
-      <Link to={`/shop/${user.userId}`} key={user.userId}>
+      <Link to={`/shop/${seller.agencyId}`} key={seller.agencyId}>
         <Card className="my-0.5 w-36">
           <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-200 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
-              src={user.agencies?.[0].logoUrl}
-              alt={user.username}
+              src={seller.logoImg as string}
+              alt={seller.agencyName}
               className="m-5 aspect-[7/7] object-contain transition-all duration-300 hover:scale-105"
               width={100}
             />
@@ -23,10 +21,7 @@ function Publisher({ user }: Props) {
         </Card>
       </Link>
     )
-    // } else {
-    //   return null // You need to provide a return value for the case where user.role !== 'SELLER'
-    // }
-  }, [user.userId, user.username])
+  }, [seller])
 
   return <div>{renderPublisher}</div>
 }

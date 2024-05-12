@@ -120,7 +120,7 @@ export default function DashboardSellerPage() {
 
   // type
   const pie = {
-    labels: [t('Old'), t('New')],
+    labels: [t('OLD'), t('NEW')],
     datasets: [
       {
         label: 'Revenue',

@@ -154,6 +154,25 @@ async function addNewSavedPost(postId: string) {
 
 export { addNewSavedPost }
 
+async function postLikePost(postId: string) {
+  return await authAxiosClient
+    .post(`/Post/like-post?postId=${postId}`, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postLikePost }
+
 async function addSocialTag(data: { tagNames: string[]; postId: string }) {
   return await axiosClient
     .post(`/SocialMedia/add-social-tag`, data)

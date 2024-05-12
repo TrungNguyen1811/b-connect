@@ -20,7 +20,7 @@ function SortBook() {
       <div className="flex w-[48rem] flex-row">
         <div className="mr-4  flex flex-row">
           <div className="mx-1 rounded-sm bg-orange-50 px-4 py-1">{t('popular')}</div>
-          <div className="mx-1 rounded-sm bg-orange-50 px-4 py-1">{t('laster')}</div>
+          <div className="mx-1 rounded-sm bg-orange-50 px-4 py-1">{t('latest')}</div>
           <div className="mx-1 rounded-sm bg-orange-50 px-4 py-1">{t('top-sale')}</div>
         </div>
         <div>

@@ -37,7 +37,7 @@ function OrderManagerPage() {
             <Link to={'?type=Return/Refund'}>{t('return/Refund')}</Link>
           </TabsTrigger>
           <TabsTrigger value="Failed">
-            <Link to={'?type=Failed'}>{t('delivery')}</Link>
+            <Link to={'?type=Failed'}>{t('failedDelivery')}</Link>
           </TabsTrigger>
           <TabsTrigger value="Other">
             <Link to={'?type=Other'}>{t('other')}</Link>

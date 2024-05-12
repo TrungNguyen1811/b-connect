@@ -147,7 +147,7 @@ function BookDetailPage() {
       },
       {
         key: 'books',
-        label: t(genre),
+        label: t('Books'),
         icon: 'book',
         href: `/books?genre=${genre}`,
       },
@@ -346,7 +346,7 @@ function BookDetailPage() {
                   <h3 className="text-3xl font-medium tracking-wide">
                     {book.name}
                     <span className="ml-2 text-sm text-gray-500">
-                      <p>{t(book.type)}</p>
+                      <p>{book.type === 'New' ? t('NEW') : t('OLD')}</p>
                     </span>
                   </h3>
                   <div className="flex flex-row justify-between">

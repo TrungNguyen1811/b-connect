@@ -3,6 +3,13 @@ import { IAgency, IAgencyAnalyst, IAgencyAnalystByTime } from 'src/types/agency'
 import { IBook } from 'src/types/books'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
+export async function getAllSeller() {
+  return authAxiosClient.get('/Account/get-agency-25').then((res) => {
+    const data: IAgency[] = res.data
+    return data
+  })
+}
+
 async function getAgencyByAgencyId(userId: string) {
   return axiosClient.get(`/Account/get-agency-by-id?agencyId=${userId}`).then((res) => {
     if (res.status === 200) {

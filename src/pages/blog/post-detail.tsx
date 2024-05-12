@@ -19,8 +19,8 @@ import { PlateView } from 'src/components/ui/plate-view'
 import { IResponseInteresterList } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
 import { removeUserSavedPost } from 'src/api/blog/delete-blog'
-import { addNewSavedPost } from 'src/api/blog/post-blog'
-import { getUserSavedPosts } from 'src/api/blog/get-blog'
+import { addNewSavedPost, postLikePost } from 'src/api/blog/post-blog'
+import { getCheckLikePosts, getUserSavedPosts } from 'src/api/blog/get-blog'
 
 type FormValue = {
   content: string
@@ -40,6 +40,19 @@ function BlogDetail() {
   useEffect(() => {
     setBlog(data.blog)
   }, [data.blog])
+
+  useEffect(() => {
+    const checkLikePost = async () => {
+      const like = await getCheckLikePosts(blog?.postData.postId as string)
+      if (like === 0) {
+        setIsLiked(false)
+      } else {
+        setIsLiked(true)
+      }
+    }
+
+    checkLikePost()
+  }, [blog?.postData.postId])
 
   useEffect(() => {
     const renderCommentsPost = async () => {
@@ -84,25 +97,16 @@ function BlogDetail() {
     }
   }
 
-  const saveToLikePost = async () => {
-    // if (blog) {
-    //   await addNewSavedPost(blog.postData.postId as string).then((res) => {
-    //     if (res === 'Successful!') {
-    //       setIsLiked(false)
-    //     }
-    //   })
-    // }
-    setIsLiked(false)
-  }
-
-  const unsaveToLikePost = async () => {
-    // if (blog) {
-    //   await removeUserSavedPost(blog.postData.postId as string).then((res) => {
-    //     if (res === 'Successful!') {
-    //     }
-    //   })
-    // }
-    setIsLiked(false)
+  const likePost = async () => {
+    if (blog) {
+      await postLikePost(blog.postData.postId as string).then((res) => {
+        if (res === true) {
+          setIsLiked(true)
+        } else {
+          setIsLiked(false)
+        }
+      })
+    }
   }
 
   const focusTextarea = () => {
@@ -111,22 +115,6 @@ function BlogDetail() {
       textarea.focus()
     }
   }
-
-  const [totalLikes, setTotalLikes] = useState(0)
-
-  // useEffect(() => {
-  //   let likesCount = 0
-
-  //   if (blog && blog.like) {
-  //     for (const liked of blog.like) {
-  //       if (liked._id) {
-  //         likesCount += 1
-  //       }
-  //     }
-  //   }
-
-  //   setTotalLikes(likesCount)
-  // }, [blog])
 
   const [totalComment, setTotalComment] = useState(0)
 
@@ -149,25 +137,6 @@ function BlogDetail() {
   const handleCommentChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setCommentText(e.target.value)
   }
-
-  // const renderTextWithFormatting = (children: any[]) => {
-  //   return children.map((child, index) => {
-  //     let formattedText = child.text
-  //     if (child.bold) formattedText = <strong>{formattedText}</strong>
-  //     if (child.italic) formattedText = <em>{formattedText}</em>
-  //     if (child.underline) formattedText = <u>{formattedText}</u>
-  //     if (child.strikethrough) formattedText = <s>{formattedText}</s>
-  //     if (child.subscript) formattedText = <sub>{formattedText}</sub>
-  //     if (child.superscript) formattedText = <sup>{formattedText}</sup>
-  //     if (child.fontSize) formattedText = <span style={{ fontSize: child.fontSize }}>{formattedText}</span>
-  //     if (child.backgroundColor)
-  //       formattedText = <span style={{ backgroundColor: child.backgroundColor }}>{formattedText}</span>
-  //     if (child.color) formattedText = <span style={{ color: child.color }}>{formattedText}</span>
-  //     if (child.code) formattedText = <code>{formattedText}</code>
-  //     if (child.url) formattedText = <a href={child.url}>{formattedText}</a>
-  //     return <React.Fragment key={index}>{formattedText}</React.Fragment>
-  //   })
-  // }
 
   useEffect(() => {
     if (blog?.postData.content) {
@@ -334,10 +303,10 @@ function BlogDetail() {
           <div className="flex flex-col items-center justify-center">
             <div
               className="m-2 mt-16 flex flex-col items-center rounded-sm p-2 hover:bg-gray-300"
-              onClick={isLiked ? unsaveToLikePost : saveToLikePost}
+              onClick={() => likePost()}
             >
               <HeartIcon size={24} className={isLiked ? ' text-orange-400 ' : ''} />
-              <p>{totalLikes}</p>
+              <p>{blog?.likesCount}</p>
             </div>
             <div className="m-2 flex flex-col items-center rounded-sm p-2 hover:bg-gray-300" onClick={focusTextarea}>
               <MessageCircleHeartIcon size={24} />
@@ -392,7 +361,7 @@ function BlogDetail() {
                         to={'/'}
                         className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
                       >
-                        #{tag.label}
+                        #{tag.cateName}
                       </Link>
                     </React.Fragment>
                   ))}

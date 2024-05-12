@@ -10,8 +10,8 @@ export function Active() {
   useEffect(() => {
     const getBlogs = async () => {
       try {
-        const blogs = await getBlogActive(7)
-        setBlogList(blogs.data)
+        const blogs = await getBlogActive()
+        setBlogList(blogs)
       } catch (error) {
         console.error('Error fetching blogs:', error)
         // Xử lý lỗi nếu cần thiết

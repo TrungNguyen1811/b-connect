@@ -1,4 +1,3 @@
-import { Tag } from 'react-tag-autocomplete'
 import { User } from './user'
 
 export interface InitialValueItem {
@@ -30,9 +29,10 @@ export interface IBlog {
   productImgs?: File | string
   ProductVideos?: File | string
   isTradePost: boolean
+  IsBanned?: boolean
   title?: string
   content?: string
-  listCate?: listCate[]
+  listCate?: IListCate[]
   createdAt?: string
   appUser?: string
   cateId?: string
@@ -49,7 +49,7 @@ export interface IBlogg {
   isTradePost?: boolean
   title: string
   content?: string
-  listCate?: listCate[]
+  listCate?: IListCate[]
   createdAt?: string
   appUser?: string
   cateId?: string
@@ -67,7 +67,7 @@ export interface IPostResponse {
   isLock?: boolean
   title?: string
   content?: string
-  listCate?: listCate[]
+  listCate?: IListCate[]
   hearts?: number
   createdAt?: string
   appUser?: string
@@ -80,10 +80,11 @@ export interface IResponsePost {
   postData: IPostResponse
   username: string
   avatarDir: string
-  tags: Tag[]
+  tags: IListCate[]
   readingTime: string
+  likesCount: number
 }
-interface listCate {
+export interface IListCate {
   cateId: string
   cateName: string
 }
