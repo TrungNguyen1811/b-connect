@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { IReportUser } from 'src/types/user'
 import { ISetTradeStatus, postReportUserPostTrade, putSetTradeStatus } from 'src/api/blog/interested'
+import { Textarea } from '../ui/text-area'
 
 const formSchema = z.object({
   reason: z.string(),
@@ -100,8 +101,8 @@ function ReportTrade({ tradeDetailsId, postId }: Props) {
       <DialogTrigger className="flex">
         <Button>Report</Button>
       </DialogTrigger>
-      <DialogContent className="h-[20rem] w-[36rem]">
-        <DialogHeader className="font-semibold">Report</DialogHeader>
+      <DialogContent className="min-h-[24rem] w-[36rem]">
+        <DialogHeader className="text-4xl font-extrabold">Report</DialogHeader>
         <div className="flex flex-col">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -112,7 +113,7 @@ function ReportTrade({ tradeDetailsId, postId }: Props) {
                   <FormItem>
                     <FormLabel className="mt-4">Reason</FormLabel>
                     <FormControl>
-                      <Input placeholder="Reason..." {...field} />
+                      <Textarea placeholder="Reason..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -122,8 +123,8 @@ function ReportTrade({ tradeDetailsId, postId }: Props) {
                 control={form.control}
                 name="video"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="mb-2">Video</FormLabel>
+                  <FormItem className="mt-2">
+                    <FormLabel className="mt-2">Video</FormLabel>
                     <FormControl>
                       <Input
                         className="py-0"

@@ -36,6 +36,7 @@ import Evidence from 'src/components/blog/evidence'
 import ReportTrade from 'src/components/blog/report'
 import ReviewTrade from 'src/components/blog/review'
 import TargetsTrade from 'src/components/blog/targets'
+import PaymentTrade from 'src/components/blog/payment'
 
 export const ITradeStatus = {
   0: 'Unsubmitted',
@@ -256,10 +257,10 @@ export default function SubmitTrade() {
       }
       queryClient.invalidateQueries()
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
-        title: 'Error Update User',
-        description: error.message,
+        title: 'Error Update Information',
+        description: error.response.data,
       })
     },
   })
@@ -331,7 +332,7 @@ export default function SubmitTrade() {
 
       case 0:
         return (
-          <div className="mt-4 min-w-[33vw] px-4 pb-4">
+          <div className="mt-4 min-w-[33vw] px-8 pb-4">
             <div className="flex flex-col items-end justify-end gap-2">
               <div className="flex flex-row justify-end gap-2">
                 <TargetsTrade tradeDetailsId={tradeDetailId} />
@@ -410,11 +411,11 @@ export default function SubmitTrade() {
   }
 
   return (
-    <div className="mx-32 min-h-[42rem]">
+    <div className="min-h-[43rem] bg-orange-100 px-32">
       <div className="flex flex-row justify-center">
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
-            <div className="rounded-md border-2 bg-white">
+            <div className="w-[40vw] rounded-md border-2 bg-white">
               <div className="flex flex-row items-start justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Interester</p>
                 {interester && renderTraderComponent(interester)}
@@ -422,7 +423,7 @@ export default function SubmitTrade() {
               {interester && renderTrader(interester)}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
-            <div className="rounded-md border-2 bg-white">
+            <div className="w-[40vw] rounded-md border-2 bg-white">
               <div className="flex flex-row items-center justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Owner</p>
                 <div className="flex flex-row items-center gap-2">
@@ -434,6 +435,11 @@ export default function SubmitTrade() {
                     <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
                       Check List
                     </Button>
+                  ) : (
+                    ''
+                  )}
+                  {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+                    <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
                   ) : (
                     ''
                   )}
@@ -642,7 +648,7 @@ export default function SubmitTrade() {
                           <FormItem>
                             <FormLabel className="mt-4">Phone</FormLabel>
                             <FormControl>
-                              <Input placeholder="ABC..." {...field} />
+                              <Input placeholder="0123456789" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -674,7 +680,7 @@ export default function SubmitTrade() {
           </div>
         ) : (
           <div className="m-4 flex flex-row justify-center">
-            <div className="rounded-md border-2">
+            <div className="w-[40vw] rounded-md border-2 bg-white">
               <div className="flex flex-row items-center justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Interester</p>
                 <div className="flex flex-row items-center gap-2">
@@ -686,6 +692,11 @@ export default function SubmitTrade() {
                     <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
                       Check List
                     </Button>
+                  ) : (
+                    ''
+                  )}
+                  {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+                    <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
                   ) : (
                     ''
                   )}
@@ -894,7 +905,7 @@ export default function SubmitTrade() {
                           <FormItem>
                             <FormLabel className="mt-4">Phone</FormLabel>
                             <FormControl>
-                              <Input placeholder="ABC..." {...field} />
+                              <Input placeholder="0123456789" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -924,7 +935,7 @@ export default function SubmitTrade() {
               )}
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
-            <div className="rounded-md border-2">
+            <div className="w-[40vw] rounded-md border-2 bg-white">
               <div className="flex flex-row items-center justify-between pr-4">
                 <p className="m-4 text-lg font-medium">Owner</p>
                 {owner && renderTraderComponent(owner)}

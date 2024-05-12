@@ -60,9 +60,9 @@ function Evidence({ tradeDetailsId }: { tradeDetailsId: string }) {
       <DialogTrigger className="flex">
         <Button>Evidence</Button>
       </DialogTrigger>
-      <DialogContent className="h-[20rem] w-[36rem]">
-        <DialogHeader className="font-semibold">
-          Provide information to ensure your order does not have unexpected events
+      <DialogContent className="min-h-[20rem] w-[36rem]">
+        <DialogHeader className="text-lg font-semibold">
+          Provide information to ensure your order does not have unexpected events!
         </DialogHeader>
         <div className="flex flex-col">
           <Form {...form}>
@@ -84,7 +84,7 @@ function Evidence({ tradeDetailsId }: { tradeDetailsId: string }) {
                 control={form.control}
                 name="video"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mt-2">
                     <FormLabel className="mb-2">Video</FormLabel>
                     <FormControl>
                       <Input

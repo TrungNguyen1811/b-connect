@@ -184,33 +184,60 @@ function CheckListPage() {
     setSelectedImage(value as string)
   }
   return (
-    <div className="mx-16 flex min-h-[42rem] flex-row items-center justify-start">
-      <div>
-        {targets?.map((target, index) => (
-          <div key={index}>
-            <CheckListItemForm
-              checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
-              id={id as string}
-              target={target}
-              isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
-              // onSubmit={handleSubmitForm}
-              onImageChange={handleImageChange}
-              // loading={submitCheckList.isLoading}
-            />
+    <div>
+      {checkList && checkList.length > 0 ? (
+        <div className="mx-16 flex min-h-[42rem] flex-row items-center justify-start">
+          <div>
+            {targets?.map((target, index) => (
+              <div key={index}>
+                <CheckListItemForm
+                  checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
+                  id={id as string}
+                  target={target}
+                  isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
+                  // onSubmit={handleSubmitForm}
+                  onImageChange={handleImageChange}
+                  // loading={submitCheckList.isLoading}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="mx-auto">
-        {isImage(selectedImage as string) ? (
-          <img src={selectedImage} alt="Selected Image" className="max-w-[32rem] rounded-sm object-cover shadow-md" />
-        ) : (
-          <video
-            controls
-            src={selectedImage}
-            className="w-[32rem] max-w-[32rem] rounded-sm object-cover shadow-md"
-          ></video>
-        )}
-      </div>
+          <div className="mx-auto">
+            {isImage(selectedImage as string) ? (
+              <img
+                src={selectedImage}
+                alt="Selected Image"
+                className="max-w-[32rem] rounded-sm object-cover shadow-md"
+              />
+            ) : (
+              <video
+                controls
+                src={selectedImage}
+                className="w-[32rem] max-w-[32rem] rounded-sm object-cover shadow-md"
+              ></video>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center  px-32 py-16 opacity-90">
+          <div className="flex flex-row items-center">
+            <img
+              className="mr-8 w-[50vw] rounded-sm"
+              src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1715537416/UserProfile/user02/Image/khsvggcunpq1pl6nwwka.png"
+              alt="Something went wrong ;v"
+            />
+            <div className="mb-32">
+              <p className="py-4 text-3xl font-bold">
+                Whoops! Looks like your partner haven&apos;t updated their target yet ;v
+              </p>
+              <p className="mb-6 w-[27vw]">
+                Please ask your partner to update the target request so you can provide appropriate book information.{' '}
+              </p>
+              <Button onClick={() => window.history.back()}>Go back</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

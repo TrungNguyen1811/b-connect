@@ -122,3 +122,8 @@ export interface IEvidence {
   deliveryCode: string
   video: File
 }
+
+export interface IPaymentTrade {
+  transactionId: string
+  tradeDetailsId: string
+}

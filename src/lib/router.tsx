@@ -8,6 +8,7 @@ import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 import StaffLayout from 'src/pages/layout/StaffLayout'
 import TradeManagerPage from 'src/components/staff/book/TradeManagePage'
+import ErrorPage from 'src/pages/error-page'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -363,5 +364,9 @@ export const ROUTES = createBrowserRouter([
       }
     },
     element: <UpdateBlog />,
+  },
+  {
+    path: '/blog/error-page',
+    element: <ErrorPage />,
   },
 ])

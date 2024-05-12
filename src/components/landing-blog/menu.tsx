@@ -118,7 +118,7 @@ export function Menu() {
         <div className="flex flex-row justify-between">
           <p className="text-md mb-4 font-bold">My Tags</p>
           <Link to={'dashboard/following_tags'}>
-            <SettingsIcon />
+            <SettingsIcon className="mr-4" />
           </Link>
         </div>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
@@ -159,7 +159,7 @@ export function Menu() {
         <div className="mb-4 flex flex-row items-center justify-between">
           <p className="text-md font-bold">My Trade</p>
           <Link to={'/blog/dashboard/manage-interested'}>
-            <SettingsIcon />
+            <SettingsIcon className="mr-4" />
           </Link>
         </div>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">

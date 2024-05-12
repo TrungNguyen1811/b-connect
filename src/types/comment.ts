@@ -3,7 +3,7 @@ export interface IComment {
   commentId?: string
   commenterId: string
   content: string
-  userName?: string
+  username?: string
   avatarDir?: string
   createDate?: string
   updatedAt?: string

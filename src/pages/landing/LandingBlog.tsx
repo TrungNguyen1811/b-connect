@@ -127,14 +127,14 @@ export default function LandingBlog() {
   if (!blogs) return <PostGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
 
   return (
-    <div className="mx-24 h-full px-4 py-2">
+    <div className="mx-20 h-full px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
-        <div className="col-span-2 bg-orange-50">
+        <div className="col-span-2 w-60 bg-orange-50">
           <Menu />
         </div>
-        <div className="col-span-7">
+        <div className="col-span-7 ml-8">
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="h-[90%] ">
+            <DialogContent className="h-[90vh] ">
               <DialogHeader className="mb-2 px-12">
                 <p className="text-4xl font-extrabold">What are you interested in?</p>
                 <p className="text-xl font-semibold">Follow tags to customize your feed</p>
@@ -155,7 +155,7 @@ export default function LandingBlog() {
                   ))}
                 </div>
               </ScrollArea>
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-end">
                 <Separator className="mb-4" />
                 <Button onClick={onSubmit} className="w-full">
                   Add Tags
@@ -165,7 +165,7 @@ export default function LandingBlog() {
           </Dialog>
           {renderPosts}
         </div>
-        <div className="col-span-3 bg-orange-50">
+        <div className="col-span-3 w-80 bg-orange-50">
           <Active />
         </div>
       </div>

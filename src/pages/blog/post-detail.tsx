@@ -156,7 +156,7 @@ function BlogDetail() {
   // console.log(blog?.postData.content)
 
   const renderCommenter = React.useCallback(
-    ({ userName, avatarDir, content, createDate }: IComment) => (
+    ({ username, avatarDir, content, createDate }: IComment) => (
       <div className="flex flex-row items-start justify-start">
         <div className="mr-4">
           <Avatar>
@@ -166,7 +166,7 @@ function BlogDetail() {
         <div className="flex w-full flex-col">
           <div className=" border-1 w-9/10 flex flex-col rounded-md border">
             <div className="my-2 ml-4 flex flex-row items-center justify-between">
-              <p className="text-md mr-2 font-bold">User01{userName}</p>
+              <p className="text-md mr-2 font-bold">{username}</p>
               <p className="mr-2 text-sm font-light">{createDate ? format(new Date(createDate), 'PPpp') : 'N/A'}</p>
             </div>
             <div>

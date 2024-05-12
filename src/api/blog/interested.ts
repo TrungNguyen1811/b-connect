@@ -1,6 +1,6 @@
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { ICheckList } from 'src/types/advertisement'
-import { IEvidence, IResponsePost, ISubmitTrade } from 'src/types/blog'
+import { IEvidence, IPaymentTrade, IResponsePost, ISubmitTrade } from 'src/types/blog'
 import { IResponseInteresterList, IResponseTraderList } from 'src/types/interester'
 import { IReportUser, IReviewUser } from 'src/types/user'
 
@@ -50,6 +50,8 @@ export interface ITradeDetail {
     isPostOwner: boolean
     isUsingMiddle: boolean
     isCheckListValid: string
+    transactionId: string
+    transactionRecord: string
     ratingRecordId: string
     status: number
     address: string
@@ -130,6 +132,27 @@ async function postAcceptTrade(postId: string, interesterId: string, isUsingMidd
     })
 }
 export { postAcceptTrade }
+
+async function postPaymentTrade(data: IPaymentTrade) {
+  return await authAxiosClient
+    .post('/Payment/pay-middle-fee', {
+      tradeDetailsId: data.tradeDetailsId,
+      transactionId: data.transactionId,
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+export { postPaymentTrade }
 
 async function postEvidenceTrade(trade: IEvidence) {
   const formData = new FormData()

@@ -18,7 +18,7 @@ export function HeaderBlog() {
     [navigate],
   )
   return (
-    <div className="sticky left-0 top-0 z-10 border-b">
+    <div className="sticky left-0 top-0 z-10">
       <div className=" bg-orange-400">
         <div className="mx-32 flex flex-row justify-between px-4 py-2">
           <div className="flex flex-row">

@@ -102,7 +102,7 @@ function ReviewTrade({ tradeDetailsId, revieweeId, postId }: Props) {
       <DialogTrigger className="flex">
         <Button>Feedback</Button>
       </DialogTrigger>
-      <DialogContent className="h-[70vh] w-[40vw]">
+      <DialogContent className="min-h-[56vh] w-[40vw]">
         <DialogHeader className="mb-2 px-12">
           <p className="text-4xl font-extrabold">Feedback</p>
         </DialogHeader>

@@ -130,7 +130,7 @@ function ManagePostInterester() {
           ) : (
             ''
           )}
-          <div>{isChosen ? <Button> Deny </Button> : ''}</div>
+          <div>{isChosen ? <Button> Payment </Button> : ''}</div>
         </div>
       </div>
     ),
