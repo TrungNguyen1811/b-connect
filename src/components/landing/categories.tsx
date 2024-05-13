@@ -10,15 +10,27 @@ import Category from './card-category'
 import { ChevronRight } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import { useTranslation } from 'react-i18next'
+import BlockGridLoading from '../book/block-grid-loading'
 
 function Categories() {
-  const { data } = useQuery<IResponse<ICategory[]>, AxiosError>(['FeatureCategory'], () => getAllCategory(), {
-    keepPreviousData: true,
-  })
+  const { data, isLoading } = useQuery<IResponse<ICategory[]>, AxiosError>(
+    ['FeatureCategory'],
+    () => getAllCategory(),
+    {
+      keepPreviousData: true,
+    },
+  )
 
   const { t } = useTranslation('translation')
 
   const renderCategories = (categories: ICategory[]) => {
+    if (isLoading)
+      return (
+        <div className="w-full flex-row p-2 px-0.5">
+          <BlockGridLoading pageSize={6} className="grid grid-cols-6 gap-5" />
+        </div>
+      )
+
     return categories.map((category, index) => (
       <div key={index} className="carousel-item flex-none lg:space-x-4 lg:pb-4 lg:pr-4">
         <Category category={category} />

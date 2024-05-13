@@ -86,6 +86,20 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
   }, [user?.userId])
 
   useEffect(() => {
+    const setAddress = async () => {
+      if (checkbox == true) {
+        form.setValue('city_Province', addressDefault?.city_Province as string)
+        form.setValue('district', addressDefault?.district as string)
+        form.setValue('subDistrict', addressDefault?.subDistrict as string)
+        form.setValue('rendezvous', addressDefault?.rendezvous as string)
+      }
+    }
+
+    console.log('Fetching addresses...')
+    setAddress()
+  }, [addressDefault, checkbox])
+
+  useEffect(() => {
     const isValidated = async () => {
       if (user?.isValidated === true) {
         setShowRegisterSlide(true)
@@ -243,7 +257,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
                       <p className="">Use Address Default</p>
                       <Checkbox checked={checkbox} onCheckedChange={(checked: boolean) => setCheckbox(checked)} />
                     </div>
-                    {checkbox == true ? (
+                    {addressDefault && checkbox == true ? (
                       <p className="my-2 flex flex-row items-center">
                         <p className="mr-2 text-sm font-semibold">Address Default:</p> {addressDefault?.rendezvous},{' '}
                         {addressDefault?.subDistrict}, {addressDefault?.district}, {addressDefault?.city_Province}

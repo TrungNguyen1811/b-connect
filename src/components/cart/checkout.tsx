@@ -317,7 +317,7 @@ const CheckoutPage = () => {
   return (
     <div className="p-4">
       <MetaData title="Checkout" />
-      <div className="mx-24 rounded-lg border border-gray-200 p-4">
+      <div className="mx-24 rounded-lg border border-gray-400 p-4">
         <div className="w-full">
           <div className="flex w-full flex-row py-2 text-center font-medium">
             <p className="w-2/5 pl-8 text-start">Product</p>
@@ -362,7 +362,7 @@ const CheckoutPage = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="m-4 mx-auto w-full max-w-3xl space-y-4 rounded-lg border border-gray-200 p-4"
+              className="m-4 mx-auto w-full max-w-3xl space-y-4 rounded-lg border border-gray-400 p-4"
             >
               <div className="flex flex-row items-center gap-2">
                 <p>Use Address Default</p>

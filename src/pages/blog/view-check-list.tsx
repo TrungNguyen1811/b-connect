@@ -180,125 +180,127 @@ function CheckListViewPage() {
 
   return (
     <div>
-      <button className="ml-4 mt-4 " onClick={() => window.history.back()}>
-        <p className="flex flex-row items-center gap-1 text-orange-400 underline">
-          <ArrowLeftIcon size={16} /> Go back
-        </p>
-      </button>
       {checkList && checkList.length > 0 ? (
-        <div className="flex min-h-[36rem] flex-col items-center justify-center">
-          <div className="mx-auto flex flex-row items-center">
-            <Table className="m-4 w-[90vw] border">
-              <TableHeader>
-                <TableRow className="bg-orange-300 hover:bg-orange-300">
-                  <TableCell className="font-medium">Target</TableCell>
-                  {targets?.map((target, index) => (
-                    <TableCell
-                      key={index}
-                      onClick={() => compare(target)}
-                      className="w-16 text-center font-medium hover:bg-orange-400 "
-                    >
-                      {target}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody className="bg-white">
-                <TableRow>
-                  <TableCell className="font-medium">Middle</TableCell>
-                  {targets?.map((target, index) => (
-                    <TableCell key={index} className="justify-center hover:bg-slate-200">
-                      <CheckListItemForm
-                        checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
-                        id={id as string}
-                        target={target}
-                        isStaff={true}
-                        onImageMiddleChange={handleMiddleImageChange}
-                        onImagePartnerChange={handlePartnerImageChange}
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Partner</TableCell>
-                  {targets?.map((target, index) => (
-                    <TableCell key={index} className="items-center justify-center hover:bg-slate-200">
-                      <CheckListItemForm
-                        checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
-                        id={id as string}
-                        target={target}
-                        isStaff={false}
-                        onImagePartnerChange={handlePartnerImageChange}
-                        onImageMiddleChange={handleMiddleImageChange}
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableBody>
-            </Table>
-            {tradeDetail!.details.status < 6 && tradeDetail!.details.status > 3 ? (
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger>
-                  <Button>Accept</Button>
-                </DialogTrigger>
-                <DialogContent className="h-32 w-72">
-                  <DialogHeader>
-                    <DialogTitle className="mx-auto mb-2">Do you want to accept?</DialogTitle>
-                    <DialogDescription className="mx-auto flex flex-row items-center justify-start gap-4">
-                      <Button variant="default" className="w-16" onClick={() => handlePutStatusTrade(6)}>
-                        Yes
-                      </Button>
-                      <Button variant="destructive" className="w-16">
-                        <DialogClose>No</DialogClose>
-                      </Button>
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            ) : (
-              'Accepted'
-            )}
-          </div>
-          <div className="mx-auto flex flex-row gap-4">
-            <div className="">
-              <p className="text-center font-medium">Middle</p>
-              {selectedMiddleImage ? (
-                isImage(selectedMiddleImage as string) ? (
-                  <img
-                    src={selectedMiddleImage}
-                    alt="Selected Image"
-                    className="max-w-[40rem]  rounded-sm object-cover shadow-md"
-                  />
-                ) : (
-                  <video
-                    controls
-                    src={selectedMiddleImage}
-                    className="w-[40rem] max-w-[40rem] rounded-sm object-cover shadow-md"
-                  ></video>
-                )
+        <div>
+          <button className="ml-4 mt-4 " onClick={() => window.history.back()}>
+            <p className="flex flex-row items-center gap-1 text-orange-400 underline">
+              <ArrowLeftIcon size={16} /> Go back
+            </p>
+          </button>
+          <div className="flex min-h-[36rem] flex-col items-center justify-start">
+            <div className="mx-auto flex flex-row items-center">
+              <Table className="m-4 w-[90vw] border border-gray-400">
+                <TableHeader>
+                  <TableRow className="bg-orange-300 hover:bg-orange-300">
+                    <TableCell className="font-medium">Target</TableCell>
+                    {targets?.map((target, index) => (
+                      <TableCell
+                        key={index}
+                        onClick={() => compare(target)}
+                        className="w-16 text-center font-medium hover:bg-orange-400 "
+                      >
+                        {target}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="bg-white">
+                  <TableRow>
+                    <TableCell className="font-medium">Middle</TableCell>
+                    {targets?.map((target, index) => (
+                      <TableCell key={index} className="justify-center hover:bg-slate-200">
+                        <CheckListItemForm
+                          checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
+                          id={id as string}
+                          target={target}
+                          isStaff={true}
+                          onImageMiddleChange={handleMiddleImageChange}
+                          onImagePartnerChange={handlePartnerImageChange}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Partner</TableCell>
+                    {targets?.map((target, index) => (
+                      <TableCell key={index} className="items-center justify-center hover:bg-slate-200">
+                        <CheckListItemForm
+                          checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
+                          id={id as string}
+                          target={target}
+                          isStaff={false}
+                          onImagePartnerChange={handlePartnerImageChange}
+                          onImageMiddleChange={handleMiddleImageChange}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableBody>
+              </Table>
+              {tradeDetail!.details.status < 6 ? (
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger>
+                    <Button>Accept</Button>
+                  </DialogTrigger>
+                  <DialogContent className="h-32 w-72">
+                    <DialogHeader>
+                      <DialogTitle className="mx-auto mb-2">Do you want to accept?</DialogTitle>
+                      <DialogDescription className="mx-auto flex flex-row items-center justify-start gap-4">
+                        <Button variant="default" className="w-16" onClick={() => handlePutStatusTrade(6)}>
+                          Yes
+                        </Button>
+                        <Button variant="destructive" onClick={() => setOpen(false)} className="w-16">
+                          <DialogClose>No</DialogClose>
+                        </Button>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               ) : (
-                ''
+                'Accepted'
               )}
             </div>
-            <div className="">
-              <p className="text-center font-medium">Partner</p>
-              {selectedPartnerImage ? (
-                isImage(selectedPartnerImage as string) ? (
-                  <img
-                    src={selectedPartnerImage}
-                    alt="Selected Image"
-                    className="max-w-[40rem]  rounded-sm object-cover shadow-md"
-                  />
+            <div className="mx-auto flex flex-row gap-4">
+              <div className="">
+                <p className="text-center font-medium">Middle</p>
+                {selectedMiddleImage ? (
+                  isImage(selectedMiddleImage as string) ? (
+                    <img
+                      src={selectedMiddleImage}
+                      alt="Selected Image"
+                      className="max-w-[40rem]  rounded-sm object-cover shadow-md"
+                    />
+                  ) : (
+                    <video
+                      controls
+                      src={selectedMiddleImage}
+                      className="w-[40rem] max-w-[40rem] rounded-sm object-cover shadow-md"
+                    ></video>
+                  )
                 ) : (
-                  <video
-                    controls
-                    src={selectedPartnerImage}
-                    className="w-[40rem] max-w-[40rem] rounded-sm object-cover shadow-md"
-                  ></video>
-                )
-              ) : (
-                ''
-              )}
+                  ''
+                )}
+              </div>
+              <div className="">
+                <p className="text-center font-medium">Partner</p>
+                {selectedPartnerImage ? (
+                  isImage(selectedPartnerImage as string) ? (
+                    <img
+                      src={selectedPartnerImage}
+                      alt="Selected Image"
+                      className="max-w-[40rem]  rounded-sm object-cover shadow-md"
+                    />
+                  ) : (
+                    <video
+                      controls
+                      src={selectedPartnerImage}
+                      className="w-[40rem] max-w-[40rem] rounded-sm object-cover shadow-md"
+                    ></video>
+                  )
+                ) : (
+                  ''
+                )}
+              </div>
             </div>
           </div>
         </div>

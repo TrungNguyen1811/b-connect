@@ -123,7 +123,7 @@ function Post({ postId }: PostProps) {
   }
 
   return (
-    <div className="border-gray-250 mt-2 max-h-[37rem] w-full rounded-md border bg-white">
+    <div className="mt-2 max-h-[37rem] w-full rounded-md border border-gray-400 bg-white">
       <Link to={`/blog/${blog?.postData.postId}`}>
         {blog?.postData.imageDir ? (
           <div className="w-full rounded-md">

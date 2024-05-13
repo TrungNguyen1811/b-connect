@@ -10,7 +10,7 @@ function Publisher({ seller }: Props) {
     return (
       <Link to={`/shop/${seller.agencyId}`} key={seller.agencyId}>
         <Card className="my-0.5 w-36">
-          <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-200 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
+          <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-400 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
               src={seller.logoImg as string}
               alt={seller.agencyName}

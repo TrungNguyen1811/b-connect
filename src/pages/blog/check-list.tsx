@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Loader2 } from 'lucide-react'
+import { ArrowLeftIcon, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
@@ -186,36 +186,48 @@ function CheckListPage() {
   return (
     <div>
       {checkList && checkList.length > 0 ? (
-        <div className="mx-16 flex min-h-[42rem] flex-row items-center justify-start">
-          <div>
-            {targets?.map((target, index) => (
-              <div key={index}>
-                <CheckListItemForm
-                  checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
-                  id={id as string}
-                  target={target}
-                  isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
-                  // onSubmit={handleSubmitForm}
-                  onImageChange={handleImageChange}
-                  // loading={submitCheckList.isLoading}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="mx-auto">
-            {isImage(selectedImage as string) ? (
-              <img
-                src={selectedImage}
-                alt="Selected Image"
-                className="max-w-[32rem] rounded-sm object-cover shadow-md"
-              />
-            ) : (
-              <video
-                controls
-                src={selectedImage}
-                className="w-[32rem] max-w-[32rem] rounded-sm object-cover shadow-md"
-              ></video>
-            )}
+        <div>
+          <button className="ml-4 mt-4 " onClick={() => window.history.back()}>
+            <p className="flex flex-row items-center gap-1 text-orange-400 underline">
+              <ArrowLeftIcon size={16} /> Go back
+            </p>
+          </button>
+          <p className="my-4 flex justify-center text-2xl font-bold">CHECK LIST</p>
+          <div className="mx-16 flex min-h-[42rem] flex-row items-start justify-start">
+            <div>
+              {targets?.map((target, index) => (
+                <div key={index}>
+                  <CheckListItemForm
+                    checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
+                    id={id as string}
+                    target={target}
+                    isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
+                    // onSubmit={handleSubmitForm}
+                    onImageChange={handleImageChange}
+                    // loading={submitCheckList.isLoading}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="mx-auto">
+              {selectedImage ? (
+                isImage(selectedImage as string) ? (
+                  <img
+                    src={selectedImage}
+                    alt="Selected Image"
+                    className="max-w-[32rem] rounded-sm object-cover shadow-md"
+                  />
+                ) : (
+                  <video
+                    controls
+                    src={selectedImage}
+                    className="w-[32rem] max-w-[32rem] rounded-sm object-cover shadow-md"
+                  ></video>
+                )
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </div>
       ) : (

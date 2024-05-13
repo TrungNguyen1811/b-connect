@@ -280,6 +280,48 @@
     z-index: 100;
   }
 
+  // hover circleline
+
+  .hover-circleline-animation {
+    overflow: hidden;
+    place-items: start;
+    position: relative;
+  }
+
+  .hover-circleline-animation::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 300px;
+    top: -310%;
+    left: 40%;
+    margin-left: 5px;
+    background: #f97316;
+    transform: rotate(45deg);
+  }
+
+  .hover-circleline-animation:hover::before {
+    animation: animate2 2s linear infinite;
+  }
+
+  @keyframes animate2 {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .hover-circleline-animation::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 4px;
+    background: #fff7ed;
+  }
+
   // hover underline
   .hover-underline-animation {
     display: inline-block;

@@ -22,7 +22,7 @@ import ErrorPage from '../error-page'
 const initPostState: GetManyPostsParams = {
   PageNumber: 0,
   PageSize: 40,
-  category: undefined,
+  // category: undefined,
 }
 
 export default function LandingBlog() {
@@ -124,12 +124,12 @@ export default function LandingBlog() {
   // if (!blogs) {
   //   return <div>Loading...</div>
   // }
-  if (!blogs) return <PostGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
+  // if (!blogs) return <PostGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
 
   return (
     <div className="mx-20 h-full px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
-        <div className="col-span-2 w-60 bg-orange-50">
+        <div className="col-span-2 w-60 bg-orange-50 pr-8">
           <Menu />
         </div>
         <div className="col-span-7 ml-8">

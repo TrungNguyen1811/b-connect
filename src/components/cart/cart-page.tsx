@@ -48,7 +48,7 @@ function CartPage() {
   }
 
   const [cartItemsByStore, setCartItemsByStore] = useState<GroupedByStore>({})
-
+  console.log('cartItemsByStore', cartItemsByStore)
   useEffect(() => {
     const groupedByStore: GroupedByStore = {}
 
@@ -186,7 +186,7 @@ function CartPage() {
   }
   return (
     <div className="p-4">
-      <div className="rounded-lg border border-gray-200 p-4">
+      <div className="rounded-lg border border-gray-400 p-4">
         <Table>
           <TableHeader>
             <TableRow>

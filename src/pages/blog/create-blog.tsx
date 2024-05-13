@@ -24,7 +24,6 @@ import { useMutation } from '@tanstack/react-query'
 import { queryClient } from 'src/lib/query'
 import { addSocialTag, postBlogApi } from 'src/api/blog/post-blog'
 import { useAuth } from 'src/hooks/useAuth'
-import { Checkbox } from 'src/components/ui/check-box'
 import { PlateEditor } from 'src/components/ui/plate-editor'
 import { Value } from '@udecode/plate-common'
 import { ReactTags, Tag } from 'react-tag-autocomplete'
@@ -52,9 +51,10 @@ export default function CreateBlog() {
     readonly label: string
   }
 
+  //Tag
   const [selected, setSelected] = useState<Tag[]>([])
-
   const reactTags = useRef(null)
+  const [options, setOptions] = useState<Options[]>([])
 
   const onAdd = useCallback(
     (newTag: Tag) => {
@@ -74,10 +74,6 @@ export default function CreateBlog() {
     [selected],
   )
 
-  // const [categories, setCategories] = useState<ICategory[]>()
-  const [options, setOptions] = useState<Options[]>([])
-  console.log('options', options)
-  // const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const listTags = useMemo(() => {
     if (!selected) return
     else return selected.map((ct) => ct.label)
@@ -108,6 +104,10 @@ export default function CreateBlog() {
       })
   }, [])
 
+  //Dialog
+  const [open, setOpenDialog] = useState<boolean>(false)
+
+  //Close
   const Close = () => {
     return (
       <Dialog>
@@ -133,6 +133,17 @@ export default function CreateBlog() {
       </Dialog>
     )
   }
+  //Set checkbox
+  const [isChecked, setIsChecked] = useState<boolean>()
+
+  const handleChecked = () => {
+    if (!user?.isValidated) {
+      setIsChecked(false)
+      setOpenDialog(true)
+    } else setIsChecked(!isChecked)
+  }
+
+  //Set content
   const initialValue = [
     {
       id: '1',
@@ -154,12 +165,10 @@ export default function CreateBlog() {
         ...(data as FormData),
         productImages: data.productImages,
         productVideos: data.productVideos,
-        isTradePost: data.isTradePost,
+        isTradePost: isChecked ? isChecked : false,
         title: data.title,
         content: data.content,
       }
-      console.log('Form data:', dataBlog)
-
       // console.log('Form data:', dataBlog)
       postBlog.mutate(dataBlog)
     }
@@ -298,20 +307,32 @@ export default function CreateBlog() {
                     )}
                   />
                   <div className="flex-grow" />
-                  <FormField
-                    control={form.control}
-                    name="isTradePost"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-end space-x-3 space-y-0 rounded-md p-4">
-                        <div className="space-y-1 leading-none">
-                          <FormLabel>Trade post</FormLabel>
-                        </div>
-                        <FormControl>
-                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                  <div className="flex flex-row items-center gap-1 space-y-1 leading-none">
+                    <p>Trade post</p>
+                    <input type="checkbox" checked={isChecked} onChange={handleChecked} />
+                  </div>
+                  <Dialog open={open} onOpenChange={setOpenDialog}>
+                    <DialogContent className="w-[32rem]">
+                      <DialogHeader>
+                        <DialogTitle className="pb-4 text-xl font-bold">
+                          You don&apos;t have permission to do this
+                        </DialogTitle>
+                        <Separator />
+                        <p className="py-2">
+                          You must authenticate your account to be able to perform this action. Do you want to update
+                          national identify card?
+                        </p>
+                        <DialogDescription className="flex flex-row">
+                          <Button className="mr-4 bg-red-600" onClick={() => navigate('/user/account/identify')}>
+                            Yes, I do.
+                          </Button>
+                          <Button>
+                            <DialogClose>No, keep editing.</DialogClose>
+                          </Button>
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 <FormField
                   control={form.control}

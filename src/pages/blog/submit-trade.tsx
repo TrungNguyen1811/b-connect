@@ -26,7 +26,6 @@ import { SortAscIcon, CheckIcon } from 'lucide-react'
 import { cn } from 'src/lib/utils'
 import AddressData from 'src/components/cart/address.json'
 import { Textarea } from 'src/components/ui/text-area'
-import { Label } from 'src/components/ui/label'
 import { IAddress } from 'src/types/address'
 import { getAddressByAddressId } from 'src/api/address/get-address'
 import { ROLE } from 'src/types'
@@ -37,6 +36,8 @@ import ReportTrade from 'src/components/blog/report'
 import ReviewTrade from 'src/components/blog/review'
 import TargetsTrade from 'src/components/blog/targets'
 import PaymentTrade from 'src/components/blog/payment'
+import CardProfile from 'src/components/blog/card-profile'
+import CardInfoTrade from 'src/components/blog/card-info-trade'
 
 export const ITradeStatus = {
   0: 'Unsubmitted',
@@ -212,7 +213,7 @@ export default function SubmitTrade() {
     },
     onError: (error: any) => {
       toast({
-        title: 'Error Update User',
+        title: 'Error Confirm Trade Info',
         description: error.response.data,
       })
     },
@@ -238,24 +239,255 @@ export default function SubmitTrade() {
       note: userTrade?.details.note,
     },
   })
-
+  const [openForm, setOpenForm] = useState<boolean>(false)
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
 
+  const SubmitForm = () => {
+    return (
+      <div className="mx-8">
+        <p className="mb-4 text-lg font-semibold">Trade Form</p>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="city_Province"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>City/Province</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                        >
+                          {field.value
+                            ? AddressData.find((province) => province.Name === field.value)?.Name
+                            : 'Select Province'}
+                          <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search city..." className="h-9" />
+                        <CommandEmpty>No city found.</CommandEmpty>
+                        <CommandGroup>
+                          <ScrollArea className="h-48">
+                            {AddressData.map((province) => (
+                              <CommandItem
+                                value={province.Id}
+                                key={province.Id}
+                                onSelect={() => {
+                                  form.setValue('city_Province', province.Name)
+                                  const city = form.getValues('city_Province')
+                                  setCity(city as string)
+                                }}
+                              >
+                                {province.Name}
+                                <CheckIcon
+                                  className={cn(
+                                    'ml-auto h-4 w-4',
+                                    province.Name === field.value ? 'opacity-100' : 'opacity-0',
+                                  )}
+                                />
+                              </CommandItem>
+                            ))}
+                          </ScrollArea>
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="district"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="mt-4">District</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                        >
+                          {field.value
+                            ? AddressData.find((province) => province.Name === city) // Find selected province
+                                ?.district.find((district) => district.Name === field.value)?.Name // Find selected district
+                            : 'Select District'}
+                          <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search district..." className="h-9" />
+                        <CommandEmpty>No district found.</CommandEmpty>
+                        <CommandGroup>
+                          <ScrollArea className="h-48">
+                            {AddressData.find((province) => province.Name === form.getValues('city_Province')) // Find selected province
+                              ?.district.map((district) => (
+                                <CommandItem
+                                  value={district.Id}
+                                  key={district.Id}
+                                  onSelect={() => {
+                                    form.setValue('district', district.Name)
+                                    const dis = form.getValues('district')
+                                    setDistrict(dis)
+                                  }}
+                                >
+                                  {district.Name}
+                                  <CheckIcon
+                                    className={cn(
+                                      'ml-auto h-4 w-4',
+                                      district.Id === field.value ? 'opacity-100' : 'opacity-0',
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                          </ScrollArea>
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="subDistrict"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="mt-4">Wards</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                        >
+                          {field.value
+                            ? AddressData.find((province) => province.Name === city) // Find selected province
+                                ?.district.find((district) => district.Name === getDistrict)
+                                ?.subDistrict.find((subDistrict) => subDistrict.Name === field.value)?.Name // Find selected district
+                            : 'Select District'}{' '}
+                          <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search district..." className="h-9" />
+                        <CommandEmpty>No district found.</CommandEmpty>
+                        <CommandGroup>
+                          <ScrollArea className="h-48">
+                            {AddressData.find((province) => province.Name === form.getValues('city_Province'))
+                              ?.district.find((district) => district.Name === form.getValues('district'))
+                              ?.subDistrict.map((subDistrict) => (
+                                <CommandItem
+                                  value={subDistrict.Id}
+                                  key={subDistrict.Id}
+                                  onSelect={() => {
+                                    form.setValue('subDistrict', subDistrict.Name)
+                                  }}
+                                >
+                                  {subDistrict.Name}
+                                  <CheckIcon
+                                    className={cn(
+                                      'ml-auto h-4 w-4',
+                                      subDistrict.Id === field.value ? 'opacity-100' : 'opacity-0',
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                          </ScrollArea>
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="rendezvous"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mt-4">Rendezvous</FormLabel>
+                  <FormControl>
+                    <Input placeholder="ABC..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mt-4">Phone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="0123456789" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="note"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mt-4">Note</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="ABC..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button className="mt-4" type="submit">
+              Submit
+            </Button>
+            <Button className="ml-4 mt-4" variant="outline" onClick={() => setOpenForm(false)}>
+              Cancel
+            </Button>
+          </form>
+        </Form>
+      </div>
+    )
+  }
+
   const submitTradeMutation = useMutation((formData: ISubmitTrade) => putSubmitTrade(formData), {
     onSuccess: (formData) => {
+      queryClient.invalidateQueries()
       if (formData) {
         toast({
           title: 'Success',
           description: 'Submit Trade Success!!!',
         })
+        setOpenForm(false)
       } else {
         toast({
           title: 'Failed',
           description: 'Submit Trade Failed!!!',
         })
       }
-      queryClient.invalidateQueries()
     },
     onError: (error: any) => {
       toast({
@@ -280,11 +512,106 @@ export default function SubmitTrade() {
 
     submitTradeMutation.mutate(formData)
   }
+  const renderTraderComponent = (userTrade: ITradeDetail) => {
+    const status = userTrade?.details.status
 
-  const renderTraderComponent = (userTrader: ITradeDetail) => {
-    const status = userTrader?.details.status
-    const tradeDetailId = userTrader?.details.tradeDetailId
-    const traderId = userTrader.traderId
+    switch (status) {
+      case 2:
+        return (
+          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+            <div className="flex flex-row items-center justify-end gap-2">
+              {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+                <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+              ) : (
+                ''
+              )}
+              <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+                Check List
+              </Button>
+            </div>
+          </div>
+        )
+      case 3:
+        return (
+          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+              Check List
+            </Button>
+            <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
+          </div>
+        )
+
+      case 4:
+        return (
+          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+              Check List
+            </Button>
+            <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
+          </div>
+        )
+
+      case 6:
+      case 7:
+        return (
+          <div className="mt-4 flex justify-center gap-2">
+            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
+            <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
+          </div>
+        )
+
+      case 0:
+        return (
+          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+              Check List
+            </Button>
+            <Button onClick={() => setOpenForm(true)}>Submit</Button>
+          </div>
+        )
+
+      case 1:
+        return (
+          <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
+            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+              Check List
+            </Button>
+            <Button onClick={() => setOpenForm(true)}>Submit</Button>
+          </div>
+        )
+
+      default:
+        return renderTrader(userTrade)
+    }
+  }
+  const renderYourTraderComponent = (userTrade: ITradeDetail) => {
+    const status = userTrade?.details.status
+    const tradeDetailId = userTrade?.details.tradeDetailId
+    const traderId = userTrade.traderId
 
     const handlePutStatusTrade = (newStatus: number) => {
       putStatusTrade(tradeDetailId as string, newStatus)
@@ -295,7 +622,7 @@ export default function SubmitTrade() {
         return (
           <div className="mt-4 flex flex-row gap-2">
             <TargetsTrade tradeDetailsId={tradeDetailId} />
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}>
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
               View Check List
             </Button>
           </div>
@@ -304,7 +631,7 @@ export default function SubmitTrade() {
         return (
           <div className="mt-4 flex flex-row gap-2">
             <Evidence tradeDetailsId={tradeDetailId} />
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}>
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
               View Check List
             </Button>
           </div>
@@ -314,7 +641,7 @@ export default function SubmitTrade() {
         return (
           <div className="mt-4 flex flex-row gap-2">
             <Evidence tradeDetailsId={tradeDetailId} />
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}>
+            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
               View Check List
             </Button>
           </div>
@@ -332,13 +659,11 @@ export default function SubmitTrade() {
 
       case 0:
         return (
-          <div className="mt-4 min-w-[33vw] px-8 pb-4">
+          <div className="mt-4 min-w-[33vw] pb-4">
             <div className="flex flex-col items-end justify-end gap-2">
               <div className="flex flex-row justify-end gap-2">
                 <TargetsTrade tradeDetailsId={tradeDetailId} />
-                <Button
-                  onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}
-                >
+                <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
                   View Check List
                 </Button>
               </div>
@@ -349,23 +674,20 @@ export default function SubmitTrade() {
 
       case 1:
         return (
-          <div className="mt-4 min-w-[33vw] px-4 pb-4">
-            {userTrader.details.isUsingMiddle ? (
-              <div className="flex flex-col items-end justify-end gap-2">
+          <div className="mt-4 min-w-[33vw] pb-4">
+            {userTrade.details.isUsingMiddle ? (
+              <div className="flex flex-col items-center justify-center gap-2">
                 <div className="flex flex-row justify-end gap-2">
                   <TargetsTrade tradeDetailsId={tradeDetailId} />
                   <Button
-                    onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrader?.details.tradeDetailId}`)}
+                    onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}
                   >
                     View Check List
                   </Button>
+                  <Button className="" onClick={() => handlePutStatusTrade(2)}>
+                    Confirm Trade Info
+                  </Button>
                 </div>
-                <p className="ml-4">
-                  <button className="mr-1 font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(2)}>
-                    Accept
-                  </button>
-                  to confirm the trade information!
-                </p>
               </div>
             ) : (
               <p className="ml-4 flex justify-end">
@@ -379,33 +701,18 @@ export default function SubmitTrade() {
         )
 
       default:
-        return renderTrader(userTrader)
+        return renderTrader(userTrade)
     }
   }
 
   const renderTrader = (userTrade: ITradeDetail) => {
     return (
-      <div className="px-4 pb-4 sm:h-[16rem] sm:w-[16rem] md:h-[32rem] md:w-[32rem]">
-        <div className="flex flex-row items-center">
-          <Label className="text-md">IsPostOwner:</Label>
-          {userTrade?.details.isPostOwner ? <p className="ml-2">True</p> : <p className="ml-2">False</p>}
+      <div className="justify-center px-8 pb-4 sm:h-[16rem] sm:w-[16rem] md:h-[32rem] md:w-[32rem] lg:w-full">
+        <div className="px-20">
+          <CardProfile userId={userTrade.traderId} />
         </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Status:</Label>
-          <p className="ml-2">{ITradeStatus[userTrade?.details.status as keyof typeof ITradeStatus]}</p>
-        </div>
-        <div className="flex flex-row items-start">
-          <Label className="text-md">Address:</Label>
-          <p className="ml-2">{userTrade?.address}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Phone:</Label>
-          <p className="ml-2">{userTrade?.details.phone}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <Label className="text-md">Note:</Label>
-          <p className="ml-2">{userTrade?.details.note}</p>
-        </div>
+        <Separator className="my-4" />
+        <CardInfoTrade userTrade={userTrade} />
       </div>
     )
   }
@@ -415,532 +722,30 @@ export default function SubmitTrade() {
       <div className="flex flex-row justify-center">
         {isOwner ? (
           <div className="m-4 flex flex-row justify-center">
-            <div className="w-[40vw] rounded-md border-2 bg-white">
-              <div className="flex flex-row items-start justify-between pr-4">
-                <p className="m-4 text-lg font-medium">Interester</p>
-                {interester && renderTraderComponent(interester)}
-              </div>
+            <div className="w-[40vw] rounded-md border-2 border-gray-400 bg-white">
+              <p className="m-4 flex justify-center text-lg font-extrabold">YOUR TRADER</p>
               {interester && renderTrader(interester)}
+              <div className="flex justify-center">{interester && renderYourTraderComponent(interester)}</div>
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
-            <div className="w-[40vw] rounded-md border-2 bg-white">
-              <div className="flex flex-row items-center justify-between pr-4">
-                <p className="m-4 text-lg font-medium">Owner</p>
-                <div className="flex flex-row items-center gap-2">
-                  {userTrade?.details.status == 0 ||
-                  userTrade?.details.status == 1 ||
-                  userTrade?.details.status == 2 ||
-                  userTrade?.details.status == 3 ||
-                  userTrade?.details.status == 4 ? (
-                    <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
-                      Check List
-                    </Button>
-                  ) : (
-                    ''
-                  )}
-                  {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-                    <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-                  ) : (
-                    ''
-                  )}
-                  {userTrade?.details.status == 3 ||
-                  userTrade?.details.status == 4 ||
-                  userTrade?.details.status == 6 ? (
-                    <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </div>
-              {userTrade?.details.status == 0 || userTrade?.details.status == 1 ? (
-                <div className="min-w-[33vw] px-4 pb-4">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                      <FormField
-                        control={form.control}
-                        name="city_Province"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>City/Province</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                                  >
-                                    {field.value
-                                      ? AddressData.find((province) => province.Name === field.value)?.Name
-                                      : 'Select Province'}
-                                    <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                  <CommandInput placeholder="Search city..." className="h-9" />
-                                  <CommandEmpty>No city found.</CommandEmpty>
-                                  <CommandGroup>
-                                    <ScrollArea className="h-48">
-                                      {AddressData.map((province) => (
-                                        <CommandItem
-                                          value={province.Id}
-                                          key={province.Id}
-                                          onSelect={() => {
-                                            form.setValue('city_Province', province.Name)
-                                            const city = form.getValues('city_Province')
-                                            setCity(city as string)
-                                          }}
-                                        >
-                                          {province.Name}
-                                          <CheckIcon
-                                            className={cn(
-                                              'ml-auto h-4 w-4',
-                                              province.Name === field.value ? 'opacity-100' : 'opacity-0',
-                                            )}
-                                          />
-                                        </CommandItem>
-                                      ))}
-                                    </ScrollArea>
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="district"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel className="mt-4">District</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                                  >
-                                    {field.value
-                                      ? AddressData.find((province) => province.Name === city) // Find selected province
-                                          ?.district.find((district) => district.Name === field.value)?.Name // Find selected district
-                                      : 'Select District'}
-                                    <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                  <CommandInput placeholder="Search district..." className="h-9" />
-                                  <CommandEmpty>No district found.</CommandEmpty>
-                                  <CommandGroup>
-                                    <ScrollArea className="h-48">
-                                      {AddressData.find((province) => province.Name === form.getValues('city_Province')) // Find selected province
-                                        ?.district.map((district) => (
-                                          <CommandItem
-                                            value={district.Id}
-                                            key={district.Id}
-                                            onSelect={() => {
-                                              form.setValue('district', district.Name)
-                                              const dis = form.getValues('district')
-                                              setDistrict(dis)
-                                            }}
-                                          >
-                                            {district.Name}
-                                            <CheckIcon
-                                              className={cn(
-                                                'ml-auto h-4 w-4',
-                                                district.Id === field.value ? 'opacity-100' : 'opacity-0',
-                                              )}
-                                            />
-                                          </CommandItem>
-                                        ))}
-                                    </ScrollArea>
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="subDistrict"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel className="mt-4">Wards</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                                  >
-                                    {field.value
-                                      ? AddressData.find((province) => province.Name === city) // Find selected province
-                                          ?.district.find((district) => district.Name === getDistrict)
-                                          ?.subDistrict.find((subDistrict) => subDistrict.Name === field.value)?.Name // Find selected district
-                                      : 'Select District'}{' '}
-                                    <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                  <CommandInput placeholder="Search district..." className="h-9" />
-                                  <CommandEmpty>No district found.</CommandEmpty>
-                                  <CommandGroup>
-                                    <ScrollArea className="h-48">
-                                      {AddressData.find((province) => province.Name === form.getValues('city_Province'))
-                                        ?.district.find((district) => district.Name === form.getValues('district'))
-                                        ?.subDistrict.map((subDistrict) => (
-                                          <CommandItem
-                                            value={subDistrict.Id}
-                                            key={subDistrict.Id}
-                                            onSelect={() => {
-                                              form.setValue('subDistrict', subDistrict.Name)
-                                            }}
-                                          >
-                                            {subDistrict.Name}
-                                            <CheckIcon
-                                              className={cn(
-                                                'ml-auto h-4 w-4',
-                                                subDistrict.Id === field.value ? 'opacity-100' : 'opacity-0',
-                                              )}
-                                            />
-                                          </CommandItem>
-                                        ))}
-                                    </ScrollArea>
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="rendezvous"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="mt-4">Rendezvous</FormLabel>
-                            <FormControl>
-                              <Input placeholder="ABC..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="mt-4">Phone</FormLabel>
-                            <FormControl>
-                              <Input placeholder="0123456789" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="note"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="mt-4">Note</FormLabel>
-                            <FormControl>
-                              <Textarea placeholder="ABC..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button className="mt-4" type="submit">
-                        Submit
-                      </Button>
-                    </form>
-                  </Form>
-                </div>
-              ) : (
-                userTrade && renderTrader(userTrade)
-              )}
+            <div className="w-[40vw] rounded-md border-2 border-gray-400 bg-white">
+              <p className="m-4 flex justify-center text-lg font-extrabold">YOU</p>
+              {openForm ? SubmitForm() : userTrade && renderTrader(userTrade)}
+              <div className="flex justify-center">{openForm ? '' : userTrade && renderTraderComponent(userTrade)}</div>
             </div>
           </div>
         ) : (
           <div className="m-4 flex flex-row justify-center">
-            <div className="w-[40vw] rounded-md border-2 bg-white">
-              <div className="flex flex-row items-center justify-between pr-4">
-                <p className="m-4 text-lg font-medium">Interester</p>
-                <div className="flex flex-row items-center gap-2">
-                  {userTrade?.details.status == 0 ||
-                  userTrade?.details.status == 1 ||
-                  userTrade?.details.status == 2 ||
-                  userTrade?.details.status == 3 ||
-                  userTrade?.details.status == 4 ? (
-                    <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
-                      Check List
-                    </Button>
-                  ) : (
-                    ''
-                  )}
-                  {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-                    <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-                  ) : (
-                    ''
-                  )}
-                  {userTrade?.details.status == 3 ||
-                  userTrade?.details.status == 4 ||
-                  userTrade?.details.status == 6 ? (
-                    <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </div>
-              {userTrade?.details.status === 0 || userTrade?.details.status == 1 ? (
-                <div className="min-w-[33vw] px-4 pb-4">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                      <FormField
-                        control={form.control}
-                        name="city_Province"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>City/Province</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                                  >
-                                    {field.value
-                                      ? AddressData.find((province) => province.Name === field.value)?.Name
-                                      : 'Select Province'}
-                                    <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                  <CommandInput placeholder="Search city..." className="h-9" />
-                                  <CommandEmpty>No city found.</CommandEmpty>
-                                  <CommandGroup>
-                                    <ScrollArea className="h-48">
-                                      {AddressData.map((province) => (
-                                        <CommandItem
-                                          value={province.Id}
-                                          key={province.Id}
-                                          onSelect={() => {
-                                            form.setValue('city_Province', province.Name)
-                                            const city = form.getValues('city_Province')
-                                            setCity(city as string)
-                                          }}
-                                        >
-                                          {province.Name}
-                                          <CheckIcon
-                                            className={cn(
-                                              'ml-auto h-4 w-4',
-                                              province.Name === field.value ? 'opacity-100' : 'opacity-0',
-                                            )}
-                                          />
-                                        </CommandItem>
-                                      ))}
-                                    </ScrollArea>
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="district"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel className="mt-4">District</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                                  >
-                                    {field.value
-                                      ? AddressData.find((province) => province.Name === city) // Find selected province
-                                          ?.district.find((district) => district.Name === field.value)?.Name // Find selected district
-                                      : 'Select District'}
-                                    <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                  <CommandInput placeholder="Search district..." className="h-9" />
-                                  <CommandEmpty>No district found.</CommandEmpty>
-                                  <CommandGroup>
-                                    <ScrollArea className="h-48">
-                                      {AddressData.find((province) => province.Name === form.getValues('city_Province')) // Find selected province
-                                        ?.district.map((district) => (
-                                          <CommandItem
-                                            value={district.Id}
-                                            key={district.Id}
-                                            onSelect={() => {
-                                              form.setValue('district', district.Name)
-                                              const dis = form.getValues('district')
-                                              setDistrict(dis)
-                                            }}
-                                          >
-                                            {district.Name}
-                                            <CheckIcon
-                                              className={cn(
-                                                'ml-auto h-4 w-4',
-                                                district.Id === field.value ? 'opacity-100' : 'opacity-0',
-                                              )}
-                                            />
-                                          </CommandItem>
-                                        ))}
-                                    </ScrollArea>
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="subDistrict"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel className="mt-4">Wards</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                                  >
-                                    {field.value
-                                      ? AddressData.find((province) => province.Name === city) // Find selected province
-                                          ?.district.find((district) => district.Name === getDistrict)
-                                          ?.subDistrict.find((subDistrict) => subDistrict.Name === field.value)?.Name // Find selected district
-                                      : 'Select District'}{' '}
-                                    <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                  <CommandInput placeholder="Search district..." className="h-9" />
-                                  <CommandEmpty>No district found.</CommandEmpty>
-                                  <CommandGroup>
-                                    <ScrollArea className="h-48">
-                                      {AddressData.find((province) => province.Name === form.getValues('city_Province'))
-                                        ?.district.find((district) => district.Name === form.getValues('district'))
-                                        ?.subDistrict.map((subDistrict) => (
-                                          <CommandItem
-                                            value={subDistrict.Id}
-                                            key={subDistrict.Id}
-                                            onSelect={() => {
-                                              form.setValue('subDistrict', subDistrict.Name)
-                                            }}
-                                          >
-                                            {subDistrict.Name}
-                                            <CheckIcon
-                                              className={cn(
-                                                'ml-auto h-4 w-4',
-                                                subDistrict.Id === field.value ? 'opacity-100' : 'opacity-0',
-                                              )}
-                                            />
-                                          </CommandItem>
-                                        ))}
-                                    </ScrollArea>
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="rendezvous"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="mt-4">Rendezvous</FormLabel>
-                            <FormControl>
-                              <Input placeholder="ABC..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="mt-4">Phone</FormLabel>
-                            <FormControl>
-                              <Input placeholder="0123456789" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="note"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="mt-4">Note</FormLabel>
-                            <FormControl>
-                              <Textarea placeholder="ABC..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button className="mt-4" type="submit">
-                        Submit
-                      </Button>
-                    </form>
-                  </Form>
-                </div>
-              ) : (
-                userTrade && renderTrader(userTrade)
-              )}
+            <div className="w-[40vw] rounded-md border-2 border-gray-400 bg-white">
+              <p className="m-4 flex justify-center text-lg font-extrabold">YOU</p>
+              {openForm ? SubmitForm() : userTrade && renderTrader(userTrade)}
+              <div className="flex justify-center">{openForm ? '' : userTrade && renderTraderComponent(userTrade)}</div>
             </div>
             <Separator className="mx-8" orientation={'vertical'} />
-            <div className="w-[40vw] rounded-md border-2 bg-white">
-              <div className="flex flex-row items-center justify-between pr-4">
-                <p className="m-4 text-lg font-medium">Owner</p>
-                {owner && renderTraderComponent(owner)}
-              </div>
+            <div className="w-[40vw] rounded-md border-2 border-gray-400 bg-white">
+              <p className="m-4 flex justify-center text-lg font-extrabold">YOUR TRADER</p>
               {owner && renderTrader(owner)}
+              <div className="flex justify-center">{owner && renderYourTraderComponent(owner)}</div>
             </div>
           </div>
         )}

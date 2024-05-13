@@ -125,11 +125,11 @@ export function Menu() {
           <ul className="list-none">
             {tags.map((tag) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-orange-500"
+                className="hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-orange-300"
                 key={tag.cateId}
               >
-                <Link to={`c/${tag.cateName}`}>
-                  <p className="text-base">#{tag.cateName}</p>
+                <Link to={`c/${tag.cateName}`} className="z-10">
+                  <p className="z-10 text-base hover:text-orange-900 hover:underline">#{tag.cateName}</p>
                 </Link>
               </li>
             ))}
@@ -166,7 +166,7 @@ export function Menu() {
           <ul className="list-none">
             {interested.map((i) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation hover:bg-orange-50300 w-full rounded-md p-1 text-sm"
+                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-1 text-sm underline hover:bg-orange-300"
                 key={i.postData.postId}
               >
                 <Link className="p-1 text-base" to={`/blog/${i.postData.postId}`}>

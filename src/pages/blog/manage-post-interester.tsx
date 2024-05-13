@@ -5,7 +5,6 @@ import { IResponsePostLocked, getLockedPostByUserId, getPostByIdApi } from 'src/
 import { getPostInterestByPostId, postAcceptTrade } from 'src/api/blog/interested'
 import { Avatar, AvatarFallback, AvatarImage } from 'src/components/ui/avatar'
 import { Button } from 'src/components/ui/button'
-import { Separator } from 'src/components/ui/separator'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponsePost } from 'src/types/blog'
 import { IResponseInteresterList } from 'src/types/interester'
@@ -83,16 +82,22 @@ function ManagePostInterester() {
             <DialogTrigger>
               <Button>Accept</Button>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader className="w-60">
-                <DialogTitle>Do you want to use a middle to make the exchange more secure?</DialogTitle>
-                <DialogDescription className="flex flex-row items-center justify-start gap-4">
-                  <Button variant="default" className="w-16" onClick={() => acceptTrade(id as string, userId, true)}>
+            <DialogContent className="w-[28rem]">
+              <DialogHeader className="w-96">
+                <DialogTitle className="text-xl font-medium">
+                  Do you want to use a middle to make the exchange more secure?
+                </DialogTitle>
+                <DialogDescription className="flex flex-row items-center justify-center gap-4">
+                  <Button
+                    variant="default"
+                    className="mt-4 w-24"
+                    onClick={() => acceptTrade(id as string, userId, true)}
+                  >
                     Yes
                   </Button>
                   <Button
                     variant="destructive"
-                    className="w-16"
+                    className="mt-4 w-24"
                     onClick={() => acceptTrade(id as string, userId, false)}
                   >
                     No
@@ -110,9 +115,9 @@ function ManagePostInterester() {
   const trader2 = useCallback(
     ({ recordId, userId, username, avatarDir, createDate, isChosen }: IResponseInteresterList) => (
       <div className="flex flex-row">
-        <div className="ml-8 flex w-full items-center gap-3">
+        <div className="ml-2 flex w-full items-center gap-3">
           <Avatar>
-            <AvatarImage width={'50rem'} src={avatarDir} alt={`${username}`} />
+            <AvatarImage width={'60rem'} src={avatarDir} alt={`${username}`} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="flex flex-1 justify-between">
@@ -124,13 +129,12 @@ function ManagePostInterester() {
         </div>
         <div className=" flex flex-row items-center">
           {isChosen ? (
-            <Link to={`/blog/dashboard/submit-form/${id}`} className="mr-4 w-32 border-2 border-red-600 text-center">
-              Confirm Trade
+            <Link to={`/blog/dashboard/submit-form/${id}`}>
+              <Button className="w-32">Confirm Trade</Button>
             </Link>
           ) : (
             ''
           )}
-          <div>{isChosen ? <Button> Payment </Button> : ''}</div>
         </div>
       </div>
     ),
@@ -141,7 +145,7 @@ function ManagePostInterester() {
     return interestList.map((interest) => (
       <div key={interest.userId} className="mb-2 w-full">
         {trader(interest)}
-        <Separator className="my-4" />
+        {/* <Separator className="my-4" /> */}
       </div>
     ))
   }, [interestList, trader])
@@ -149,9 +153,9 @@ function ManagePostInterester() {
   const renderTrader2 = useMemo(() => {
     if (!Array.isArray(interestList)) return null
     return interestList.map((interest) => (
-      <div key={interest.userId} className="mb-2 w-full">
+      <div key={interest.userId} className="mb-2 w-full rounded-sm border border-gray-400 p-2">
         {trader2(interest)}
-        <Separator className="my-4" />
+        {/* <Separator className="my-4" /> */}
       </div>
     ))
   }, [interestList, trader2])
@@ -205,7 +209,7 @@ function ManagePostInterester() {
             </div>
           </Link>
         </nav>
-        <div className="h-full w-full">
+        <div className="h-full min-h-[70vh] w-full rounded-md border-2 border-gray-400 bg-white p-4">
           {interestList ? (
             postData?.postData.isLock ? (
               renderTrader2

@@ -16,7 +16,7 @@ function Category({ category }: Props) {
     <button onClick={() => onSubmit(category.cateId as string)}>
       {/* <Link to={`/books?CategoryIds=${category.cateId}`} key={category.cateId}> */}
       <Card className=" w-[100%]">
-        <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-200 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
+        <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-400 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
           <img
             src={category.imageDir as string}
             alt={category.cateName}

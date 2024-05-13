@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useId, useState } from 'react'
 import { AvatarImage } from '../../components/ui/avatar'
 import { Separator } from '../../components/ui/separator'
 import { BookMarkedIcon, HandshakeIcon, HeartIcon, MessageCircleHeart, MessageCircleHeartIcon } from 'lucide-react'
-import { Link, useLoaderData } from 'react-router-dom'
+import { Link, useLoaderData, useNavigate } from 'react-router-dom'
 import { IResponsePost } from 'src/types/blog'
 import { useToast } from '../../components/ui/use-toast'
 import { Button } from '../../components/ui/button'
@@ -21,6 +21,14 @@ import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } fro
 import { removeUserSavedPost } from 'src/api/blog/delete-blog'
 import { addNewSavedPost, postLikePost } from 'src/api/blog/post-blog'
 import { getCheckLikePosts, getUserSavedPosts } from 'src/api/blog/get-blog'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '../../components/ui/dialog'
 
 type FormValue = {
   content: string
@@ -36,6 +44,7 @@ function BlogDetail() {
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const { toast } = useToast()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setBlog(data.blog)
@@ -249,6 +258,7 @@ function BlogDetail() {
   const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isInterested, setIsInterested] = useState<boolean>()
   const [postInterestId, setPostInterestId] = useState<string>()
+  const [open, setOpenDialog] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -281,21 +291,26 @@ function BlogDetail() {
 
   const handleInterestClick = async () => {
     try {
-      if (!isInterested) {
-        const data = await postInterestedPost(blog?.postData.postId as string)
-        setPostInterestId(data)
-        setIsInterested(true)
-      } else {
-        if (postInterestId) {
-          await removeInterestedPost(postInterestId)
+      if (user?.isValidated && open == false) {
+        if (!isInterested) {
+          const data = await postInterestedPost(blog?.postData.postId as string)
+          setPostInterestId(data)
+          setIsInterested(true)
+        } else {
+          if (postInterestId) {
+            await removeInterestedPost(postInterestId)
+          }
+          setIsInterested(false)
+          setPostInterestId(undefined)
         }
-        setIsInterested(false)
-        setPostInterestId(undefined)
+      } else if (!user?.isValidated && open == false) {
+        setOpenDialog(true)
       }
     } catch (error) {
       console.error('Error:', error)
     }
   }
+
   return (
     <div className="mx-32 px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
@@ -327,6 +342,28 @@ function BlogDetail() {
               ) : (
                 <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
                   <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
+                  <Dialog open={open} onOpenChange={setOpenDialog}>
+                    <DialogContent className="w-[32rem]">
+                      <DialogHeader>
+                        <DialogTitle className="pb-4 text-xl font-bold">
+                          You don&apos;t have permission to do this
+                        </DialogTitle>
+                        <Separator />
+                        <p className="py-2">
+                          You must authenticate your account to be able to perform this action. Do you want to update
+                          national identify card?
+                        </p>
+                        <DialogDescription className="flex flex-row">
+                          <Button className="mr-4 bg-red-600" onClick={() => navigate('/user/account/identify')}>
+                            Yes, I do.
+                          </Button>
+                          <Button>
+                            <DialogClose>No, keep editing.</DialogClose>
+                          </Button>
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )
             ) : (

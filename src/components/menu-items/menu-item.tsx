@@ -32,13 +32,10 @@ function MenuItem({ item, className, ...props }: MenuItemProps) {
   }, [item])
   return (
     <li
-      className={cn(
-        'hover-underline-animation hover:hover-underline-animation flex flex-col rounded-md p-2 hover:bg-orange-300',
-        className,
-      )}
+      className={cn('hover:hover-circleline-animation flex flex-col rounded-md  hover:bg-orange-300', className)}
       {...props}
     >
-      <Link to={item.href || '#'} className={cn('inline-flex items-center')}>
+      <Link to={item.href || '#'} className={cn('z-10 inline-flex items-center p-2')}>
         {Icon && <Icon className="mr-1" size={16} />}
         {item.title}
       </Link>

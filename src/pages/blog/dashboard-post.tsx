@@ -76,15 +76,15 @@ function DashboardBlog() {
       <div className="mb-4 flex flex-col">
         <p className="p-4 text-3xl font-bold">Dashboard</p>
         <div className="mx-4 flex flex-row justify-between">
-          <div className="flex w-full flex-col rounded-md border-2 bg-slate-50 p-6">
+          <div className="flex w-full flex-col rounded-md border-2 border-gray-400 bg-slate-50 p-6">
             <p className="text-2xl font-bold">{}0</p>
             <p className="font-light">Total post reactions</p>
           </div>
-          <div className="mx-3 flex w-full flex-col rounded-md border-2 bg-slate-50 p-6">
+          <div className="mx-3 flex w-full flex-col rounded-md border-2 border-gray-400 bg-slate-50 p-6">
             <p className="text-2xl font-bold">{}0</p>
             <p className="font-light">Total post comments</p>
           </div>
-          <div className="flex w-full flex-col rounded-md border-2 bg-slate-50 p-6">
+          <div className="flex w-full flex-col rounded-md border-2 border-gray-400 bg-slate-50 p-6">
             <p className="text-2xl font-bold">{}0</p>
             <p className="font-light">Total post views</p>
           </div>
@@ -120,7 +120,7 @@ function DashboardBlog() {
             </div>
           </div>
 
-          <div className="h-full min-h-[28rem] w-full rounded-md border-2 bg-slate-50 p-6">
+          <div className="h-full min-h-[28rem] w-full rounded-md border-2 border-gray-400 bg-slate-50 p-6">
             {checkbox ? (
               lockBlogs?.map((lock, index) => (
                 <>

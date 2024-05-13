@@ -89,7 +89,7 @@ function ProfileUser() {
                   </div>
                   <div className="flex flex-row items-center justify-center">
                     <p className="px-4">Add: 123 Abcd, Hoa Hai, Ngu Hanh Son, Da Nang{userData?.addressId}</p>
-                    <p className="px-4">Joined on: 15/04/2024{userData?.createdAt?.toISOString()}</p>
+                    <p className="px-4">Joined on: 15/04/2024{userData?.createdAt as string}</p>
                     {/* <p className="px-4">Shopee: {user?.username}</p> */}
                   </div>
                 </div>

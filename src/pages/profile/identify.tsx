@@ -13,7 +13,7 @@ import { Input } from 'src/components/ui/input'
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import { ENUM_CITIZEN_ID_TYPE, ICTCBackSide, ICTCFrontSide, INIC } from 'src/types'
+import { ICTCBackSide, ICTCFrontSide, INIC } from 'src/types'
 import { IToken } from 'src/types/token'
 import { z } from 'zod'
 
@@ -26,9 +26,6 @@ const formCTCSchema = z.object({
   nicSex: z.string(),
   nicNationality: z.string(),
   nicDoe: z.date(),
-  features: z.string(),
-  issueDate: z.date(),
-  nicType: z.nativeEnum(ENUM_CITIZEN_ID_TYPE),
 })
 
 type FormData = z.infer<typeof formCTCSchema>
@@ -126,10 +123,8 @@ function IdentificationUser() {
       form.setValue('nicAddress', fs.data[0].address)
       form.setValue('nicSex', fs.data[0].sex)
       form.setValue('nicNationality', fs.data[0].nationality)
+      form.setValue('nicDob', parse(fs.data[0].dob, 'dd/MM/yyyy', new Date()))
       form.setValue('nicDoe', parse(fs.data[0].doe, 'dd/MM/yyyy', new Date()))
-      // form.setValue('nicType', fs.data[0].type_new!);
-      form.setValue('features', bs.data[0].features)
-      form.setValue('issueDate', parse(bs.data[0].issue_date, 'dd/MM/yyyy', new Date()))
 
       // Return a value here if needed
     } catch (error) {
@@ -212,6 +207,20 @@ function IdentificationUser() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Home</FormLabel>
+                <FormControl>
+                  <Input disabled {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="nicAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
                 <FormControl>
                   <Input disabled {...field} />
                 </FormControl>
@@ -342,6 +351,12 @@ function IdentificationUser() {
     form.formState.errors && console.log(form.formState.errors)
   }, [form.formState.errors])
 
+  const resetForm = () => {
+    form.reset()
+    setImageFS(null)
+    setImageBS(null)
+  }
+
   const Result = () => {
     return (
       <div>
@@ -366,9 +381,14 @@ function IdentificationUser() {
 
   return (
     <div className="w-[75vw] rounded-lg border bg-card text-card-foreground shadow-sm">
-      <div className="px-8 py-2">
-        <p className="text-xl">Identification Information</p>
-        <p className="text-gray-500">Manage your identification information</p>
+      <div className="flex flex-row items-center justify-between">
+        <div className="px-8 py-2">
+          <p className="text-xl">Identification Information</p>
+          <p className="text-gray-500">Manage your identification information</p>
+        </div>
+        <Button type="button" onClick={resetForm} className="ml-4 w-32">
+          Reset
+        </Button>
       </div>
       <Separator />
       {user?.isValidated && isUpdate === false ? (

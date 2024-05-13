@@ -22,6 +22,7 @@ const formCTCSchema = z.object({
   nicName: z.string(),
   nicDob: z.date(),
   nicHome: z.string(),
+  nicAddress: z.string(),
   nicSex: z.string(),
   nicNationality: z.string(),
   nicDoe: z.date(),
@@ -112,7 +113,7 @@ function IdentificationSeller() {
       form.setValue('nicId', fs.data[0].id)
       form.setValue('nicName', fs.data[0].name)
       form.setValue('nicHome', fs.data[0].home)
-      // form.setValue('nicAddress', fs.data[0].address)
+      form.setValue('nicAddress', fs.data[0].address)
       form.setValue('nicSex', fs.data[0].sex)
       form.setValue('nicNationality', fs.data[0].nationality)
       form.setValue('nicDob', parse(fs.data[0].dob, 'dd/MM/yyyy', new Date()))
@@ -199,6 +200,20 @@ function IdentificationSeller() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Home</FormLabel>
+                <FormControl>
+                  <Input disabled {...field} />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="nicAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
                 <FormControl>
                   <Input disabled {...field} />
                 </FormControl>

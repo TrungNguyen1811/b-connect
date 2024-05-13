@@ -109,7 +109,7 @@ export function UpdateCategory({ categoryId }: { categoryId: string }) {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="m-4 mx-auto w-full max-w-sm space-y-4 rounded-lg border border-gray-200 p-4"
+                className="m-4 mx-auto w-full max-w-sm space-y-4 rounded-lg border border-gray-400 p-4"
               >
                 <FormField
                   control={form.control}

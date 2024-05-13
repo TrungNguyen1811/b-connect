@@ -34,7 +34,7 @@ export interface User {
   blog?: IBlogg[]
   bio?: string
   url?: string
-  createdAt?: Date
+  createdAt?: Date | string
   updatedAt?: Date
 }
 
@@ -54,7 +54,7 @@ export interface IRegisterNIC {
   nicName: string
   nicDob: Date
   nicHome: string
-  // nicAddress: string
+  nicAddress: string
   nicSex: string
   nicNationality: string
   nicDoe: Date
