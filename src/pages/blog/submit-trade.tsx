@@ -364,7 +364,7 @@ export default function SubmitTrade() {
                   <button className="mr-1 font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(2)}>
                     Accept
                   </button>
-                  to confirm the trade information
+                  to confirm the trade information!
                 </p>
               </div>
             ) : (
