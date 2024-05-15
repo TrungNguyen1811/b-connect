@@ -35,3 +35,15 @@ export async function getCompareMonth(customerId: string) {
     return data
   })
 }
+
+export async function getUserPostData() {
+  return authAxiosClient.get(`/Account/user-data`).then((res) => {
+    return res.data
+  })
+}
+
+export async function getUserAnalystPost() {
+  return authAxiosClient.get(`/Account/user-post-data`).then((res) => {
+    return res.data
+  })
+}

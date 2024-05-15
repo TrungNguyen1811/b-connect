@@ -9,7 +9,7 @@ function CardInfoTrade({ userTrade }: { userTrade: ITradeDetail }) {
         <div>
           <p className="text-gray-400">{string}</p>
         </div>
-        <p> {name}</p>
+        <p>{name ? name : 'null'}</p>
       </div>
     )
   }

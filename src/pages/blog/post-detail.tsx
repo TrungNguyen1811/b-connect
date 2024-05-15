@@ -39,6 +39,7 @@ function BlogDetail() {
   const [blog, setBlog] = React.useState<IResponsePost | null>(data.blog)
   const contents: Value = JSON.parse(blog?.postData.content as string)
   const [comments, setComments] = useState<IComment[]>()
+  const [likes, setLikes] = useState<number>(blog?.likesCount || 0)
   const [isSaved, setIsSaved] = useState<boolean>()
   const queryClient = useQueryClient()
   const { user } = useAuth()
@@ -92,15 +93,33 @@ function BlogDetail() {
     }
   }
 
+  const [checkLike, setCheckLike] = useState<boolean>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const checkLike = await checkUserLikePost(blog?.postData.postId as string)
+      if (checkLike == true) {
+        setCheckLike(true)
+      } else {
+        setCheckLike(false)
+      }
+    }
+    fetchData()
+  }, [blog?.postData.postId])
+
   const likePost = async () => {
     if (blog) {
-      await postLikePost(blog.postData.postId as string).then((res) => {
-        if (res.liked === true) {
+      try {
+        const response = await postLikePost(blog.postData.postId as string)
+        if (response.liked) {
           setCheckLike(true)
+          setLikes((likes) => likes + 1)
         } else {
           setCheckLike(false)
+          setLikes((likes) => likes - 1)
         }
-      })
+      } catch (error) {
+        console.error('Error liking post:', error)
+      }
     }
   }
 
@@ -183,6 +202,7 @@ function BlogDetail() {
     mutationFn: postPostComment,
     onSuccess: (payload: IComment) => {
       if (!blog) return
+      setComments((prevComments) => [...(prevComments || []), payload])
       queryClient.invalidateQueries()
     },
   })
@@ -208,7 +228,6 @@ function BlogDetail() {
             title: 'Post a comment successfully',
             description: 'Your comment have been successfully',
           })
-          setComments((prevComments) => [...(prevComments || []), payload])
           reset()
         })
         .catch((e) => {
@@ -221,17 +240,6 @@ function BlogDetail() {
     },
     [blog?.postData.postId, user?.userId, mutateAsync, reset, toast],
   )
-
-  const [checkLike, setCheckLike] = useState<boolean>()
-  useEffect(() => {
-    const fetchData = async () => {
-      const checkLike = await checkUserLikePost(blog?.postData.postId as string)
-      if (checkLike == 'true') {
-        setCheckLike(true)
-      } else setCheckLike(false)
-    }
-    fetchData()
-  }, [blog?.postData.postId])
 
   const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isInterested, setIsInterested] = useState<boolean>()
@@ -298,7 +306,7 @@ function BlogDetail() {
               onClick={() => likePost()}
             >
               <HeartIcon size={24} className={checkLike ? ' text-orange-400 ' : ''} />
-              <p>{blog?.likesCount}</p>
+              <p>{likes}</p>
             </div>
             <div className="m-2 flex flex-col items-center rounded-sm p-2 hover:bg-gray-300" onClick={focusTextarea}>
               <MessageCircleHeartIcon size={24} />
@@ -362,7 +370,9 @@ function BlogDetail() {
                 </Avatar>
                 <div className="ml-2 flex flex-col items-start">
                   <p className="font-semibold">{blog?.username}</p>
-                  <p className="text-xs font-light">{blog?.postData.createdAt}</p>
+                  <p className="text-xs font-light">
+                    {blog?.postData.createdAt ? format(new Date(blog?.postData.createdAt), 'PPpp') : 'N/A'}
+                  </p>
                 </div>
                 <div className="flex-grow"></div>
                 <div className="text-sm font-light">{blog?.readingTime}</div>
@@ -407,10 +417,7 @@ function BlogDetail() {
                 </div>
                 <div className="flex flex-row">
                   <Avatar>
-                    <AvatarImage
-                      src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-                      className="mr-4 h-10 w-10 rounded-[50%]"
-                    />
+                    <AvatarImage src={user?.avatarDir as string} className="mr-4 h-10 w-10 rounded-[50%]" />
                   </Avatar>
                   <div className="w-full">
                     <form onSubmit={handleSubmit(handleCommentSubmit)} className="space-y-2">

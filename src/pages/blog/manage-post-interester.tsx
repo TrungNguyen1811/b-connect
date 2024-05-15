@@ -192,7 +192,7 @@ function ManagePostInterester() {
           </Link>
           <Link to={'/blog/dashboard/following_categories'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
-              <p className="w-full font-semibold">Following Category</p>
+              <p className="w-full font-semibold">Following Tags</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
             </div>
           </Link>

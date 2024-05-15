@@ -1,6 +1,6 @@
 import { Avatar } from '@radix-ui/react-avatar'
 import React, { useEffect, useState } from 'react'
-import { getPostByIdApi, getUserSavedPosts } from 'src/api/blog/get-blog'
+import { checkUserLikePost, getPostByIdApi, getUserSavedPosts } from 'src/api/blog/get-blog'
 import { IResponsePost } from 'src/types/blog'
 import { AvatarImage } from '../ui/avatar'
 import { Separator } from '../ui/separator'
@@ -11,6 +11,7 @@ import { IResponseInteresterList } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
 import { addNewSavedPost, postLikePost } from 'src/api/blog/post-blog'
 import { removeUserSavedPost } from 'src/api/blog/delete-blog'
+import { format } from 'date-fns'
 
 interface PostProps {
   postId: string
@@ -21,10 +22,11 @@ function Post({ postId }: PostProps) {
   const [blog, setBlog] = useState<IResponsePost>()
   const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isSaved, setIsSaved] = useState<boolean>(false)
-  const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isInterested, setIsInterested] = useState<boolean>(false)
-  const [postInterestId, setPostInterestId] = useState<string | undefined>(undefined) // Sử dụng kiểu union để cho phép giá trị undefined
-
+  const [postInterestId, setPostInterestId] = useState<string | undefined>(undefined)
+  const [checkLike, setCheckLike] = useState<boolean>()
+  const [likes, setLikes] = useState<number>(blog?.likesCount || 0)
+  console.log('dât', likes)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -71,15 +73,32 @@ function Post({ postId }: PostProps) {
     }
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const checkLike = await checkUserLikePost(blog?.postData.postId as string)
+      if (checkLike == true) {
+        setCheckLike(true)
+      } else {
+        setCheckLike(false)
+      }
+    }
+    fetchData()
+  }, [blog?.postData.postId])
+
   const likePost = async () => {
     if (blog) {
-      await postLikePost(blog.postData.postId as string).then((res) => {
-        if (res === true) {
-          setIsLiked(true)
+      try {
+        const response = await postLikePost(blog.postData.postId as string)
+        if (response.liked) {
+          setCheckLike(true)
+          setLikes(likes + 1)
         } else {
-          setIsLiked(false)
+          setCheckLike(false)
+          setLikes(likes - 1)
         }
-      })
+      } catch (error) {
+        console.error('Error liking post:', error)
+      }
     }
   }
 
@@ -142,11 +161,13 @@ function Post({ postId }: PostProps) {
             </Avatar>
             <div className="ml-2 flex flex-col">
               <p className="font-semibold">{blog?.username}</p>
-              <p className="text-xs font-light">{blog?.postData.createdAt}</p>
+              <p className="text-xs font-light">
+                {blog?.postData.createdAt ? format(new Date(blog?.postData.createdAt), 'PPpp') : 'N/A'}
+              </p>
             </div>
           </div>
           <div className="flex flex-col">
-            <p className="my-2 ml-12 text-3xl font-extrabold">{blog?.postData.title}</p>
+            <p className="my-2 ml-12 text-3xl font-extrabold hover:text-orange-600">{blog?.postData.title}</p>
             <p className="mb-2 ml-12 flex flex-row gap-1 text-sm">
               {blog?.tags.map((tag, index) => (
                 <React.Fragment key={index}>
@@ -174,14 +195,14 @@ function Post({ postId }: PostProps) {
       <div className="flex flex-row items-center justify-between">
         <div className="ml-2 flex flex-row items-center justify-start gap-2">
           <div
-            className="m-2 my-0 flex flex-row items-center gap-1 rounded-sm p-1 py-0 hover:bg-gray-300"
+            className="m-2 my-0 flex flex-row items-center gap-1 rounded-sm p-1 py-0 hover:bg-gray-200"
             onClick={() => likePost()}
           >
-            <HeartIcon size={16} className={isLiked ? ' text-orange-400 ' : ''} />
-            {blog?.likesCount}
+            <HeartIcon size={16} className={checkLike ? ' text-orange-400 ' : ''} />
+            {likes}
           </div>
           <button
-            className="flex flex-row items-center text-sm font-light"
+            className="flex flex-row items-center rounded-sm p-1 text-sm font-light hover:bg-gray-200"
             onClick={() => navigate(`/blog/${blog?.postData.postId}`)}
           >
             <MessageCircleIcon size={16} className="mr-1" /> Add Comment

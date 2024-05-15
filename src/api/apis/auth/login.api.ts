@@ -17,7 +17,7 @@ async function loginApi(
         password: password,
       },
       {
-        withCredentials: true,
+        withCredentials: false,
       },
     )
     .then((err) => {

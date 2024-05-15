@@ -43,8 +43,8 @@ function TopBook() {
   // if (isError)
   //   return (
   //     <div>
-  //       <img src="../public/error.png" alt="Something went wrong ;v" />
-  //       <p>Something went wrong ;v</p>
+  //       <img src="../public/error.png" alt="Something went wrong " />
+  //       <p>Something went wrong </p>
   //     </div>
   //   )
 

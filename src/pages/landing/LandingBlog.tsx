@@ -78,7 +78,7 @@ export default function LandingBlog() {
         navigate('/blog')
       } else {
         toast({
-          title: 'Ops! Add tags failed ;v',
+          title: 'Ops! Add tags failed ',
         })
         navigate('/blog')
         setOpen(false)

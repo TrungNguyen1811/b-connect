@@ -9,14 +9,15 @@ import MetaData from 'src/components/metadata'
 import Post from 'src/components/blog/post'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPostByUserId } from 'src/api/blog/get-blog'
-import { User } from 'src/types/user'
-import { getUserByUserName } from 'src/api/user/get-user'
+import { IAnalystPost, User } from 'src/types/user'
+import { getUserByUserName, getUserPostData } from 'src/api/user/get-user'
 
 function ProfileUser() {
   const { user } = useAuth()
   const { username } = useParams()
   const [userData, setUserData] = useState<User | null>(null)
   const [blogs, setBlogs] = useState<IResponsePost[] | null>(null)
+  const [analyst, setAnalyst] = useState<IAnalystPost>()
   const isCurrentUser = user && user.username === username
   const navigate = useNavigate()
 
@@ -26,6 +27,8 @@ function ProfileUser() {
         if (user) {
           const getUser = await getUserByUserName(username as string)
           setUserData(getUser)
+          const analyst = await getUserPostData()
+          setAnalyst(analyst)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -68,7 +71,7 @@ function ProfileUser() {
                 </Avatar>
                 <div className="absolute left-[16rem] top-36 h-[14rem] w-[63rem] rounded-md border-2 bg-orange-100">
                   <div className="right-0 flex flex-row items-center justify-center pt-16">
-                    <p className="ml-20 text-xl font-semibold">{userData?.username}</p>{' '}
+                    <p className="ml-20 text-xl font-semibold">{userData?.username}</p>
                     {isCurrentUser ? (
                       <Button
                         onClick={() => {
@@ -101,15 +104,15 @@ function ProfileUser() {
           <div className="mr-5 mt-2 max-h-40 w-1/3 rounded-md border-2 bg-orange-100">
             <div className="m-4">
               <div className="flex flex-row p-2">
-                <StickyNoteIcon /> <p className="pl-1">3 posts published</p>
+                <StickyNoteIcon /> <p className="pl-1">{analyst?.postCount} posts published</p>
               </div>
               <div className="flex flex-row p-2">
                 <MessageSquareDotIcon />
-                <p className="pl-1">2 comments written</p>
+                <p className="pl-1">{analyst?.commentCount} comments written</p>
               </div>
               <div className="flex flex-row p-2">
                 <BookHeartIcon />
-                <p className="pl-1">2 tags followed</p>
+                <p className="pl-1">{analyst?.tagFollowCount} tags followed</p>
               </div>
             </div>
           </div>

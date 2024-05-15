@@ -4,16 +4,19 @@ import { Link, useNavigate } from 'react-router-dom'
 import { deleteUserTargetedCategories } from 'src/api/blog/delete-blog'
 import { getUserTargetedTags } from 'src/api/blog/get-blog'
 import { getCategoryById } from 'src/api/categories/get-category'
+import { getUserAnalystPost } from 'src/api/user/get-user'
 import { Button } from 'src/components/ui/button'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponseTag } from 'src/types/blog'
 import { ICategory } from 'src/types/categories'
+import { IAnalystPost } from 'src/types/user'
 
 function FollowingTags() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [tags, setTags] = useState<IResponseTag[]>([])
+  const [dashboard, setDashboard] = useState<IAnalystPost>()
 
   useEffect(() => {
     const fetchCategoryNames = async () => {
@@ -21,6 +24,8 @@ function FollowingTags() {
       if (tags) {
         setTags(tags)
       }
+      const dashboard = await getUserAnalystPost()
+      setDashboard(dashboard)
     }
 
     fetchCategoryNames()
@@ -103,19 +108,19 @@ function FollowingTags() {
           <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Post</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.postCount}</p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/following_tags'} className=" ">
             <div className="flex flex-row items-center rounded-sm bg-orange-50 px-2 py-1">
-              <p className="w-full font-semibold">Following Category</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="w-full font-semibold">Following Tags</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.tagFollowCount}</p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/manage-interested'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Manage Post interested</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2"></p>
             </div>
           </Link>
         </nav>
@@ -128,7 +133,7 @@ function FollowingTags() {
             </div>
           ) : (
             <div className="mx-8 w-full">
-              <div className="flex flex-col items-center">
+              <div className="flex min-h-[35rem] flex-col items-center rounded-md border-2 border-gray-400 bg-white">
                 <img
                   className="pb-6 pt-16"
                   src="https://media.dev.to/cdn-cgi/image/width=300,height=,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fi%2Fy5767q6brm62skiyywvc.png"

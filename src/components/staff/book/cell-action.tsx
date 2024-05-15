@@ -76,6 +76,21 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           title: 'Success',
           description: 'Accept Received Order Success!!!',
         })
+        setTradeDetail((prevTradeDetail) => {
+          const updatedTradeDetail = prevTradeDetail?.map((trade) => {
+            if (trade.details.tradeDetailId === formData.tradeDetailsId) {
+              return {
+                ...trade,
+                details: {
+                  ...trade.details,
+                  status: 3,
+                },
+              }
+            }
+            return trade
+          })
+          return updatedTradeDetail
+        })
         queryClient.invalidateQueries()
       } else {
         toast({

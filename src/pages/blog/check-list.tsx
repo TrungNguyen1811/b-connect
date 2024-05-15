@@ -64,10 +64,10 @@ function CheckListItemForm({
         })
       }
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
         title: 'Error Submit Target',
-        description: error.message,
+        description: error.response.data,
       })
     },
   })
@@ -236,11 +236,11 @@ function CheckListPage() {
             <img
               className="mr-8 w-[50vw] rounded-sm"
               src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1715537416/UserProfile/user02/Image/khsvggcunpq1pl6nwwka.png"
-              alt="Something went wrong ;v"
+              alt="Something went wrong "
             />
             <div className="mb-32">
               <p className="py-4 text-3xl font-bold">
-                Whoops! Looks like your partner haven&apos;t updated their target yet ;v
+                Whoops! Looks like your partner haven&apos;t updated their target yet
               </p>
               <p className="mb-6 w-[27vw]">
                 Please ask your partner to update the target request so you can provide appropriate book information.{' '}

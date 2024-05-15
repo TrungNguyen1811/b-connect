@@ -147,3 +147,14 @@ export interface IReportUser {
   reason: string
   video: File
 }
+
+export interface IAnalystPost {
+  postCount: number
+  commentCount: number
+  tagFollowCount: number
+}
+export interface IDashboardPost {
+  heartCount: number
+  commentCount: number
+  savedPostCount: number
+}

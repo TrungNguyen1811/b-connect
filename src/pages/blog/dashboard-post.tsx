@@ -5,11 +5,13 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { deletePost } from 'src/api/blog/delete-blog'
 import { IResponsePostLocked, getLockedPostByUserId, getPostByUserId } from 'src/api/blog/get-blog'
+import { getUserAnalystPost } from 'src/api/user/get-user'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/check-box'
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
+import { IDashboardPost } from 'src/types'
 import { IResponsePost } from 'src/types/blog'
 
 function DashboardBlog() {
@@ -17,10 +19,8 @@ function DashboardBlog() {
   const [blogs, setBlogs] = useState<IResponsePost[]>()
   const [lockBlogs, setLockBlogs] = useState<IResponsePostLocked[]>()
   const [checkbox, setCheckbox] = useState<boolean>(false)
+  const [dashboard, setDashboard] = useState<IDashboardPost>()
   const queryClient = useQueryClient()
-  console.log('blogs', blogs)
-  console.log('lockBlogs', lockBlogs)
-  console.log('checkbox', checkbox)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +31,8 @@ function DashboardBlog() {
           setLockBlogs(lockedBlogsData)
           const blogsData: IResponsePost[] = await getPostByUserId(user.userId)
           setBlogs(blogsData)
+          const dashboard = await getUserAnalystPost()
+          setDashboard(dashboard)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -77,16 +79,16 @@ function DashboardBlog() {
         <p className="p-4 text-3xl font-bold">Dashboard</p>
         <div className="mx-4 flex flex-row justify-between">
           <div className="flex w-full flex-col rounded-md border-2 border-gray-400 bg-slate-50 p-6">
-            <p className="text-2xl font-bold">{}0</p>
+            <p className="text-3xl font-bold">{dashboard?.heartCount}</p>
             <p className="font-light">Total post reactions</p>
           </div>
           <div className="mx-3 flex w-full flex-col rounded-md border-2 border-gray-400 bg-slate-50 p-6">
-            <p className="text-2xl font-bold">{}0</p>
+            <p className="text-3xl font-bold">{dashboard?.commentCount}</p>
             <p className="font-light">Total post comments</p>
           </div>
           <div className="flex w-full flex-col rounded-md border-2 border-gray-400 bg-slate-50 p-6">
-            <p className="text-2xl font-bold">{}0</p>
-            <p className="font-light">Total post views</p>
+            <p className="text-3xl font-bold">{dashboard?.savedPostCount}</p>
+            <p className="font-light">Total post saves</p>
           </div>
         </div>
       </div>
@@ -100,7 +102,7 @@ function DashboardBlog() {
           </Link>
           <Link to={'/blog/dashboard/following_tags'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
-              <p className="w-full font-semibold">Following Category</p>
+              <p className="w-full font-semibold">Following Tags</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
             </div>
           </Link>

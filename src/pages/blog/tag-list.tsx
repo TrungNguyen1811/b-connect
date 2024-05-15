@@ -83,7 +83,7 @@ function TagList() {
               src="https://media.dev.to/cdn-cgi/image/width=300,height=,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fi%2Fy5767q6brm62skiyywvc.png"
               alt="Error"
             />
-            <p className="text-lg">Something Wrong ;v</p>
+            <p className="text-lg">Something Wrong </p>
           </div>
         )}
       </div>

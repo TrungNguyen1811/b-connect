@@ -149,7 +149,7 @@ function CheckListViewPage() {
           description: 'Accept Trade Success!!!',
         })
         queryClient.invalidateQueries()
-        setOpen(true)
+        setOpen(false)
       } else {
         toast({
           title: 'Failed',
@@ -237,7 +237,9 @@ function CheckListViewPage() {
                   </TableRow>
                 </TableBody>
               </Table>
-              {tradeDetail && tradeDetail.details.status < 6 ? (
+            </div>
+            {tradeDetail && tradeDetail.details.isUsingMiddle ? (
+              tradeDetail && tradeDetail.details.status < 2 ? (
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger>
                     <Button>Accept</Button>
@@ -246,7 +248,7 @@ function CheckListViewPage() {
                     <DialogHeader>
                       <DialogTitle className="mx-auto mb-2">Do you want to accept?</DialogTitle>
                       <DialogDescription className="mx-auto flex flex-row items-center justify-start gap-4">
-                        <Button variant="default" className="w-16" onClick={() => handlePutStatusTrade(6)}>
+                        <Button variant="default" className="w-16" onClick={() => handlePutStatusTrade(2)}>
                           Yes
                         </Button>
                         <Button variant="destructive" onClick={() => setOpen(false)} className="w-16">
@@ -258,8 +260,30 @@ function CheckListViewPage() {
                 </Dialog>
               ) : (
                 'Accepted'
-              )}
-            </div>
+              )
+            ) : tradeDetail && tradeDetail.details.status < 6 ? (
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger>
+                  <Button>Accept</Button>
+                </DialogTrigger>
+                <DialogContent className="h-32 w-72">
+                  <DialogHeader>
+                    <DialogTitle className="mx-auto mb-2">Do you want to accept?</DialogTitle>
+                    <DialogDescription className="mx-auto flex flex-row items-center justify-start gap-4">
+                      <Button variant="default" className="w-16" onClick={() => handlePutStatusTrade(6)}>
+                        Yes
+                      </Button>
+                      <Button variant="destructive" onClick={() => setOpen(false)} className="w-16">
+                        <DialogClose>No</DialogClose>
+                      </Button>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            ) : (
+              'Accepted'
+            )}
+
             <div className="mx-auto flex flex-row gap-4">
               <div className="">
                 <p className="text-center font-medium">Middle</p>
@@ -310,10 +334,10 @@ function CheckListViewPage() {
             <img
               className="mr-8 w-[50vw] rounded-sm"
               src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1715537416/UserProfile/user02/Image/khsvggcunpq1pl6nwwka.png"
-              alt="Something went wrong ;v"
+              alt="Something went wrong "
             />
             <div className="mb-32">
-              <p className="py-4 text-3xl font-bold">Whoops! Looks like you haven&apos;t updated your target ;v</p>
+              <p className="py-4 text-3xl font-bold">Whoops! Looks like you haven&apos;t updated your target </p>
               <p className="mb-6 w-[27vw]">
                 You must update the target to require your partner to provide complete information.
               </p>

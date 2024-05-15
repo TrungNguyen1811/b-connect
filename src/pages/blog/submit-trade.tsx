@@ -521,6 +521,16 @@ export default function SubmitTrade() {
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
             <div className="flex flex-row items-center justify-end gap-2">
+              {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+                <PaymentMiddleTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+              ) : (
+                ''
+              )}
+              {userTrade?.details.isUsingMiddle == false && userTrade.details.transactionId == null ? (
+                <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+              ) : (
+                ''
+              )}
               <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
                 Check List
               </Button>
@@ -562,15 +572,10 @@ export default function SubmitTrade() {
       case 0:
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
-            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-              <PaymentMiddleTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-            ) : (
-              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-            )}
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
             </Button>
-            <Button onClick={() => setOpenForm(true)}>Submit</Button>
+            <Button onClick={() => setOpenForm(true)}>Change data</Button>
           </div>
         )
 
@@ -580,7 +585,7 @@ export default function SubmitTrade() {
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
             </Button>
-            <Button onClick={() => setOpenForm(true)}>Submit</Button>
+            <Button onClick={() => setOpenForm(true)}>Change data</Button>
           </div>
         )
 
@@ -601,7 +606,6 @@ export default function SubmitTrade() {
       case 2:
         return (
           <div className="mt-4 flex flex-row gap-2">
-            <TargetsTrade tradeDetailsId={tradeDetailId} />
             <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
               View Check List
             </Button>
@@ -658,7 +662,6 @@ export default function SubmitTrade() {
             {userTrade.details.isUsingMiddle ? (
               <div className="flex flex-col items-center justify-center gap-2">
                 <div className="flex flex-row justify-end gap-2">
-                  <TargetsTrade tradeDetailsId={tradeDetailId} />
                   <Button
                     onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}
                   >

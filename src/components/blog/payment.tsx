@@ -63,7 +63,7 @@ function PaymentTrade({ tradeDetailsId }: Props) {
           <DialogHeader className="text-lg font-semibold">
             Enter the amount you want to deposit, it will ensure a safer book exchange.
           </DialogHeader>
-          <div className="flex flex-col">
+          <div className="mt-2 flex flex-col">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
@@ -79,12 +79,14 @@ function PaymentTrade({ tradeDetailsId }: Props) {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={postPayment.isLoading} className="w-24">
-                  {postPayment.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Payment
-                </Button>
-                <Button onClick={() => setOpen(false)} className="w-24">
-                  Cancel
-                </Button>
+                <div className="mt-2 flex flex-row gap-2">
+                  <Button type="submit" disabled={postPayment.isLoading} className="w-24">
+                    {postPayment.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Payment
+                  </Button>
+                  <Button onClick={() => setOpen(false)} className="w-24" variant={'destructive'}>
+                    Cancel
+                  </Button>
+                </div>
               </form>
             </Form>
           </div>
