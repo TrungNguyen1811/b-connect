@@ -65,6 +65,7 @@ export interface IPostResponse {
   videoDir?: string
   isTradePost?: boolean
   isLock?: boolean
+  isBanned?: boolean
   title?: string
   content?: string
   listCate?: IListCate[]
@@ -84,6 +85,7 @@ export interface IResponsePost {
   readingTime: string
   likesCount: number
 }
+
 export interface IListCate {
   cateId: string
   cateName: string

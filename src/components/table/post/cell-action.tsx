@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import { User } from 'src/types/user'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,25 +7,65 @@ import {
   DropdownMenuTrigger,
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
-import { Edit, MoreHorizontal } from 'lucide-react'
-import BanUser from 'src/components/admins/ban-user'
-import UpdateBanUser from './manage-post/user-unban'
-import UpdateRoleUser from './manage-post/update-role-user'
+import { Edit, Loader2, MoreHorizontal } from 'lucide-react'
+import { IResponsePost } from 'src/types/blog'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'src/components/ui/use-toast'
+import { postBanPost } from 'src/api/blog/post-blog'
 
 interface CellActionProps {
-  data: User
+  data: IResponsePost
 }
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  // const [loading, setLoading] = useState(false)
-  // const [open, setOpen] = useState(false)
+  console.log('data', data.postData)
   const navigate = useNavigate()
   // const onConfirm = async () => {}
+  const query = useQueryClient()
+  const banPost = useMutation((postId: string) => postBanPost(postId), {
+    onSuccess: (data) => {
+      if (data) {
+        toast({
+          title: 'Success',
+          description: 'Ban Post Success!!!',
+        })
+      } else {
+        toast({
+          title: 'Failed',
+          description: 'Ban Post Failed!!!',
+        })
+      }
+      query.invalidateQueries()
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error Ban Post',
+        description: error.response.data,
+      })
+    },
+  })
+
+  if (banPost.isError) {
+    return <div className="error">{`Error: ${banPost.error}`}</div>
+  }
+  const onSubmit = (postId: string) => {
+    banPost.mutate(postId)
+  }
   return (
     <div className="flex w-16 flex-row items-center gap-2">
       {/* <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} /> */}
       <div className="flex gap-2">
-        {data.userId && (data.isBanned ? <UpdateBanUser userId={data.userId} /> : <BanUser userId={data.userId} />)}
-        {data.userId && <UpdateRoleUser userId={data.userId} />}
+        {data.postData.postId && (
+          <Button
+            onClick={() => onSubmit(data.postData.postId as string)}
+            disabled={banPost.isLoading}
+            variant={data.postData.isBanned ? 'destructive' : 'default'}
+            className="my-2"
+            type="submit"
+          >
+            {banPost.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}
+            {data.postData.isBanned ? 'Banned' : 'Ban'}
+          </Button>
+        )}
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -37,7 +76,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => navigate(`/admin/manage/user/${data.userId}`)}>
+          <DropdownMenuItem onClick={() => navigate(`/blog/${data.postData.postId}`)}>
             <Edit className="mr-2 h-4 w-4" /> Detail
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -26,7 +26,6 @@ function TopBook() {
     refetchInterval: 300000,
   })
   const { t } = useTranslation('translation')
-
   const renderBooks = useMemo(() => {
     if (isLoading)
       return (

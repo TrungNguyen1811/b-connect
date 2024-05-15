@@ -1,13 +1,9 @@
 import { axiosClient } from 'src/lib/axios'
-export default async function refreshToken(token: string) {
+export default async function refreshToken() {
   return axiosClient
-    .post(
-      '/Account/RefreshToken',
-      { token },
-      {
-        withCredentials: true,
-      },
-    )
+    .post('/Account/RefreshToken', {
+      withCredentials: true,
+    })
     .then((res) => {
       const response = {
         status: res.status,

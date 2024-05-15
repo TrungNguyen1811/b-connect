@@ -30,6 +30,7 @@ export default function LandingBlog() {
   const [blogs, setBlogs] = useState<GetManyPostsParams>(initPostState)
 
   const { data, isLoading, isError } = useGetManyPosts(blogs)
+  console.log('help', isError)
   const [open, setOpen] = useState(false)
   useEffect(() => {
     const fl = async () => {
@@ -73,6 +74,7 @@ export default function LandingBlog() {
         toast({
           title: 'Welcome to BConnect!!!',
         })
+        setOpen(false)
         navigate('/blog')
       } else {
         toast({

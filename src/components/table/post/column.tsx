@@ -50,7 +50,7 @@ export const columns: ColumnDef<IResponsePost>[] = [
   },
   {
     accessorKey: 'postData.isTradePost',
-    header: 'isTradePost',
+    header: 'Trade Post',
     cell: ({ getValue }) => {
       const isTradePost = getValue() as boolean
       return (
@@ -62,7 +62,7 @@ export const columns: ColumnDef<IResponsePost>[] = [
   },
   {
     accessorKey: 'postData.isLock',
-    header: 'isLock',
+    header: 'Lock',
     cell: ({ getValue }) => {
       const isLock = getValue() as string
       return (
@@ -76,7 +76,7 @@ export const columns: ColumnDef<IResponsePost>[] = [
     accessorKey: 'postData.createdAt',
     header: 'Created At',
     cell: ({ getValue }) => {
-      const createdAt = getValue() as string
+      const createdAt = getValue() as Date
       return (
         <div className="w-[6rem]">
           <p>{format(createdAt, 'PPP')}</p>

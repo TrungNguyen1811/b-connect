@@ -21,12 +21,6 @@ function PostTable() {
         }}
         setSearchQuery={(value) => {
           table.setGlobalFilter(value.search)
-          table.setColumnFilters(() => [
-            {
-              id: 'role',
-              value: value.role,
-            },
-          ])
         }}
       />
     )

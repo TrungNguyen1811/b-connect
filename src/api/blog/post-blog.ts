@@ -191,3 +191,22 @@ async function addSocialTag(data: { tagNames: string[]; postId: string }) {
 }
 
 export { addSocialTag }
+
+async function postBanPost(postId: string) {
+  return await authAxiosClient
+    .put(`/Post/ban-post?postId=${postId}`, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postBanPost }

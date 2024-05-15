@@ -70,6 +70,13 @@ export async function getPostByUserId(userId: string) {
   })
 }
 
+export async function checkUserLikePost(postId: string) {
+  return authAxiosClient.get(`/Post/check-user-like-or-not?postId=${postId}`).then((res) => {
+    const data = res.data
+    return data
+  })
+}
+
 export interface IResponsePostLocked {
   postId: string
   status: string

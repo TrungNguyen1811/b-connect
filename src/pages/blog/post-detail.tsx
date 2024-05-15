@@ -1,5 +1,5 @@
 import { Avatar } from '@radix-ui/react-avatar'
-import React, { useCallback, useEffect, useId, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { AvatarImage } from '../../components/ui/avatar'
 import { Separator } from '../../components/ui/separator'
 import { BookMarkedIcon, HandshakeIcon, HeartIcon, MessageCircleHeart, MessageCircleHeartIcon } from 'lucide-react'
@@ -20,7 +20,7 @@ import { IResponseInteresterList } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
 import { removeUserSavedPost } from 'src/api/blog/delete-blog'
 import { addNewSavedPost, postLikePost } from 'src/api/blog/post-blog'
-import { getCheckLikePosts, getUserSavedPosts } from 'src/api/blog/get-blog'
+import { checkUserLikePost, getUserSavedPosts } from 'src/api/blog/get-blog'
 import {
   Dialog,
   DialogClose,
@@ -40,7 +40,6 @@ function BlogDetail() {
   const contents: Value = JSON.parse(blog?.postData.content as string)
   const [comments, setComments] = useState<IComment[]>()
   const [isSaved, setIsSaved] = useState<boolean>()
-  const [isLiked, setIsLiked] = useState<boolean>()
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const { toast } = useToast()
@@ -49,19 +48,6 @@ function BlogDetail() {
   useEffect(() => {
     setBlog(data.blog)
   }, [data.blog])
-
-  useEffect(() => {
-    const checkLikePost = async () => {
-      const like = await getCheckLikePosts(blog?.postData.postId as string)
-      if (like === 0) {
-        setIsLiked(false)
-      } else {
-        setIsLiked(true)
-      }
-    }
-
-    checkLikePost()
-  }, [blog?.postData.postId])
 
   useEffect(() => {
     const renderCommentsPost = async () => {
@@ -109,10 +95,10 @@ function BlogDetail() {
   const likePost = async () => {
     if (blog) {
       await postLikePost(blog.postData.postId as string).then((res) => {
-        if (res === true) {
-          setIsLiked(true)
+        if (res.liked === true) {
+          setCheckLike(true)
         } else {
-          setIsLiked(false)
+          setCheckLike(false)
         }
       })
     }
@@ -124,22 +110,6 @@ function BlogDetail() {
       textarea.focus()
     }
   }
-
-  const [totalComment, setTotalComment] = useState(0)
-
-  useEffect(() => {
-    let commentsCount = 0
-
-    if (blog && blog.postData.commentsId) {
-      for (const comments of blog.postData.commentsId) {
-        if (comments) {
-          commentsCount += 1
-        }
-      }
-    }
-
-    setTotalComment(commentsCount)
-  }, [blog])
 
   const [commentText, setCommentText] = useState('')
 
@@ -209,13 +179,10 @@ function BlogDetail() {
   //   return postPostComment(comment)
   // }, [])
 
-  const id = useId()
-
   const { mutateAsync, isLoading: isAddComment } = useMutation({
     mutationFn: postPostComment,
     onSuccess: (payload: IComment) => {
       if (!blog) return
-      // addComment(payload)
       queryClient.invalidateQueries()
     },
   })
@@ -255,11 +222,21 @@ function BlogDetail() {
     [blog?.postData.postId, user?.userId, mutateAsync, reset, toast],
   )
 
+  const [checkLike, setCheckLike] = useState<boolean>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const checkLike = await checkUserLikePost(blog?.postData.postId as string)
+      if (checkLike == 'true') {
+        setCheckLike(true)
+      } else setCheckLike(false)
+    }
+    fetchData()
+  }, [blog?.postData.postId])
+
   const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isInterested, setIsInterested] = useState<boolean>()
   const [postInterestId, setPostInterestId] = useState<string>()
   const [open, setOpenDialog] = useState<boolean>(false)
-
   useEffect(() => {
     const fetchData = async () => {
       const interesterList: IResponseInteresterList[] = await getPostInterestByPostId(blog?.postData.postId as string)
@@ -320,12 +297,12 @@ function BlogDetail() {
               className="m-2 mt-16 flex flex-col items-center rounded-sm p-2 hover:bg-gray-300"
               onClick={() => likePost()}
             >
-              <HeartIcon size={24} className={isLiked ? ' text-orange-400 ' : ''} />
+              <HeartIcon size={24} className={checkLike ? ' text-orange-400 ' : ''} />
               <p>{blog?.likesCount}</p>
             </div>
             <div className="m-2 flex flex-col items-center rounded-sm p-2 hover:bg-gray-300" onClick={focusTextarea}>
               <MessageCircleHeartIcon size={24} />
-              <p>{totalComment}</p>
+              <p>{comments?.length}</p>
             </div>
             <div
               className="m-2 rounded-sm p-4 hover:bg-gray-300"
@@ -342,6 +319,7 @@ function BlogDetail() {
               ) : (
                 <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
                   <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
+                  {interesterList.length}
                   <Dialog open={open} onOpenChange={setOpenDialog}>
                     <DialogContent className="w-[32rem]">
                       <DialogHeader>

@@ -2,8 +2,6 @@ import { Table } from '@tanstack/react-table'
 import React from 'react'
 import { cn } from 'src/lib/utils'
 import SearchInput from 'src/components/ui/search-input'
-import { DataTableFacetedFilter } from 'src/components/ui/data-table-facet'
-import { TABLE_USER_ROLE_FACET_OPTIONS } from './option'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponsePost } from 'src/types/blog'
 export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
@@ -33,20 +31,6 @@ export function UserTableToolbar({
           }}
           className="h-8 max-w-xs"
         />
-        {table.getColumn('role') && (
-          <DataTableFacetedFilter
-            title="Role"
-            onOptionsChange={(options) => {
-              const role = options.map((option) => option.value).join(',')
-              setSearchQuery &&
-                setSearchQuery({
-                  ...queries,
-                  role,
-                })
-            }}
-            options={TABLE_USER_ROLE_FACET_OPTIONS}
-          />
-        )}
       </div>
     </div>
   )
