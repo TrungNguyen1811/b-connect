@@ -42,7 +42,7 @@ authAxiosClient.interceptors.response.use(
       try {
         const { data, status } = await refreshToken()
         if (status === 200 || status === 201) {
-          localStorage.setItem('token', data.accessToken)
+          localStorage.setItem('token', data)
           return authAxiosClient(originalRequest)
         }
 
@@ -51,7 +51,7 @@ authAxiosClient.interceptors.response.use(
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         // localStorage.removeItem('expiresIn')
-        // window.location.href = '/login'
+        window.location.href = '/login'
       }
     }
     return Promise.reject(error)
