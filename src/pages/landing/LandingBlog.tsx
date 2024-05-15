@@ -68,7 +68,7 @@ export default function LandingBlog() {
   }
 
   const onSubmit = async () => {
-    await postAddUserTargetedCategory(JSON.stringify(selectedItems)).then((res) => {
+    await postAddUserTargetedCategory(selectedItems).then((res) => {
       if (res) {
         toast({
           title: 'Welcome to BConnect!!!',

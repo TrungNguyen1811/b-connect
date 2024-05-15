@@ -4,7 +4,7 @@ import { axiosClient } from 'src/lib/axios'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
 export async function getAllCategory() {
-  return axiosClient.get('/Category/get-all-category?PageNumber=1&PageSize=30').then((res) => {
+  return axiosClient.get('/Category/get-all-category').then((res) => {
     const data = res.data
     const pagination = res.headers['x-pagination']
     const parseJson: IResponsePagination = JSON.parse(pagination)
@@ -19,7 +19,7 @@ export async function getAllCategory() {
 }
 
 export async function getAllCategoryNoParam() {
-  return axiosClient.get('/Category/get-all-category?PageNumber=1&PageSize=50', {}).then((res) => {
+  return axiosClient.get('/Category/get-all-category', {}).then((res) => {
     const data: ICategory[] = res.data
     // const pagination = res.headers['x-pagination']
     // const parseJson: IQueryPagination = JSON.parse(pagination)

@@ -35,9 +35,10 @@ import Evidence from 'src/components/blog/evidence'
 import ReportTrade from 'src/components/blog/report'
 import ReviewTrade from 'src/components/blog/review'
 import TargetsTrade from 'src/components/blog/targets'
-import PaymentTrade from 'src/components/blog/payment'
 import CardProfile from 'src/components/blog/card-profile'
 import CardInfoTrade from 'src/components/blog/card-info-trade'
+import PaymentMiddleTrade from 'src/components/blog/payment-middle'
+import PaymentTrade from 'src/components/blog/payment'
 
 export const ITradeStatus = {
   0: 'Unsubmitted',
@@ -520,11 +521,6 @@ export default function SubmitTrade() {
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
             <div className="flex flex-row items-center justify-end gap-2">
-              {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-                <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-              ) : (
-                ''
-              )}
               <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
                 Check List
               </Button>
@@ -534,11 +530,6 @@ export default function SubmitTrade() {
       case 3:
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
-            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-            ) : (
-              ''
-            )}
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
             </Button>
@@ -549,11 +540,6 @@ export default function SubmitTrade() {
       case 4:
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
-            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-            ) : (
-              ''
-            )}
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
             </Button>
@@ -565,11 +551,6 @@ export default function SubmitTrade() {
       case 7:
         return (
           <div className="mt-4 flex justify-center gap-2 pb-4">
-            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-            ) : (
-              ''
-            )}
             {userTrade?.details.isUsingMiddle == true ? (
               <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
             ) : (
@@ -582,9 +563,9 @@ export default function SubmitTrade() {
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
             {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
+              <PaymentMiddleTrade tradeDetailsId={userTrade.details.tradeDetailId} />
             ) : (
-              ''
+              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
             )}
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
@@ -596,11 +577,6 @@ export default function SubmitTrade() {
       case 1:
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
-            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
-              <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
-            ) : (
-              ''
-            )}
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
             </Button>

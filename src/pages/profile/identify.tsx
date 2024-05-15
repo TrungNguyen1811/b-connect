@@ -366,11 +366,12 @@ function IdentificationUser() {
         </div>
         <div className="flex h-96 flex-row">
           <div className="ml-16">
-            <p>ID: {getNic?.id}</p>
+            <p>ID:</p>
+            <p>{getNic?.id}</p>
             <p>NAME: {getNic?.name}</p>
             <p>SEX: {getNic?.sex}</p>
             <p>DATE OF BIRTH: {getNic?.doB}</p>
-            <p>ADDRESS{getNic?.address}</p>
+            <p>ADDRESS: {getNic?.address}</p>
             <p>HOME: {getNic?.home}</p>
             <p>NATIONALITY: {getNic?.nationality}</p>
           </div>
@@ -378,7 +379,7 @@ function IdentificationUser() {
       </div>
     )
   }
-
+  console.log('va', user)
   return (
     <div className="w-[75vw] rounded-lg border bg-card text-card-foreground shadow-sm">
       <div className="flex flex-row items-center justify-between">
@@ -386,12 +387,12 @@ function IdentificationUser() {
           <p className="text-xl">Identification Information</p>
           <p className="text-gray-500">Manage your identification information</p>
         </div>
-        <Button type="button" onClick={resetForm} className="ml-4 w-32">
+        <Button type="button" onClick={resetForm} className="mr-4 w-32">
           Reset
         </Button>
       </div>
       <Separator />
-      {user?.isValidated && isUpdate === false ? (
+      {user?.isValidated && isUpdate == false ? (
         <div>
           <Result />
         </div>

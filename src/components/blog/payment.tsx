@@ -5,12 +5,27 @@ import { IPaymentTrade } from 'src/types/blog'
 import { postPaymentTrade } from 'src/api/blog/interested'
 import { Loader2 } from 'lucide-react'
 import { faker } from '@faker-js/faker'
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogDescription } from '../ui/dialog'
+import { Form, FormItem, FormLabel, FormControl, FormMessage, FormField } from '../ui/form'
+import { Input } from '../ui/input'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 
 interface Props {
   tradeDetailsId: string
 }
+const FormSchema = z.object({
+  amount: z.number(),
+})
+type FormData = z.infer<typeof FormSchema>
 function PaymentTrade({ tradeDetailsId }: Props) {
   const transactionId = faker.string.uuid()
+  const [open, setOpen] = useState<boolean>(false)
+  const form = useForm<FormData>({
+    resolver: zodResolver(FormSchema),
+  })
   const postPayment = useMutation((formData: IPaymentTrade) => postPaymentTrade(formData), {
     onSuccess: (data) => {
       if (data) {
@@ -29,18 +44,56 @@ function PaymentTrade({ tradeDetailsId }: Props) {
       })
     },
   })
-  const onSubmit = async () => {
+  const onSubmit = async (data: FormData) => {
     const formData: IPaymentTrade = {
       tradeDetailsId: tradeDetailsId as string,
       transactionId: transactionId as string,
-      isUsingMiddle: true,
+      isUsingMiddle: false,
+      amount: data.amount,
     }
     postPayment.mutate(formData)
   }
   return (
-    <Button type="submit" disabled={postPayment.isLoading} onClick={onSubmit} className="w-24">
-      {postPayment.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Payment
-    </Button>
+    <div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger className="flex">
+          <Button>Payment</Button>
+        </DialogTrigger>
+        <DialogContent className="min-h-[20rem] w-[36rem]">
+          <DialogHeader className="text-lg font-semibold">
+            Enter the amount you want to deposit, it will ensure a safer book exchange.
+          </DialogHeader>
+          <div className="flex flex-col">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                  control={form.control}
+                  name="amount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mt-4">Amount</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Amount..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={postPayment.isLoading} className="w-24">
+                  {postPayment.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Payment
+                </Button>
+                <Button onClick={() => setOpen(false)} className="w-24">
+                  Cancel
+                </Button>
+              </form>
+            </Form>
+          </div>
+          <DialogDescription>
+            Note: Please discuss with your book exchange partner the deposit amount.
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
 export default PaymentTrade

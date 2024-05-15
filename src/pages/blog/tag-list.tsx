@@ -3,8 +3,11 @@ import { ICategory } from 'src/types'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Input } from 'src/components/ui/input'
 import { Search } from 'lucide-react'
-import { getAllCategory } from 'src/api/categories/get-category'
+import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import TagItem from 'src/components/blog/tags-item'
+import { useAuth } from 'src/hooks/useAuth'
+import { IResponseTag } from 'src/types/blog'
+import { getUserTargetedTags } from 'src/api/blog/get-blog'
 
 function TagList() {
   const [categories, setCategories] = useState<ICategory[]>()
@@ -20,8 +23,8 @@ function TagList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesData = await getAllCategory()
-        setCategories(categoriesData.data)
+        const categoriesData = await getAllCategoryNoParam()
+        setCategories(categoriesData)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
@@ -29,6 +32,23 @@ function TagList() {
 
     fetchData()
   }, [])
+
+  const { user } = useAuth()
+  const [myTags, setMyTags] = useState<IResponseTag[]>([])
+
+  useEffect(() => {
+    const fetchCategoryNames = async () => {
+      const tags = await getUserTargetedTags()
+      if (tags) {
+        setMyTags(tags)
+      }
+    }
+
+    fetchCategoryNames()
+  }, [user])
+
+  const userTagIds = new Set(myTags.map((tag) => tag.cateId))
+  const filteredCategories = categories?.filter((category) => !userTagIds.has(category.cateId as string))
 
   return (
     <div className="mx-28">
@@ -49,8 +69,11 @@ function TagList() {
       <div className="h-full w-full pb-8">
         {categories ? (
           <div className="mx-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
-            {categories.map((category, index) => (
-              <div key={index}>{category.cateId && <TagItem id={category.cateId} />}</div>
+            {myTags.map((tag) => (
+              <TagItem key={tag.cateId} id={tag.cateId} name={tag.cateName} />
+            ))}
+            {filteredCategories?.map((category, index) => (
+              <div key={index}>{category.cateId && <TagItem id={category.cateId} name={category.cateName} />}</div>
             ))}
           </div>
         ) : (

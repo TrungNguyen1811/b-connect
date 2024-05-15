@@ -138,8 +138,8 @@ async function postPaymentTrade(data: IPaymentTrade) {
     .post('/Payment/pre-trade-checkout', {
       tradeDetailsId: data.tradeDetailsId,
       transactionId: data.transactionId,
-      isUsingMiddle: true,
-      amount: 100000,
+      isUsingMiddle: data.isUsingMiddle,
+      amount: data.amount ? data.amount : '',
     })
     .then((response) => {
       if (response.status === 200) {
@@ -229,7 +229,7 @@ async function postReportUserPostTrade(trade: IReportUser) {
 
 export { postReportUserPostTrade }
 
-async function postAddUserTargetedCategory(tags: string) {
+async function postAddUserTargetedCategory(tags: string[]) {
   return await authAxiosClient
     .post('/SocialMedia/add-user-targeted-category', tags)
     .then((response) => {
