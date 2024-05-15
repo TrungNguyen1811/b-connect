@@ -126,4 +126,6 @@ export interface IEvidence {
 export interface IPaymentTrade {
   transactionId: string
   tradeDetailsId: string
+  isUsingMiddle: boolean
+  amount?: number
 }

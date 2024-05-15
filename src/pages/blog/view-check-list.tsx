@@ -237,7 +237,7 @@ function CheckListViewPage() {
                   </TableRow>
                 </TableBody>
               </Table>
-              {tradeDetail!.details.status < 6 ? (
+              {tradeDetail && tradeDetail.details.status < 6 ? (
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger>
                     <Button>Accept</Button>

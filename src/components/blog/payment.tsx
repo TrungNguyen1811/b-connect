@@ -33,6 +33,7 @@ function PaymentTrade({ tradeDetailsId }: Props) {
     const formData: IPaymentTrade = {
       tradeDetailsId: tradeDetailsId as string,
       transactionId: transactionId as string,
+      isUsingMiddle: true,
     }
     postPayment.mutate(formData)
   }

@@ -19,8 +19,8 @@ export const createBlogSchema = z.object({
 })
 
 export const updateBlogSchema = z.object({
-  productImages: z.any(),
-  productVideos: z.any(),
+  Image: z.any(),
+  Video: z.any(),
   title: z.string(),
   content: z.string(),
   isLock: z.boolean(),

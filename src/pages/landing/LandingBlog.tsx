@@ -31,7 +31,6 @@ export default function LandingBlog() {
 
   const { data, isLoading, isError } = useGetManyPosts(blogs)
   const [open, setOpen] = useState(false)
-
   useEffect(() => {
     const fl = async () => {
       const tag = await getUserTargetedTags()
@@ -87,13 +86,13 @@ export default function LandingBlog() {
 
   const renderPosts = useMemo(() => {
     if (isLoading) return <PostGridLoading pageSize={8} className="h-96 " />
-    if (!Array.isArray(data) || data.length === 0)
+    if (!Array.isArray(data?.data) || data?.data.length === 0)
       return (
         <div className="col-span-full row-span-full h-full w-full">
           <h3 className="text-center text-slate-300">No result found</h3>
         </div>
       )
-    return data.map((post) => {
+    return data?.data.map((post) => {
       return <Post key={post.postData.postId} postId={post.postData.postId!} />
     })
   }, [data, isLoading])

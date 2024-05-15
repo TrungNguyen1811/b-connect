@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { IResponsePostLocked, getLockedPostByUserId, getPostByUserId } from 'src/api/blog/get-blog'
+import { IResponsePostLocked, getLockedPostByUserId } from 'src/api/blog/get-blog'
 import { getPostInterestByPostId, getPostInterestedByUser, removeInterestedPost } from 'src/api/blog/interested'
 import { Avatar, AvatarImage } from 'src/components/ui/avatar'
 import { Button } from 'src/components/ui/button'
@@ -60,7 +60,7 @@ function PostInterestedManage() {
     mutate(userInterest?.recordId as string)
   }
   //
-  const [blogs, setBlogs] = useState<IResponsePost[]>()
+  const [blogs, setBlogs] = useState<IResponsePost>()
   const [lockBlogs, setLockBlogs] = useState<IResponsePostLocked[]>()
   const [checkbox, setCheckbox] = useState<boolean>(false)
 
@@ -72,15 +72,12 @@ function PostInterestedManage() {
             const id = '1'
             const lockedBlogsData: IResponsePostLocked[] = await getLockedPostByUserId(id as string)
             setLockBlogs(lockedBlogsData)
-            const blogsData: IResponsePost[] = await getPostByUserId(user.userId)
-            setBlogs(blogsData)
           }
         }
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
-
     fetchData()
   }, [user, checkbox])
 
@@ -90,7 +87,7 @@ function PostInterestedManage() {
         <p className="p-4 text-3xl font-bold">Dashboard {'>>'} Manage Post Interested</p>
       </div>
       <div className="mx-4 flex flex-row">
-        <nav className="mr-3 md:w-[18rem]">
+        <nav className="mr-3 md:w-[20.5rem]">
           <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Post</p>
@@ -112,17 +109,30 @@ function PostInterestedManage() {
         </nav>
         <div className="h-full w-full">
           <div className="flex flex-row items-center">
-            <p className="mr-2">Lock Post</p>
+            <p className="mr-2">In Progress</p>
             <Checkbox checked={checkbox} onCheckedChange={(checked: boolean) => setCheckbox(checked)} />
           </div>
           {checkbox ? (
-            <div className="min-h-[35rem] rounded-md border-2 bg-white p-4">
+            <div className="min-h-[35rem] rounded-md border-2 border-gray-400 bg-white p-4">
               {lockBlogs?.map((lock, index) => (
-                <div key={index} className="">
+                <div key={index} className="mx-2">
                   <Link to={`/blog/dashboard/submit-form/${lock.postId}`}>
                     <div className="flex flex-col">
-                      <p className="text-lg">{lock.title}</p>
-                      <p className="text-red-600">{lock.status}</p>
+                      <div className="w-9/10 flex flex-row items-center">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={lock.avatarDir} />
+                        </Avatar>
+                        <div className="my-2 ml-4 flex flex-col items-start">
+                          <div className="flex flex-row items-center justify-start">
+                            <p className="mr-2 text-lg font-bold text-orange-600 hover:text-orange-700">{lock.title}</p>
+                          </div>
+                          <div className="flex flex-row items-center justify-stretch gap-2">
+                            <p className="font-semibold text-gray-700">{lock.postOwner}</p>
+                            <p className="text-sm font-light">{format(lock.createDate, 'PPP')}</p>
+                          </div>
+                        </div>
+                        <div className="flex-grow"></div>
+                      </div>
                     </div>
                   </Link>
                   <Separator className="my-2" />
@@ -130,15 +140,13 @@ function PostInterestedManage() {
               ))}
             </div>
           ) : interestList && interestList.length > 0 ? (
-            <div className="min-h-[35rem] rounded-md border-2 bg-white">
+            <div className="min-h-[35rem] rounded-md border-2 border-gray-400 bg-white">
               {interestList.map((post, index) => (
                 <div key={index} className="flex w-full flex-col">
                   <div className="mx-4 p-4 pb-2">
                     <div className="w-9/10 flex flex-row items-center">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-                        />
+                        <AvatarImage src={post.avatarDir} />
                       </Avatar>
                       <div className="my-2 ml-4 flex flex-col items-start">
                         <Link className="flex flex-row items-center justify-start" to={`/blog/${post.postData.postId}`}>

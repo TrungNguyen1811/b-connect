@@ -25,7 +25,7 @@ export function Active() {
     <div>
       <div className="rounded-lg border border-gray-300 bg-white">
         <div className="m-2">
-          <p className="p-2 pb-0 text-lg font-bold">Active discussions</p>
+          <p className="p-2 pb-0 text-lg font-bold text-orange-500">Active discussions</p>
           <div className="my flex flex-col p-2">
             {blogList.map((blog, index) => (
               <Link key={index} to={`/blog/${blog.postId}`}>
@@ -36,9 +36,7 @@ export function Active() {
                     <p className="flex flex-row items-center font-light">
                       {/* {blog.like?.length} <HeartIcon size={16} className="ml-1" /> */}
                     </p>
-                    <p className="ml-4 flex flex-row items-center font-light">
-                      {/* {blog.comments?.length} <MessageCircleHeartIcon size={16} className="ml-1" /> */}
-                    </p>
+                    <p className="flex flex-row items-center text-sm font-light">12 comments</p>
                   </div>
                   {index + 1 < blogList.length && <Separator className="border-1 mt-4" />}
                 </div>

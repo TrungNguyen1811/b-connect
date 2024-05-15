@@ -65,7 +65,7 @@ function FollowingTags() {
     }
 
     return (
-      <div className="h-48 w-full rounded-lg border-2 bg-white">
+      <div className="h-48 w-48 rounded-lg border-2 bg-white">
         <div className="flex h-full flex-col justify-between p-4 pb-1">
           <div className="px-1">
             <Link to={`/blog/${tag?.cateId}`}>

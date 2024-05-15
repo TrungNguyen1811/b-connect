@@ -52,8 +52,8 @@ async function updateBlogApi(blogData: {
   postId: string
   // listCate: string
   title: string
-  ProductImages?: File | null
-  ProductVideos?: File | null
+  Image?: File | null
+  Video?: File | null
   content: string
   isLock?: boolean
 }) {
@@ -62,16 +62,16 @@ async function updateBlogApi(blogData: {
   data.append('PostId', blogData.postId)
   data.append('Content', blogData.content)
   data.append('IsLock', blogData.isLock)
-  if (blogData.ProductImages instanceof File) {
-    data.append('Image', blogData.ProductImages)
+  if (blogData.Image instanceof File) {
+    data.append('Image', blogData.Image)
   } else {
-    console.log('blogData.ProductImages is not logic object File')
+    console.log('blogData.Image is not logic object File')
   }
 
-  if (blogData.ProductVideos instanceof File) {
-    data.append('Video', blogData.ProductVideos)
+  if (blogData.Video instanceof File) {
+    data.append('Video', blogData.Video)
   } else {
-    console.log('blogData.ProductVideos is not logic object File')
+    console.log('blogData.Video is not logic object File')
   }
 
   return await authAxiosClient

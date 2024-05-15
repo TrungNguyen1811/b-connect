@@ -105,7 +105,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   }
 
   return (
-    <div className="flex w-44 flex-row gap-2">
+    <div className="flex w-12 flex-row gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

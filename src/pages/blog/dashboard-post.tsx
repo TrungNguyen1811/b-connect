@@ -115,7 +115,7 @@ function DashboardBlog() {
           <div className="flex flex-row items-center justify-between">
             <p className="text-xl font-bold">Posts</p>
             <div className="flex flex-row items-center">
-              <p className="mr-2">Lock Post</p>
+              <p className="mr-2">In Progress Trade</p>
               <Checkbox checked={checkbox} onCheckedChange={(checked: boolean) => setCheckbox(checked)} />
             </div>
           </div>
@@ -138,7 +138,7 @@ function DashboardBlog() {
                 <div className="my-4 mt-2" key={index}>
                   {blog.postData && blog.postData.postId ? (
                     <div className="flex flex-row items-center justify-between">
-                      <div>
+                      <div className="w-96">
                         {blog.postData.isTradePost ? (
                           <Link
                             className="flex flex-row items-center justify-start"
@@ -171,10 +171,23 @@ function DashboardBlog() {
                           <p>0</p>
                         </div>
                       </div>
-                      <div className="flex flex-row items-center justify-between gap-5 text-gray-500">
-                        <Link to={`/blog/${blog.postData.postId}`}>View</Link>
-                        <Link to={`/blog/${blog.postData.postId}/edit`}>Edit</Link>
-                        <button onClick={() => onDelete(blog.postData.postId as string)}>Delete</button>
+                      <div className="flex w-36 flex-row items-center justify-start gap-5 text-gray-500">
+                        <Link to={`/blog/${blog.postData.postId}`} className="hover:text-orange-500">
+                          View
+                        </Link>
+                        <Link to={`/blog/${blog.postData.postId}/edit`} className="hover:text-orange-500">
+                          Edit
+                        </Link>
+                        {blog.postData.isLock ? (
+                          ''
+                        ) : (
+                          <button
+                            onClick={() => onDelete(blog.postData.postId as string)}
+                            className="hover:text-orange-500"
+                          >
+                            Delete
+                          </button>
+                        )}
                       </div>
                     </div>
                   ) : (

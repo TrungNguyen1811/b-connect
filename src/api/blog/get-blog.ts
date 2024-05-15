@@ -3,134 +3,7 @@ import { ICategory } from 'src/types/categories'
 import axios from 'axios'
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { IDefaultQuery } from 'src/types/requests'
-
-// const fakeContentArray = Array.from({ length: 7 }, () => ({
-//   id: faker.string.uuid(),
-//   type: 'p',
-//   children: [{ text: faker.lorem.sentence() }],
-// }))
-
-// // Convert the fake content array to a JSON string
-// const fakeContent = JSON.stringify(fakeContentArray)
-
-// const createCategory = (): ICategory => ({
-//   cateId: faker.string.uuid(),
-//   cateName: faker.lorem.word({ length: 4, strategy: 'shortest' }),
-// })
-
-// const fakeCommentArray: {
-//   commentId: string
-//   userId: {
-//     userId: string
-//     email: string
-//     avatar: string
-//     fullName: string
-//   }
-//   comment: string
-//   createdAt: string
-// }[] = Array.from({ length: 10 }, () => ({
-//   commentId: faker.string.uuid(),
-//   userId: {
-//     userId: faker.string.uuid(),
-//     email: faker.lorem.word({ length: 10, strategy: 'shortest' }),
-//     avatar: faker.image.urlLoremFlickr({
-//       height: 50,
-//       width: 50,
-//     }),
-//     fullName: faker.lorem.word({ length: 10, strategy: 'shortest' }),
-//   },
-//   comment: faker.lorem.words({ min: 10, max: 150 }),
-//   createdAt: faker.date.recent().toISOString(),
-// }))
-
-// const fakeLikeArray: {
-//   _id: string
-//   user_id: string
-// }[] = Array.from({ length: 7 }, () => ({
-//   _id: faker.string.uuid(),
-//   user_id: faker.string.uuid(),
-// }))
-
-// export function getBlogById(id: string) {
-//   // TODO: Replace this with an actual API call
-//   const blog: IBlogg = {
-//     postId: faker.string.uuid(),
-//     userId: '',
-//     title: faker.lorem.words(),
-//     productImgs: faker.image.urlLoremFlickr({
-//       height: 100,
-//       width: 100,
-//     }),
-//     content: fakeContent,
-//     createdAt: faker.date.recent().toISOString(),
-//   }
-
-//   return new Promise<IBlogg>((resolve) => {
-//     setTimeout(() => resolve(blog), 1000)
-//   })
-//   // return authAxiosClient.get(`/book/${id}`);
-// }
-
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export function getManyBlogBooks() {
-//   // TODO: Replace this with an actual API call
-
-//   const blogs: IBlogg[] = Array.from({ length: 100 }, () => ({
-//     _id: faker.string.uuid(),
-//     userId: '',
-//     title: faker.lorem.words(),
-//     image: faker.image.urlLoremFlickr({
-//       height: 100,
-//       width: 100,
-//     }),
-//     content: fakeContent,
-//     category: [
-//       {
-//         _id: faker.string.uuid(),
-//         name: faker.lorem.word({ length: 10, strategy: 'shortest' }),
-//       },
-//     ],
-//     like: fakeLikeArray,
-//     comments: fakeCommentArray,
-//     date: faker.date.recent().toISOString(),
-//   }))
-
-//   const response: IResponse<IBlogg[]> = {
-//     data: blogs,
-//   }
-//   return new Promise<IResponse<IBlogg[]>>((resolve) => {
-//     setTimeout(() => resolve(response), 1000)
-//   })
-// }
-
-// export function getBlogsByUserId(id: string) {
-//   const blogs: IBlogg[] = Array.from({ length: 100 }, () => ({
-//     _id: faker.string.uuid(),
-//     userId: id,
-//     title: faker.lorem.words(),
-//     image: faker.image.urlLoremFlickr({
-//       height: 100,
-//       width: 100,
-//     }),
-//     content: fakeContent,
-//     category: [
-//       {
-//         _id: faker.string.uuid(),
-//         name: faker.lorem.word({ length: 10, strategy: 'shortest' }),
-//       },
-//     ],
-//     like: fakeLikeArray,
-//     comments: fakeCommentArray,
-//     date: faker.date.recent().toISOString(),
-//   }))
-
-//   const response: IResponse<IBlogg[]> = {
-//     data: blogs,
-//   }
-//   return new Promise<IResponse<IBlogg[]>>((resolve) => {
-//     setTimeout(() => resolve(response), 1000)
-//   })
-// }
+import { IResponse, IResponsePagination } from 'src/types/response'
 
 export async function getBlogActive(): Promise<IBlogg[]> {
   return axiosClient.get(`/Post/mostliked`).then((res) => res.data)
@@ -179,7 +52,14 @@ export async function getAllPosts(params: GetManyPostsParams) {
     })
     .then((res) => {
       const data: IResponsePost[] = res.data
-      return data
+      const pagination = res.headers['x-pagination']
+      const parseJson: IResponsePagination = JSON.parse(pagination)
+      const dataAll: IResponse<IResponsePost[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: parseJson,
+      }
+      return dataAll
     })
 }
 
@@ -194,6 +74,9 @@ export interface IResponsePostLocked {
   postId: string
   status: string
   title: string
+  postOwner: string
+  avatarDir: string
+  createDate: Date
 }
 export async function getLockedPostByUserId(id: string) {
   return authAxiosClient.get(`/trading/get-locked-post-by-userId?traderType=${id}`).then((res) => {

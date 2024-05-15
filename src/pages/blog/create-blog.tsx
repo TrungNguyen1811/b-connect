@@ -1,4 +1,4 @@
-import { XIcon } from 'lucide-react'
+import { Loader2, XIcon } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Dialog,
@@ -58,7 +58,7 @@ export default function CreateBlog() {
 
   const onAdd = useCallback(
     (newTag: Tag) => {
-      if (selected.length > 3) {
+      if (selected.length > 4) {
         toast({
           title: 'The limit for a post is 4 tags',
         })
@@ -364,7 +364,9 @@ export default function CreateBlog() {
               </div>
             </ScrollArea>
             <div className="mx-52 flex flex-row justify-between py-6">
-              <Button type="submit">Publish</Button>
+              <Button disabled={postBlog.isLoading} type="submit">
+                {postBlog.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Publish
+              </Button>
             </div>
           </form>
         </Form>

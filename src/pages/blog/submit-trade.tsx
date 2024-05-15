@@ -77,6 +77,7 @@ export default function SubmitTrade() {
   const [isOwner, setIsOwner] = useState<boolean>(true)
   const [address, setAddress] = useState<IAddress>()
   const [addressId, setAddressId] = useState<string>()
+  const [openForm, setOpenForm] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchTradeDetail = async () => {
@@ -89,7 +90,7 @@ export default function SubmitTrade() {
       }
     }
     fetchTradeDetail()
-  }, [id])
+  }, [id, openForm])
 
   useEffect(() => {
     const fetchUsersAndSetAuthorization = async () => {
@@ -239,7 +240,6 @@ export default function SubmitTrade() {
       note: userTrade?.details.note,
     },
   })
-  const [openForm, setOpenForm] = useState<boolean>(false)
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
 
@@ -518,7 +518,7 @@ export default function SubmitTrade() {
     switch (status) {
       case 2:
         return (
-          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+          <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
             <div className="flex flex-row items-center justify-end gap-2">
               {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
                 <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
@@ -533,7 +533,7 @@ export default function SubmitTrade() {
         )
       case 3:
         return (
-          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+          <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
             {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
               <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
             ) : (
@@ -548,7 +548,7 @@ export default function SubmitTrade() {
 
       case 4:
         return (
-          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+          <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
             {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
               <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
             ) : (
@@ -564,19 +564,23 @@ export default function SubmitTrade() {
       case 6:
       case 7:
         return (
-          <div className="mt-4 flex justify-center gap-2">
+          <div className="mt-4 flex justify-center gap-2 pb-4">
             {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
               <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
             ) : (
               ''
             )}
-            <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
+            {userTrade?.details.isUsingMiddle == true ? (
+              <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
           </div>
         )
 
       case 0:
         return (
-          <div className="mt-4 flex min-w-[33vw] justify-center pb-4">
+          <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
             {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
               <PaymentTrade tradeDetailsId={userTrade.details.tradeDetailId} />
             ) : (
@@ -651,7 +655,7 @@ export default function SubmitTrade() {
       case 7:
         return (
           <div className="mt-4 flex justify-end gap-2">
-            <Evidence tradeDetailsId={tradeDetailId} />
+            {userTrade?.details.isUsingMiddle == true ? <Evidence tradeDetailsId={tradeDetailId} /> : ''}
             <ReviewTrade tradeDetailsId={tradeDetailId} revieweeId={traderId} postId={id as string} />
             <ReportTrade tradeDetailsId={tradeDetailId} postId={id as string} />
           </div>
@@ -691,10 +695,9 @@ export default function SubmitTrade() {
               </div>
             ) : (
               <p className="ml-4 flex justify-end">
-                <button className="mr-1 font-normal text-red-600 underline" onClick={() => handlePutStatusTrade(6)}>
-                  Accept
-                </button>
-                to confirm the trade information
+                <Button className="" onClick={() => handlePutStatusTrade(6)}>
+                  Confirm Trade Info
+                </Button>
               </p>
             )}
           </div>

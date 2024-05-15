@@ -135,9 +135,11 @@ export { postAcceptTrade }
 
 async function postPaymentTrade(data: IPaymentTrade) {
   return await authAxiosClient
-    .post('/Payment/pay-middle-fee', {
+    .post('/Payment/pre-trade-checkout', {
       tradeDetailsId: data.tradeDetailsId,
       transactionId: data.transactionId,
+      isUsingMiddle: true,
+      amount: 100000,
     })
     .then((response) => {
       if (response.status === 200) {

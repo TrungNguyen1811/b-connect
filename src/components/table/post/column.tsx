@@ -1,15 +1,15 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from 'src/components/ui/check-box'
 import { CellAction } from './cell-action'
-import { IPostResponse } from 'src/types/blog'
+import { IResponsePost } from 'src/types/blog'
 import { format } from 'date-fns'
 
-export const columns: ColumnDef<IPostResponse>[] = [
+export const columns: ColumnDef<IResponsePost>[] = [
   {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+        checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
@@ -25,57 +25,68 @@ export const columns: ColumnDef<IPostResponse>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'postId',
-    header: 'PostId',
+    accessorKey: 'username',
+    header: 'Username',
     cell: ({ getValue }) => {
-      const postId = getValue() as boolean
+      const username = getValue() as boolean
       return (
-        <div className="w-[18rem]">
-          <p>{postId}</p>
+        <div className="w-[6rem]">
+          <p>{username}</p>
         </div>
       )
     },
   },
   {
-    accessorKey: 'userId',
-    header: 'UserId',
-    cell: ({ getValue }) => {
-      const userId = getValue() as boolean
-      return (
-        <div className="w-[16rem]">
-          <p>{userId}</p>
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: 'title',
+    accessorKey: 'postData.title',
     header: 'Title',
     cell: ({ getValue }) => {
       const title = getValue() as boolean
       return (
-        <div className="w-[18rem]">
+        <div className="w-[12rem]">
           <p>{title}</p>
         </div>
       )
     },
   },
   {
-    accessorKey: 'createdAt',
+    accessorKey: 'postData.isTradePost',
+    header: 'isTradePost',
+    cell: ({ getValue }) => {
+      const isTradePost = getValue() as boolean
+      return (
+        <div className="w-[4rem]">
+          <p>{isTradePost ? 'True' : 'False'}</p>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'postData.isLock',
+    header: 'isLock',
+    cell: ({ getValue }) => {
+      const isLock = getValue() as string
+      return (
+        <div className="w-[4rem]">
+          <p>{isLock ? 'True' : 'False'}</p>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'postData.createdAt',
     header: 'Created At',
     cell: ({ getValue }) => {
       const createdAt = getValue() as string
       return (
-        <div className="w-[8rem]">
+        <div className="w-[6rem]">
           <p>{format(createdAt, 'PPP')}</p>
         </div>
       )
     },
   },
-
   {
-    header: 'Action',
     id: 'action',
+    header: 'Action',
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ]

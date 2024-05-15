@@ -1,4 +1,4 @@
-import { XIcon } from 'lucide-react'
+import { Loader2, XIcon } from 'lucide-react'
 import { Link, useLoaderData, useNavigate, useParams } from 'react-router-dom'
 import {
   Dialog,
@@ -34,8 +34,8 @@ import { toast } from 'src/components/ui/use-toast'
 
 type FormData = z.infer<typeof updateBlogSchema>
 interface updatePost {
-  productImages: File | null
-  productVideos: File | null
+  Image: File | null
+  Video: File | null
   postId: string
   title: string
   content: string
@@ -87,6 +87,11 @@ export default function UpdateBlog() {
   const reactTags = useRef(null)
   const onAdd = useCallback(
     (newTag: Tag) => {
+      if (selected.length > 4) {
+        toast({
+          title: 'The limit for a post is 4 tags',
+        })
+      } else setSelected([...selected, newTag])
       setSelected([...selected, newTag])
     },
     [selected],
@@ -164,14 +169,12 @@ export default function UpdateBlog() {
     const dataBlog: updatePost = {
       ...(data as FormData),
       postId: post?.postData.postId as string,
-      productImages: data.productImages,
-      productVideos: data.productVideos,
+      Image: data.Image,
+      Video: data.Video,
       content: data.content,
       title: data.title,
       isLock: data.isLock as boolean,
     }
-    console.log('Form data:', dataBlog)
-
     updateBlog.mutate(dataBlog)
   }
 
@@ -199,15 +202,14 @@ export default function UpdateBlog() {
     },
   })
   const postTags = useMutation((data: { tagNames: string[]; postId: string }) => addSocialTag(data), {
-    onSuccess: (status) => {
-      if (status === 200) {
-        console.log('Successful!!!')
+    onSuccess: (data) => {
+      if (data === 'Successful!') {
         toast({
           title: 'Successful!!!',
-          description: 'Add Blog Success!',
+          description: 'Update Blog Success!',
         })
         queryClient.invalidateQueries()
-        navigate('/blog')
+        navigate(`/blog/${id}`)
       } else {
         toast({
           title: 'Invalid Blog response',
@@ -243,7 +245,7 @@ export default function UpdateBlog() {
                 <div className="flex flex-row items-center justify-stretch">
                   <FormField
                     control={form.control}
-                    name="productImages"
+                    name="Image"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center">
                         {field.value ? (
@@ -252,6 +254,7 @@ export default function UpdateBlog() {
                               <Input
                                 className="screen-reader-only"
                                 type="file"
+                                accept="image/*"
                                 onChange={(e) => field.onChange(e.target.files?.[0] || null)}
                               />
                             </FormControl>
@@ -263,6 +266,7 @@ export default function UpdateBlog() {
                               <Input
                                 className="screen-reader-only"
                                 type="file"
+                                accept="image/*"
                                 onChange={(e) => field.onChange(e.target.files?.[0] || null)}
                               />
                             </FormControl>
@@ -274,7 +278,7 @@ export default function UpdateBlog() {
                   />
                   <FormField
                     control={form.control}
-                    name="productVideos"
+                    name="Video"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center">
                         {field.value ? (
@@ -283,6 +287,7 @@ export default function UpdateBlog() {
                               <Input
                                 className="screen-reader-only"
                                 type="file"
+                                accept="video/*"
                                 onChange={(e) => field.onChange(e.target.files?.[0] || null)}
                               />
                             </FormControl>
@@ -294,6 +299,7 @@ export default function UpdateBlog() {
                               <Input
                                 className="screen-reader-only"
                                 type="file"
+                                accept="video/*"
                                 onChange={(e) => field.onChange(e.target.files?.[0] || null)}
                               />
                             </FormControl>
@@ -349,7 +355,9 @@ export default function UpdateBlog() {
               </div>
             </ScrollArea>
             <div className="mx-52 flex flex-row justify-between py-6">
-              <Button type="submit">Publish</Button>
+              <Button disabled={updateBlog.isLoading} type="submit">
+                {updateBlog.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Publish
+              </Button>
             </div>
           </form>
         </Form>

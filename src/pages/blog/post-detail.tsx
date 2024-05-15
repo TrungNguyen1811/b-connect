@@ -394,12 +394,16 @@ function BlogDetail() {
                 <p className="mb-2 flex flex-row text-sm">
                   {blog?.tags.map((tag, index) => (
                     <React.Fragment key={index}>
-                      <Link
-                        to={'/'}
-                        className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
-                      >
-                        #{tag.cateName}
-                      </Link>
+                      {index < 4 ? (
+                        <Link
+                          to={'/'}
+                          className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
+                        >
+                          #{tag.cateName}
+                        </Link>
+                      ) : (
+                        ''
+                      )}
                     </React.Fragment>
                   ))}
                 </p>

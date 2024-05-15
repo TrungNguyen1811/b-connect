@@ -62,7 +62,7 @@ export default function SidebarAdmin({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative hidden h-screen border-r md:block`,
+        `relative hidden h-screen border-r bg-orange-300 md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,
@@ -78,7 +78,7 @@ export default function SidebarAdmin({ className }: SidebarProps) {
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
-            <p className={cn('px-6 pb-4 text-3xl font-extrabold', !isOpen && 'hidden')}>Overview</p>
+            <p className={cn('px-6 pb-4 text-3xl font-extrabold text-white', !isOpen && 'hidden')}>Overview</p>
             <SideNav
               className="text-background opacity-0 transition-all duration-300 group-hover:z-50 group-hover:ml-4 group-hover:rounded group-hover:bg-foreground group-hover:p-2 group-hover:opacity-100"
               items={NavItems}

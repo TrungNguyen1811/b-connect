@@ -9,6 +9,7 @@ import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 import StaffLayout from 'src/pages/layout/StaffLayout'
 import TradeManagerPage from 'src/components/staff/book/TradeManagePage'
 import ErrorPage from 'src/pages/error-page'
+import PostManagerPage from 'src/pages/admin/PostManage.tsx/PostManage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -185,6 +186,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: 'admin/manage/user',
         element: <UserManagerPage />,
+      },
+      {
+        path: 'admin/manage/post',
+        element: <PostManagerPage />,
       },
       {
         path: 'admin/manage/user/:id',

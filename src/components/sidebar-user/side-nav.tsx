@@ -95,7 +95,9 @@ export function SideNav({ items, setOpen, className }: SideNavProps) {
             )}
           >
             <item.icon className={cn('h-5 w-5', item.color)} />
-            <span className={cn('absolute left-12 text-base duration-200', !isOpen && className)}>{item.title}</span>
+            <span className={cn('absolute left-12 text-base text-orange-900 duration-200', !isOpen && className)}>
+              {item.title}
+            </span>
           </Link>
         ),
       )}

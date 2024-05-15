@@ -17,6 +17,7 @@ interface Options {
 function TargetsTrade({ tradeDetailsId }: Props) {
   const reactTags = useRef(null)
   const [selected, setSelected] = useState<Tag[]>([])
+  const [open, setOpen] = useState<boolean>(false)
   const [options, setOptions] = useState<Options[]>([])
   const queryClient = useQueryClient()
   const listTags = useMemo(() => {
@@ -26,6 +27,13 @@ function TargetsTrade({ tradeDetailsId }: Props) {
 
   const onAdd = useCallback(
     (newTag: Tag) => {
+      if (selected.length >= 3) {
+        toast({
+          title: 'Tag Limit Reached',
+          description: 'You can only add up to 3 tags.',
+        })
+        return
+      }
       setSelected([...selected, newTag])
     },
     [selected],
@@ -46,6 +54,7 @@ function TargetsTrade({ tradeDetailsId }: Props) {
           title: 'Successful!!!',
           description: 'Add Target Success!',
         })
+        setOpen(false)
         queryClient.invalidateQueries()
       } else {
         toast({
@@ -54,10 +63,10 @@ function TargetsTrade({ tradeDetailsId }: Props) {
         })
       }
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
         title: 'Error Submitting Target',
-        description: error.message,
+        description: error.response.data,
       })
     },
   })
@@ -69,7 +78,7 @@ function TargetsTrade({ tradeDetailsId }: Props) {
     postTarget.mutate(data)
   }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="flex">
         <Button>Targets</Button>
       </DialogTrigger>
