@@ -1,9 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from 'src/components/ui/check-box'
 import { CellAction } from './cell-action'
-import { IPostResponse } from 'src/types/blog'
+import { IRefund } from 'src/types/transaction'
 
-export const columns: ColumnDef<IPostResponse>[] = [
+export const columns: ColumnDef<IRefund>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -24,54 +24,53 @@ export const columns: ColumnDef<IPostResponse>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'postId',
-    header: 'PostId',
+    accessorKey: 'id',
+    header: 'Refund Id',
     cell: ({ getValue }) => {
-      const postId = getValue() as boolean
+      const id = getValue() as string
       return (
-        <div className="w-[18rem]">
-          <p>{postId}</p>
+        <div className="w-[12rem]">
+          <p>{id}</p>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'transactionId',
+    header: 'Transaction Id',
+    cell: ({ getValue }) => {
+      const transactionId = getValue() as string
+      return (
+        <div className="w-[12rem]">
+          <p>{transactionId}</p>
         </div>
       )
     },
   },
   {
     accessorKey: 'userId',
-    header: 'UserId',
+    header: 'User Id',
     cell: ({ getValue }) => {
-      const userId = getValue() as boolean
+      const userId = getValue() as string
       return (
-        <div className="w-[16rem]">
+        <div className="w-[12rem]">
           <p>{userId}</p>
         </div>
       )
     },
   },
   {
-    accessorKey: 'title',
-    header: 'Title',
+    accessorKey: 'reason',
+    header: 'Reason',
     cell: ({ getValue }) => {
-      const title = getValue() as boolean
+      const reason = getValue() as string
       return (
-        <div className="w-[18rem]">
-          <p>{title}</p>
+        <div className="w-[12rem]">
+          <p>{reason}</p>
         </div>
       )
     },
   },
-  // {
-  //   accessorKey: 'createdAt',
-  //   header: 'Created At',
-  //   cell: ({ getValue }) => {
-  //     const createdAt = getValue() as string
-  //     return (
-  //       <div className="w-[8rem]">
-  //         <p>{format(new Date(createdAt), 'PPP')}</p>
-  //       </div>
-  //     )
-  //   },
-  // },
-
   {
     header: 'Action',
     id: 'action',
