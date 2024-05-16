@@ -26,7 +26,7 @@ function MyTransactionPage() {
   const description = 'Payment History  (Server side table functionalities.)'
 
   return (
-    <div className="mx-4 w-full">
+    <div className="w-full">
       <MetaData title={'Payment History'} />
       <div className="flex items-start justify-between">
         <Heading title={title} description={description} />

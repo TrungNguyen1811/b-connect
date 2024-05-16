@@ -36,18 +36,6 @@ export const columns: ColumnDef<ITransaction>[] = [
     },
   },
   {
-    accessorKey: 'userId',
-    header: 'UserId',
-    cell: ({ getValue }) => {
-      const userId = getValue() as string
-      return (
-        <div className="w-[12rem]">
-          <p>{userId}</p>
-        </div>
-      )
-    },
-  },
-  {
     accessorKey: 'bankCode',
     header: 'BankCode',
     cell: ({ getValue }) => {

@@ -48,24 +48,12 @@ export const columns: ColumnDef<IRefund>[] = [
     },
   },
   {
-    accessorKey: 'userId',
-    header: 'User Id',
-    cell: ({ getValue }) => {
-      const userId = getValue() as string
-      return (
-        <div className="w-[12rem]">
-          <p>{userId}</p>
-        </div>
-      )
-    },
-  },
-  {
     accessorKey: 'reason',
     header: 'Reason',
     cell: ({ getValue }) => {
       const reason = getValue() as string
       return (
-        <div className="w-[12rem]">
+        <div className="w-[16rem]">
           <p>{reason}</p>
         </div>
       )

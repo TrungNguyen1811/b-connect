@@ -67,7 +67,7 @@ function TransactionTable() {
   }, [isLoading, tableStates.pagination.pageIndex, table, data])
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 bg-white">
       {isError && <Button onClick={() => refetch()}>Retry</Button>}
       {isError && <p>{error?.message}</p>}
       <DataTable

@@ -137,7 +137,7 @@ function AuthPreview({ className, ...prosp }: Props) {
               My purchase
             </DropdownMenuItem>
           </Link>
-          <Link to="/transaction" className="hover-underline-animation hover:hover-underline-animation">
+          <Link to="/user/transaction" className="hover-underline-animation hover:hover-underline-animation">
             <DropdownMenuItem className="flex flex-row gap-2">
               <ArrowLeftRight className="mr-2 h-4 w-4" />
               Payment history
