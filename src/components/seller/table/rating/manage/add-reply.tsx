@@ -12,11 +12,13 @@ import { replySchema } from './validation'
 import { useAuth } from 'src/hooks/useAuth'
 import { replyReview } from 'src/api/review/post-rating-review'
 import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
 
 type FormData = z.infer<typeof replySchema>
 
 export function ReplyCustomer({ data }: { data: IListReplyResponse }) {
   const queryClient = useQueryClient()
+  const [open, setOpen] = useState<boolean>(false)
   const { user } = useAuth()
   const form = useForm<FormData>({
     resolver: zodResolver(replySchema),
@@ -36,7 +38,7 @@ export function ReplyCustomer({ data }: { data: IListReplyResponse }) {
         title: 'Successful!!',
         description: 'Reply Success',
       })
-      // setBookGroup(updatedBookGroup)
+      setOpen(false)
       queryClient.invalidateQueries()
     },
     onError: () => {
@@ -72,11 +74,7 @@ export function ReplyCustomer({ data }: { data: IListReplyResponse }) {
                         <FormItem className="flex flex-row items-center">
                           <FormLabel className="w-40 pr-2 text-right">Reply</FormLabel>
                           <FormControl>
-                            <Textarea
-                              className="h-40 bg-orange-50"
-                              placeholder="Show more detail about bookGroup"
-                              {...field}
-                            />
+                            <Textarea className="h-40 bg-orange-50" placeholder="Reply..." {...field} />
                           </FormControl>
                         </FormItem>
                       )}
@@ -85,7 +83,7 @@ export function ReplyCustomer({ data }: { data: IListReplyResponse }) {
                 </div>
                 <div className="bottom-0 flex-grow text-right">
                   <div className="">
-                    <Button className="my-2 mr-2" type="submit">
+                    <Button className="my-2 mr-2" variant={'destructive'} onClick={() => setOpen(false)}>
                       Cancel
                     </Button>
                     <Button disabled={updateBookGroup.isLoading} className="" type="submit">

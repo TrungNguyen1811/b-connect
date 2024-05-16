@@ -62,6 +62,12 @@ export async function getAllPosts(params: GetManyPostsParams) {
       return dataAll
     })
 }
+export async function getRelevantPosts(userId: string) {
+  return axiosClient.get(`/Post/user-targeted-categories?userId=${userId}`).then((res) => {
+    const data: IResponsePost[] = res.data
+    return data
+  })
+}
 
 export async function getPostByUserId(userId: string) {
   return axiosClient.get(`/Post/get-post-by-user?userId=${userId}`).then((res) => {

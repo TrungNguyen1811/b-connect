@@ -11,6 +11,7 @@ const CheckoutSuccess = () => {
           <h3 className="text-center text-base font-semibold text-gray-900 md:text-2xl">Payment Done!</h3>
           <p className="my-2 text-gray-600">Thank you for completing your secure online payment.</p>
           <p> Have a great day! </p>
+
           <div className="py-10 text-center">
             <Link className="bg-indigo-600 px-12 py-3 font-semibold text-white hover:bg-indigo-500" to={`/`}>
               GO BACK

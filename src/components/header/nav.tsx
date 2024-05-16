@@ -11,7 +11,7 @@ function Navigation() {
   return (
     <div className="m-1 flex items-center justify-between">
       <div className="flex">
-        <NavLink className={'nav-link'} to={'/seller/dashboard'}>
+        <NavLink className={'nav-link '} to={'/seller/dashboard'}>
           {t('SellerCenter')}
         </NavLink>
         <NavLink className={'hidden-on-mobile nav-link'} to={'/'}>
@@ -23,10 +23,10 @@ function Navigation() {
         </div>
       </div>
       <div className="flex justify-between">
-        <div className="mr-4 flex items-center justify-center">
+        <div className="mr-4 flex items-center justify-center hover:text-orange-500">
           <Notification />
         </div>
-        <div className="mr-4 flex items-center justify-center">
+        <div className="mr-4 flex items-center justify-center hover:text-orange-500">
           <Help />
         </div>
         <div className="mr-4 flex items-center justify-center">

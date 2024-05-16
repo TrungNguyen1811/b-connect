@@ -6,10 +6,11 @@ import { getBookById } from 'src/api/books/get-book'
 import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
-import StaffLayout from 'src/pages/layout/StaffLayout'
-import TradeManagerPage from 'src/components/staff/book/TradeManagePage'
-import ErrorPage from 'src/pages/error-page'
-import PostManagerPage from 'src/pages/admin/PostManage.tsx/PostManage'
+import TransactionManagePage from 'src/pages/staff/manage/TransactionManagePage'
+import TradeManagerPage from 'src/pages/staff/manage/TradeManagePage'
+import RefundManagePage from 'src/pages/staff/manage/RefundManagePage'
+import MyRequestRefundPage from 'src/pages/profile/MyRequestRefundPage'
+import MyTransactionPage from 'src/pages/profile/MyTransactionPage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -31,6 +32,9 @@ const DashboardPage = React.lazy(() => import('src/pages/admin/DashBoardPage'))
 const UserManagerPage = React.lazy(() => import('src/pages/admin/User/UserManage'))
 const UserDetailPage = React.lazy(() => import('src/pages/admin/User/UserDetailPage'))
 const CategoryManagerPage = React.lazy(() => import('src/pages/admin/Category/CategoryManage'))
+const PostManagerPage = React.lazy(() => import('src/pages/admin/PostManage.tsx/PostManage'))
+
+const StaffLayout = React.lazy(() => import('src/pages/layout/StaffLayout'))
 
 const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
 const MyShop = React.lazy(() => import('src/pages/seller/MyShop'))
@@ -50,15 +54,15 @@ const AdvertisementPage = React.lazy(() => import('src/pages/seller/Advertisemen
 const CheckoutAdsResultPage = React.lazy(() => import('src/pages/seller/CheckoutAdsResultPage'))
 
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
-const InfoAccount = React.lazy(() => import('src/pages/profile/profileUser'))
-const IdentificationUser = React.lazy(() => import('src/pages/profile/identify'))
-const ChangePassword = React.lazy(() => import('src/pages/profile/changePassword'))
-const AddressPage = React.lazy(() => import('src/pages/profile/addressPage'))
+const InfoAccount = React.lazy(() => import('src/pages/profile/ProfileUserPage'))
+const IdentificationUser = React.lazy(() => import('src/pages/profile/IdentifyPage'))
+const ChangePassword = React.lazy(() => import('src/pages/profile/ChangePasswordPage'))
+const AddressPage = React.lazy(() => import('src/pages/profile/AddressPage'))
 const MyPurchase = React.lazy(() => import('src/pages/profile/MyPurchasePage'))
 
 const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
-const ProfileUser = React.lazy(() => import('src/pages/profile/profileUserBlog'))
+const ProfileUser = React.lazy(() => import('src/pages/profile/ProfileUserBlogPage'))
 const UpdateProfile = React.lazy(() => import('src/pages/blog/update-profile'))
 const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard-post'))
 const FollowingTags = React.lazy(() => import('src/pages/blog/following-tags'))
@@ -72,6 +76,8 @@ const ManagePostInterester = React.lazy(() => import('src/pages/blog/manage-post
 const SubmitTrade = React.lazy(() => import('src/pages/blog/submit-trade'))
 const CheckListPage = React.lazy(() => import('src/pages/blog/check-list'))
 const CheckListViewPage = React.lazy(() => import('src/pages/blog/view-check-list'))
+
+const ErrorPage = React.lazy(() => import('src/pages/error-page'))
 
 export const ROUTES = createBrowserRouter([
   {
@@ -103,9 +109,6 @@ export const ROUTES = createBrowserRouter([
         },
         element: <BookDetailPage />,
       },
-      // {
-      //   element: <AddToCart />,
-      // },
       {
         path: 'view-cart',
         element: <ViewCart />,
@@ -146,6 +149,14 @@ export const ROUTES = createBrowserRouter([
           {
             path: 'user/purchase',
             element: <MyPurchase />,
+          },
+          {
+            path: 'user/transaction',
+            element: <MyTransactionPage />,
+          },
+          {
+            path: 'user/refund',
+            element: <MyRequestRefundPage />,
           },
           {
             path: 'user/account/identify',
@@ -215,6 +226,14 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/staff/manage/trade',
         element: <TradeManagerPage />,
+      },
+      {
+        path: '/staff/manage/transition',
+        element: <TransactionManagePage />,
+      },
+      {
+        path: '/staff/manage/refund',
+        element: <RefundManagePage />,
       },
     ],
   },
@@ -311,10 +330,6 @@ export const ROUTES = createBrowserRouter([
         path: '/blog/dashboard/following_tags',
         element: <FollowingTags />,
       },
-      // {
-      //   path: '/blog/dashboard/manage-interester',
-      //   element: <ManagePostInterester />,
-      // },
       {
         path: '/blog/dashboard/manage-interester/:id',
         element: <ManagePostInterester />,
@@ -339,7 +354,6 @@ export const ROUTES = createBrowserRouter([
         path: '/blog/tags',
         element: <TagList />,
       },
-
       {
         path: '/blog/:id',
         loader: async ({ params }) => {

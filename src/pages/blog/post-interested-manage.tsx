@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { IResponsePostLocked, getLockedPostByUserId } from 'src/api/blog/get-blog'
 import { getPostInterestByPostId, getPostInterestedByUser, removeInterestedPost } from 'src/api/blog/interested'
+import { getUserPostData } from 'src/api/user/get-user'
 import { Avatar, AvatarImage } from 'src/components/ui/avatar'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/check-box'
@@ -12,12 +13,14 @@ import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponsePost } from 'src/types/blog'
 import { IResponseInteresterList } from 'src/types/interester'
+import { IAnalystPost } from 'src/types/user'
 
 function PostInterestedManage() {
   const { user } = useAuth()
   const [postId, setPostId] = useState('')
   const [interestList, setInterestedList] = useState<IResponsePost[]>([])
   const navigate = useNavigate()
+  const [dashboard, setDashboard] = useState<IAnalystPost>()
   const queryClient = useQueryClient()
 
   useEffect(() => {
@@ -26,6 +29,8 @@ function PostInterestedManage() {
         if (user) {
           const interestedData: IResponsePost[] = await getPostInterestedByUser()
           setInterestedList(interestedData)
+          const dashboard = await getUserPostData()
+          setDashboard(dashboard)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -91,19 +96,25 @@ function PostInterestedManage() {
           <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Post</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">
+                {dashboard?.postCount ? dashboard?.postCount : 0}
+              </p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/following_tags'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Following Tags</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">
+                {dashboard?.tagFollowCount ? dashboard?.tagFollowCount : 0}
+              </p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/manage-interested'} className=" ">
-            <div className="flex flex-row items-center rounded-sm bg-orange-50 px-2 py-1">
+            <div className="flex flex-row items-center rounded-sm bg-white px-2 py-1">
               <p className="w-full font-semibold">Manage Post Interested</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">
+                {dashboard?.interestedCount ? dashboard?.interestedCount : 0}
+              </p>
             </div>
           </Link>
         </nav>

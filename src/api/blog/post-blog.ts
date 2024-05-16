@@ -210,3 +210,22 @@ async function postBanPost(postId: string) {
 }
 
 export { postBanPost }
+
+async function postUnbanPost(postId: string) {
+  return await authAxiosClient
+    .put(`/Post/un-ban-post?postId=${postId}`, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postUnbanPost }

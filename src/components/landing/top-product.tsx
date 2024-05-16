@@ -35,7 +35,7 @@ function TopBook() {
       )
 
     return data?.data.map((book, index) => (
-      <div key={index} className={`carousel-item flex-none p-2 px-0.5 hover:scale-105`}>
+      <div key={index} className={`carousel-item hover:scale-102 flex-none p-2 px-0.5`}>
         <Book book={book} />
       </div>
     ))

@@ -199,9 +199,9 @@ function UpdateProfile() {
 
               <div className="flex flex-col items-start py-2">
                 <FormLabel className="mb-2">Avatar User</FormLabel>
-                <div className="flex flex-row items-center">
+                <div className="flex flex-row items-center gap-2">
                   <Avatar className="h-12 w-12">
-                    <AvatarImage src="https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn"></AvatarImage>
+                    <AvatarImage src={user?.avatarDir as string}></AvatarImage>
                   </Avatar>
                   <FormField
                     control={form.control}

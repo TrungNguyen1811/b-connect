@@ -1,28 +1,26 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { LoaderIcon } from 'lucide-react'
 import { getTransaction } from 'src/api/order/get-order'
 import { createOrder } from 'src/api/order/post-order'
-import CheckoutSuccess from './success'
 import CheckoutFailed from './failed'
-import { useSearchParams } from 'react-router-dom'
-import { ICart, IOrder, IPaymentReturnDTO, ITransaction } from 'src/types'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { ICart, IOrder, IPaymentReturnDTO } from 'src/types'
 import { SaveTransaction } from 'src/api/order/post-transaction'
 import { useAuth } from 'src/hooks/useAuth'
 import { getCartApi } from 'src/api/cart/get-cart'
 import ErrorPage from 'src/pages/error-page'
+import { ITransaction } from 'src/types/transaction'
+import CheckoutSuccess from './success'
 
 function CheckoutResult() {
   const [searchParams] = useSearchParams()
   const refId = searchParams.get('refId')
   const [transaction, setTransaction] = useState<ITransaction>()
   const [dataOrder, setDataOrder] = useState<IOrder>()
-  const [isLoadingTransaction, setIsLoadingTransaction] = useState(true) // Biến trạng thái để kiểm tra xem giao dịch đã tải xong chưa
+  const [isLoadingTransaction, setIsLoadingTransaction] = useState(true)
   const [cartItems, setCartItems] = useState<ICart[]>([])
   const { user } = useAuth()
-
-  const token = localStorage.getItem('token') as string
-  console.log('token', token)
+  const navigate = useNavigate()
   // useEffect(() => {
   //   const resetUser = async () => {
   //     await getUserProfileApi((err, user) => {
@@ -72,7 +70,7 @@ function CheckoutResult() {
       } catch (error) {
         console.error('Error fetching transaction:', error)
       } finally {
-        setIsLoadingTransaction(false) // Đánh dấu rằng giao dịch đã được tải xong
+        setIsLoadingTransaction(false)
       }
     }
 
@@ -105,15 +103,19 @@ function CheckoutResult() {
     () => createOrder(mergedData),
     {
       retry: false,
-      enabled: !isLoadingTransaction, // Sử dụng biến trạng thái để kiểm tra xem giao dịch đã tải xong chưa
+      enabled: !isLoadingTransaction,
     },
   )
 
   const success = useMemo(() => {
     if (isLoadingOrder) {
       return (
-        <div className="text-center">
-          <LoaderIcon className="mx-auto h-10 w-10 animate-spin text-primary" />
+        <div className="h-96 text-center">
+          {/* <LoaderIcon className="mx-auto h-10 w-10 animate-spin text-primary" /> */}
+          <img
+            className="mx-auto h-48 w-48 animate-spin"
+            src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1715806882/Posts/user02/6a1f98b3-0b57-4c99-bce7-94b3b32a881f/Images/dz8negfs5cv5wdtjeaoi.gif"
+          />
           <h1>Saving data... Please wait</h1>
         </div>
       )

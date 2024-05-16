@@ -16,6 +16,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import { ICTCBackSide, ICTCFrontSide, INIC } from 'src/types'
 import { IToken } from 'src/types/token'
 import { z } from 'zod'
+import refreshToken from 'src/api/apis/auth/refresh.api'
 
 const formCTCSchema = z.object({
   nicId: z.string(),
@@ -43,7 +44,7 @@ function IdentificationUser() {
       setNic(getNic)
     }
     fetchData()
-  }, [])
+  }, [user])
 
   const [imageFS, setImageFS] = useState<File | null>(null)
   const [imageBS, setImageBS] = useState<File | null>(null)
@@ -261,6 +262,7 @@ function IdentificationUser() {
       </div>
     )
   }, [form.control, isBothSide])
+  console.log('đâ', user)
 
   const [isLoading, setIsLoading] = useState(false)
   const onSubmit = async (data: FormData) => {
@@ -286,9 +288,9 @@ function IdentificationUser() {
           description: 'Register CTC successfully',
           variant: 'success',
         })
-        token = result!
-
-        await profileApi(token.accessToken!, (err, user) => {
+        const data = await refreshToken()
+        token = { accessToken: data.accessToken }
+        await profileApi(token.accessToken, (err, user) => {
           if (err) {
             toast({
               title: err.message,
@@ -322,9 +324,9 @@ function IdentificationUser() {
           description: 'Register CTC successfully',
           variant: 'success',
         })
-        token = result!
-
-        await profileApi(token.accessToken!, (err, user) => {
+        const data = await refreshToken()
+        token = { accessToken: data.accessToken }
+        await profileApi(token.accessToken, (err, user) => {
           if (err) {
             toast({
               title: err.message,
@@ -366,14 +368,34 @@ function IdentificationUser() {
         </div>
         <div className="flex h-96 flex-row">
           <div className="ml-16">
-            <p>ID:</p>
-            <p>{getNic?.id}</p>
-            <p>NAME: {getNic?.name}</p>
-            <p>SEX: {getNic?.sex}</p>
-            <p>DATE OF BIRTH: {getNic?.doB}</p>
-            <p>ADDRESS: {getNic?.address}</p>
-            <p>HOME: {getNic?.home}</p>
-            <p>NATIONALITY: {getNic?.nationality}</p>
+            <div className="flex flex-row">
+              <p className="w-36">ID:</p>
+              <p>{getNic?.id}</p>
+            </div>
+            <div className="flex flex-row">
+              <p className="w-36">NAME: </p>
+              <p>{getNic?.name}</p>
+            </div>
+            <div className="flex flex-row">
+              <p className="w-36">SEX: </p>
+              <p>{getNic?.sex}</p>
+            </div>
+            <div className="flex flex-row">
+              <p className="w-36">DATE OF BIRTH: </p>
+              <p>{getNic?.doB}</p>
+            </div>
+            <div className="flex flex-row">
+              <p className="w-36">ADDRESS: </p>
+              <p>{getNic?.address}</p>
+            </div>
+            <div className="flex flex-row">
+              <p className="w-36">HOME: </p>
+              <p>{getNic?.home}</p>
+            </div>
+            <div className="flex flex-row">
+              <p className="w-36">NATIONALITY: </p>
+              <p>{getNic?.nationality}</p>
+            </div>
           </div>
         </div>
       </div>

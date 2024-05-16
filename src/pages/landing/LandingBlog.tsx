@@ -1,7 +1,7 @@
 // import Post from 'src/components/blog/post'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { GetManyPostsParams, getUserTargetedTags } from 'src/api/blog/get-blog'
+import { Link, useNavigate } from 'react-router-dom'
+import { getRelevantPosts, getUserTargetedTags } from 'src/api/blog/get-blog'
 import { postAddUserTargetedCategory } from 'src/api/blog/interested'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import PostGridLoading from 'src/components/blog/loading-post'
@@ -15,22 +15,24 @@ import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import useGetManyPosts from 'src/hooks/useGetManyPosts'
 import { ICategory } from 'src/types'
 import ErrorPage from '../error-page'
+import { IResponsePost } from 'src/types/blog'
+import { useCustomQueryDetail } from 'src/hooks/useCustomQueryDetail'
 
-const initPostState: GetManyPostsParams = {
-  PageNumber: 0,
-  PageSize: 40,
-  // category: undefined,
-}
+// const initPostState: GetManyPostsParams = {
+//   PageNumber: 0,
+//   PageSize: 100,
+//   // category: undefined,
+// }
 
 export default function LandingBlog() {
   const { user } = useAuth()
-  const [blogs, setBlogs] = useState<GetManyPostsParams>(initPostState)
-
-  const { data, isLoading, isError } = useGetManyPosts(blogs)
-  console.log('help', isError)
+  // const [blogs, setBlogs] = useState<GetManyPostsParams>(initPostState)
+  const { data, isLoading, isError } = useCustomQueryDetail<IResponsePost[]>(() =>
+    getRelevantPosts(user?.userId as string),
+  )
+  // const { data, isLoading, isError } = useGetManyPosts(blogs)
   const [open, setOpen] = useState(false)
   useEffect(() => {
     const fl = async () => {
@@ -88,13 +90,13 @@ export default function LandingBlog() {
 
   const renderPosts = useMemo(() => {
     if (isLoading) return <PostGridLoading pageSize={8} className="h-96 " />
-    if (!Array.isArray(data?.data) || data?.data.length === 0)
+    if (!Array.isArray(data) || data?.length === 0)
       return (
         <div className="col-span-full row-span-full h-full w-full">
           <h3 className="text-center text-slate-300">No result found</h3>
         </div>
       )
-    return data?.data.map((post) => {
+    return data?.map((post) => {
       return <Post key={post.postData.postId} postId={post.postData.postId!} />
     })
   }, [data, isLoading])
@@ -164,6 +166,14 @@ export default function LandingBlog() {
               </div>
             </DialogContent>
           </Dialog>
+          <div className="flex flex-row gap-6 px-3 py-2">
+            <Link to="/blog" className="text-xl font-bold">
+              Relevant
+            </Link>
+            <Link to="/blog/latest" className="text-xl text-gray-500">
+              Latest
+            </Link>
+          </div>
           {renderPosts}
         </div>
         <div className="col-span-3 w-80 bg-orange-50">

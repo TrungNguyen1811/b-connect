@@ -2,9 +2,9 @@ import { Button } from '../ui/button'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from '../ui/use-toast'
 import { IPaymentTrade } from 'src/types/blog'
-import { postPaymentTrade } from 'src/api/blog/interested'
 import { Loader2 } from 'lucide-react'
 import { faker } from '@faker-js/faker'
+import { postPaymentTrade } from 'src/api/payment/post-payment'
 
 interface Props {
   tradeDetailsId: string

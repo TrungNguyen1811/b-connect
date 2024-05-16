@@ -131,3 +131,7 @@ export interface IPaymentTrade {
   isUsingMiddle: boolean
   amount?: number
 }
+export interface IPaymentRefund {
+  transId: string
+  amount: number
+}

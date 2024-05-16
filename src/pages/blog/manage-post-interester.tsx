@@ -16,6 +16,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from 'src/components/ui/dialog'
+import { getUserPostData } from 'src/api/user/get-user'
+import { IAnalystPost } from 'src/types/user'
 
 function ManagePostInterester() {
   const { user } = useAuth()
@@ -23,14 +25,16 @@ function ManagePostInterester() {
   const [postData, setPostData] = useState<IResponsePost>()
   const [interestList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const navigate = useNavigate()
+  const [dashboard, setDashboard] = useState<IAnalystPost>()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (user && id) {
           const interestersData: IResponseInteresterList[] = await getPostInterestByPostId(id as string)
-          console.log(interestList)
           setInteresterList(interestersData)
+          const dashboard = await getUserPostData()
+          setDashboard(dashboard)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -187,25 +191,25 @@ function ManagePostInterester() {
           <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Post</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.postCount}</p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/following_categories'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Following Tags</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.tagFollowCount}</p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/manage-interested'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Manage Post Interested</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.interestedCount}</p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/manage-interester'} className=" ">
-            <div className="flex flex-row items-center rounded-sm bg-orange-50 px-2 py-1">
+            <div className="flex flex-row items-center rounded-sm bg-white px-2 py-1">
               <p className="w-full font-semibold">Manage Post Interester</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{interestList.length}</p>
             </div>
           </Link>
         </nav>

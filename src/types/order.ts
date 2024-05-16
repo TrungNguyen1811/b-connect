@@ -18,15 +18,6 @@ export enum ENUM_DEPOSIT_TYPE {
   VnPay = 'VnPay',
 }
 
-export interface ITransaction {
-  transactionId: string
-  paymentStatus: string
-  paymentMessage: string
-  paymentDate: string
-  amount: number
-  signature: string
-}
-
 export interface IPaymentReturnDTO {
   paymentStatus: string
   paymentMessage: string

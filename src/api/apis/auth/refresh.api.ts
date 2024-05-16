@@ -8,6 +8,7 @@ export default async function refreshToken() {
       const response = {
         status: res.status,
         data: res.data,
+        accessToken: res.data,
       }
       return response
     })

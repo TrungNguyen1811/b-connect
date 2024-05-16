@@ -42,7 +42,7 @@ export async function getUserPostData() {
   })
 }
 
-export async function getUserAnalystPost() {
+export async function getUserDashboardPost() {
   return authAxiosClient.get(`/Account/user-post-data`).then((res) => {
     return res.data
   })

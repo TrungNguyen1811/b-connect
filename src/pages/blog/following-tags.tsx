@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { deleteUserTargetedCategories } from 'src/api/blog/delete-blog'
 import { getUserTargetedTags } from 'src/api/blog/get-blog'
 import { getCategoryById } from 'src/api/categories/get-category'
-import { getUserAnalystPost } from 'src/api/user/get-user'
+import { getUserPostData } from 'src/api/user/get-user'
 import { Button } from 'src/components/ui/button'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
@@ -24,7 +24,7 @@ function FollowingTags() {
       if (tags) {
         setTags(tags)
       }
-      const dashboard = await getUserAnalystPost()
+      const dashboard = await getUserPostData()
       setDashboard(dashboard)
     }
 
@@ -112,7 +112,7 @@ function FollowingTags() {
             </div>
           </Link>
           <Link to={'/blog/dashboard/following_tags'} className=" ">
-            <div className="flex flex-row items-center rounded-sm bg-orange-50 px-2 py-1">
+            <div className="flex flex-row items-center rounded-sm bg-white px-2 py-1">
               <p className="w-full font-semibold">Following Tags</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.tagFollowCount}</p>
             </div>
@@ -120,7 +120,7 @@ function FollowingTags() {
           <Link to={'/blog/dashboard/manage-interested'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Manage Post interested</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2"></p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.interestedCount}</p>
             </div>
           </Link>
         </nav>

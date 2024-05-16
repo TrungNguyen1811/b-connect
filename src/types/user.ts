@@ -152,6 +152,7 @@ export interface IAnalystPost {
   postCount: number
   commentCount: number
   tagFollowCount: number
+  interestedCount: number
 }
 export interface IDashboardPost {
   heartCount: number

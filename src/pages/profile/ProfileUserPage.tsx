@@ -21,7 +21,7 @@ import validator from 'validator'
 const formSchema = z.object({
   username: z.string().optional(),
   email: z.string().optional(),
-  phone: z.string().refine(validator.isMobilePhone),
+  phone: z.string().refine(validator.isMobilePhone).optional(),
   avatarDir: z.any().optional(),
 })
 

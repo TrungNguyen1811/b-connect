@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { deletePost } from 'src/api/blog/delete-blog'
 import { IResponsePostLocked, getLockedPostByUserId, getPostByUserId } from 'src/api/blog/get-blog'
-import { getUserAnalystPost } from 'src/api/user/get-user'
+import { getUserDashboardPost, getUserPostData } from 'src/api/user/get-user'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/check-box'
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import { IDashboardPost } from 'src/types'
+import { IAnalystPost, IDashboardPost } from 'src/types'
 import { IResponsePost } from 'src/types/blog'
 
 function DashboardBlog() {
@@ -20,6 +20,8 @@ function DashboardBlog() {
   const [lockBlogs, setLockBlogs] = useState<IResponsePostLocked[]>()
   const [checkbox, setCheckbox] = useState<boolean>(false)
   const [dashboard, setDashboard] = useState<IDashboardPost>()
+  const [analyst, setAnalyst] = useState<IAnalystPost>()
+
   const queryClient = useQueryClient()
 
   useEffect(() => {
@@ -31,8 +33,10 @@ function DashboardBlog() {
           setLockBlogs(lockedBlogsData)
           const blogsData: IResponsePost[] = await getPostByUserId(user.userId)
           setBlogs(blogsData)
-          const dashboard = await getUserAnalystPost()
+          const dashboard = await getUserDashboardPost()
           setDashboard(dashboard)
+          const analyst = await getUserPostData()
+          setAnalyst(analyst)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -97,19 +101,19 @@ function DashboardBlog() {
           <Link to={'/blog/dashboard'} className="">
             <div className="flex flex-row items-center rounded-sm bg-white px-2 py-1">
               <p className="w-full font-semibold">Post</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{blogs?.length}</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{analyst?.postCount}</p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/following_tags'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Following Tags</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{analyst?.tagFollowCount}</p>
             </div>
           </Link>
           <Link to={'/blog/dashboard/manage-interested'} className=" ">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Manage Post interested</p>
-              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">0</p>
+              <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{analyst?.interestedCount}</p>
             </div>
           </Link>
         </nav>

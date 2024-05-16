@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import Header from 'src/components/header/header-dashboard'
-import SidebarStaff from 'src/components/staff/book/sidebar-staff'
+import SidebarStaff from '../staff/sidebar-staff'
 // import { useAuth } from 'src/hooks/useAuth'
 // import { ROLE } from 'src/types'
 

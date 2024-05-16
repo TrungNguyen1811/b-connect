@@ -53,7 +53,9 @@ export function SideNav({ items, setOpen, className }: SideNavProps) {
                 <div>
                   <item.icon className={cn('h-5 w-5', item.color)} />
                 </div>
-                <div className={cn('absolute left-12 text-base duration-200', !isOpen && className)}>{item.title}</div>
+                <div className={cn('absolute left-12 text-base text-orange-900 duration-200', !isOpen && className)}>
+                  {item.title}
+                </div>
 
                 {/* {isOpen && (
                   <ChevronDownIcon className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
@@ -75,7 +77,7 @@ export function SideNav({ items, setOpen, className }: SideNavProps) {
                   >
                     {/* Use child.icon aqui em vez de item.icon */}
                     <child.icon className={cn('h-5 w-5', child.color)} />
-                    <div className={cn('text-base duration-200', !isOpen && className)}>{child.title}</div>
+                    <div className={cn('text-base  duration-200', !isOpen && className)}>{child.title}</div>
                   </Link>
                 ))}
               </AccordionContent>
