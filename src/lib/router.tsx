@@ -6,11 +6,6 @@ import { getBookById } from 'src/api/books/get-book'
 import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
-import TransactionManagePage from 'src/pages/staff/manage/TransactionManagePage'
-import TradeManagerPage from 'src/pages/staff/manage/TradeManagePage'
-import RefundManagePage from 'src/pages/staff/manage/RefundManagePage'
-import MyRequestRefundPage from 'src/pages/profile/MyRequestRefundPage'
-import MyTransactionPage from 'src/pages/profile/MyTransactionPage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -35,6 +30,9 @@ const CategoryManagerPage = React.lazy(() => import('src/pages/admin/Category/Ca
 const PostManagerPage = React.lazy(() => import('src/pages/admin/PostManage.tsx/PostManage'))
 
 const StaffLayout = React.lazy(() => import('src/pages/layout/StaffLayout'))
+const TransactionManagePage = React.lazy(() => import('src/pages/staff/manage/TransactionManagePage'))
+const TradeManagerPage = React.lazy(() => import('src/pages/staff/manage/TradeManagePage'))
+const RefundManagePage = React.lazy(() => import('src/pages/staff/manage/RefundManagePage'))
 
 const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
 const MyShop = React.lazy(() => import('src/pages/seller/MyShop'))
@@ -57,8 +55,10 @@ const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/ProfileUserPage'))
 const IdentificationUser = React.lazy(() => import('src/pages/profile/IdentifyPage'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/ChangePasswordPage'))
-const AddressPage = React.lazy(() => import('src/pages/profile/AddressPage'))
+// const AddressPage = React.lazy(() => import('src/pages/profile/AddressPage'))
 const MyPurchase = React.lazy(() => import('src/pages/profile/MyPurchasePage'))
+const MyRequestRefundPage = React.lazy(() => import('src/pages/profile/MyRequestRefundPage'))
+const MyTransactionPage = React.lazy(() => import('src/pages/profile/MyTransactionPage'))
 
 const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
@@ -166,10 +166,10 @@ export const ROUTES = createBrowserRouter([
             path: 'user/account/password',
             element: <ChangePassword />,
           },
-          {
-            path: 'user/account/address',
-            element: <AddressPage />,
-          },
+          // {
+          //   path: 'user/account/address',
+          //   element: <AddressPage />,
+          // },
         ],
       },
     ],
