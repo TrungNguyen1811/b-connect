@@ -7,7 +7,7 @@ import UpdateAddress from 'src/components/user/update-address'
 import { useAuth } from 'src/hooks/useAuth'
 import { IAddress } from 'src/types/address'
 
-function AddressPage() {
+function AddressUserPage() {
   const { user } = useAuth()
   const [addresses, setAddresses] = useState<IAddress[]>([])
 
@@ -69,4 +69,4 @@ function AddressPage() {
     </div>
   )
 }
-export default AddressPage
+export default AddressUserPage

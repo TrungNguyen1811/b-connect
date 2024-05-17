@@ -55,7 +55,7 @@ const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/ProfileUserPage'))
 const IdentificationUser = React.lazy(() => import('src/pages/profile/IdentifyPage'))
 const ChangePassword = React.lazy(() => import('src/pages/profile/ChangePasswordPage'))
-const AddressPage = React.lazy(() => import('src/pages/profile/AddressPage'))
+const AddressUserPage = React.lazy(() => import('src/pages/profile/AddressUserPage'))
 const MyPurchase = React.lazy(() => import('src/pages/profile/MyPurchasePage'))
 const MyRequestRefundPage = React.lazy(() => import('src/pages/profile/MyRequestRefundPage'))
 const MyTransactionPage = React.lazy(() => import('src/pages/profile/MyTransactionPage'))
@@ -168,7 +168,7 @@ export const ROUTES = createBrowserRouter([
           },
           {
             path: 'user/account/address',
-            element: <AddressPage />,
+            element: <AddressUserPage />,
           },
         ],
       },
