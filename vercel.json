@@ -15,10 +15,5 @@
       ]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://localhost:7138/(.*)"
-    }
-  ]
+   "rewrites": [{ "source": "/(.*)", "destination": "/" }] 
 }
