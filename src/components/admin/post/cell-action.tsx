@@ -16,20 +16,13 @@ interface CellActionProps {
   data: IResponsePost
 }
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  console.log('data', data.postData)
   const navigate = useNavigate()
-  // const onConfirm = async () => {}
-
+  const isBanned = data?.postData?.isBanned
+  const postId = data?.postData?.postId
   return (
     <div className="flex w-16 flex-row items-center gap-2">
-      {/* <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} /> */}
       <div className="flex gap-2">
-        {data.postData.postId &&
-          (data.postData.isBanned ? (
-            <UnBanPost postId={data.postData.postId} />
-          ) : (
-            <BanPost postId={data.postData.postId} />
-          ))}
+        {isBanned ? <UnBanPost postId={postId as string} /> : <BanPost postId={postId as string} />}
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -40,7 +33,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => navigate(`/blog/${data.postData.postId}`)}>
+          <DropdownMenuItem onClick={() => navigate(`/blog/${postId}`)}>
             <Edit className="mr-2 h-4 w-4" /> Detail
           </DropdownMenuItem>
         </DropdownMenuContent>

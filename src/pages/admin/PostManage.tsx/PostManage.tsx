@@ -1,30 +1,17 @@
 import React from 'react'
+import { columns } from 'src/components/admin/post/column'
+import PostTable from 'src/components/admin/post/post-table'
+import { usePostTable } from 'src/components/admin/post/usePostTable'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
-import PostTable from 'src/components/table/post/post-table'
 import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function PostManagerPage() {
-  // const [categories, setCategories] = useState<ICategory[]>([])
+  const { data } = usePostTable(columns)
 
-  // useEffect(() => {
-  //   const getCategories = async () => {
-  //     try {
-  //       const cate = await getAllCategoryNoParam()
-  //       setBlogList(cate.data)
-  //     } catch (error) {
-  //       console.error('Error fetching cate:', error)
-  //     }
-  //   }
-
-  //   getCategories()
-  // }, [])
-
-  // console.log('${data?.data.length', blogList)
-
-  const title = `Manage Post`
+  const title = `Manage Post (${data?.data.length ? data?.data.length : 0})`
   const description = 'Manage Posts (Server side table functionalities.)'
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {

@@ -7,9 +7,9 @@ import { Button } from 'src/components/ui/button'
 import { BookHeartIcon, MessageSquareDotIcon, StickyNoteIcon } from 'lucide-react'
 import MetaData from 'src/components/metadata'
 import Post from 'src/components/blog/post'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getPostByUserId } from 'src/api/blog/get-blog'
-import { IAnalystPost, IRating, User } from 'src/types/user'
+import { IAnalystPost, IRatingOverall, User } from 'src/types/user'
 import { getUserByUserName, getUserPostData } from 'src/api/user/get-user'
 import { getUserRatingInfo } from 'src/api/review/get-all-review-by-bookId'
 
@@ -19,7 +19,7 @@ function ProfileUser() {
   const [userData, setUserData] = useState<User | null>(null)
   const [blogs, setBlogs] = useState<IResponsePost[] | null>(null)
   const [analyst, setAnalyst] = useState<IAnalystPost>()
-  const [rating, setRating] = useState<IRating>()
+  const [rating, setRating] = useState<IRatingOverall>()
   const isCurrentUser = user && user.username === username
   const navigate = useNavigate()
 
@@ -31,7 +31,7 @@ function ProfileUser() {
           setUserData(getUser)
           const analyst = await getUserPostData()
           setAnalyst(analyst)
-          const rating = await getUserRatingInfo()
+          const rating = await getUserRatingInfo(userData?.userId as string)
           setRating(rating)
         }
       } catch (error) {
@@ -95,9 +95,9 @@ function ProfileUser() {
                     </p>
                   </div>
                   <div className="flex flex-row items-center justify-center">
-                    <p className="px-4">
+                    <Link to={`/blog/user/rating/${userData?.userId}`} className="px-4 hover:text-orange-500">
                       Rating: {rating?.overallRating}* ({rating?.totalReviews} Rating)
-                    </p>
+                    </Link>
                     <p className="px-4">Add: 123 Abcd, Hoa Hai, Ngu Hanh Son, Da Nang{userData?.addressId}</p>
                     <p className="px-4">Joined on: 15/04/2024{userData?.createdAt as string}</p>
                     {/* <p className="px-4">Shopee: {user?.username}</p> */}

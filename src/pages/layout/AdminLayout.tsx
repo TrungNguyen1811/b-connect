@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import Header from 'src/components/header/header-dashboard'
-import SidebarAdmin from 'src/components/admins/sidebar-admin'
+import SidebarAdmin from 'src/components/admin/sidebar-admin'
 import { useAuth } from 'src/hooks/useAuth'
 import { ROLE } from 'src/types'
 

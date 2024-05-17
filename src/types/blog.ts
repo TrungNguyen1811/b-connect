@@ -22,41 +22,6 @@ export interface IContentBlog {
     url?: string
   }[]
 }
-export interface IBlog {
-  postId?: string
-  userId?: string
-  authorName?: string
-  productImgs?: File | string
-  ProductVideos?: File | string
-  isTradePost: boolean
-  IsBanned?: boolean
-  title?: string
-  content?: string
-  listCate?: IListCate[]
-  createdAt?: string
-  appUser?: string
-  cateId?: string
-  commentsId?: string
-  likeId?: string
-}
-
-export interface IBlogg {
-  postId?: string
-  userId: string
-  authorName?: string
-  productImgs?: File | string
-  ProductVideos?: File | string
-  isTradePost?: boolean
-  title: string
-  content?: string
-  listCate?: IListCate[]
-  createdAt?: string
-  appUser?: string
-  cateId?: string
-  commentsId?: string
-  likeId?: string
-}
-
 export interface IPostResponse {
   postId?: string
   userId: string
@@ -72,9 +37,6 @@ export interface IPostResponse {
   hearts?: number
   createdAt?: string
   appUser?: string
-  cateId?: string
-  commentsId?: string
-  likeId?: string
 }
 
 export interface IResponsePost {
@@ -83,7 +45,9 @@ export interface IResponsePost {
   avatarDir: string
   tags: IListCate[]
   readingTime: string
-  likesCount: number
+  totalLikes: number
+  totalComments: number
+  totalFollow: number
 }
 
 export interface IListCate {
@@ -99,7 +63,7 @@ export interface ILiked {
 export interface IReadingList {
   _id?: string
   userId?: User['userId']
-  blog_Id: IBlogg['postId']
+  blog_Id: IPostResponse['postId']
 }
 
 export interface IResponseTag {

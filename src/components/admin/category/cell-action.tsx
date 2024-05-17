@@ -78,7 +78,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   }
 
   return (
-    <div className="flex w-44 flex-row gap-2">
+    <div className="flex w-40 flex-row gap-2">
       <div className="">
         <ViewCategoryDetail categoryId={cateId as string} />
       </div>

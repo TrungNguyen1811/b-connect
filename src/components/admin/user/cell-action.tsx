@@ -9,7 +9,7 @@ import {
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
 import { Edit, MoreHorizontal } from 'lucide-react'
-import BanUser from 'src/components/admins/ban-user'
+import BanUser from 'src/components/admin/ban-user'
 import UpdateBanUser from './manage-user/user-unban'
 import UpdateRoleUser from './manage-user/update-role-user'
 

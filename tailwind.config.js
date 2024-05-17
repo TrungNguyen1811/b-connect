@@ -94,10 +94,6 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
-      fontFamily: {
-        display: ['Pally', 'Comic Sans MS', 'sans-serif'],
-        body: ['Pally', 'Comic Sans MS', 'sans-serif'],
-      },
     },
   },
   plugins: [require('tailwindcss-animate')],

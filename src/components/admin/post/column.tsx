@@ -28,7 +28,7 @@ export const columns: ColumnDef<IResponsePost>[] = [
     accessorKey: 'username',
     header: 'Username',
     cell: ({ getValue }) => {
-      const username = getValue() as boolean
+      const username = getValue() as string
       return (
         <div className="w-[6rem]">
           <p>{username}</p>
@@ -39,8 +39,8 @@ export const columns: ColumnDef<IResponsePost>[] = [
   {
     accessorKey: 'postData.title',
     header: 'Title',
-    cell: ({ getValue }) => {
-      const title = getValue() as boolean
+    cell: ({ row }) => {
+      const title = row.original.postData?.title || 'N/A'
       return (
         <div className="w-[12rem]">
           <p>{title}</p>
@@ -51,8 +51,8 @@ export const columns: ColumnDef<IResponsePost>[] = [
   {
     accessorKey: 'postData.isTradePost',
     header: 'Trade Post',
-    cell: ({ getValue }) => {
-      const isTradePost = getValue() as boolean
+    cell: ({ row }) => {
+      const isTradePost = row.original.postData?.isTradePost ?? false
       return (
         <div className="w-[4rem]">
           <p>{isTradePost ? 'True' : 'False'}</p>
@@ -63,8 +63,8 @@ export const columns: ColumnDef<IResponsePost>[] = [
   {
     accessorKey: 'postData.isLock',
     header: 'Lock',
-    cell: ({ getValue }) => {
-      const isLock = getValue() as string
+    cell: ({ row }) => {
+      const isLock = row.original.postData?.isLock ?? false
       return (
         <div className="w-[4rem]">
           <p>{isLock ? 'True' : 'False'}</p>
@@ -75,11 +75,11 @@ export const columns: ColumnDef<IResponsePost>[] = [
   {
     accessorKey: 'postData.createdAt',
     header: 'Created At',
-    cell: ({ getValue }) => {
-      const createdAt = getValue() as Date
+    cell: ({ row }) => {
+      const createdAt = row.original.postData?.createdAt
       return (
         <div className="w-[6rem]">
-          <p>{format(createdAt, 'PPP')}</p>
+          <p>{createdAt ? format(new Date(createdAt), 'PPP') : 'N/A'}</p>
         </div>
       )
     },

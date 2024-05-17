@@ -28,11 +28,9 @@ const UserManagerPage = React.lazy(() => import('src/pages/admin/User/UserManage
 const UserDetailPage = React.lazy(() => import('src/pages/admin/User/UserDetailPage'))
 const CategoryManagerPage = React.lazy(() => import('src/pages/admin/Category/CategoryManage'))
 const PostManagerPage = React.lazy(() => import('src/pages/admin/PostManage.tsx/PostManage'))
-
-const StaffLayout = React.lazy(() => import('src/pages/layout/StaffLayout'))
-const TransactionManagePage = React.lazy(() => import('src/pages/staff/manage/TransactionManagePage'))
-const TradeManagerPage = React.lazy(() => import('src/pages/staff/manage/TradeManagePage'))
-const RefundManagePage = React.lazy(() => import('src/pages/staff/manage/RefundManagePage'))
+const TradeManagerPage = React.lazy(() => import('src/pages/admin/Trade/TradeManagePage'))
+const TransactionManagePage = React.lazy(() => import('src/pages/admin/Transaction/TransactionManagePage'))
+const RefundManagePage = React.lazy(() => import('src/pages/admin/Refund/RefundManagePage'))
 
 const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
 const MyShop = React.lazy(() => import('src/pages/seller/MyShop'))
@@ -60,9 +58,11 @@ const MyPurchase = React.lazy(() => import('src/pages/profile/MyPurchasePage'))
 const MyRequestRefundPage = React.lazy(() => import('src/pages/profile/MyRequestRefundPage'))
 const MyTransactionPage = React.lazy(() => import('src/pages/profile/MyTransactionPage'))
 
-const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
+const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
+const LandingBlogLatest = React.lazy(() => import('src/pages/landing/LandingBlogLatest'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/ProfileUserBlogPage'))
+const RatingUserPage = React.lazy(() => import('src/pages/profile/RatingUserPage'))
 const UpdateProfile = React.lazy(() => import('src/pages/blog/update-profile'))
 const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard-post'))
 const FollowingTags = React.lazy(() => import('src/pages/blog/following-tags'))
@@ -214,25 +214,16 @@ export const ROUTES = createBrowserRouter([
         path: 'admin/manage/category',
         element: <CategoryManagerPage />,
       },
-    ],
-  },
-  {
-    path: '/staff',
-    element: <StaffLayout />,
-    children: [
       {
-        path: '/staff/dashboard',
-      },
-      {
-        path: '/staff/manage/trade',
+        path: '/admin/manage/trade',
         element: <TradeManagerPage />,
       },
       {
-        path: '/staff/manage/transition',
+        path: '/admin/manage/transition',
         element: <TransactionManagePage />,
       },
       {
-        path: '/staff/manage/refund',
+        path: '/admin/manage/refund',
         element: <RefundManagePage />,
       },
     ],
@@ -315,8 +306,16 @@ export const ROUTES = createBrowserRouter([
         element: <LandingBlog />,
       },
       {
+        path: '/blog/latest',
+        element: <LandingBlogLatest />,
+      },
+      {
         path: '/blog/profile/:username',
         element: <ProfileUser />,
+      },
+      {
+        path: '/blog/user/rating/:id',
+        element: <RatingUserPage />,
       },
       {
         path: '/blog/setting/profile',

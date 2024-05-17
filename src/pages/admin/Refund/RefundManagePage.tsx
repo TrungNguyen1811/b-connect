@@ -1,30 +1,17 @@
 import React from 'react'
+import { columns } from 'src/components/admin/refund/column'
+import RefundTable from 'src/components/admin/refund/refund-table'
+import { useRefundTable } from 'src/components/admin/refund/useRefundTable'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
-import RefundTable from 'src/components/staff/refund/refund-table'
 import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function RefundManagePage() {
-  // const [categories, setCategories] = useState<ICategory[]>([])
+  const { data } = useRefundTable(columns)
 
-  // useEffect(() => {
-  //   const getCategories = async () => {
-  //     try {
-  //       const cate = await getAllCategoryNoParam()
-  //       setBlogList(cate.data)
-  //     } catch (error) {
-  //       console.error('Error fetching cate:', error)
-  //     }
-  //   }
-
-  //   getCategories()
-  // }, [])
-
-  // console.log('${data?.data.length', blogList)
-
-  const title = `Manage Refund`
+  const title = `Manage Refund (${data?.data.length ? data?.data.length : 0})`
   const description = 'Manage Refund  (Server side table functionalities.)'
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {

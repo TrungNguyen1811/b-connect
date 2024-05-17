@@ -1,4 +1,3 @@
-import { IBlogg } from './blog'
 import { IInterested } from './interested'
 
 export interface User {
@@ -31,7 +30,6 @@ export interface User {
   issueDate?: string
   nicType?: 'old' | 'new' | 'old_back' | 'new_back' | 'cmnd_09_front' | 'cmnd_12_front' | 'cccd_12_front'
   interested?: IInterested['userId']
-  blog?: IBlogg[]
   bio?: string
   url?: string
   createdAt?: Date | string
@@ -160,7 +158,15 @@ export interface IDashboardPost {
   savedPostCount: number
 }
 
-export interface IRating {
+export interface IRatingOverall {
   overallRating: number
   totalReviews: number
+}
+
+export interface IRating {
+  ratingPoint: number
+  username: string
+  createdDate: Date
+  comment: string
+  avatarDir: string
 }

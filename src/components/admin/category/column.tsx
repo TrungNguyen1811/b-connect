@@ -42,8 +42,8 @@ export const columns: ColumnDef<ICategory>[] = [
       const cateName = getValue() as string
       if (cateName) {
         const truncateName = cateName.length > 20 ? `${cateName.substring(0, 20)}...` : cateName
-        return <p className="w-[8rem]">{truncateName}</p>
-      } else return <p className="w-[8rem]">{cateName}</p>
+        return <p className="w-[12rem]">{truncateName}</p>
+      } else return <p className="w-[12rem]">{cateName}</p>
     },
   },
   {
@@ -53,10 +53,10 @@ export const columns: ColumnDef<ICategory>[] = [
       const description: string | null = getValue() as string | null
 
       if (!description) {
-        return <p className="text-slate-400">No description available</p>
+        return <p className="w-[20rem] text-slate-400">No description available</p>
       }
       const truncatedDescription = description.length > 100 ? `${description.substring(0, 100)}...` : description
-      return <p className="w-[36rem] text-slate-400">{truncatedDescription}</p>
+      return <p className="w-[20rem] text-slate-400">{truncatedDescription}</p>
     },
   },
   {

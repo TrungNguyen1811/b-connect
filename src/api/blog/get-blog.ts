@@ -1,11 +1,11 @@
-import { IBlogg, IResponsePost, IResponseTag } from 'src/types/blog'
+import { IResponsePost, IResponseTag } from 'src/types/blog'
 import { ICategory } from 'src/types/categories'
 import axios from 'axios'
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { IDefaultQuery } from 'src/types/requests'
 import { IResponse, IResponsePagination } from 'src/types/response'
 
-export async function getBlogActive(): Promise<IBlogg[]> {
+export async function getBlogActive(): Promise<IResponsePost[]> {
   return axiosClient.get(`/Post/mostliked`).then((res) => res.data)
 }
 
@@ -62,8 +62,20 @@ export async function getAllPosts(params: GetManyPostsParams) {
       return dataAll
     })
 }
-export async function getRelevantPosts(userId: string) {
-  return axiosClient.get(`/Post/user-targeted-categories?userId=${userId}`).then((res) => {
+
+export async function getAllPostsNoPagination(params: GetManyPostsParams) {
+  return axiosClient
+    .get('/Post/get-all-post', {
+      params,
+    })
+    .then((res) => {
+      const data: IResponsePost[] = res.data
+      return data
+    })
+}
+
+export async function getRelevantPosts() {
+  return authAxiosClient.get(`/Post/user-targeted-categories`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })

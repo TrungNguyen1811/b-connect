@@ -5,6 +5,8 @@ import {
   ArrowLeftIcon,
   ArrowRightLeftIcon,
   BookTemplateIcon,
+  HandCoinsIcon,
+  HandshakeIcon,
   LayoutDashboardIcon,
   StickyNoteIcon,
   Users,
@@ -55,7 +57,19 @@ export default function SidebarAdmin({ className }: SidebarProps) {
     {
       title: 'Manage Transaction',
       icon: ArrowRightLeftIcon,
-      href: '/admin/manage/transaction',
+      href: '/admin/manage/transition',
+      color: 'text-orange-500',
+    },
+    {
+      title: 'Manage Refund',
+      icon: HandCoinsIcon,
+      href: '/admin/manage/refund',
+      color: 'text-orange-500',
+    },
+    {
+      title: 'Manage Trade',
+      icon: HandshakeIcon,
+      href: '/admin/manage/trade',
       color: 'text-orange-500',
     },
   ]

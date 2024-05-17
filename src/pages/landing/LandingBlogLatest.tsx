@@ -1,7 +1,7 @@
 // import Post from 'src/components/blog/post'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { getRelevantPosts, getUserTargetedTags } from 'src/api/blog/get-blog'
+import { GetManyPostsParams, getUserTargetedTags } from 'src/api/blog/get-blog'
 import { postAddUserTargetedCategory } from 'src/api/blog/interested'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import PostGridLoading from 'src/components/blog/loading-post'
@@ -17,20 +17,17 @@ import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import { ICategory } from 'src/types'
 import ErrorPage from '../error-page'
-import { IResponsePost } from 'src/types/blog'
-import { useCustomQueryDetail } from 'src/hooks/useCustomQueryDetail'
+import useGetManyPosts from 'src/hooks/useGetManyPosts'
 
-// const initPostState: GetManyPostsParams = {
-//   PageNumber: 0,
-//   PageSize: 100,
-//   // category: undefined,
-// }
+const initPostState: GetManyPostsParams = {
+  PageNumber: 0,
+  PageSize: 1000,
+}
 
-export default function LandingBlog() {
+export default function LandingBlogLatest() {
   const { user } = useAuth()
-  // const [blogs, setBlogs] = useState<GetManyPostsParams>(initPostState)
-  const { data, isLoading, isError } = useCustomQueryDetail<IResponsePost[]>(() => getRelevantPosts())
-  // const { data, isLoading, isError } = useGetManyPosts(blogs)
+  const [blogs, setBlogs] = useState<GetManyPostsParams>(initPostState)
+  const { data, isLoading, isError } = useGetManyPosts(blogs)
   const [open, setOpen] = useState(false)
   useEffect(() => {
     const fl = async () => {
@@ -88,44 +85,18 @@ export default function LandingBlog() {
 
   const renderPosts = useMemo(() => {
     if (isLoading) return <PostGridLoading pageSize={8} className="h-96 " />
-    if (!Array.isArray(data) || data?.length === 0)
+    if (!Array.isArray(data?.data) || data?.data?.length === 0)
       return (
         <div className="col-span-full row-span-full h-full w-full">
           <h3 className="text-center text-slate-300">No result found</h3>
         </div>
       )
-    return data?.map((post) => {
+    return data?.data.map((post) => {
       return <Post key={post.postData.postId} postId={post.postData.postId!} />
     })
   }, [data, isLoading])
 
   if (isError) return <ErrorPage />
-
-  // useEffect(() => {
-  //   const getAllBlogFollowOnCategory = async () => {
-  //     const allBlogData = await getAllPosts()
-
-  //     if (!user?.interested) {
-  //       setBlogs(allBlogData)
-  //       return
-  //     }
-
-  //     const filteredBlogs = allBlogData.data.filter((blog) => {
-  //       return user?.interested?.every((interest) => {
-  //         return blog.category.some((cat) => interest.category_id.some((category) => category._id === cat._id))
-  //       })
-  //     })
-
-  //     setBlogs({ data: filteredBlogs })
-  //   }
-
-  //   getAllBlogFollowOnCategory()
-  // }, [user])
-
-  // if (!blogs) {
-  //   return <div>Loading...</div>
-  // }
-  // if (!blogs) return <PostGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
 
   return (
     <div className="mx-20 h-full px-4 py-2">
@@ -165,10 +136,10 @@ export default function LandingBlog() {
             </DialogContent>
           </Dialog>
           <div className="flex flex-row gap-6 px-3 py-2">
-            <Link to="/blog" className="text-xl font-bold">
+            <Link to="/blog" className="text-xl text-gray-500">
               Relevant
             </Link>
-            <Link to="/blog/latest" className="text-xl text-gray-500">
+            <Link to="/blog/latest" className="text-xl font-bold">
               Latest
             </Link>
           </div>

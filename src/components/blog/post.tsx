@@ -25,7 +25,7 @@ function Post({ postId }: PostProps) {
   const [isInterested, setIsInterested] = useState<boolean>(false)
   const [postInterestId, setPostInterestId] = useState<string | undefined>(undefined)
   const [checkLike, setCheckLike] = useState<boolean>()
-  const [likes, setLikes] = useState<number>(blog?.likesCount || 0)
+  const [likes, setLikes] = useState<number>(blog?.totalLikes || 0)
   console.log('dât', likes)
   const navigate = useNavigate()
 
@@ -149,7 +149,11 @@ function Post({ postId }: PostProps) {
             <img src={blog?.postData.imageDir as string} className="max-h-[18rem] w-full rounded-t-md" />
           </div>
         ) : blog?.postData.videoDir ? (
-          <video src={blog?.postData.videoDir as string} className="w-full rounded-t-md" controls></video>
+          <video
+            src={blog?.postData.videoDir as string}
+            className="max-h-[18rem] w-full  rounded-t-md"
+            controls
+          ></video>
         ) : (
           ''
         )}
