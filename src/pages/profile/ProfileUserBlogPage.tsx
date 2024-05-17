@@ -9,8 +9,9 @@ import MetaData from 'src/components/metadata'
 import Post from 'src/components/blog/post'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPostByUserId } from 'src/api/blog/get-blog'
-import { IAnalystPost, User } from 'src/types/user'
+import { IAnalystPost, IRating, User } from 'src/types/user'
 import { getUserByUserName, getUserPostData } from 'src/api/user/get-user'
+import { getUserRatingInfo } from 'src/api/review/get-all-review-by-bookId'
 
 function ProfileUser() {
   const { user } = useAuth()
@@ -18,6 +19,7 @@ function ProfileUser() {
   const [userData, setUserData] = useState<User | null>(null)
   const [blogs, setBlogs] = useState<IResponsePost[] | null>(null)
   const [analyst, setAnalyst] = useState<IAnalystPost>()
+  const [rating, setRating] = useState<IRating>()
   const isCurrentUser = user && user.username === username
   const navigate = useNavigate()
 
@@ -29,6 +31,8 @@ function ProfileUser() {
           setUserData(getUser)
           const analyst = await getUserPostData()
           setAnalyst(analyst)
+          const rating = await getUserRatingInfo()
+          setRating(rating)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -91,6 +95,9 @@ function ProfileUser() {
                     </p>
                   </div>
                   <div className="flex flex-row items-center justify-center">
+                    <p className="px-4">
+                      Rating: {rating?.overallRating}* ({rating?.totalReviews} Rating)
+                    </p>
                     <p className="px-4">Add: 123 Abcd, Hoa Hai, Ngu Hanh Son, Da Nang{userData?.addressId}</p>
                     <p className="px-4">Joined on: 15/04/2024{userData?.createdAt as string}</p>
                     {/* <p className="px-4">Shopee: {user?.username}</p> */}

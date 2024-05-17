@@ -159,3 +159,8 @@ export interface IDashboardPost {
   commentCount: number
   savedPostCount: number
 }
+
+export interface IRating {
+  overallRating: number
+  totalReviews: number
+}

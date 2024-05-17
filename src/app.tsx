@@ -19,6 +19,7 @@ export default function App() {
         </OrderCartProvider>
       </AuthProvider>
       <Toaster />
+
       {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   )

@@ -1,14 +1,37 @@
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { ArrowBigUpIcon } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
 
-const ScrollToTop = () => {
-  // Extracts pathname property(key) from an object
-  const { pathname } = useLocation()
+export default function ScrollToTop() {
+  const [isVisible, setIsVisible] = useState(false)
 
-  // Automatically scrolls to top whenever pathname changes
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
-}
+    const toggleVisibility = () => {
+      if (window.scrollY > 500) {
+        setIsVisible(true)
+      } else {
+        setIsVisible(false)
+      }
+    }
 
-export default ScrollToTop
+    window.addEventListener('scroll', toggleVisibility)
+
+    return () => window.removeEventListener('scroll', toggleVisibility)
+  }, [])
+
+  return (
+    <div className="scroll-to-top">
+      {isVisible && (
+        <div onClick={scrollToTop}>
+          <ArrowBigUpIcon />
+        </div>
+      )}
+    </div>
+  )
+}

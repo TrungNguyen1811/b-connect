@@ -3,6 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+  @font-face {
+    font-family: Garamond;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/Roboto.woff2") format('woff2');
+  }
+
+  html {
+    font-family: Garamond, system-ui, sans-serif;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -442,4 +454,13 @@
 
 #click {
   display: none;
+}
+
+// scroll
+.scroll-to-top {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 72px;
+  margin-bottom: 72px;
 }

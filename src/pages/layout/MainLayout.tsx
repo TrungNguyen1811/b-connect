@@ -4,6 +4,7 @@ import Header from 'src/components/header/header'
 import MetaData from 'src/components/metadata'
 import TailwindIndicator from 'src/components/tailwind-indicator'
 import { ChatLayout } from '../chat/chat-layout'
+import AutoScrollToTop from 'src/components/auto-scroll-top'
 
 function MainLayout() {
   const defaultLayout = undefined
@@ -12,6 +13,7 @@ function MainLayout() {
       <MetaData title="LandingPage" />
       <Header />
       <Outlet />
+      <AutoScrollToTop />
       <ChatLayout defaultLayout={defaultLayout} navCollapsedSize={8} />
       <TailwindIndicator />
       <Footer />
