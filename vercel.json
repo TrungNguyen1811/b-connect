@@ -1,8 +1,8 @@
 {
   "version": 2,
   "builds": [
-    { "src": "*.html", "use": "@vercel/static" },
-    { "src": "*.js", "use": "@vercel/node" }
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "src/api/**/*.ts", "use": "@vercel/node" }
   ],
   "headers": [
     {
@@ -15,5 +15,7 @@
       ]
     }
   ],
-   "rewrites": [{ "source": "/(.*)", "destination": "/" }] 
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
