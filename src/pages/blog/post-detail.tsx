@@ -39,7 +39,7 @@ function BlogDetail() {
   const [blog, setBlog] = React.useState<IResponsePost | null>(data.blog)
   const contents: Value = JSON.parse(blog?.postData.content as string)
   const [comments, setComments] = useState<IComment[]>()
-  const [likes, setLikes] = useState<number>(blog?.likesCount || 0)
+  const [likes, setLikes] = useState<number>(blog?.totalLikes || 0)
   const [isSaved, setIsSaved] = useState<boolean>()
   const queryClient = useQueryClient()
   const { user } = useAuth()

@@ -4,10 +4,10 @@ import { cn } from 'src/lib/utils'
 import SearchInput from 'src/components/ui/search-input'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IBook, ICategory } from 'src/types'
-import { TYPE_OPTIONS } from 'src/components/table/user/option'
 import { DataTableRadioFacetedFilter } from 'src/components/ui/data-table-radio-facet'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import { DataTableFacetedFilter } from 'src/components/ui/data-table-facet'
+import { TYPE_OPTIONS } from 'src/components/admin/user/option'
 export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>
   queries: Partial<IQueryPagination & IQuerySearch> & Record<string, unknown>
