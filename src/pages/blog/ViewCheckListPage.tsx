@@ -35,13 +35,13 @@ function CheckListItemForm({
   id,
   target,
   checkList,
-  isStaff,
+  isAdmin,
   onImageMiddleChange,
   onImagePartnerChange,
 }: {
   id: string
   target: string
-  isStaff: boolean
+  isAdmin: boolean
   checkList: ICheckList
   onImageMiddleChange: (value: React.SetStateAction<string>) => void
   onImagePartnerChange: (value: React.SetStateAction<string>) => void
@@ -49,7 +49,7 @@ function CheckListItemForm({
   return (
     <div className="flex flex-row items-center justify-center">
       <div className="flex flex-row items-center gap-4">
-        {isStaff ? (
+        {isAdmin ? (
           <div className="flex flex-col items-center gap-4">
             {checkList.middleUploadDir &&
               (isImage(checkList.middleUploadDir as string) ? (
@@ -213,7 +213,7 @@ function CheckListViewPage() {
                           checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
                           id={id as string}
                           target={target}
-                          isStaff={true}
+                          isAdmin={true}
                           onImageMiddleChange={handleMiddleImageChange}
                           onImagePartnerChange={handlePartnerImageChange}
                         />
@@ -228,7 +228,7 @@ function CheckListViewPage() {
                           checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
                           id={id as string}
                           target={target}
-                          isStaff={false}
+                          isAdmin={false}
                           onImagePartnerChange={handlePartnerImageChange}
                           onImageMiddleChange={handleMiddleImageChange}
                         />

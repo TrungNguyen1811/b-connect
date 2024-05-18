@@ -31,14 +31,14 @@ function CheckListItemForm({
   id,
   target,
   checkList,
-  isStaff,
+  isAdmin,
   // loading,
   // onSubmit,
   onImageChange,
 }: {
   id: string
   target: string
-  isStaff: boolean
+  isAdmin: boolean
   // loading: boolean
   checkList: ICheckList
   // onSubmit: (data: ICheckList) => void
@@ -87,7 +87,7 @@ function CheckListItemForm({
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="flex flex-row items-center gap-4">
           <FormLabel className="w-48">Target: {target}</FormLabel>
-          {isStaff ? (
+          {isAdmin ? (
             <FormField
               control={form.control}
               name="middleUploadDir"
@@ -201,7 +201,7 @@ function CheckListPage() {
                     checkList={checkList?.find((ck) => ck.target == target) as ICheckList}
                     id={id as string}
                     target={target}
-                    isStaff={user?.roles?.includes(ROLE.STAFF) as boolean}
+                    isAdmin={user?.roles?.includes(ROLE.ADMIN) as boolean}
                     // onSubmit={handleSubmitForm}
                     onImageChange={handleImageChange}
                     // loading={submitCheckList.isLoading}

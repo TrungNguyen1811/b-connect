@@ -74,9 +74,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             user,
             token,
           })
-          if (user?.roles?.includes(ROLE.STAFF) === true) {
-            navigate('/staff/manage/trade')
-          } else if (user?.roles?.includes(ROLE.ADMIN) === true) {
+          if (user?.roles?.includes(ROLE.ADMIN) === true) {
             navigate('/admin/dashboard')
           } else {
             navigate('/')

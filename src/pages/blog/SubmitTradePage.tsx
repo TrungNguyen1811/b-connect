@@ -102,7 +102,7 @@ export default function SubmitTrade() {
         if (
           user?.userId !== getTwoUser.ownerId &&
           user?.userId !== getTwoUser.interesterId &&
-          !user?.roles?.includes(ROLE.STAFF)
+          !user?.roles?.includes(ROLE.ADMIN)
         ) {
           setAuthorized(false)
         }

@@ -19,7 +19,7 @@ function RefundManagePage() {
       {
         label: 'DashBoard',
         key: 'dashboard',
-        href: '/staff/dashboard',
+        href: '/admin/dashboard',
         icon: 'dashboard',
       },
       {

@@ -1,6 +1,6 @@
 import { ITradeDetail } from 'src/api/blog/interested'
-import { ITradeStatus } from 'src/pages/blog/submit-trade'
 import { ScrollArea } from '../ui/scroll-area'
+import { ITradeStatus } from 'src/pages/blog/SubmitTradePage'
 
 function CardInfoTrade({ userTrade }: { userTrade: ITradeDetail }) {
   const renderForm = (string: string, name: string) => {

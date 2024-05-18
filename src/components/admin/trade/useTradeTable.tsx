@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
-import { getAllTradePostForMiddle } from 'src/api/staff/get-all-trade-post'
 import { IPostResponse } from 'src/types/blog'
+import { getAllTradePostForMiddle } from 'src/api/admin/get-all-trade-post'
 
 export function useTradeTable(columns: ColumnDef<IPostResponse>[]) {
   const [queries, setQueries] = useState<
