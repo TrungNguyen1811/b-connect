@@ -9,7 +9,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import { IResponseTag } from 'src/types/blog'
 import { getUserTargetedTags } from 'src/api/blog/get-blog'
 
-function TagList() {
+function TagListPage() {
   const [categories, setCategories] = useState<ICategory[]>()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -90,4 +90,4 @@ function TagList() {
     </div>
   )
 }
-export default TagList
+export default TagListPage

@@ -6,6 +6,7 @@ import { getBookById } from 'src/api/books/get-book'
 import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
+import PostTagPage from 'src/pages/blog/PostTagPage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -63,19 +64,19 @@ const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
 const LandingBlogLatest = React.lazy(() => import('src/pages/landing/LandingBlogLatest'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/ProfileUserBlogPage'))
 const RatingUserPage = React.lazy(() => import('src/pages/profile/RatingUserPage'))
-const UpdateProfile = React.lazy(() => import('src/pages/blog/update-profile'))
-const DashboardBlog = React.lazy(() => import('src/pages/blog/dashboard-post'))
-const FollowingTags = React.lazy(() => import('src/pages/blog/following-tags'))
-const TagList = React.lazy(() => import('src/pages/blog/tag-list'))
-const ReadingList = React.lazy(() => import('src/pages/blog/reading-list'))
-const CreateBlog = React.lazy(() => import('src/pages/blog/create-blog'))
-const UpdateBlog = React.lazy(() => import('src/pages/blog/update-post'))
-const BlogDetail = React.lazy(() => import('src/pages/blog/post-detail'))
-const PostInterestedManage = React.lazy(() => import('src/pages/blog/post-interested-manage'))
-const ManagePostInterester = React.lazy(() => import('src/pages/blog/manage-post-interester'))
-const SubmitTrade = React.lazy(() => import('src/pages/blog/submit-trade'))
-const CheckListPage = React.lazy(() => import('src/pages/blog/check-list'))
-const CheckListViewPage = React.lazy(() => import('src/pages/blog/view-check-list'))
+const UpdateProfile = React.lazy(() => import('src/pages/blog/UpdateProfilePage'))
+const DashboardBlog = React.lazy(() => import('src/pages/blog/DashboardPostPage'))
+const FollowingTags = React.lazy(() => import('src/pages/blog/ManageFollowingTagsPage'))
+const TagList = React.lazy(() => import('src/pages/blog/TagListPage'))
+const ReadingList = React.lazy(() => import('src/pages/blog/ReadingListPage'))
+const CreateBlog = React.lazy(() => import('src/pages/blog/CreatePostPage'))
+const UpdateBlog = React.lazy(() => import('src/pages/blog/UpdatePostPage'))
+const BlogDetail = React.lazy(() => import('src/pages/blog/PostDetailPage'))
+const PostInterestedManage = React.lazy(() => import('src/pages/blog/ManagePostInterestedPage'))
+const ManagePostInterester = React.lazy(() => import('src/pages/blog/ManagePostInteresterPage'))
+const SubmitTrade = React.lazy(() => import('src/pages/blog/SubmitTradePage'))
+const CheckListPage = React.lazy(() => import('src/pages/blog/CheckListPage'))
+const CheckListViewPage = React.lazy(() => import('src/pages/blog/ViewCheckListPage'))
 
 const ErrorPage = React.lazy(() => import('src/pages/error-page'))
 
@@ -308,6 +309,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/blog/latest',
         element: <LandingBlogLatest />,
+      },
+      {
+        path: '/blog/c/:tag',
+        element: <PostTagPage />,
       },
       {
         path: '/blog/profile/:username',

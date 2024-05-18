@@ -75,7 +75,7 @@ export async function getAllPostsNoPagination(params: GetManyPostsParams) {
 }
 
 export async function getRelevantPosts() {
-  return authAxiosClient.get(`/Post/user-targeted-categories`).then((res) => {
+  return authAxiosClient.get(`/Post/user-targeted-post`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })

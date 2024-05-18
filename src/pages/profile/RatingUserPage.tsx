@@ -98,15 +98,15 @@ function RatingUserPage() {
         <div>
           {lists?.map((list, index) => {
             return (
-              <div key={index} className="flex flex-row items-start">
-                <Avatar>
+              <div key={index} className="flex flex-row items-start gap-1">
+                <Avatar className="h-12 w-12">
                   <AvatarImage src={list.avatarDir} />
                 </Avatar>
                 <div>
-                  <p>{list.username}user01</p>
+                  <p>{list.username}</p>
                   <Rating style={{ maxWidth: 100 }} value={list.ratingPoint as number} />
-                  <p className="text-gray-600">{format(list.createdDate, 'PPpp')}2024/12/26</p>
-                  <p>{list.comment}hay đáy</p>
+                  <p className="text-gray-600">{format(list.createdDate, 'PPpp')}</p>
+                  <p>{list.comment}</p>
                 </div>
                 {lists.length - 1 > index ? <Separator /> : ''}
               </div>

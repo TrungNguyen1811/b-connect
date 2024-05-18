@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { AvatarImage } from 'src/components/ui/avatar'
 import { Avatar } from '@radix-ui/react-avatar'
 import { Button } from 'src/components/ui/button'
-import { BookHeartIcon, MessageSquareDotIcon, StickyNoteIcon } from 'lucide-react'
+import { BookHeartIcon, MessageSquareDotIcon, StarIcon, StickyNoteIcon } from 'lucide-react'
 import MetaData from 'src/components/metadata'
 import Post from 'src/components/blog/post'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -31,7 +31,7 @@ function ProfileUser() {
           setUserData(getUser)
           const analyst = await getUserPostData()
           setAnalyst(analyst)
-          const rating = await getUserRatingInfo(userData?.userId as string)
+          const rating = await getUserRatingInfo(getUser.userId as string)
           setRating(rating)
         }
       } catch (error) {
@@ -95,8 +95,11 @@ function ProfileUser() {
                     </p>
                   </div>
                   <div className="flex flex-row items-center justify-center">
-                    <Link to={`/blog/user/rating/${userData?.userId}`} className="px-4 hover:text-orange-500">
-                      Rating: {rating?.overallRating}* ({rating?.totalReviews} Rating)
+                    <Link
+                      to={`/blog/user/rating/${userData?.userId}`}
+                      className="flex flex-row items-center gap-1 px-4 hover:text-orange-500"
+                    >
+                      Rating: <StarIcon className="h-4 w-4" /> {rating?.overallRating} ({rating?.totalReviews} Rating)
                     </Link>
                     <p className="px-4">Add: 123 Abcd, Hoa Hai, Ngu Hanh Son, Da Nang{userData?.addressId}</p>
                     <p className="px-4">Joined on: 15/04/2024{userData?.createdAt as string}</p>
