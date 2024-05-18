@@ -48,6 +48,7 @@ export interface IResponsePost {
   totalLikes: number
   totalComments: number
   totalFollow: number
+  likesCount: number
 }
 
 export interface IListCate {

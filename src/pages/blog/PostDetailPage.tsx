@@ -39,7 +39,7 @@ function BlogDetail() {
   const [blog, setBlog] = React.useState<IResponsePost | null>(data.blog)
   const contents: Value = JSON.parse(blog?.postData.content as string)
   const [comments, setComments] = useState<IComment[]>()
-  const [likes, setLikes] = useState<number>(blog?.totalLikes || 0)
+  const [likes, setLikes] = useState<number>(blog?.likesCount || 0)
   const [isSaved, setIsSaved] = useState<boolean>()
   const queryClient = useQueryClient()
   const { user } = useAuth()
@@ -384,7 +384,7 @@ function BlogDetail() {
                     <React.Fragment key={index}>
                       {index < 4 ? (
                         <Link
-                          to={'/'}
+                          to={`/blog/c/${tag.cateName}`}
                           className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
                         >
                           #{tag.cateName}

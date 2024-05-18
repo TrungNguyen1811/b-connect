@@ -25,14 +25,14 @@ function Post({ postId }: PostProps) {
   const [isInterested, setIsInterested] = useState<boolean>(false)
   const [postInterestId, setPostInterestId] = useState<string | undefined>(undefined)
   const [checkLike, setCheckLike] = useState<boolean>()
-  const [likes, setLikes] = useState<number>(blog?.totalLikes || 0)
-  console.log('dât', likes)
+  const [likes, setLikes] = useState<number>(0)
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchBlogAndUser = async () => {
       const blogData = await getPostByIdApi(postId)
       setBlog(blogData)
+      setLikes(blogData.likesCount)
     }
 
     fetchBlogAndUser()
@@ -177,7 +177,7 @@ function Post({ postId }: PostProps) {
                 <React.Fragment key={index}>
                   {index < 4 ? (
                     <Link
-                      to={'/'}
+                      to={`/blog/c/${tag.cateName}`}
                       className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
                     >
                       #{tag.cateName}

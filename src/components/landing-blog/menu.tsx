@@ -128,7 +128,7 @@ export function Menu() {
                 className="hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-orange-300"
                 key={tag.cateId}
               >
-                <Link to={`c/${tag.cateName}`} className="z-10">
+                <Link to={`/blog/c/${tag.cateName}`} className="z-10">
                   <p className="z-10 text-base hover:text-orange-900 hover:underline">#{tag.cateName}</p>
                 </Link>
               </li>

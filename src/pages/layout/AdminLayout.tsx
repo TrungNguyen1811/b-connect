@@ -11,7 +11,7 @@ function AdminLayout() {
     return <Navigate to={'/'} />
   }
   return (
-    <div>
+    <div className="h-full">
       <Header />
       <div className="flex flex-row">
         <SidebarAdmin />

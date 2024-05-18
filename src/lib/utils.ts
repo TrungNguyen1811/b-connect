@@ -36,6 +36,7 @@ export function formatDuration(days: number, hours: number, minutes: number, sec
 }
 
 export function formatDate(formDate: Date) {
+  if (!formDate) return ''
   return (
     formDate.getFullYear() +
     '/' +

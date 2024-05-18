@@ -4,7 +4,8 @@ import { IRefund } from 'src/types/transaction'
 export async function postCreateRefundRequest(data: IRefund) {
   return await authAxiosClient
     .post(`Transaction/create-refund-request`, {
-      data,
+      transactionId: data.transactionId,
+      reason: data.reason,
     })
     .then((response) => {
       if (response.status === 200) {

@@ -27,7 +27,7 @@ export { postPaymentTrade }
 async function postPaymentRefund(data: IPaymentRefund) {
   return await authAxiosClient
     .post('/Payment/vnpay/create-refund-request', {
-      transactionId: data.transId,
+      transId: data.transId,
       amount: data.amount,
     })
     .then((response) => {

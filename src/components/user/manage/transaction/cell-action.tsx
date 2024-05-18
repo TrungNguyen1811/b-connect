@@ -77,51 +77,56 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   }
   return (
     <div className="flex w-12 flex-row gap-2">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-[50vw]">
-          <DialogHeader>
-            <DialogTitle>Request Refund</DialogTitle>
-          </DialogHeader>
-          <div className="flex items-center space-x-2">
-            <div className="grid flex-1 gap-2">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className=" bg-gray-100">
-                    <div className="mx-4">
-                      <FormField
-                        control={form.control}
-                        name="reason"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-center py-4">
-                            <FormLabel className="w-40 pr-2 text-right">Reason</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                className="b-4 h-40 bg-orange-50"
-                                placeholder="Show more detail about reason"
-                                {...field}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+      {data.isRefunded ? (
+        ''
+      ) : (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="w-[50vw]">
+            <DialogHeader>
+              <DialogTitle>Request Refund</DialogTitle>
+            </DialogHeader>
+            <div className="flex items-center space-x-2">
+              <div className="grid flex-1 gap-2">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className=" bg-gray-100">
+                      <div className="mx-4">
+                        <FormField
+                          control={form.control}
+                          name="reason"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-center py-4">
+                              <FormLabel className="w-40 pr-2 text-right">Reason</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  className="b-4 h-40 bg-orange-50"
+                                  placeholder="Show more detail about reason"
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="bottom-0 flex-grow text-right">
-                    <div className="">
-                      <Button className="my-2 mr-2" variant={'destructive'} onClick={() => setOpen(false)}>
-                        Cancel
-                      </Button>
-                      <Button disabled={createRefund.isLoading} className="" type="submit">
-                        {createRefund.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Submit
-                      </Button>
+                    <div className="bottom-0 flex-grow text-right">
+                      <div className="">
+                        <Button className="my-2 mr-2" variant={'destructive'} onClick={() => setOpen(false)}>
+                          Cancel
+                        </Button>
+                        <Button disabled={createRefund.isLoading} className="" type="submit">
+                          {createRefund.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Submit
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </form>
-              </Form>
+                  </form>
+                </Form>
+              </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

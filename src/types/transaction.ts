@@ -6,10 +6,12 @@ export interface ITransaction {
   cardType: string
   orderInfo: string
   paymentStatus: string
-  paymentMessage: string
+  transactionNo: string
   paymentDate: string
+  paymentMessage: string
   amount: number
   signature: string
+  isRefunded: string
 }
 
 export interface IRefund {

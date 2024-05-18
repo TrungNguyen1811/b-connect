@@ -1,36 +1,59 @@
 import { Button } from 'src/components/ui/button'
-import { columns } from './column'
-import { useUserTable } from './useUserTable'
-import { UserTableToolbar } from './toolbar'
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Pagination from 'src/components/ui/pagination'
 import TableSizeSelector from 'src/components/ui/table-size-selector'
 import { Skeleton } from 'src/components/ui/skeleton'
-import { DataTable } from 'src/components/ui/data-table'
+import { columns } from './column'
+import { AdsTableToolbar } from './toolbar'
+import { useAdvertisementTable } from './useAdvertisementTable'
+import { DataTable } from './data-table-ads'
 
-function UserTable() {
-  const { isError, isLoading, table, error, refetch, data, tableStates } = useUserTable(columns)
-  const renderHeader = React.useMemo(() => {
+function AdvertisementTable() {
+  const { isError, isLoading, table, error, refetch, data, tableStates, setTableStates, queries, setQueries } =
+    useAdvertisementTable(columns)
+
+  const [startDate, setStartDate] = useState<string>()
+  const [endDate, setEndDate] = useState<string>()
+
+  const handleStartDateChange = (value: string) => {
+    setStartDate(value)
+  }
+
+  const handleEndDateChange = (value: string) => {
+    setEndDate(value)
+  }
+
+  useEffect(() => {
+    setTableStates((prev) => ({
+      ...prev,
+      startDate: startDate,
+      endDate: endDate,
+    }))
+  }, [startDate, setTableStates, endDate])
+
+  console.log('quee', queries)
+
+  const renderHeader = useMemo(() => {
     return (
-      <UserTableToolbar
-        table={table}
-        queries={{
-          PageNumber: tableStates.pagination.pageIndex + 1,
-          PageSize: tableStates.pagination.pageSize,
-          search: tableStates.globalFilter,
-        }}
-        setSearchQuery={(value) => {
-          table.setGlobalFilter(value.search)
-          table.setColumnFilters(() => [
-            {
-              id: 'role',
-              value: value.role,
-            },
-          ])
-        }}
-      />
+      <div>
+        <AdsTableToolbar
+          table={table}
+          queries={{
+            PageNumber: tableStates.pagination.pageIndex + 1,
+            PageSize: tableStates.pagination.pageSize,
+            agencyId: tableStates.globalFilter,
+            ...queries,
+          }}
+          setSearchQuery={(value) => {
+            table.setGlobalFilter(value.search)
+            setQueries(value)
+          }}
+          onStartDateChange={handleStartDateChange}
+          onEndDateChange={handleEndDateChange}
+        />
+      </div>
     )
-  }, [table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize, tableStates.globalFilter])
+  }, [queries, table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize])
 
   const renderFooter = React.useMemo(() => {
     if (isLoading)
@@ -71,7 +94,7 @@ function UserTable() {
   }, [isLoading, tableStates.pagination.pageIndex, table, data])
 
   return (
-    <div className="mt-8">
+    <div className="mt-4">
       {isError && <Button onClick={() => refetch()}>Retry</Button>}
       {isError && <p>{error?.message}</p>}
       <DataTable
@@ -85,4 +108,4 @@ function UserTable() {
     </div>
   )
 }
-export default UserTable
+export default AdvertisementTable

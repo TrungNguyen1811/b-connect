@@ -17,7 +17,7 @@ interface Props {
   tradeDetailsId: string
 }
 const FormSchema = z.object({
-  amount: z.number(),
+  amount: z.coerce.number().min(0),
 })
 type FormData = z.infer<typeof FormSchema>
 function PaymentTrade({ tradeDetailsId }: Props) {

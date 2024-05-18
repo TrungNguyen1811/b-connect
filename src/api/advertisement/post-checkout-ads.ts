@@ -65,3 +65,14 @@ async function postRegisterRelevantAds(data: ICheckoutAds) {
     })
 }
 export { postRegisterRelevantAds }
+
+async function postUpdateBannerList(data: string[]) {
+  return authAxiosClient.post('/ad/update-banner-display-list', data).then((res) => {
+    if (res.status === 200) {
+      return res.status
+    } else {
+      return 'Error with status code' + res.status + '(' + res.data + ')'
+    }
+  })
+}
+export { postUpdateBannerList }

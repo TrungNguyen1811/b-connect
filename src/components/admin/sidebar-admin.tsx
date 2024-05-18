@@ -55,6 +55,12 @@ export default function SidebarAdmin({ className }: SidebarProps) {
       color: 'text-orange-500',
     },
     {
+      title: 'Advertisement',
+      icon: HandshakeIcon,
+      href: '/admin/manage/advertisement',
+      color: 'text-orange-500',
+    },
+    {
       title: 'Manage Transaction',
       icon: ArrowRightLeftIcon,
       href: '/admin/manage/transition',
@@ -76,7 +82,7 @@ export default function SidebarAdmin({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative hidden h-screen border-r bg-orange-300 md:block`,
+        `relative hidden max-h-max min-h-screen border-r bg-orange-300 md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,
@@ -89,8 +95,8 @@ export default function SidebarAdmin({ className }: SidebarProps) {
         )}
         onClick={handleToggle}
       />
-      <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
+      <div className="sticky top-14 space-y-4 py-4">
+        <div className=" px-3 py-2">
           <div className="mt-3 space-y-1">
             <p className={cn('px-6 pb-4 text-3xl font-extrabold text-white', !isOpen && 'hidden')}>Overview</p>
             <SideNav

@@ -118,7 +118,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative h-screen border-r md:block`,
+        `relative max-h-max min-h-screen border-r md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,
@@ -131,7 +131,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
         )}
         onClick={handleToggle}
       />
-      <div className="space-y-4 py-4">
+      <div className="sticky top-14 space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
             <p className={cn('px-6 pb-4 text-3xl font-extrabold', !isOpen && 'hidden')}>{t('overview')}</p>

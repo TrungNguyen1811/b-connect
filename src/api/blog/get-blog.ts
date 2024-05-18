@@ -63,19 +63,21 @@ export async function getAllPosts(params: GetManyPostsParams) {
     })
 }
 
-export async function getAllPostsNoPagination(params: GetManyPostsParams) {
-  return axiosClient
-    .get('/Post/get-all-post', {
-      params,
-    })
-    .then((res) => {
-      const data: IResponsePost[] = res.data
-      return data
-    })
+export async function getAllPostsByUser() {
+  return axiosClient.get('/Post/get-all-post-user-view').then((res) => {
+    const data: IResponsePost[] = res.data
+    return data
+  })
 }
 
 export async function getRelevantPosts() {
   return authAxiosClient.get(`/Post/user-targeted-post`).then((res) => {
+    const data: IResponsePost[] = res.data
+    return data
+  })
+}
+export async function getTagPosts(cateName: string) {
+  return authAxiosClient.get(`/Post/tag-list-post?cateName=${cateName}`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })

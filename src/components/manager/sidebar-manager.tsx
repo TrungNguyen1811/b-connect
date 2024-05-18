@@ -63,7 +63,7 @@ export default function SidebarManager({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative hidden h-screen border-r md:block`,
+        `relative  hidden max-h-max min-h-screen border-r md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,

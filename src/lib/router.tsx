@@ -7,6 +7,7 @@ import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 import PostTagPage from 'src/pages/blog/PostTagPage'
+import AdvertisementAdminPage from 'src/pages/admin/AdvertisementPage/AdvertisementPage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -61,7 +62,7 @@ const MyTransactionPage = React.lazy(() => import('src/pages/profile/MyTransacti
 
 const BlogLayout = React.lazy(() => import('src/pages/layout/BlogLayout'))
 const LandingBlog = React.lazy(() => import('src/pages/landing/LandingBlog'))
-const LandingBlogLatest = React.lazy(() => import('src/pages/landing/LandingBlogLatest'))
+const LandingBlogLatest = React.lazy(() => import('src/pages/landing/LandingBlogAllPosts'))
 const ProfileUser = React.lazy(() => import('src/pages/profile/ProfileUserBlogPage'))
 const RatingUserPage = React.lazy(() => import('src/pages/profile/RatingUserPage'))
 const UpdateProfile = React.lazy(() => import('src/pages/blog/UpdateProfilePage'))
@@ -214,6 +215,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: 'admin/manage/category',
         element: <CategoryManagerPage />,
+      },
+      {
+        path: 'admin/manage/advertisement',
+        element: <AdvertisementAdminPage />,
       },
       {
         path: '/admin/manage/trade',
