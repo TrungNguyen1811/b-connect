@@ -14,7 +14,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      src: path.resolve(__dirname, './src'),
+      src: path.resolve(__dirname, 'src'),
     },
   },
   css: {
@@ -24,13 +24,13 @@ export default defineConfig({
       },
     },
   },
-  server: {
-    // https: true,
-    host: true,
-    port: 5000,
-    https: {
-      key: 'key.pem',
-      cert: 'cert.pem',
-    },
-  },
+  // server: {
+  //   // https: true,
+  //   host: true,
+  //   port: 5000,
+  //   https: {
+  //     key: 'key.pem',
+  //     cert: 'cert.pem',
+  //   },
+  // },
 })
