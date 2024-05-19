@@ -1,33 +1,28 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { getAllAddress } from 'src/api/address/get-address'
 import MetaData from 'src/components/metadata'
 import { Separator } from 'src/components/ui/separator'
 import AddNewAddress from 'src/components/user/add-address'
 import UpdateAddress from 'src/components/user/update-address'
 import { useAuth } from 'src/hooks/useAuth'
-import { IAddress } from 'src/types/address'
 
 function AddressUserPage() {
   const { user } = useAuth()
-  const [addresses, setAddresses] = useState<IAddress[]>([])
+  // const [addresses, setAddresses] = useState<IAddress[]>([])
 
-  useEffect(() => {
-    const getAddressById = async () => {
-      try {
-        const data: IAddress[] = await getAllAddress(user?.userId as string)
-        if (data) {
-          setAddresses(data)
-          console.log('Addresses fetched:', data)
-        } else {
-          console.log('No address data received.')
-        }
-      } catch (error) {
-        console.error('Error fetching addresses:', error)
-      }
-    }
-    console.log('Fetching addresses...')
-    getAddressById()
-  }, [user?.userId])
+  const {
+    data: addresses = [],
+    isLoading,
+    isError,
+  } = useQuery(['addresses'], () => getAllAddress(user?.userId as string))
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isError) {
+    return <div>Error loading addresses.</div>
+  }
 
   return (
     <div className="w-[77vw]">

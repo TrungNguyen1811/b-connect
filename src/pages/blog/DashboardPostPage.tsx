@@ -122,7 +122,11 @@ function DashboardBlog() {
             <p className="text-xl font-bold">Posts</p>
             <div className="flex flex-row items-center">
               <p className="mr-2">In Progress Trade</p>
-              <Checkbox checked={checkbox} onCheckedChange={(checked: boolean) => setCheckbox(checked)} />
+              <Checkbox
+                className="border-orange-600"
+                checked={checkbox}
+                onCheckedChange={(checked: boolean) => setCheckbox(checked)}
+              />
             </div>
           </div>
 
@@ -139,7 +143,7 @@ function DashboardBlog() {
                   <Separator className="my-2" />
                 </>
               ))
-            ) : blogs && blogs.length > 0 ? (
+            ) : blogs && Array.isArray(blogs) && blogs.length > 0 ? (
               blogs?.map((blog, index) => (
                 <div className="my-4 mt-2" key={index}>
                   {blog.postData && blog.postData.postId ? (

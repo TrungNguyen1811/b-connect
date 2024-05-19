@@ -5,7 +5,7 @@ import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
 export async function getAllCategory() {
   return axiosClient.get('/Category/get-all-category').then((res) => {
-    const data = res.data
+    const data: ICategory[] = res.data
     const pagination = res.headers['x-pagination']
     const parseJson: IResponsePagination = JSON.parse(pagination)
     // console.log('a', parseJson)
@@ -21,14 +21,6 @@ export async function getAllCategory() {
 export async function getAllCategoryNoParam() {
   return axiosClient.get('/Category/get-all-category', {}).then((res) => {
     const data: ICategory[] = res.data
-    // const pagination = res.headers['x-pagination']
-    // const parseJson: IQueryPagination = JSON.parse(pagination)
-    // // console.log('a', parseJson)
-    // const dataAll: IResponse<ICategory[]> = {
-    //   data: data,
-    //   _metadata: data,
-    //   _pagination: parseJson,
-    // }
     return data
   })
 }

@@ -142,7 +142,7 @@ export default function Sidebar({ className }: SidebarProps) {
                   <AvatarFallback>{getLabelByFullname(user?.fullName)}</AvatarFallback>
                 </Avatar>
                 <div className={cn('ml-2 text-start', !isOpen && 'hidden')}>
-                  <p className="text-md text-accent-foreground">{user?.email}</p>
+                  <p className="text-md text-accent-foreground">{user?.username}</p>
                   <p className="flex flex-row items-center text-sm hover:text-orange-500">
                     <Edit size={12} className="mr-1 " /> Edit Profile
                   </p>

@@ -42,7 +42,6 @@ function InfoAccount() {
   })
   const queryClient = useQueryClient()
   const [users, setUser] = useState<User | undefined>(undefined)
-  const token = localStorage.getItem('token') as string
   const fetchDataAndUpdateForm = async () => {
     try {
       const userData = await getUserById(user?.userId as string)

@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useLocation } from 'react-router-dom'
@@ -14,7 +16,6 @@ import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem } from 's
 import { Separator } from 'src/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
 import { useAuth } from 'src/hooks/useAuth'
-import { useCustomQuery } from 'src/hooks/useCustomQuery'
 import { formatPrice } from 'src/lib/utils'
 import { IResponseOrder } from 'src/types/order'
 import { z } from 'zod'
@@ -41,8 +42,12 @@ function MyPurchase() {
     fetch()
   }, [user?.userId])
 
-  const { data, isLoading, isError } = useCustomQuery<IResponseOrder[]>(
-    () => getOrderHistoryApi(user?.userId as string),
+  const { data, isLoading } = useQuery<IResponseOrder[]>(
+    ['orderHistory', type, user?.userId],
+    async () => {
+      const response = await getOrderHistoryApi(type as string, user?.userId as string)
+      return response.data // Assuming response.data contains the array of orders
+    },
     {
       refetchOnWindowFocus: false,
     },
@@ -60,62 +65,60 @@ function MyPurchase() {
     return (
       <div>
         <div>
-          {order.items.map((o) => (
-            <div key={o.bookId}>
-              <div className="border-1 mb-8 rounded-sm border bg-white p-4">
-                <div className="mb-2 flex flex-row items-center justify-start">
-                  <p className="text-sm font-semibold">Agene Name</p>
-                  <Link
-                    className="ml-2 rounded-sm border px-2 py-1 text-xs text-gray-500 hover:bg-orange-400 hover:text-white"
-                    to={`/shop/${o.agencyId}`}
-                  >
-                    View Shop
-                  </Link>
-                  <p className="flex flex-grow"></p>
-                  {/* <p>{o.status}</p> */}
-                  <p>Complete</p>
-                </div>
-                <Separator />
-                <div className="flex flex-row items-end justify-between">
-                  <div className="my-4 flex flex-row items-stretch justify-start">
-                    <img src={o.bookDir} className="w-20 border" />
-                    <div className="ml-4 flex flex-col">
-                      <p>{o.bookName}</p>
-                      <p className="text-sm text-gray-500">Type: Old</p>
-                      {/* <p className="text-sm text-gray-500">{o.type}</p> */}
-                      <p className="mt-1 text-sm">x{o.quantity}</p>
-                    </div>
-                  </div>
-                  <p className="text-orange-500">{formatPrice(o.price)}</p>
+          <div className="border-1 mb-8 rounded-sm border bg-white p-4">
+            <div className="mb-2 flex flex-row items-center justify-start">
+              <p className="text-sm font-semibold">Agene Name</p>
+              <Link
+                className="ml-2 rounded-sm border px-2 py-1 text-xs text-gray-500 hover:bg-orange-400 hover:text-white"
+                to={`/shop/${order.agencyId}`}
+              >
+                View Shop
+              </Link>
+              <p className="flex flex-grow"></p>
+              <p>{order.status}</p>
+            </div>
+            <Separator />
+            <div className="flex flex-row items-end justify-between">
+              <div className="my-4 flex flex-row items-stretch justify-start">
+                <img src={order.bookDir} className="w-20 border" />
+                <div className="ml-4 flex flex-col">
+                  <p>{order.bookName}</p>
+                  <p className="text-sm text-gray-500">Type: Old</p>
+                  {/* <p className="text-sm text-gray-500">{o.type}</p> */}
+                  <p className="mt-1 text-sm">x{order.quantity}</p>
                 </div>
               </div>
+              <p className="">{formatPrice(order.price)}</p>
             </div>
-          ))}
+            <div className="flex flex-row items-end justify-between">
+              <p className="text-xs italic">{format(order.date as string, 'PPPpp')}</p>
+              <p className="flex flex-row items-end gap-1">
+                <p className="text-md pb-0.5 font-medium">Total Order: </p>
+                <p className="text-lg text-orange-500">{formatPrice(order.totalPrice)}</p>
+              </p>
+            </div>
+          </div>
         </div>
-        {/* <div>
-          <p>{order.date}</p>
-          <p>{order.totalPrice}</p>
-        </div> */}
       </div>
     )
   }
 
   const renderOrder = useMemo(() => {
     if (isLoading) return <BlockGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
-    if (!data?.data || data.data.length === 0)
+    if (!data || data.length === 0)
       return (
         <div className="col-span-full row-span-full  w-full">
           <h3 className="h-96 pt-48 text-center text-slate-300">No result found</h3>
         </div>
       )
-    return data?.data.map((order) => {
+    return data?.map((order) => {
       return (
         <div key={order.orderId}>
           <Order order={order} />
         </div>
       )
     })
-  }, [data?.data, isLoading])
+  }, [data, isLoading])
   return (
     <div className="flex w-full flex-row">
       <div className="w-full">
@@ -125,13 +128,16 @@ function MyPurchase() {
               <Link to={'?type=1'}>All</Link>
             </TabsTrigger>
             <TabsTrigger value="2">
-              <Link to={'?type=2'}>On Delivery</Link>
+              <Link to={'?type=2'}>To ship</Link>
             </TabsTrigger>
             <TabsTrigger value="3">
-              <Link to={'?type=3'}>Complete</Link>
+              <Link to={'?type=3'}>On Delivery</Link>
             </TabsTrigger>
             <TabsTrigger value="4">
-              <Link to={'?type=4'}>Cancel</Link>
+              <Link to={'?type=4'}>Complete</Link>
+            </TabsTrigger>
+            <TabsTrigger value="5">
+              <Link to={'?type=5'}>Cancel</Link>
             </TabsTrigger>
           </TabsList>
           <TabsContent value={type as string}>{renderOrder}</TabsContent>

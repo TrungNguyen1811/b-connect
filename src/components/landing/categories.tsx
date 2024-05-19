@@ -2,25 +2,21 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Separator } from '../ui/separator'
 import { useQuery } from '@tanstack/react-query'
-import { IResponse } from 'src/types/response'
 import { ICategory } from 'src/types'
 import { AxiosError } from 'axios'
-import { getAllCategory } from 'src/api/categories/get-category'
 import Category from './card-category'
 import { ChevronRight } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import { useTranslation } from 'react-i18next'
 import BlockGridLoading from '../book/block-grid-loading'
+import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 
 function Categories() {
-  const { data, isLoading } = useQuery<IResponse<ICategory[]>, AxiosError>(
-    ['FeatureCategory'],
-    () => getAllCategory(),
-    {
-      keepPreviousData: true,
-    },
-  )
+  const { data, isLoading } = useQuery<ICategory[], AxiosError>(['FeatureCategory'], () => getAllCategoryNoParam(), {
+    keepPreviousData: true,
+  })
 
+  console.log('dataaa', data)
   const { t } = useTranslation('translation')
 
   const renderCategories = (categories: ICategory[]) => {
@@ -65,7 +61,7 @@ function Categories() {
             <ScrollArea>
               <div className="flex flex-col lg:pb-4">
                 {data &&
-                  splitCategoriesIntoRows(data.data).map((row, rowIndex) => (
+                  splitCategoriesIntoRows(data).map((row, rowIndex) => (
                     <div key={rowIndex} className="flex lg:pb-4">
                       {renderCategories(row)}
                     </div>

@@ -164,7 +164,7 @@ function BlogDetail() {
         <div className="flex w-full flex-col">
           <div className=" border-1 w-9/10 flex flex-col rounded-md border">
             <div className="my-2 ml-4 flex flex-row items-center justify-between">
-              <p className="text-md mr-2 font-bold">{username}</p>
+              <p className="text-md mr-2">@{username}</p>
               <p className="mr-2 text-sm font-light">{createDate ? format(new Date(createDate), 'PPpp') : 'N/A'}</p>
             </div>
             <div>

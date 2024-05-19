@@ -19,8 +19,8 @@ async function getTransaction(_id: string) {
 
 export { getTransaction }
 
-async function getOrderHistoryApi(userId: string) {
-  return await axiosClient.get(`/Order/order-history?userId=${userId}`, {}).then((response) => {
+async function getOrderHistoryApi(type: string, userId: string) {
+  return await axiosClient.get(`/Order/order-history?userId=${userId}&type=${type}`, {}).then((response) => {
     const data: IResponseOrder[] = response.data
     // const pagination = response.headers['x-pagination']
     // const parseJson: IResponsePagination = JSON.parse(pagination)

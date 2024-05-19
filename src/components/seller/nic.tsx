@@ -16,6 +16,7 @@ import { registerAccountValidates } from 'src/api/seller/set-is-account-validate
 import { postNICApi } from 'src/api/user/nic'
 import { profileApi } from 'src/api/apis/auth/profile.api'
 import { IToken } from 'src/types/token'
+import refreshToken from 'src/api/apis/auth/refresh.api'
 
 const formCTCSchema = z.object({
   nicId: z.string(),
@@ -263,23 +264,10 @@ function IdentificationSeller() {
       userId: userId,
     }
     let token: IToken
-    await registerAccountValidates(formData, async (err, result) => {
-      if (err) {
-        toast({
-          title: 'Error',
-          description: err.message,
-          variant: 'destructive',
-        })
-        return err.message
-      }
-      toast({
-        title: 'Success',
-        description: 'Register CTC successfully',
-        variant: 'success',
-      })
-      token = result!
-
-      await profileApi(token.accessToken!, (err, user) => {
+    const updateUserState = async () => {
+      const data = await refreshToken()
+      token = { accessToken: data.accessToken }
+      await profileApi(token.accessToken, (err, user) => {
         if (err) {
           toast({
             title: err.message,
@@ -296,6 +284,22 @@ function IdentificationSeller() {
           })
         }
       })
+    }
+    await registerAccountValidates(formData, async (err, result) => {
+      if (err) {
+        toast({
+          title: 'Error',
+          description: err.message,
+          variant: 'destructive',
+        })
+        return err.message
+      }
+      toast({
+        title: 'Success',
+        description: 'Register CTC successfully',
+        variant: 'success',
+      })
+      await updateUserState()
       return result
     })
     setIsLoading(false)

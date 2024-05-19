@@ -40,7 +40,14 @@ export interface IResponseOrder {
   orderId: string
   totalPrice: number
   date: string
-  items: IResponseItemsOrder[]
+  bookId: string
+  bookName: string
+  price: number
+  quantity: number
+  status: string
+  agencyId: string
+  agencyName: string
+  bookDir: string
 }
 
 export interface IResponseOrderAgency {

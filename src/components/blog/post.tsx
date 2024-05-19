@@ -20,6 +20,7 @@ interface PostProps {
 function Post({ postId }: PostProps) {
   const { user } = useAuth()
   const [blog, setBlog] = useState<IResponsePost>()
+
   const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isSaved, setIsSaved] = useState<boolean>(false)
   const [isInterested, setIsInterested] = useState<boolean>(false)
@@ -41,7 +42,7 @@ function Post({ postId }: PostProps) {
   useEffect(() => {
     const getSavedPost = async () => {
       const save: IResponsePost[] = await getUserSavedPosts()
-      const isSave = save.filter((save) => save.postData.postId === blog?.postData.postId)
+      const isSave = save.filter((save) => save.postData.postId === postId)
 
       if (isSave && isSave.length > 0) {
         setIsSaved(true)
@@ -51,11 +52,11 @@ function Post({ postId }: PostProps) {
       }
     }
     getSavedPost()
-  }, [blog?.postData.postId])
+  }, [postId])
 
   const saveToReadingList = async () => {
     if (blog) {
-      await addNewSavedPost(blog.postData.postId as string).then((res) => {
+      await addNewSavedPost(postId as string).then((res) => {
         if (res === 'Successful!') {
           setIsSaved(true)
         }
@@ -65,7 +66,7 @@ function Post({ postId }: PostProps) {
 
   const unsaveFromReadingList = async () => {
     if (blog) {
-      await removeUserSavedPost(blog.postData.postId as string).then((res) => {
+      await removeUserSavedPost(postId as string).then((res) => {
         if (res === 'Successful!') {
           setIsSaved(false)
         }
@@ -75,7 +76,7 @@ function Post({ postId }: PostProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const checkLike = await checkUserLikePost(blog?.postData.postId as string)
+      const checkLike = await checkUserLikePost(postId as string)
       if (checkLike == true) {
         setCheckLike(true)
       } else {
@@ -83,12 +84,12 @@ function Post({ postId }: PostProps) {
       }
     }
     fetchData()
-  }, [blog?.postData.postId])
+  }, [postId])
 
   const likePost = async () => {
     if (blog) {
       try {
-        const response = await postLikePost(blog.postData.postId as string)
+        const response = await postLikePost(postId as string)
         if (response.liked) {
           setCheckLike(true)
           setLikes(likes + 1)
@@ -143,7 +144,7 @@ function Post({ postId }: PostProps) {
 
   return (
     <div className="mt-2 max-h-[37rem] w-full rounded-md border border-gray-400 bg-white">
-      <Link to={`/blog/${blog?.postData.postId}`}>
+      <Link to={`/blog/${postId}`}>
         {blog?.postData.imageDir ? (
           <div className="w-full rounded-md">
             <img src={blog?.postData.imageDir as string} className="max-h-[18rem] w-full rounded-t-md" />
@@ -173,20 +174,21 @@ function Post({ postId }: PostProps) {
           <div className="flex flex-col">
             <p className="my-2 ml-12 text-3xl font-extrabold hover:text-orange-600">{blog?.postData.title}</p>
             <p className="mb-2 ml-12 flex flex-row gap-1 text-sm">
-              {blog?.tags.map((tag, index) => (
-                <React.Fragment key={index}>
-                  {index < 4 ? (
-                    <Link
-                      to={`/blog/c/${tag.cateName}`}
-                      className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
-                    >
-                      #{tag.cateName}
-                    </Link>
-                  ) : (
-                    ''
-                  )}
-                </React.Fragment>
-              ))}
+              {Array.isArray(blog?.tags) &&
+                blog?.tags.map((tag, index) => (
+                  <React.Fragment key={index}>
+                    {index < 4 ? (
+                      <Link
+                        to={`/blog/c/${tag.cateName}`}
+                        className="ml-2 rounded-md px-2 py-1 text-sm hover:border hover:bg-orange-100 hover:text-orange-600"
+                      >
+                        #{tag.cateName}
+                      </Link>
+                    ) : (
+                      ''
+                    )}
+                  </React.Fragment>
+                ))}
             </p>
           </div>
           <div className="flex flex-row">
@@ -207,7 +209,7 @@ function Post({ postId }: PostProps) {
           </div>
           <button
             className="flex flex-row items-center rounded-sm p-1 text-sm font-light hover:bg-gray-200"
-            onClick={() => navigate(`/blog/${blog?.postData.postId}`)}
+            onClick={() => navigate(`/blog/${postId}`)}
           >
             <MessageCircleIcon size={16} className="mr-1" /> Add Comment
           </button>

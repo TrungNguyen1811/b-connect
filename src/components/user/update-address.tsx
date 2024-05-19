@@ -39,6 +39,7 @@ const UpdateAddress = ({ addressId }: Props) => {
   const [address, setAddress] = useState<IAddress>()
   const [city, setCity] = useState('')
   const [getDistrict, setDistrict] = useState('')
+  const [open, setOpen] = useState<boolean>(false)
 
   const form = useForm<FormData>({
     resolver: zodResolver(AddressSchema),
@@ -88,7 +89,8 @@ const UpdateAddress = ({ addressId }: Props) => {
       toast({
         title: 'Update address success',
       }),
-        queryClient.invalidateQueries()
+        setOpen(false)
+      queryClient.invalidateQueries(['addresses'])
     },
     onError: (error: Error) => {
       throw error.message
@@ -112,9 +114,9 @@ const UpdateAddress = ({ addressId }: Props) => {
   return (
     <div className="p-4">
       <MetaData title="Address" />
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <Button>Update</Button>{' '}
+          <Button>Update</Button>
         </DialogTrigger>
         <DialogContent className="w-[30vw]">
           <div className="rounded-lg border border-gray-400 p-4">

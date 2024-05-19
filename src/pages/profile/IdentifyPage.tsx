@@ -273,6 +273,28 @@ function IdentificationUser() {
       userId: user?.userId as string,
     }
     let token: IToken
+    const updateUserState = async () => {
+      const data = await refreshToken()
+      token = { accessToken: data.accessToken }
+      await profileApi(token.accessToken, (err, user) => {
+        if (err) {
+          toast({
+            title: err.message,
+            description: err.cause?.message,
+            variant: 'destructive',
+          })
+        } else {
+          if (!user) {
+            return
+          }
+          login({
+            user,
+            token,
+          })
+        }
+      })
+    }
+
     if (isUpdate === true) {
       await updateNicData(formData, async (err, result) => {
         if (err) {
@@ -288,25 +310,7 @@ function IdentificationUser() {
           description: 'Register CTC successfully',
           variant: 'success',
         })
-        const data = await refreshToken()
-        token = { accessToken: data.accessToken }
-        await profileApi(token.accessToken, (err, user) => {
-          if (err) {
-            toast({
-              title: err.message,
-              description: err.cause?.message,
-              variant: 'destructive',
-            })
-          } else {
-            if (!user) {
-              return
-            }
-            login({
-              user,
-              token,
-            })
-          }
-        })
+        await updateUserState()
         return result
       })
     } else {
@@ -324,25 +328,7 @@ function IdentificationUser() {
           description: 'Register CTC successfully',
           variant: 'success',
         })
-        const data = await refreshToken()
-        token = { accessToken: data.accessToken }
-        await profileApi(token.accessToken, (err, user) => {
-          if (err) {
-            toast({
-              title: err.message,
-              description: err.cause?.message,
-              variant: 'destructive',
-            })
-          } else {
-            if (!user) {
-              return
-            }
-            login({
-              user,
-              token,
-            })
-          }
-        })
+        await updateUserState()
         return result
       })
     }
@@ -409,9 +395,13 @@ function IdentificationUser() {
           <p className="text-xl">Identification Information</p>
           <p className="text-gray-500">Manage your identification information</p>
         </div>
-        <Button type="button" onClick={resetForm} className="mr-4 w-32">
-          Reset
-        </Button>
+        {user?.isValidated && isUpdate == false ? (
+          ''
+        ) : (
+          <Button type="button" onClick={resetForm} className="mr-4 w-32">
+            Reset
+          </Button>
+        )}
       </div>
       <Separator />
       {user?.isValidated && isUpdate == false ? (

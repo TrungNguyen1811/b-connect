@@ -27,7 +27,7 @@ function Book({ book }: Props) {
         <Card className="xs:w-[4rem] rounded-sm lg:w-[12rem]">
           <CardTitle className="aspect-[1] flex-col overflow-clip rounded-t-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
-              src={book.bookDir}
+              src={book.bookDir?.[0]}
               alt={book.name}
               className="aspect-[1] object-contain transition-all duration-300"
               style={{ width: '100%' }}
