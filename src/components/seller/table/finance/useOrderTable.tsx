@@ -5,27 +5,39 @@ import { useEffect, useState } from 'react'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
 import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
-import { IListReplyResponse } from 'src/types'
-import { getAllReviewByAgency } from 'src/api/review/get-all-review-by-bookId'
+import { IResponseOrderAgency } from 'src/types'
+import { GetManyOrderParams, SearchOrders } from 'src/api/order/get-order'
+import { useLocation } from 'react-router-dom'
 
-export function useRatingTable(columns: ColumnDef<IListReplyResponse>[]) {
+export function useFinanceTable(columns: ColumnDef<IResponseOrderAgency>[]) {
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const type = searchParams.get('type')
+
   const [queries, setQueries] = useState<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }
+    Partial<IQueryPagination & IQuerySearch> & { [key: string]: any } & GetManyOrderParams
   >({
+    Address: undefined,
+    BookName: undefined,
+    CustomerName: undefined,
+    Status: undefined,
+    OrderId: undefined,
+    startDate: undefined,
+    endDate: undefined,
     PageNumber: 0,
     PageSize: 6,
   })
 
-  const queryController = useQuery<IResponse<IListReplyResponse[]>, AxiosError>(
+  const queryController = useQuery<IResponse<IResponseOrderAgency[]>, AxiosError>(
     [...API_GET_ALL_USER_QUERY_KEYS, queries],
-    () => getAllReviewByAgency(queries),
+    () => SearchOrders(queries),
     {
       keepPreviousData: true,
     },
   )
 
-  const table = useReactTable<IListReplyResponse>({
+  const table = useReactTable<IResponseOrderAgency>({
     columns,
     data: queryController.data?.data || [],
     manualPagination: true,
@@ -34,7 +46,6 @@ export function useRatingTable(columns: ColumnDef<IListReplyResponse>[]) {
         pageIndex: queries.PageNumber || 0,
         pageSize: queries.PageSize,
       },
-      globalFilter: queries.BookName,
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getCoreRowModel(),
@@ -52,10 +63,15 @@ export function useRatingTable(columns: ColumnDef<IListReplyResponse>[]) {
   useEffect(() => {
     setTableStates((prev) => ({
       ...prev,
-      recentDays: queries.RecentDays,
-      hasReplied: queries.HasReplied,
+      startDate: queries.startDate,
+      endDate: queries.endDate,
+      BookName: queries.BookName,
+      CustomerName: queries.CustomerName,
+      Address: queries.Address,
+      OrderId: queries.OrderId,
+      Status: queries.Status,
     }))
-  }, [queries, setTableStates])
+  }, [queries])
 
   table.setOptions((prev) => ({
     ...prev,
@@ -66,20 +82,12 @@ export function useRatingTable(columns: ColumnDef<IListReplyResponse>[]) {
   }))
 
   useEffect(() => {
-    const otherFilters = tableStates.columnFilters
     setQueries((prev) => ({
       ...prev,
-      RatingPoint: otherFilters?.[0]?.value,
       PageNumber: tableStates.pagination.pageIndex + 1,
       PageSize: tableStates.pagination.pageSize,
-      BookName: tableStates.globalFilter || undefined,
     }))
-  }, [
-    tableStates.columnFilters,
-    tableStates.globalFilter,
-    tableStates.pagination.pageIndex,
-    tableStates.pagination.pageSize,
-  ])
+  }, [tableStates.pagination.pageIndex, tableStates.pagination.pageSize])
 
   useEffect(() => {
     if (!queryController.data?._pagination) return

@@ -67,7 +67,7 @@ function MyPurchase() {
         <div>
           <div className="border-1 mb-8 rounded-sm border bg-white p-4">
             <div className="mb-2 flex flex-row items-center justify-start">
-              <p className="text-sm font-semibold">Agene Name</p>
+              <p className="text-sm font-semibold">{order.agencyName}</p>
               <Link
                 className="ml-2 rounded-sm border px-2 py-1 text-xs text-gray-500 hover:bg-orange-400 hover:text-white"
                 to={`/shop/${order.agencyId}`}

@@ -29,6 +29,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../../components/ui/dialog'
+import { useStatisticContext } from 'src/hooks/useStatistic'
 
 type FormValue = {
   content: string
@@ -296,6 +297,25 @@ function BlogDetail() {
     }
   }
 
+  //count view
+  const { postData, updateStatPost } = useStatisticContext()
+
+  useEffect(() => {
+    const handleViewPost = (postId: string) => {
+      const stat = postData.find((stat) => stat.postId === postId)
+      const currentView = stat?.view || 0
+      updateStatPost(postId, { view: currentView + 1 })
+    }
+
+    const timer = setTimeout(() => {
+      if (blog?.postData.postId) {
+        handleViewPost(blog?.postData.postId)
+      }
+    }, 5000)
+
+    return () => clearTimeout(timer)
+  }, [blog?.postData.postId])
+
   return (
     <div className="mx-32 px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
@@ -413,7 +433,6 @@ function BlogDetail() {
               <div>
                 <div className="mb-6 flex flex-row items-center justify-between">
                   <p>Top Comments ({})</p>
-                  <Button>Subscribe</Button>
                 </div>
                 <div className="flex flex-row">
                   <Avatar>

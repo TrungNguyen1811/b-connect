@@ -28,8 +28,7 @@ function BookShouldByWith({ book }: Props) {
     if (isLoadingShouldBuyWithBooks || !book || !shouldByWithBooks) return []
 
     const arr = shouldByWithBooks?.data.filter((b) => b.productId !== book?.productId).slice(0, 3) || []
-    arr.unshift(book)
-
+    // arr.unshift(book)
     return arr
   }, [book, isLoadingShouldBuyWithBooks, shouldByWithBooks])
 

@@ -6,34 +6,45 @@ import TableSizeSelector from 'src/components/ui/table-size-selector'
 import { Skeleton } from 'src/components/ui/skeleton'
 import { columns } from './column'
 import { RatingTableToolbar } from './toolbar'
-import { useRatingTable } from './useRatingTable'
+import { useOrderTable } from './useOrderTable'
 
-function RatingTable() {
+function OrderTable() {
   const { isError, isLoading, table, error, refetch, data, tableStates, setTableStates, queries, setQueries } =
-    useRatingTable(columns)
-  const [day, setDay] = useState<string>()
-  const [isRep, setIsRep] = useState<string>()
-  const handleRecentDaysChange = (value: string) => {
-    setDay(value)
+    useOrderTable(columns)
+  const [startDate, setStartDate] = useState<string>()
+  const [endDate, setEndDate] = useState<string>()
+  const [search, setSearch] = useState<string>()
+  const [label, setLabel] = useState<string>('')
+  const [type, setType] = useState<string>('')
+
+  const handleType = (value: string) => {
+    setType(value)
+  }
+  const handleLabelChange = (value: string) => {
+    setLabel(value)
+  }
+  const handleSearchChange = (value: string) => {
+    setSearch(value)
+  }
+  const handleStartDateChange = (value: string) => {
+    setStartDate(value)
   }
 
-  const handleHasRepliedChange = (value: string) => {
-    setIsRep(value)
+  const handleEndDateChange = (value: string) => {
+    setEndDate(value)
   }
 
   useEffect(() => {
     setTableStates((prev) => ({
       ...prev,
-      recentDays: day,
+      startDate: startDate,
+      endDate: endDate,
+      [label]: search,
+      Status: type,
     }))
-  }, [day, setTableStates])
+  }, [startDate, setTableStates, endDate, label, search, type])
 
-  useEffect(() => {
-    setTableStates((prev) => ({
-      ...prev,
-      hasReplied: isRep,
-    }))
-  }, [isRep, setTableStates])
+  console.log('quee', queries)
 
   const renderHeader = useMemo(() => {
     return (
@@ -43,27 +54,21 @@ function RatingTable() {
           queries={{
             PageNumber: tableStates.pagination.pageIndex + 1,
             PageSize: tableStates.pagination.pageSize,
-            BookName: tableStates.globalFilter,
-            // RecentDays: day,
-            // HasReplied: isRep,
+            // OrderId: tableStates.globalFilter,
             ...queries,
           }}
           setSearchQuery={(value) => {
             setQueries(value)
-            table.setGlobalFilter(value.BookName),
-              table.setColumnFilters(() => [
-                {
-                  id: 'RatingPoint',
-                  value: value.RatingPoint,
-                },
-              ])
           }}
-          onRecentDaysChange={handleRecentDaysChange}
-          onHasRepliedChange={handleHasRepliedChange}
+          onSearchChange={handleSearchChange}
+          onStartDateChange={handleStartDateChange}
+          onEndDateChange={handleEndDateChange}
+          onSetLabelChange={handleLabelChange}
+          type={handleType}
         />
       </div>
     )
-  }, [day, isRep, table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize, tableStates.globalFilter])
+  }, [queries, table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize])
 
   const renderFooter = React.useMemo(() => {
     if (isLoading)
@@ -118,4 +123,4 @@ function RatingTable() {
     </div>
   )
 }
-export default RatingTable
+export default OrderTable

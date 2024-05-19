@@ -2,6 +2,7 @@ import React from 'react'
 import { IResponsePost } from 'src/types/blog'
 import { Avatar, AvatarImage } from '../ui/avatar'
 import { format } from 'date-fns'
+import { Link } from 'react-router-dom'
 
 const RenderNameUser: React.FC<{ post: IResponsePost }> = ({ post }) => {
   return (
@@ -11,7 +12,7 @@ const RenderNameUser: React.FC<{ post: IResponsePost }> = ({ post }) => {
           <AvatarImage src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'} />
         </Avatar>
         <div className="my-2 ml-4 flex flex-col items-start">
-          <p className="mr-2 text-lg font-bold">{post.postData.title}</p>
+          <p className="mr-2 text-lg font-bold hover:text-orange-400">{post.postData.title}</p>
           <div className="flex flex-row items-center justify-stretch gap-2">
             <p className="font-semibold text-gray-700">{post.username}</p>
             <p className="text-sm font-light">{format(post.postData.createdAt as string, 'PPP')}</p>
@@ -33,9 +34,9 @@ const SavedPostsList: React.FC<{ posts: IResponsePost[] }> = ({ posts }) => {
   return (
     <div>
       {posts.map((post, index) => (
-        <div key={index} className="flex w-full flex-col">
+        <Link to={`/blog/${post.postData.postId}`} key={index} className="flex w-full flex-col hover:bg-gray-100">
           {post.postData.userId && <RenderNameUser post={post} />}
-        </div>
+        </Link>
       ))}
     </div>
   )

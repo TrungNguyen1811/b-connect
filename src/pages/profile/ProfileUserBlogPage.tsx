@@ -101,8 +101,10 @@ function ProfileUser() {
                     >
                       Rating: <StarIcon className="h-4 w-4" /> {rating?.overallRating} ({rating?.totalReviews} Rating)
                     </Link>
-                    <p className="px-4">Add: 123 Abcd, Hoa Hai, Ngu Hanh Son, Da Nang{userData?.addressId}</p>
-                    <p className="px-4">Joined on: 15/04/2024{userData?.createdAt as string}</p>
+                    <p className="px-4">{userData?.addressId ? <p>Add: {userData?.addressId}</p> : ''}</p>
+                    <p className="px-4">
+                      {userData?.createdAt ? <p>Joined on: {userData?.createdAt as string}</p> : ''}
+                    </p>
                     {/* <p className="px-4">Shopee: {user?.username}</p> */}
                   </div>
                 </div>
@@ -127,11 +129,12 @@ function ProfileUser() {
             </div>
           </div>
           <main className="h-full w-full rounded-md">
-            {blogs?.map((blog, index) => (
-              <div className="my-4 mt-2" key={index}>
-                {blog?.postData.postId && <Post postId={blog.postData.postId} />}
-              </div>
-            ))}
+            {Array.isArray(blogs) &&
+              blogs?.map((blog, index) => (
+                <div className="my-4 mt-2" key={index}>
+                  {blog?.postData.postId && <Post postId={blog.postData.postId} />}
+                </div>
+              ))}
           </main>
         </div>
       </main>

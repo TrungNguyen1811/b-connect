@@ -3,7 +3,7 @@ import { Bar, Pie, Chart } from 'react-chartjs-2'
 import { Card, CardContent, CardHeader, CardTitle } from 'src/components/ui/card'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
-import { cn, formatPrice } from 'src/lib/utils'
+import { formatPrice } from 'src/lib/utils'
 import { IAgencyAnalyst, IAgencyAnalystByTime } from 'src/types/agency'
 import {
   Chart as ChartJS,
@@ -19,13 +19,10 @@ import {
   ArcElement,
 } from 'chart.js'
 import { getAgencyAnalyst, getAgencyAnalystByTime } from 'src/api/seller/get-agency'
-import { Popover, PopoverTrigger, PopoverContent } from 'src/components/ui/popover'
-import { Button } from 'src/components/ui/button'
-import { Calendar } from 'src/components/ui/calendar'
 import { addDays, format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
-import { CalendarIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { DateRangePicker } from 'src/components/ui/date-range-picker-mf'
 
 ChartJS.register(
   LinearScale,
@@ -328,38 +325,14 @@ export default function DashboardSellerPage() {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">{t('overview')} 👋</h2>
           <div className="hidden items-center space-x-2 md:flex">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={'outline'}
-                  className={cn('w-[300px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date?.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
-                      </>
-                    ) : (
-                      format(date.from, 'LLL dd, y')
-                    )
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
+            <DateRangePicker
+              onUpdate={(values) => setDate(values.range)}
+              initialDateFrom={date?.from}
+              initialDateTo={date?.to}
+              align="start"
+              locale="en-GB"
+              showCompare={false}
+            />
           </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">

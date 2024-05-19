@@ -4,13 +4,10 @@ import { cn, formatDate } from 'src/lib/utils'
 import SearchInput from 'src/components/ui/search-input'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { DateRange } from 'react-day-picker'
-import { format, subDays } from 'date-fns'
-import { Popover, PopoverTrigger, PopoverContent } from 'src/components/ui/popover'
-import { Button } from 'src/components/ui/button'
-import { CalendarIcon } from 'lucide-react'
-import { Calendar } from 'src/components/ui/calendar'
+import { subDays } from 'date-fns'
 import { IResponseAds } from 'src/types/advertisement'
 import { GetBannerParams } from 'src/api/advertisement/get-top-banner'
+import { DateRangePicker } from 'src/components/ui/date-range-picker-mf'
 export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>
   queries: Partial<IQueryPagination & IQuerySearch> & Record<string, unknown> & GetBannerParams
@@ -62,38 +59,14 @@ export function AdsTableToolbar({
           className="h-8 max-w-xs"
         />
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              id="date"
-              variant={'outline'}
-              className={cn('w-[300px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, 'yyyy, MM, dd')} - {format(date.to, 'yyyy, MM, dd')}
-                  </>
-                ) : (
-                  format(date.from, 'yyyy, MM, dd')
-                )
-              ) : (
-                <span>Pick a date</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={date?.from}
-              selected={date}
-              onSelect={setDate}
-              numberOfMonths={2}
-            />
-          </PopoverContent>
-        </Popover>
+        <DateRangePicker
+          onUpdate={(values) => setDate(values.range)}
+          initialDateFrom={date?.from}
+          initialDateTo={date?.to}
+          align="start"
+          locale="en-GB"
+          showCompare={false}
+        />
       </div>
     </div>
   )

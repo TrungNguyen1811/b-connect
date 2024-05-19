@@ -34,6 +34,7 @@ import { postChatMessage } from 'src/api/chat/post-chat'
 import { useTranslation } from 'react-i18next'
 import { getCartIdApi } from 'src/api/cart/get-cart-id'
 import { ICart } from 'src/types/cart'
+import { useStatisticContext } from 'src/hooks/useStatistic'
 
 type FormValue = {
   comment: string
@@ -301,6 +302,23 @@ function BookDetailPage() {
     postMessage(formData)
   }
 
+  //count view
+  const { postData, updateStatBook } = useStatisticContext()
+  useEffect(() => {
+    const handleViewBook = (bookId: string) => {
+      const stat = postData.find((stat) => stat.bookId === bookId)
+      const currentView = stat?.view || 0
+      updateStatBook(bookId, { view: currentView + 1 })
+    }
+
+    const timer = setTimeout(() => {
+      if (book?.productId) {
+        handleViewBook(book?.productId)
+      }
+    }, 5000)
+
+    return () => clearTimeout(timer)
+  }, [book?.productId])
   return (
     <div className="mx-auto min-h-screen w-full bg-orange-100">
       <MetaData title={book ? book.name.slice(0, 10) + '...' : ''} />
@@ -329,7 +347,7 @@ function BookDetailPage() {
                                 onClick={() => handleCarouselItemClick(image)}
                                 onMouseEnter={() => handleCarouselItemClick(image)}
                               >
-                                <img className="rounded-sm" src={image} />
+                                <img className="h-[6rem] w-[6rem] rounded-sm" src={image} />
                               </CardContent>
                             </Card>
                           </CarouselItem>
@@ -351,9 +369,16 @@ function BookDetailPage() {
                   </h3>
                   <div className="flex flex-row justify-between">
                     <div className="flex flex-row">
-                      <p className="nav-link mr-4 pr-2">{book.rating} *****</p>
-                      <p className="nav-link mr-4 pr-2">1.5 {t('sold')}</p>
-                      <p className="nav-link mr-4 pr-2">1.2k {t('rating')}</p>
+                      <p className="nav-link mr-4 flex flex-row items-center gap-1 pr-2">
+                        {book.rating}
+                        <Rating className="h-3 w-3" value={book.rating} />
+                      </p>
+                      <p className="nav-link mr-4 pr-2">
+                        {book.numberOfBookSold} {t('sold')}
+                      </p>
+                      <p className="nav-link mr-4 pr-2">
+                        {book.numberOfRating} {t('rating')}
+                      </p>
                     </div>
                   </div>
                   <p>

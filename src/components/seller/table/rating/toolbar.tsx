@@ -42,7 +42,7 @@ export function RatingTableToolbar({
         />
 
         <DataTableRadioFacetedFilter
-          title="ratingPoint"
+          title="RatingPoint"
           onOptionsChange={(options) => {
             const RatingPoint = options.map((option) => option.value).join(',')
             setSearchQuery &&
