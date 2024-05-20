@@ -42,6 +42,19 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     getPaginationRowModel: getCoreRowModel(),
   })
   const [tableStates, setTableStates] = useState(table.initialState)
+  const setTableQueries = (newQueries: Partial<IQueryPagination & IQuerySearch> & { [key: string]: any }) => {
+    setQueries((prevQueries) => ({
+      ...prevQueries,
+      ...newQueries,
+    }))
+  }
+
+  useEffect(() => {
+    setTableStates((prev) => ({
+      ...prev,
+      cate: queries.cate,
+    }))
+  }, [queries, setTableStates])
 
   table.setOptions((prev) => ({
     ...prev,
@@ -56,7 +69,6 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     setQueries((prev) => ({
       ...prev,
       type: otherFilters?.[0]?.value,
-      cate: otherFilters?.[1]?.value,
       PageNumber: tableStates.pagination.pageIndex + 1,
       PageSize: tableStates.pagination.pageSize,
       name: tableStates.globalFilter || undefined,
@@ -80,5 +92,7 @@ export function useBookTable(columns: ColumnDef<IBook>[]) {
     table,
     tableStates,
     setTableStates,
+    queries,
+    setQueries: setTableQueries,
   }
 }

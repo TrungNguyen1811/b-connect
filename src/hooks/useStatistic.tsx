@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { axiosClient } from 'src/lib/axios'
 
@@ -8,7 +9,6 @@ interface IStatistic {
   view?: number
   interested?: number
   purchase?: number
-  search?: number
   hearts?: number
 }
 
@@ -29,11 +29,7 @@ export const useStatisticContext = () => {
 }
 
 const generateStatId = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0
-    const v = c === 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
+  return faker.string.uuid()
 }
 
 export const StatisticProvider = ({ children }: { children: ReactNode }) => {
@@ -105,7 +101,7 @@ export const StatisticProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       sendDataToServer()
-    }, 30000) // 5 minutes
+    }, 300000) // 5 minutes
     return () => clearInterval(interval)
   }, [])
 

@@ -27,8 +27,8 @@ import BookShouldByWith from './BookShouldByWith'
 import BookRelevant from './BookRelevant'
 import { Carousel, CarouselContent3, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
 import { Card, CardContent } from 'src/components/ui/card'
-import { IAgency } from 'src/types/agency'
-import { getAgencyByAgencyId, getPercentageReplyByAgencyId } from 'src/api/seller/get-agency'
+import { IAgency, IAgencyStat } from 'src/types/agency'
+import { getAgencyByAgencyId, getAgencyStat } from 'src/api/seller/get-agency'
 import { UserChatReply } from 'src/types/chat'
 import { postChatMessage } from 'src/api/chat/post-chat'
 import { useTranslation } from 'react-i18next'
@@ -51,17 +51,18 @@ function BookDetailPage() {
   }, [data])
 
   const [agency, setAgency] = useState<IAgency>()
+  const [agencyStat, setAgencyStat] = useState<IAgencyStat | null>()
   useEffect(() => {
     const fetchData = async () => {
       const agency = (await getAgencyByAgencyId(book?.agencyId as string)) as IAgency
       setAgency(agency)
+      const stat = await getAgencyStat(book?.agencyId as string)
+      setAgencyStat(stat)
     }
     if (book?.productId) {
       fetchData()
     }
   }, [book?.agencyId])
-
-  const percent = getPercentageReplyByAgencyId(book?.agencyId as string)
 
   const [bookReview, setBookReview] = useState<IReviewResponse[]>([])
   useEffect(() => {
@@ -371,7 +372,7 @@ function BookDetailPage() {
                     <div className="flex flex-row">
                       <p className="nav-link mr-4 flex flex-row items-center gap-1 pr-2">
                         {book.rating}
-                        <Rating className="h-3 w-3" value={book.rating} />
+                        <Rating className="h-3 w-3" value={book.rating} readOnly />
                       </p>
                       <p className="nav-link mr-4 pr-2">
                         {book.numberOfBookSold} {t('sold')}
@@ -474,10 +475,15 @@ function BookDetailPage() {
           </div>
         </div>
         <div className="mx-16 flex flex-row gap-16 text-gray-500">
-          <p>{t('Rating')}: 5</p>
-          <p>{t('Product')}: 13</p>
-          <p>{t('Response')}: 0%</p>
-          <p>{t('Join')}: 2024/02/22</p>
+          <p>
+            {t('Rating')}: {agencyStat?.agencyAverageRate || 0}
+          </p>
+          <p>
+            {t('Product')}: {agencyStat?.productCount || 0}
+          </p>
+          <p>
+            {t('Response')}: {agencyStat?.replyRate || 0}%
+          </p>
         </div>
       </div>
 

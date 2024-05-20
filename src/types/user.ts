@@ -170,3 +170,12 @@ export interface IRating {
   comment: string
   avatarDir: string
 }
+
+export interface IVerifySMS {
+  inputOTP: string
+  phone: string
+}
+export interface IResponsePhone {
+  phone: string
+  content: string
+}

@@ -7,7 +7,6 @@ import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 import PostTagPage from 'src/pages/blog/PostTagPage'
-import AdvertisementAdminPage from 'src/pages/admin/AdvertisementPage/AdvertisementPage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -33,6 +32,7 @@ const PostManagerPage = React.lazy(() => import('src/pages/admin/PostManage.tsx/
 const TradeManagerPage = React.lazy(() => import('src/pages/admin/Trade/TradeManagePage'))
 const TransactionManagePage = React.lazy(() => import('src/pages/admin/Transaction/TransactionManagePage'))
 const RefundManagePage = React.lazy(() => import('src/pages/admin/Refund/RefundManagePage'))
+const AdvertisementAdminPage = React.lazy(() => import('src/pages/admin/AdvertisementPage/AdvertisementPage'))
 
 const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
 const MyShop = React.lazy(() => import('src/pages/seller/MyShop'))
@@ -50,6 +50,7 @@ const OrderDetailPage = React.lazy(() => import('src/components/seller/table/ord
 const ReplyReviewPage = React.lazy(() => import('src/pages/seller/manage/ReplyReviewPage'))
 const AdvertisementPage = React.lazy(() => import('src/pages/seller/AdvertisementPage'))
 const CheckoutAdsResultPage = React.lazy(() => import('src/pages/seller/CheckoutAdsResultPage'))
+const FinanceManagePage = React.lazy(() => import('src/pages/seller/manage/FinanceManagePage'))
 
 const UserLayout = React.lazy(() => import('src/pages/layout/UserLayout'))
 const InfoAccount = React.lazy(() => import('src/pages/profile/ProfileUserPage'))
@@ -285,6 +286,10 @@ export const ROUTES = createBrowserRouter([
           return { order }
         },
         element: <OrderDetailPage />,
+      },
+      {
+        path: '/seller/finance',
+        element: <FinanceManagePage />,
       },
       {
         path: '/seller/marketing',

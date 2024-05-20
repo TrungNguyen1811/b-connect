@@ -1,4 +1,4 @@
-import { User } from 'src/types/user'
+import { IResponsePhone, IVerifySMS, User } from 'src/types/user'
 import { authAxiosClient } from '../../lib/axios'
 
 async function postUserApi(userData: User) {
@@ -53,3 +53,41 @@ async function updateUserProfileApi(userData: User) {
 }
 
 export { updateUserProfileApi }
+async function postPhoneApi(number: string) {
+  return await authAxiosClient
+    .post('/Account/send-sms', number, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postPhoneApi }
+
+async function postVerifyPhoneApi(data: IVerifySMS) {
+  return await authAxiosClient
+    .post('/Account/verify-phone', data, {})
+    .then((response) => {
+      if (response.status === 200) {
+        const data: IResponsePhone = response.data
+        return data.phone
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postVerifyPhoneApi }

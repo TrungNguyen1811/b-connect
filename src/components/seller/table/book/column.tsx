@@ -74,14 +74,14 @@ export const columns: ColumnDef<IBook>[] = [
       return <p className="w-[8rem]">{stock}</p>
     },
   },
-  // {
-  //   accessorKey: 'category',
-  //   header: 'category',
-  //   cell: ({ getValue }) => {
-  //     const category = getValue() as string
-  //     return <p className="w-[8rem]">{category}</p>
-  //   },
-  // },
+  {
+    accessorKey: 'category',
+    header: 'category',
+    cell: ({ getValue }) => {
+      const category = getValue() as string
+      return <p className="w-[8rem]">{category}</p>
+    },
+  },
   {
     header: 'Action',
     id: 'action',

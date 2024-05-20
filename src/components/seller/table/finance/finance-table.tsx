@@ -5,12 +5,12 @@ import Pagination from 'src/components/ui/pagination'
 import TableSizeSelector from 'src/components/ui/table-size-selector'
 import { Skeleton } from 'src/components/ui/skeleton'
 import { columns } from './column'
-import { RatingTableToolbar } from './toolbar'
-import { useOrderTable } from './useOrderTable'
+import { FinanceTableToolbar } from './toolbar'
+import { useFinanceTable } from './useFinanceTable'
 
-function OrderTable() {
+function FinanceTable() {
   const { isError, isLoading, table, error, refetch, data, tableStates, setTableStates, queries, setQueries } =
-    useOrderTable(columns)
+    useFinanceTable(columns)
   const [startDate, setStartDate] = useState<string>()
   const [endDate, setEndDate] = useState<string>()
   const [search, setSearch] = useState<string>()
@@ -49,7 +49,7 @@ function OrderTable() {
   const renderHeader = useMemo(() => {
     return (
       <div>
-        <RatingTableToolbar
+        <FinanceTableToolbar
           table={table}
           queries={{
             PageNumber: tableStates.pagination.pageIndex + 1,
@@ -123,4 +123,4 @@ function OrderTable() {
     </div>
   )
 }
-export default OrderTable
+export default FinanceTable

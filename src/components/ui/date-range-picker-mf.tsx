@@ -63,8 +63,8 @@ interface Preset {
 
 // Define presets
 const PRESETS: Preset[] = [
-  { name: 'today', label: 'Today' },
-  { name: 'yesterday', label: 'Yesterday' },
+  // { name: 'today', label: 'Today' },
+  // { name: 'yesterday', label: 'Yesterday' },
   { name: 'last7', label: 'Last 7 days' },
   { name: 'last14', label: 'Last 14 days' },
   { name: 'last30', label: 'Last 30 days' },
@@ -327,7 +327,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align={align} className="w-auto">
+      <PopoverContent align={align} className="mr-6 w-auto">
         <div className="flex py-2">
           <div className="flex">
             <div className="flex flex-col">
@@ -432,7 +432,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
             </div>
           </div>
           {!isSmallScreen && (
-            <div className="flex flex-col items-end gap-1 pb-6 pl-6 pr-2">
+            <div className="flex flex-col items-end gap-1 pb-6 pl-4 pr-2">
               <div className="flex w-full flex-col items-end gap-1 pb-6 pl-6 pr-2">
                 {PRESETS.map((preset) => (
                   <PresetButton

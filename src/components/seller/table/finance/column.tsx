@@ -24,20 +24,16 @@ export const columns: ColumnDef<IResponseOrderAgency>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'customerName',
-    header: 'Customer',
+    accessorKey: 'orderId',
+    header: 'OrderId',
   },
   {
-    accessorKey: 'bookName',
-    header: 'Book',
+    accessorKey: 'totalPrice',
+    header: 'Price',
   },
   {
-    accessorKey: 'quantity',
-    header: 'Quantity',
-  },
-  {
-    accessorKey: 'price',
-    header: 'Total Price',
+    accessorKey: 'paymentMethod',
+    header: 'Method',
   },
   {
     accessorKey: 'status',

@@ -8,23 +8,6 @@ import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function BookGroupManagerPage() {
-  // const [categories, setCategories] = useState<ICategory[]>([])
-
-  // useEffect(() => {
-  //   const getCategories = async () => {
-  //     try {
-  //       const cate = await getAllCategoryNoParam()
-  //       setBlogList(cate.data)
-  //     } catch (error) {
-  //       console.error('Error fetching cate:', error)
-  //     }
-  //   }
-
-  //   getCategories()
-  // }, [])
-
-  // console.log('${data?.data.length', blogList)
-
   const title = `Manage Book Group`
   const description = 'Manage Book Group (Server side table functionalities.)'
 

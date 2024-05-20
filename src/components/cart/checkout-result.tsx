@@ -11,6 +11,7 @@ import { getCartApi } from 'src/api/cart/get-cart'
 import ErrorPage from 'src/pages/error-page'
 import { ITransaction } from 'src/types/transaction'
 import CheckoutSuccess from './success'
+import { useStatisticContext } from 'src/hooks/useStatistic'
 
 function CheckoutResult() {
   const [searchParams] = useSearchParams()
@@ -106,6 +107,17 @@ function CheckoutResult() {
       enabled: !isLoadingTransaction,
     },
   )
+
+  const { postData, updateStatBook } = useStatisticContext()
+  useEffect(() => {
+    if (dataOrder?.products && transaction?.paymentStatus === '00') {
+      dataOrder.products.forEach((book) => {
+        const stat = postData.find((stat) => stat.bookId === book.productId)
+        const currentPurchase = stat?.purchase || 0
+        updateStatBook(book.productId as string, { view: currentPurchase + book.quantity })
+      })
+    }
+  }, [dataOrder?.products, postData, updateStatBook])
 
   const success = useMemo(() => {
     if (isLoadingOrder) {

@@ -1,5 +1,5 @@
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
-import { IAgency, IAgencyAnalyst, IAgencyAnalystByTime } from 'src/types/agency'
+import { IAgency, IAgencyAnalyst, IAgencyAnalystByTime, IAgencyStat } from 'src/types/agency'
 import { IBook } from 'src/types/books'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
@@ -22,17 +22,17 @@ async function getAgencyByAgencyId(userId: string) {
 }
 export { getAgencyByAgencyId }
 
-async function getPercentageReplyByAgencyId(agencyId: string) {
-  return axiosClient.get(`/Account/percentage-reply-by-agency?agencyId=${agencyId}`).then((res) => {
+async function getAgencyStat(agencyId: string) {
+  return axiosClient.get(`/Account/agency-stat?agencyId=${agencyId}`).then((res) => {
     if (res.status === 200) {
-      const agency = res.data
+      const agency: IAgencyStat = res.data
       return agency
     } else {
       return null
     }
   })
 }
-export { getPercentageReplyByAgencyId }
+export { getAgencyStat }
 
 async function getAgencyAnalyst() {
   return authAxiosClient.get(`/Account/Get-Agency-Analyst`).then((res) => {
@@ -60,17 +60,15 @@ async function getAgencyAnalystByTime(startDate: string, endDate: string) {
 }
 export { getAgencyAnalystByTime }
 
-// async function getAgencyRevenueByTime(startDate: string, endDate: string) {
-//   return authAxiosClient
-//     .get(`/Account/GetAgencyRevenueByTime?startDate=${startDate}&endDate=${endDate}`)
-//     .then((res) => {
-//       if (res.status === 200) {
-//         const data: IRevenueByTime[] = res.data
-//         return data
-//       } else return res.status
-//     })
-// }
-// export { getAgencyRevenueByTime }
+async function getFinanceForecast() {
+  return authAxiosClient.get(`/Get-Finance-Forecast`).then((res) => {
+    if (res.status === 200) {
+      const data = res.data
+      return data
+    } else return res.status
+  })
+}
+export { getFinanceForecast }
 
 async function getBestSellerProductIdByNumberOfBookSold(params: Partial<IQueryPagination>) {
   return authAxiosClient

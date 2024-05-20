@@ -6,6 +6,7 @@ import {
   BookIcon,
   BookPlusIcon,
   BookTemplate,
+  GanttChartIcon,
   LayoutDashboardIcon,
   LibraryBigIcon,
   ListStartIcon,
@@ -89,7 +90,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
     },
     {
       title: t('manageShop'),
-      icon: TagIcon,
+      icon: GanttChartIcon,
       href: '/seller/shop',
       color: 'text-orange-500',
       isChildren: true,

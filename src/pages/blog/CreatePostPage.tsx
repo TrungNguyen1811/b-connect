@@ -202,7 +202,7 @@ export default function CreateBlog() {
 
   const postTags = useMutation((data: { tagNames: string[]; postId: string }) => addSocialTag(data), {
     onSuccess: (status) => {
-      if (status === 200) {
+      if (status) {
         console.log('Successful!!!')
         toast({
           title: 'Successful!!!',

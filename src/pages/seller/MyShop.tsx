@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLoaderData } from 'react-router-dom'
-import { GetListBestSellerProductIdByRevenueAndAgencyId } from 'src/api/seller/get-agency'
+import { GetListBestSellerProductIdByRevenueAndAgencyId, getAgencyStat } from 'src/api/seller/get-agency'
 import {
   GetAllBookInInventoryByAgencyId,
   GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId,
@@ -16,7 +16,7 @@ import Pagination from 'src/components/ui/pagination'
 import { ScrollArea, ScrollBar } from 'src/components/ui/scroll-area'
 import { useCustomQuery } from 'src/hooks/useCustomQuery'
 import { IBook } from 'src/types'
-import { IAgency } from 'src/types/agency'
+import { IAgency, IAgencyStat } from 'src/types/agency'
 
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
@@ -37,6 +37,16 @@ const initParamState = {
 function MyShop() {
   const shop = useLoaderData() as { shop: IAgency }
   const agencyId = shop.shop.agencyId as string
+
+  const [agencyStat, setAgencyStat] = useState<IAgencyStat | null>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const stat = await getAgencyStat(agencyId as string)
+      setAgencyStat(stat)
+    }
+
+    fetchData()
+  }, [agencyId])
 
   const [bookState, setBookState] = React.useState<GetManyBooksParams>(initBookState)
   const { data, isLoading, isError } = useCustomQuery<IBook[]>(
@@ -139,9 +149,9 @@ function MyShop() {
                       <p className="ml-8 py-2 text-xl font-semibold">{shop.shop.agencyName}</p>
                     </div>
                     <div className="flex flex-row items-center justify-evenly">
-                      <p className="px-4">Product: {data?.data.length}</p>
-                      <p className="px-4">Joined on: {}</p>
-                      <p className="px-4">Rating: {}</p>
+                      <p className="px-4">Product: {agencyStat?.productCount || 0}</p>
+                      <p className="px-4">Response: {agencyStat?.replyRate || 0}%</p>
+                      <p className="px-4">Rating: {agencyStat?.agencyAverageRate || 0}</p>
                     </div>
                   </div>
                 </header>

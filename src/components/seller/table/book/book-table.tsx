@@ -1,6 +1,6 @@
 import { Button } from 'src/components/ui/button'
 import { DataTable } from 'src/components/ui/data-table'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Pagination from 'src/components/ui/pagination'
 import TableSizeSelector from 'src/components/ui/table-size-selector'
 import { Skeleton } from 'src/components/ui/skeleton'
@@ -9,7 +9,20 @@ import { BookTableToolbar } from './toolbar'
 import { useBookTable } from './useBookTable'
 
 function BookTable() {
-  const { isError, isLoading, table, error, refetch, data, tableStates } = useBookTable(columns)
+  const { isError, isLoading, table, error, refetch, data, tableStates, setTableStates, queries, setQueries } =
+    useBookTable(columns)
+  const [cate, setCate] = useState<string>()
+  const handleCateChange = (value: string) => {
+    setCate(value)
+  }
+  useEffect(() => {
+    setTableStates((prev) => ({
+      ...prev,
+      cate: cate,
+    }))
+  }, [cate, setTableStates])
+  console.log('cta', queries)
+
   const renderHeader = React.useMemo(() => {
     return (
       <div>
@@ -19,24 +32,23 @@ function BookTable() {
             PageNumber: tableStates.pagination.pageIndex + 1,
             PageSize: tableStates.pagination.pageSize,
             search: tableStates.globalFilter,
+            ...queries,
           }}
           setSearchQuery={(value) => {
+            setQueries(value)
             table.setGlobalFilter(value.search)
             table.setColumnFilters(() => [
               {
                 id: 'type',
                 value: value.type,
               },
-              {
-                id: 'cate',
-                value: value.cate,
-              },
             ])
           }}
+          onCateChange={handleCateChange}
         />
       </div>
     )
-  }, [table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize, tableStates.globalFilter])
+  }, [cate, table, tableStates.pagination.pageIndex, tableStates.pagination.pageSize, tableStates.globalFilter])
 
   const renderFooter = React.useMemo(() => {
     if (isLoading)

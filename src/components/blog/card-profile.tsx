@@ -37,11 +37,7 @@ function CardProfile({ userId }: { userId: string }) {
       </div>
       <div className="absolute left-32 top-10">
         <Avatar className="h-20 w-20">
-          <AvatarImage
-            className="z-5 h-20 w-20"
-            src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1715598671/UserProfile/user02/Image/earrh10pi11cnk4xnjcu.png"
-            alt=""
-          />
+          <AvatarImage className="z-5 h-20 w-20" src={userDetail?.avatarDir as string} alt="" />
         </Avatar>
       </div>
       <div className="mb-4 mt-8">

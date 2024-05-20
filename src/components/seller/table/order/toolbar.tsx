@@ -32,7 +32,7 @@ export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLD
   type?: (value: string) => void
 }
 
-export function RatingTableToolbar({
+export function OrderTableToolbar({
   table,
   queries,
   setSearchQuery,

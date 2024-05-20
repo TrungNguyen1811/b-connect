@@ -4,20 +4,21 @@ import { cn } from 'src/lib/utils'
 import SearchInput from 'src/components/ui/search-input'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IBook, ICategory } from 'src/types'
-import { DataTableRadioFacetedFilter } from 'src/components/ui/data-table-radio-facet'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
-import { DataTableFacetedFilter } from 'src/components/ui/data-table-facet'
 import { TYPE_OPTIONS } from 'src/components/admin/user/option'
+import { DataTableRadioFacetedFilter } from 'src/components/ui/data-table-radio-facet'
 export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>
   queries: Partial<IQueryPagination & IQuerySearch> & Record<string, unknown>
   setSearchQuery?: (value: Partial<IQueryPagination & IQuerySearch> & Record<string, unknown>) => void
+  onCateChange?: (value: string) => void
 }
 
 export function BookTableToolbar({
   table,
   queries,
   setSearchQuery,
+  onCateChange,
   className,
   ...props
 }: DataTableToolbarProps<IBook>) {
@@ -52,34 +53,32 @@ export function BookTableToolbar({
           }}
           className="h-8 max-w-xs"
         />
-        {table.getColumn('type') && (
-          <DataTableRadioFacetedFilter
-            title="Type"
-            onOptionsChange={(options) => {
-              const type = options.map((option) => option.value)
-              setSearchQuery &&
-                setSearchQuery({
-                  ...queries,
-                  type,
-                })
-            }}
-            options={TYPE_OPTIONS}
-          />
-        )}
-        {table.getColumn('category') && (
-          <DataTableFacetedFilter
-            title="Category"
-            onOptionsChange={(options) => {
-              const cate = options.map((option) => option.value).join(',')
-              setSearchQuery &&
-                setSearchQuery({
-                  ...queries,
-                  cate,
-                })
-            }}
-            options={options}
-          />
-        )}
+        <DataTableRadioFacetedFilter
+          title="Type"
+          onOptionsChange={(options) => {
+            const type = options.map((option) => option.value).join(',')
+            setSearchQuery &&
+              setSearchQuery({
+                ...queries,
+                type: type,
+              })
+          }}
+          options={TYPE_OPTIONS}
+        />
+
+        <DataTableRadioFacetedFilter
+          title="Category"
+          onOptionsChange={(options) => {
+            const cate = options.map((option) => option.value).join(',')
+            setSearchQuery &&
+              setSearchQuery({
+                ...queries,
+                cate: cate,
+              })
+            onCateChange && onCateChange(cate)
+          }}
+          options={options}
+        />
       </div>
     </div>
   )

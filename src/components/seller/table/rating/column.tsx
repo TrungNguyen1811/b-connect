@@ -60,7 +60,7 @@ export const columns: ColumnDef<IListReplyResponse>[] = [
     header: 'Reply',
     cell: ({ getValue }) => {
       const reply = getValue() as IReplyResponse
-      return <p className="w-[8rem]">{reply.replyText}</p>
+      return <p className="w-[8rem]">{reply.replyText || ''}</p>
     },
   },
   {

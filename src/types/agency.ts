@@ -77,3 +77,9 @@ export interface ITotalRevenue {
 export interface IRevenueByTime {
   [month: string]: number
 }
+
+export interface IAgencyStat {
+  productCount: number
+  agencyAverageRate: number
+  replyRate: number
+}
