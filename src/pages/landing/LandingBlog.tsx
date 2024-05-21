@@ -16,7 +16,7 @@ import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import { ICategory } from 'src/types'
-import ErrorPage from '../error-page'
+import ErrorPage from '../static/error-page'
 import { IResponsePost } from 'src/types/blog'
 import { useCustomQueryDetail } from 'src/hooks/useCustomQueryDetail'
 

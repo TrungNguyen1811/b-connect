@@ -7,8 +7,10 @@ import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 import PostTagPage from 'src/pages/blog/PostTagPage'
-import ContactPage from 'src/pages/blog/static/contact'
 import RatingShopPage from 'src/pages/seller/RatingShopPage'
+import ErrorPage from 'src/pages/static/error-page'
+import ContactPage from 'src/pages/static/contact'
+import AboutPage from 'src/pages/static/about'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -82,7 +84,7 @@ const SubmitTrade = React.lazy(() => import('src/pages/blog/SubmitTradePage'))
 const CheckListPage = React.lazy(() => import('src/pages/blog/CheckListPage'))
 const CheckListViewPage = React.lazy(() => import('src/pages/blog/ViewCheckListPage'))
 
-const ErrorPage = React.lazy(() => import('src/pages/error-page'))
+// const ErrorPage = React.lazy(() => import('src/pages/error-page'))
 
 export const ROUTES = createBrowserRouter([
   {
@@ -180,6 +182,18 @@ export const ROUTES = createBrowserRouter([
             element: <AddressUserPage />,
           },
         ],
+      },
+      {
+        path: '/error-page',
+        element: <ErrorPage />,
+      },
+      {
+        path: '/contact',
+        element: <ContactPage />,
+      },
+      {
+        path: '/about',
+        element: <AboutPage />,
       },
     ],
   },
@@ -327,10 +341,6 @@ export const ROUTES = createBrowserRouter([
         element: <LandingBlogLatest />,
       },
       {
-        path: '/blog/contact',
-        element: <ContactPage />,
-      },
-      {
         path: '/blog/c/:tag',
         element: <PostTagPage />,
       },
@@ -407,13 +417,5 @@ export const ROUTES = createBrowserRouter([
         element: <UpdateBlog />,
       },
     ],
-  },
-  {
-    path: '/blog/error-page',
-    element: <ErrorPage />,
-  },
-  {
-    path: '/contact',
-    element: <ContactPage />,
   },
 ])

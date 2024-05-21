@@ -9,8 +9,8 @@ function ErrorPage() {
         <img className="mr-8 w-[50vw] rounded-sm" src="../public/error.png" alt="Something went wrong " />
         <div className="mb-32">
           <p className="py-4 text-3xl font-bold">Whoops! Something&apos;s changed</p>
-          <p className="mb-6 w-[27vw]">
-            You must have picked the wrong door because I haven&apos;t been able to lay my eye on the page you&apose
+          <p className="mb-6 w-[27vw] text-lg">
+            You must have picked the wrong door because I haven&apos;t been able to lay my eye on the page you&apos;ve
             been searching for.
           </p>
           <Button onClick={() => navigate('/')}>BACK TO HOME</Button>

@@ -12,7 +12,7 @@ import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import Pagination from 'src/components/ui/pagination'
 import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
 import { GetManyBooksParams } from 'src/api/books/get-book'
-import ErrorPage from '../error-page'
+import ErrorPage from '../static/error-page'
 import { useTranslation } from 'react-i18next'
 
 const initBookState: GetManyBooksParams = {
