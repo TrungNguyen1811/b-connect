@@ -7,6 +7,8 @@ import { getOrderDetail } from 'src/api/order/get-order'
 import { getUserById } from 'src/api/user/get-user'
 import { UpdateBook } from 'src/components/seller/table/book/manage/upate-book'
 import PostTagPage from 'src/pages/blog/PostTagPage'
+import ContactPage from 'src/pages/blog/static/contact'
+import RatingShopPage from 'src/pages/seller/RatingShopPage'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -141,6 +143,10 @@ export const ROUTES = createBrowserRouter([
           }
         },
         element: <MyShop />,
+      },
+      {
+        path: 'shop/review/:id',
+        element: <RatingShopPage />,
       },
       {
         element: <UserLayout />,
@@ -321,6 +327,10 @@ export const ROUTES = createBrowserRouter([
         element: <LandingBlogLatest />,
       },
       {
+        path: '/blog/contact',
+        element: <ContactPage />,
+      },
+      {
         path: '/blog/c/:tag',
         element: <PostTagPage />,
       },
@@ -382,24 +392,28 @@ export const ROUTES = createBrowserRouter([
         path: '/blog/reading-list',
         element: <ReadingList />,
       },
+      {
+        path: '/blog/create-post',
+        element: <CreateBlog />,
+      },
+      {
+        path: `/blog/:id/edit`,
+        loader: async ({ params }) => {
+          const post = await getPostByIdApi(params.id as string)
+          return {
+            post,
+          }
+        },
+        element: <UpdateBlog />,
+      },
     ],
-  },
-  {
-    path: '/blog/create-post',
-    element: <CreateBlog />,
-  },
-  {
-    path: `/blog/:id/edit`,
-    loader: async ({ params }) => {
-      const post = await getPostByIdApi(params.id as string)
-      return {
-        post,
-      }
-    },
-    element: <UpdateBlog />,
   },
   {
     path: '/blog/error-page',
     element: <ErrorPage />,
+  },
+  {
+    path: '/contact',
+    element: <ContactPage />,
   },
 ])

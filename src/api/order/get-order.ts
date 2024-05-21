@@ -36,13 +36,12 @@ async function getOrderHistoryApi(type: string, userId: string) {
 export { getOrderHistoryApi }
 
 export type GetManyOrderParams = {
-  Address?: string
-  BookName?: string
-  CustomerName?: string
-  OrderId?: string
+  address?: string
+  bookName?: string
+  customerName?: string
   startDate?: string
   endDate?: string
-  Status?: string
+  status?: string
   PageNumber?: number
   PageSize?: number
 } & Partial<IQueryPagination & IQuerySearch>

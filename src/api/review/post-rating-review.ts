@@ -15,9 +15,18 @@ async function postRatingComment(data: IReview): Promise<IReviewResponse> {
       },
     })
 
-    return response.data as IReviewResponse
-  } catch (error) {
-    throw new Error('Failed to post rating comment')
+    if (response.status === 200) {
+      return response.data as IReviewResponse
+    } else {
+      throw new Error(`Error with status code ${response.status}: ${response.data}`)
+    }
+  } catch (error: any) {
+    // If error response is available, throw it for onError to catch
+    if (error.response) {
+      throw error
+    } else {
+      throw new Error('Failed to post rating comment')
+    }
   }
 }
 

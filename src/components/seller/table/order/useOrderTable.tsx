@@ -18,11 +18,10 @@ export function useOrderTable(columns: ColumnDef<IResponseOrderAgency>[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Partial<IQueryPagination & IQuerySearch> & { [key: string]: any } & GetManyOrderParams
   >({
-    Address: undefined,
-    BookName: undefined,
-    CustomerName: undefined,
-    Status: undefined,
-    OrderId: undefined,
+    address: undefined,
+    bookName: undefined,
+    customerName: undefined,
+    status: undefined,
     startDate: undefined,
     endDate: undefined,
     PageNumber: 0,
@@ -65,11 +64,10 @@ export function useOrderTable(columns: ColumnDef<IResponseOrderAgency>[]) {
       ...prev,
       startDate: queries.startDate,
       endDate: queries.endDate,
-      BookName: queries.BookName,
-      CustomerName: queries.CustomerName,
-      Address: queries.Address,
-      OrderId: queries.OrderId,
-      Status: queries.Status,
+      bookName: queries.bookName,
+      customerName: queries.customerName,
+      address: queries.address,
+      status: queries.status,
     }))
   }, [queries])
 

@@ -172,7 +172,7 @@ export default function LandingBlog() {
               Latest
             </Link>
           </div>
-          {renderPosts}
+          <div className="h-full">{renderPosts}</div>
         </div>
         <div className="col-span-3 w-80 bg-orange-50">
           <Active />

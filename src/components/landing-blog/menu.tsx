@@ -87,9 +87,12 @@ export function Menu() {
         <p className="text-md pb-2 font-bold">Follow us</p>
         <ul className="flex flex-row">
           {items.map((item) => (
-            <li key={item.id} className="rounded-sm p-2 hover:bg-gray-300">
+            <li
+              key={item.id}
+              className="rounded-sm p-2 hover:border hover:border-orange-500 hover:bg-orange-100 hover:text-orange-500"
+            >
               <Link to={item.href}>
-                <item.icon />
+                <item.icon className="" />
               </Link>
             </li>
           ))}

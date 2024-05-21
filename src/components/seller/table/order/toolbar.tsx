@@ -60,23 +60,20 @@ export function OrderTableToolbar({
     onEndDateChange && onEndDateChange(formatDate(date?.to as Date))
   }, [date?.from, date?.to])
 
-  const [label, setLabel] = useState('bookname')
-  const [newLabel, setNewLabel] = useState('BookName')
+  const [label, setLabel] = useState('bookName')
+  const [newLabel, setNewLabel] = useState('bookName')
   const [open, setOpen] = useState(false)
-  const labels = ['BookName', 'CustomerName', 'OrderId', 'Address']
+  const labels = ['bookName', 'customerName', 'address']
 
   useEffect(() => {
     if (label === 'bookname') {
-      setNewLabel('BookName')
+      setNewLabel('bookName')
     }
     if (label === 'customername') {
-      setNewLabel('CustomerName')
-    }
-    if (label === 'orderid') {
-      setNewLabel('OrderId')
+      setNewLabel('customerName')
     }
     if (label === 'address') {
-      setNewLabel('Address')
+      setNewLabel('address')
     }
   }, [label])
 
@@ -88,7 +85,7 @@ export function OrderTableToolbar({
     setSearchQuery &&
       setSearchQuery({
         ...queries,
-        Status: types as string,
+        status: types as string,
       })
     type && type(types as string)
   }, [types])
@@ -123,24 +120,20 @@ export function OrderTableToolbar({
 
         <div className="flex w-96 flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
           <span className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground">{label}</span>
-          {label === 'orderid' && (
-            <SearchInput value={queries.OrderId || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
-          )}
-
           {label === 'customername' && (
             <SearchInput
-              value={queries.CustomerName || ''}
+              value={queries.customerName || ''}
               onChange={handleSearchInputChange}
               className="h-8 max-w-xs"
             />
           )}
 
           {label === 'bookname' && (
-            <SearchInput value={queries.BookName || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
+            <SearchInput value={queries.bookName || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
           )}
 
           {label === 'address' && (
-            <SearchInput value={queries.OrderId || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
+            <SearchInput value={queries.address || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
           )}
 
           <DropdownMenu open={open} onOpenChange={setOpen}>

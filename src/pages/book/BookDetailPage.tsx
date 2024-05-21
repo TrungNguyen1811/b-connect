@@ -222,11 +222,23 @@ function BookDetailPage() {
     [],
   )
 
-  const { mutateAsync, isLoading: isAddReview } = useMutation<IReviewResponse, Error, IReview>(postRatingComment, {
+  const { mutateAsync, isLoading: isAddReview } = useMutation<IReviewResponse, any, IReview>(postRatingComment, {
     onSuccess: (data: IReviewResponse) => {
       if (!book) return
       queryClient.invalidateQueries()
       addReview(data)
+      toast({
+        type: 'foreground',
+        title: 'Post a review successfully',
+        description: 'Your review have been recorded',
+      })
+    },
+    onError: (error: any) => {
+      toast({
+        type: 'foreground',
+        title: 'Post a review failed',
+        description: error.response?.data || 'An unknown error occurred',
+      })
     },
   })
 
@@ -259,21 +271,6 @@ function BookDetailPage() {
         ratingPoint: ratingPoint.toString(),
       }
       mutateAsync(payload)
-        .then(() => {
-          toast({
-            type: 'foreground',
-            title: 'Post a comment successfully',
-            description: 'Your comment have been recorded',
-          })
-          reset()
-        })
-        .catch((e) => {
-          toast({
-            type: 'foreground',
-            title: 'Error',
-            description: JSON.stringify(e),
-          })
-        })
     },
     [book?.productId, reset, toast],
   )

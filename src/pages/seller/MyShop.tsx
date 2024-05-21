@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useState } from 'react'
-import { useLoaderData } from 'react-router-dom'
+import { Link, useLoaderData } from 'react-router-dom'
 import { GetListBestSellerProductIdByRevenueAndAgencyId, getAgencyStat } from 'src/api/seller/get-agency'
 import {
   GetAllBookInInventoryByAgencyId,
@@ -151,7 +151,9 @@ function MyShop() {
                     <div className="flex flex-row items-center justify-evenly">
                       <p className="px-4">Product: {agencyStat?.productCount || 0}</p>
                       <p className="px-4">Response: {agencyStat?.replyRate || 0}%</p>
-                      <p className="px-4">Rating: {agencyStat?.agencyAverageRate || 0}</p>
+                      <Link to={`/shop/review/${agencyId}`} className="px-4 hover:text-orange-500">
+                        Rating: {agencyStat?.agencyAverageRate || 0}
+                      </Link>
                     </div>
                   </div>
                 </header>

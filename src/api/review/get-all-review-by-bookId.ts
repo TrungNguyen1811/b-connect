@@ -38,6 +38,21 @@ export async function getAllReviewByAgency(params: GetManyReviewParams) {
   })
 }
 
+export async function getReviewForAgencyUserView(agencyId: string, rating: number | null) {
+  return axiosClient
+    .get(`/Account/get-review-for-agency-user-view?agencyId=${agencyId}&ratingPoint=${rating}`)
+    .then((res) => {
+      const data: IListReplyResponse[] = res.data
+      const pagination = res.headers['x-pagination']
+      const dataAll: IResponse<IListReplyResponse[]> = {
+        data: data,
+        _metadata: data,
+        _pagination: pagination,
+      }
+      return dataAll
+    })
+}
+
 export async function getUserRatingInfo(userId: string) {
   return authAxiosClient.get(`/Account/user-rating-trade-info?userId=${userId}`).then((res) => {
     const data: IRatingOverall = res.data

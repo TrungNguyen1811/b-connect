@@ -15,6 +15,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import { postPhoneApi, postVerifyPhoneApi, updateUserProfileApi } from 'src/api/user/post-user'
 import { getUserById } from 'src/api/user/get-user'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from 'src/components/ui/dialog'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from 'src/components/ui/input-otp'
 
 const formSchema = z.object({
   username: z.string().optional(),
@@ -288,11 +289,19 @@ function InfoAccount() {
                           <FormItem>
                             <FormLabel>OTP</FormLabel>
                             <FormControl>
-                              <Input
-                                className="w-full px-3 py-2"
-                                placeholder="Enter otp to verify your phone number."
-                                {...field}
-                              />
+                              <InputOTP maxLength={6} {...field}>
+                                <InputOTPGroup>
+                                  <InputOTPSlot index={0} />
+                                  <InputOTPSlot index={1} />
+                                  <InputOTPSlot index={2} />
+                                </InputOTPGroup>
+                                <Separator className="w-2 bg-black" />
+                                <InputOTPGroup>
+                                  <InputOTPSlot index={3} />
+                                  <InputOTPSlot index={4} />
+                                  <InputOTPSlot index={5} />
+                                </InputOTPGroup>
+                              </InputOTP>
                             </FormControl>
                             <FormMessage />
                           </FormItem>

@@ -73,7 +73,7 @@ function ProfileUser() {
                     className="absolute left-[44rem] top-20 z-10 h-32 w-32 rounded-[50%] p-2"
                   />
                 </Avatar>
-                <div className="absolute left-[16rem] top-36 h-[14rem] w-[63rem] rounded-md border-2 bg-orange-100">
+                <div className="absolute left-[16rem] top-36 h-[14rem] w-[63rem] rounded-md border border-gray-400 bg-white">
                   <div className="right-0 flex flex-row items-center justify-center pt-16">
                     <p className="ml-20 text-xl font-semibold">{userData?.username}</p>
                     {isCurrentUser ? (
@@ -113,7 +113,7 @@ function ProfileUser() {
           </div>
         </div>
         <div className="mx-[16rem] flex flex-row">
-          <div className="mr-5 mt-2 max-h-40 w-1/3 rounded-md border-2 bg-orange-100">
+          <div className="mr-5 mt-2 max-h-40 w-1/3 rounded-md border border-gray-400 bg-white">
             <div className="m-4">
               <div className="flex flex-row p-2">
                 <StickyNoteIcon /> <p className="pl-1">{analyst?.postCount} posts published</p>
