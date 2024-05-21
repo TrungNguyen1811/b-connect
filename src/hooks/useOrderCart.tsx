@@ -13,6 +13,7 @@ export interface ContextType {
   decreaseToCart: (_id: string) => void
   removeFromCart: (_id: string) => void
   clearCart: () => void
+  resetCartItems: (cart: ICart[]) => void
 }
 
 export interface DataCart {
@@ -206,12 +207,17 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     saveCartToCookie(cartItems)
   }
 
+  const resetCartItems = (newCartItems: ICart[]) => {
+    setCartItems(newCartItems)
+  }
+
   const contextValue = {
     cartItems,
     addToCart,
     decreaseToCart,
     removeFromCart,
     clearCart,
+    resetCartItems,
   }
 
   return <OrderCartContext.Provider value={contextValue}>{children}</OrderCartContext.Provider>

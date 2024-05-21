@@ -8,10 +8,11 @@ import { ICart, IOrder, IPaymentReturnDTO } from 'src/types'
 import { SaveTransaction } from 'src/api/order/post-transaction'
 import { useAuth } from 'src/hooks/useAuth'
 import { getCartApi } from 'src/api/cart/get-cart'
-import ErrorPage from 'src/pages/error-page'
 import { ITransaction } from 'src/types/transaction'
 import CheckoutSuccess from './success'
 import { useStatisticContext } from 'src/hooks/useStatistic'
+import ErrorPage from '../error-page'
+import { useOrderCart } from 'src/hooks/useOrderCart'
 
 function CheckoutResult() {
   const [searchParams] = useSearchParams()
@@ -21,6 +22,10 @@ function CheckoutResult() {
   const [isLoadingTransaction, setIsLoadingTransaction] = useState(true)
   const [cartItems, setCartItems] = useState<ICart[]>([])
   const { user } = useAuth()
+  const { resetCartItems } = useOrderCart()
+  const handleResetCartItems = (cartItems: ICart[]) => {
+    resetCartItems(cartItems)
+  }
   const navigate = useNavigate()
   // useEffect(() => {
   //   const resetUser = async () => {
@@ -138,6 +143,7 @@ function CheckoutResult() {
             try {
               const cartDataFromServer = await getCartApi(user.userId as string)
               setCartItems(cartDataFromServer)
+              handleResetCartItems(cartItems)
               document.cookie = `cartItems_${user.userId}=${JSON.stringify(cartItems)}; path=/`
             } catch (error) {
               console.error('Error fetching cart data from server:', error)
