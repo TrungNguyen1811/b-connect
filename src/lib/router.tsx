@@ -11,6 +11,7 @@ import RatingShopPage from 'src/pages/seller/RatingShopPage'
 import ErrorPage from 'src/pages/static/error-page'
 import ContactPage from 'src/pages/static/contact'
 import AboutPage from 'src/pages/static/about'
+import PolicyPage from 'src/pages/static/policy'
 
 const MainLayout = React.lazy(() => import('../pages/layout/MainLayout'))
 const LandingPage = React.lazy(() => import('src/pages/landing'))
@@ -194,6 +195,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: '/about',
         element: <AboutPage />,
+      },
+      {
+        path: '/policy',
+        element: <PolicyPage />,
       },
     ],
   },

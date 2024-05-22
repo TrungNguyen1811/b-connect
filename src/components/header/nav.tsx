@@ -9,7 +9,7 @@ function Navigation() {
   const { t } = useTranslation('translation')
 
   return (
-    <div className="m-1 flex items-center justify-between">
+    <div className="m-1 mt-0 flex items-center justify-between pt-1">
       <div className="flex">
         <NavLink className={'nav-link '} to={'/seller/dashboard'}>
           {t('SellerCenter')}

@@ -157,10 +157,10 @@ function CheckListViewPage() {
         })
       }
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
         title: 'Error Accept Trade',
-        description: error.message,
+        description: error.response.data,
       })
     },
   })

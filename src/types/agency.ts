@@ -48,13 +48,13 @@ export interface IAgencyAnalyst {
       percentage: number
     }
   } //
-  numberOfBookANdUnitSoldByMonth: {
+  numberOfBookAndUnitSoldByMonths: {
     [date: string]: {
       numberOfBookSold: number
       numberOfUnitSold: number
     }
   } //
-  numberOfBookANdUnitSoldByDay: {
+  numberOfBookAndUnitSoldByDays: {
     [day: string]: {
       numberOfBookSold: number
       numberOfUnitSold: number

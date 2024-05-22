@@ -17,7 +17,7 @@ export function Menu() {
       {
         title: t('home'),
         key: 'home',
-        href: '/home',
+        href: '/',
         icon: 'home',
       },
       {
@@ -53,7 +53,7 @@ export function Menu() {
       {
         title: 'Privacy Policy',
         key: 'privacy-policy',
-        href: '/privacy-policy',
+        href: '/policy',
         icon: 'policy',
       },
     ]

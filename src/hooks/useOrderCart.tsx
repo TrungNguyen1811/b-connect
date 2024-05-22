@@ -10,6 +10,7 @@ import { getBookById } from 'src/api/books/get-book'
 export interface ContextType {
   cartItems: ICart[]
   addToCart: (_id: string) => void
+  addMultiToCart: (_ids: string[]) => Promise<void>
   decreaseToCart: (_id: string) => void
   removeFromCart: (_id: string) => void
   clearCart: () => void
@@ -174,7 +175,43 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
       console.error('Error fetching book details:', error)
     }
   }
+  const addMultiToCart = async (_ids: string[]) => {
+    try {
+      const newCartItems = [...cartItems]
 
+      for (const id of _ids) {
+        const book: IBook = await getBookById(id)
+        if (book && book.stock > 0) {
+          const existingItem = newCartItems.find((item) => item.productId === id)
+
+          if (existingItem) {
+            existingItem.quantity = existingItem.quantity + 1 > book.stock ? book.stock : existingItem.quantity + 1
+            existingItem.stock = book.stock
+          } else {
+            newCartItems.push({ productId: id, quantity: 1, stock: book.stock })
+          }
+        } else {
+          console.log('Book not found or out of stock')
+        }
+      }
+
+      setCartItems(newCartItems)
+      saveCartToCookie(newCartItems)
+
+      toast({
+        type: 'foreground',
+        title: 'Add to cart successfully',
+        description: 'Your cart has been updated',
+      })
+    } catch (error) {
+      console.error('Error adding multiple books to cart:', error)
+      toast({
+        type: 'foreground',
+        title: 'Error',
+        description: 'An error occurred while adding books to the cart.',
+      })
+    }
+  }
   // const addToCart = (_id: string) => {
   //   const existingItem = cartItems.find((item) => item.productId === _id)
 
@@ -214,6 +251,7 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
   const contextValue = {
     cartItems,
     addToCart,
+    addMultiToCart,
     decreaseToCart,
     removeFromCart,
     clearCart,

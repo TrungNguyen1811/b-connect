@@ -145,7 +145,7 @@ function AdvertisementPage() {
                                 <Button
                                   role="combobox"
                                   className={cn(
-                                    'ml-2 w-48 justify-between bg-white',
+                                    'ml-2 w-48 justify-between bg-white text-gray-400 hover:text-white',
                                     !field.value && 'text-muted-foreground',
                                   )}
                                 >

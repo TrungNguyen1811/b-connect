@@ -3,7 +3,7 @@ import { Bar, Pie, Chart } from 'react-chartjs-2'
 import { Card, CardContent, CardHeader, CardTitle } from 'src/components/ui/card'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
-import { formatPrice } from 'src/lib/utils'
+import { formatDate, formatPrice } from 'src/lib/utils'
 import { IAgencyAnalyst, IAgencyAnalystByTime } from 'src/types/agency'
 import {
   Chart as ChartJS,
@@ -81,7 +81,7 @@ export default function DashboardSellerPage() {
     labels: revenueByMonths.map((d) => d.label),
     datasets: [
       {
-        label: t('month'),
+        label: t('Price'),
         data: revenueByMonths.map((d) => d.value),
         backgroundColor: 'orange',
         borderColor: 'orange',
@@ -105,7 +105,7 @@ export default function DashboardSellerPage() {
     labels: revenueByDays.map((d) => d.label),
     datasets: [
       {
-        label: t('day'),
+        label: t('Price'),
         data: revenueByDays.map((d) => d.value),
         backgroundColor: 'orange',
         borderColor: 'orange',
@@ -184,11 +184,11 @@ export default function DashboardSellerPage() {
     },
   }
 
-  //numberOfBookANdUnitSoldByMonth
-  const numberOfBookANdUnitSoldByMonth = useMemo(() => {
-    if (!agencyAnalyst?.numberOfBookANdUnitSoldByMonth) return []
+  //numberOfBookAndUnitSoldByMonths
+  const numberOfBookAndUnitSoldByMonths = useMemo(() => {
+    if (!agencyAnalyst?.numberOfBookAndUnitSoldByMonths) return []
     else {
-      return Object.entries(agencyAnalyst?.numberOfBookANdUnitSoldByMonth).map<INumberOfBookANdUnitSoldByMonth>(
+      return Object.entries(agencyAnalyst?.numberOfBookAndUnitSoldByMonths).map<INumberOfBookANdUnitSoldByMonth>(
         ([date, result]) => ({
           label: date,
           value: {
@@ -198,13 +198,14 @@ export default function DashboardSellerPage() {
         }),
       )
     }
-  }, [agencyAnalyst?.numberOfBookANdUnitSoldByMonth])
+  }, [agencyAnalyst?.numberOfBookAndUnitSoldByMonths])
+
   const dataNumberOfBookANdUnitSoldByMonth = {
-    labels: numberOfBookANdUnitSoldByMonth.map((dt) => dt.label),
+    labels: numberOfBookAndUnitSoldByMonths.map((dt) => dt.label),
     datasets: [
       {
         label: t('bookSold'),
-        data: numberOfBookANdUnitSoldByMonth.map((dt) => dt.value.numberOfBookSold),
+        data: numberOfBookAndUnitSoldByMonths.map((dt) => dt.value.numberOfBookSold),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.4,
@@ -213,7 +214,7 @@ export default function DashboardSellerPage() {
       },
       {
         label: t('unitSold'),
-        data: numberOfBookANdUnitSoldByMonth.map((dt) => dt.value.numberOfUnitSold),
+        data: numberOfBookAndUnitSoldByMonths.map((dt) => dt.value.numberOfUnitSold),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
@@ -222,13 +223,14 @@ export default function DashboardSellerPage() {
       },
     ],
   }
+
   const numberOfBookANdUnitSoldByMonthOptions = {}
 
-  //numberOfBookANdUnitSoldByDay
-  const numberOfBookANdUnitSoldByDay = useMemo(() => {
-    if (!agencyAnalyst?.numberOfBookANdUnitSoldByDay) return []
+  //numberOfBookAndUnitSoldByDays
+  const numberOfBookAndUnitSoldByDays = useMemo(() => {
+    if (!agencyAnalyst?.numberOfBookAndUnitSoldByDays) return []
     else {
-      return Object.entries(agencyAnalyst?.numberOfBookANdUnitSoldByDay).map<INumberOfBookANdUnitSoldByMonth>(
+      return Object.entries(agencyAnalyst?.numberOfBookAndUnitSoldByDays).map<INumberOfBookANdUnitSoldByMonth>(
         ([date, result]) => ({
           label: date,
           value: {
@@ -238,13 +240,13 @@ export default function DashboardSellerPage() {
         }),
       )
     }
-  }, [agencyAnalyst?.numberOfBookANdUnitSoldByDay])
+  }, [agencyAnalyst?.numberOfBookAndUnitSoldByDays])
   const dataNumberOfBookANdUnitSoldByDay = {
-    labels: numberOfBookANdUnitSoldByDay.map((dt) => dt.label),
+    labels: numberOfBookAndUnitSoldByDays.map((dt) => dt.label),
     datasets: [
       {
         label: t('bookSold'),
-        data: numberOfBookANdUnitSoldByDay.map((dt) => dt.value.numberOfBookSold),
+        data: numberOfBookAndUnitSoldByDays.map((dt) => dt.value.numberOfBookSold),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.4,
@@ -253,7 +255,7 @@ export default function DashboardSellerPage() {
       },
       {
         label: t('unitSold'),
-        data: numberOfBookANdUnitSoldByDay.map((dt) => dt.value.numberOfUnitSold),
+        data: numberOfBookAndUnitSoldByDays.map((dt) => dt.value.numberOfUnitSold),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
@@ -269,8 +271,8 @@ export default function DashboardSellerPage() {
     from: new Date(),
     to: addDays(new Date(), 20),
   })
-  const [dateFrom, setDateFrom] = useState<string>('')
-  const [dateTo, setDateTo] = useState<string>('')
+  const [dateFrom, setDateFrom] = useState<string>(formatDate(date?.from as Date))
+  const [dateTo, setDateTo] = useState<string>(formatDate(date?.to as Date))
 
   useEffect(() => {
     if (date && date.from && date.to) {

@@ -77,9 +77,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   }
   return (
     <div className="flex w-12 flex-row gap-2">
-      {data.isRefunded ? (
-        ''
-      ) : (
+      {!data.isRefunded ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent className="w-[50vw]">
             <DialogHeader>
@@ -125,6 +123,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             </div>
           </DialogContent>
         </Dialog>
+      ) : (
+        ''
       )}
 
       <DropdownMenu>
@@ -148,9 +148,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             )}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
-            <button className="flex flex-row items-center">
-              <HandCoinsIcon className="mr-2 h-4 w-4" /> Request Refund
-            </button>
+            {!data.isRefunded ? (
+              <button className="flex flex-row items-center">
+                <HandCoinsIcon className="mr-2 h-4 w-4" /> Request Refund
+              </button>
+            ) : (
+              <p>Requested</p>
+            )}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

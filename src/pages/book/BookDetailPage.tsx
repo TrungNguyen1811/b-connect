@@ -329,7 +329,9 @@ function BookDetailPage() {
               className="grid w-full grid-cols-1 place-items-start gap-4 py-2 md:grid-cols-3 md:gap-6"
             >
               <article className="ml-7 flex flex-col">
-                <img src={selectedImage} alt="Selected Image" className="h-96 rounded-sm object-cover shadow-md" />
+                <div className="flex h-96 justify-center">
+                  <img src={selectedImage} alt="Selected Image" className="h-full rounded-sm object-cover shadow-md" />
+                </div>
 
                 <div className="flex flex-row">
                   {/* Carousel */}
@@ -369,7 +371,7 @@ function BookDetailPage() {
                     <div className="flex flex-row">
                       <p className="nav-link mr-4 flex flex-row items-center gap-1 pr-2">
                         {book.rating}
-                        <Rating className="h-3 w-3" value={book.rating} readOnly />
+                        <Rating className="h-4 w-16" value={book.rating} readOnly />
                       </p>
                       <p className="nav-link mr-4 pr-2">
                         {book.numberOfBookSold} {t('sold')}

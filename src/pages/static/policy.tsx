@@ -1,34 +1,50 @@
-import Footer from 'src/components/footer'
-import Header from 'src/components/header/header'
+import { useTranslation } from 'react-i18next'
 
-function ContactPage() {
+function PolicyPage() {
+  const { t } = useTranslation('policy')
   return (
-    <div>
-      <Header />
-      <div className="contact-container">
-        <div className="z-20">
-          <div className="z-10 flex flex-row justify-between">
-            <div className="ml-56 mr-4 mt-16">
-              <div>
-                <p className="w-96 text-7xl font-extrabold text-orange-600">Policy</p>
-                <p className="text-3xl font-medium text-orange-400">We&apos;d love to hear from you.</p>
-              </div>
-              <p className="mt-8 flex flex-col">
-                <input className="w-90 mb-2 h-10 rounded-sm bg-orange-100 pl-4" placeholder="abc@mail.com" />
-                <input
-                  className="w-90 h-40 rounded-sm bg-orange-100 pl-4 text-start"
-                  placeholder="What difficulty are you having?"
-                />
-                <button className="mt-8 h-8 w-36 rounded-lg bg-orange-500 font-medium text-white">SEND</button>
-              </p>
+    <div className="contact-container mx-32 mb-16">
+      <div className="flex flex-row justify-between">
+        <div className="mr-4 mt-12">
+          <div>
+            <p className="mb-8 w-full text-7xl font-extrabold text-orange-600">{t('policy-term')}</p>
+          </div>
+          <div>
+            <p className="mt-2 pt-4 text-2xl font-bold">{t('policy-1')}</p>
+
+            <div className="ml-4">
+              <p className="text-md py-4 font-bold">{t('policy-2')} </p>
+              <p className="text-md">{t('policy-p1')}</p>
+              <p className="text-md py-4 font-bold">{t('policy-3')}</p>
+              <p className="text-md">{t('policy-p2')}</p>
             </div>
-            <img className="mt-20" width="150%" src="./public/question.png" alt="image" />
+
+            <p className="mt-2 pt-4 text-2xl font-bold">{t('policy-4')}</p>
+            <div className="ml-4">
+              <p className="text-md py-4 font-bold">{t('policy-5')}</p>
+              <p>{t('policy-p3')}</p>
+              <p className="text-md py-4 font-bold">{t('policy-6')} </p>
+              <p className="text-md">{t('policy-p4')}</p>
+              <p className="text-md">{t('policy-p04')}</p>
+            </div>
+
+            <p className="mt-2 pt-4 text-2xl font-bold">{t('policy-7')}</p>
+            <div className="ml-4">
+              <p className="text-md py-4 font-bold">{t('policy-8')}</p>
+              <p className="text-md">{t('policy-p5')}</p>
+              <p className="text-md py-4 font-bold">{t('policy-9')}</p>
+              <p className="text-md">{t('policy-p6')}</p>
+            </div>
+            <p className="mb-4 mt-2 pt-4 text-2xl font-bold">{t('policy-10')}</p>
+            <div className="ml-4">
+              <p className="text-md">{t('policy-p7')}</p>
+              <p className="text-md">{t('policy-p8')}</p>
+            </div>
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }
 
-export default ContactPage
+export default PolicyPage
