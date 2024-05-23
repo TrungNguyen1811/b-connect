@@ -23,8 +23,13 @@ import { IResponsePost } from 'src/types/blog'
 export default function PostTagPage() {
   const { user } = useAuth()
   const { tag } = useParams()
-  const { data, isLoading, isError } = useCustomQueryDetail<IResponsePost[]>(() => getTagPosts(tag as string))
+  const { data, isLoading, isError, refetch } = useCustomQueryDetail<IResponsePost[]>(() => getTagPosts(tag as string))
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    refetch()
+  }, [tag])
+
   useEffect(() => {
     const fl = async () => {
       const tag = await getUserTargetedTags()
@@ -33,7 +38,7 @@ export default function PostTagPage() {
       } else setOpen(true)
     }
     fl()
-  }, [user])
+  }, [tag])
 
   const navigate = useNavigate()
   const [tags, setTags] = useState<ICategory[]>([])

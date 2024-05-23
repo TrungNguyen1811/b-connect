@@ -77,7 +77,9 @@ export function SideNav({ items, setOpen, className }: SideNavProps) {
                   >
                     {/* Use child.icon aqui em vez de item.icon */}
                     <child.icon className={cn('h-5 w-5', child.color)} />
-                    <div className={cn('text-base  duration-200', !isOpen && className)}>{child.title}</div>
+                    <div className={cn('text-base text-orange-950 duration-200', !isOpen && className)}>
+                      {child.title}
+                    </div>
                   </Link>
                 ))}
               </AccordionContent>

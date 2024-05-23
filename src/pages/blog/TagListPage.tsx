@@ -79,9 +79,9 @@ function TagListPage() {
         ) : (
           <div className="flex flex-col items-center">
             <img
-              className="pb-6 pt-16"
-              src="https://media.dev.to/cdn-cgi/image/width=300,height=,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fi%2Fy5767q6brm62skiyywvc.png"
-              alt="Error"
+              alt="error"
+              className="w-1/2 pb-6 pt-16"
+              src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1716461937/Books/Image/iwm7jjwbutk9ixeincom.png"
             />
             <p className="text-lg">Something Wrong </p>
           </div>

@@ -70,15 +70,16 @@ function FollowingTags() {
     }
 
     return (
-      <div className="h-48 w-48 rounded-lg border-2 bg-white">
+      <div className="h-48 w-52 rounded-lg border-2 bg-white hover:border-orange-500 hover:text-orange-400">
         <div className="flex h-full flex-col justify-between p-4 pb-1">
           <div className="px-1">
-            <Link to={`/blog/${tag?.cateId}`}>
+            <Link to={`/blog/c/${tag?.cateName}`}>
               <p className="font-semibold">#{tag?.cateName}</p>
             </Link>
           </div>
-          <div className="h-24 p-1">
-            <p className="text-sm font-light">
+
+          <div className="h-24 p-1 ">
+            <p className="text-sm font-light text-black">
               {tag?.description ? (
                 tag.description.length > 99 ? (
                   `${tag.description.slice(0, 100)}...`
@@ -126,7 +127,7 @@ function FollowingTags() {
         </nav>
         <div className="">
           {tags && tags.length > 0 ? (
-            <div className="col-span-full grid grid-cols-3 gap-4">
+            <div className="col-span-full grid grid-cols-4 gap-4">
               {tags.map((tag, index) => (
                 <div key={index}>{tag?.cateId && <TagDetail id={tag.cateId} />}</div>
               ))}
@@ -135,8 +136,8 @@ function FollowingTags() {
             <div className="mx-8 w-full">
               <div className="flex min-h-[35rem] flex-col items-center rounded-md border-2 border-gray-400 bg-white">
                 <img
-                  className="pb-6 pt-16"
-                  src="https://media.dev.to/cdn-cgi/image/width=300,height=,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fi%2Fy5767q6brm62skiyywvc.png"
+                  className="w-1/2 pb-6 pt-16"
+                  src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1716461937/Books/Image/iwm7jjwbutk9ixeincom.png"
                 />
                 <p className="text-lg">
                   This is where you can manage your tags, but you are not interested in any categories yet.

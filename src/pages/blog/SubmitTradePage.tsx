@@ -41,7 +41,7 @@ import PaymentMiddleTrade from 'src/components/blog/payment-middle'
 import PaymentTrade from 'src/components/blog/payment'
 
 export const ITradeStatus = {
-  0: 'Unsubmitted',
+  0: 'Not Submitted',
   1: 'Submitted',
   2: 'OnDeliveryToMiddle',
   3: 'MiddleReceived',

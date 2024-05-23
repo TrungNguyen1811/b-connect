@@ -93,7 +93,6 @@ function CheckListItemForm({
               name="middleUploadDir"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center gap-4">
-                  <FormLabel>MiddleUploadDir:</FormLabel>
                   {checkList.middleUploadDir &&
                     (isImage(checkList.middleUploadDir as string) ? (
                       <img
@@ -123,7 +122,6 @@ function CheckListItemForm({
               name="bookOwnerUploadDir"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center gap-4">
-                  <FormLabel>UploadDir:</FormLabel>
                   {checkList.bookOwnerUploadDir &&
                     (isImage(checkList.bookOwnerUploadDir as string) ? (
                       <img

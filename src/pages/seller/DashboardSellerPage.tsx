@@ -19,7 +19,7 @@ import {
   ArcElement,
 } from 'chart.js'
 import { getAgencyAnalyst, getAgencyAnalystByTime } from 'src/api/seller/get-agency'
-import { addDays, format } from 'date-fns'
+import { format, subDays } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { useTranslation } from 'react-i18next'
 import { DateRangePicker } from 'src/components/ui/date-range-picker-mf'
@@ -268,9 +268,10 @@ export default function DashboardSellerPage() {
 
   //Date
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 20),
+    from: subDays(new Date(), 30),
+    to: new Date(),
   })
+
   const [dateFrom, setDateFrom] = useState<string>(formatDate(date?.from as Date))
   const [dateTo, setDateTo] = useState<string>(formatDate(date?.to as Date))
 
@@ -479,7 +480,7 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisMonthRevenue)}</div>
                   <p className="text-sm text-muted-foreground">
-                    {t('average')}: {formatPrice(agencyAnalyst?.avgMonthRevenue).split('.')}
+                    {t('average')}: {formatPrice(agencyAnalyst?.avgMonthRevenue)}
                   </p>
                 </CardContent>
               </Card>
@@ -504,7 +505,7 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisDayRevenue)}</div>
                   <p className="text-sm text-muted-foreground">
-                    {t('average')}: {formatPrice(agencyAnalyst?.avgDayRevenue).split('.')}
+                    {t('average')}: {formatPrice(agencyAnalyst?.avgDayRevenue)}
                   </p>
                 </CardContent>
               </Card>
@@ -530,7 +531,7 @@ export default function DashboardSellerPage() {
                     {t('average')}: {Math.floor(agencyAnalyst?.percentThisMonthToAvgMonth as number)}%
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {t('highest')}: {agencyAnalyst?.percentThisMonthToHighestMonth}%
+                    {t('highest')}: {Math.floor(agencyAnalyst?.percentThisMonthToHighestMonth as number)}%
                   </p>
                 </CardContent>
               </Card>
@@ -579,19 +580,7 @@ export default function DashboardSellerPage() {
                 </CardContent>
               </Card>
             </div>
-            <Card className="col-span-4 md:col-span-3">
-              <CardHeader>
-                <CardTitle>{t('numberBookByMonth')}</CardTitle>
-                {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
-              </CardHeader>
-              <CardContent>
-                <Chart
-                  type="line"
-                  data={dataNumberOfBookANdUnitSoldByMonth}
-                  options={numberOfBookANdUnitSoldByMonthOptions}
-                />
-              </CardContent>
-            </Card>
+
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
@@ -615,6 +604,19 @@ export default function DashboardSellerPage() {
                 </CardContent>
               </Card>
             </div>
+            <Card className="col-span-4 md:col-span-3">
+              <CardHeader>
+                <CardTitle>{t('numberBookByMonth')}</CardTitle>
+                {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
+              </CardHeader>
+              <CardContent>
+                <Chart
+                  type="line"
+                  data={dataNumberOfBookANdUnitSoldByMonth}
+                  options={numberOfBookANdUnitSoldByMonthOptions}
+                />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

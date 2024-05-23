@@ -234,8 +234,8 @@ export default function CreateBlog() {
   })
 
   return (
-    <div className="h-screen bg-slate-100">
-      <div className="mx-32 flex flex-row justify-between px-4 py-2">
+    <div className="mt-4 h-screen bg-slate-100">
+      {/* <div className="mx-32 flex flex-row justify-between px-4 py-2">
         <div className="flex flex-row items-center">
           <p className="text-black-100 xs:text-2xl mr-4 justify-center font-extrabold lg:text-3xl">
             <Link to="/blog">BSocial</Link>
@@ -245,6 +245,9 @@ export default function CreateBlog() {
         <div>
           <Close />
         </div>
+      </div> */}
+      <div className="absolute right-10 top-20">
+        <Close />
       </div>
       <div className="flex flex-row">
         <Form {...form}>

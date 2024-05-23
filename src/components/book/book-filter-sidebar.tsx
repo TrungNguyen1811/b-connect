@@ -130,7 +130,7 @@ function BookFilterSideBar({ onFilterChange, totalBooks }: Props) {
               }}
               value={watch('Type')}
             >
-              <SelectTrigger className="bg-orange-50 text-gray-500">
+              <SelectTrigger className="bg-white text-gray-500">
                 <SelectValue placeholder={t('Type')} />
               </SelectTrigger>
               <SelectContent>

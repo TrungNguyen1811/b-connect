@@ -23,7 +23,7 @@ export async function postCreateRefundRequest(data: IRefund) {
 
 export async function deleteRefundRequest(refundRequestId: string) {
   return await authAxiosClient
-    .post(`Transaction/delete-refund-request?refundRequestId=?${refundRequestId}`)
+    .delete(`Transaction/delete-refund-request?refundRequestId=${refundRequestId}`)
     .then((response) => {
       if (response.status === 200) {
         return response.data

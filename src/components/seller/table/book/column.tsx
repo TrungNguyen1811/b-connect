@@ -40,9 +40,9 @@ export const columns: ColumnDef<IBook>[] = [
     cell: ({ getValue }) => {
       const name = getValue() as string
       if (name) {
-        const truncateName = name.length > 20 ? `${name.substring(0, 20)}...` : name
-        return <p className="w-[8rem]">{truncateName}</p>
-      } else return <p className="w-[8rem]">{name}</p>
+        const truncateName = name.length > 40 ? `${name.substring(0, 40)}...` : name
+        return <p className="w-[18em]">{truncateName}</p>
+      } else return <p className="w-[18rem]">{name}</p>
     },
   },
   {
@@ -50,36 +50,31 @@ export const columns: ColumnDef<IBook>[] = [
     header: 'Type',
     cell: ({ getValue }) => {
       const type = getValue() as string
-      return <p className="w-[8rem]">{type}</p>
+      return <p className="w-[4rem]">{type}</p>
     },
   },
   {
     accessorKey: 'price',
     header: 'Price',
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue('price'))
-
-      return <div className="">{formatPrice(price)}</div>
+    cell: ({ getValue }) => {
+      const price = getValue() as number
+      return <p className="w-[4rem]">{formatPrice(price as number)}</p>
     },
-    // cell: ({ getValue }) => {
-    //   const price = getValue() as string
-    //   return <p className="w-[8rem]">{price}</p>
-    // },
   },
   {
     accessorKey: 'stock',
     header: 'Stock',
     cell: ({ getValue }) => {
       const stock = getValue() as string
-      return <p className="w-[8rem]">{stock}</p>
+      return <p className=" w-[4rem] text-center">{stock}</p>
     },
   },
   {
     accessorKey: 'category',
-    header: 'category',
+    header: 'Category',
     cell: ({ getValue }) => {
-      const category = getValue() as string
-      return <p className="w-[8rem]">{category}</p>
+      const category = getValue() as string[]
+      return <p className="w-[20rem]">{category.join(', ')}</p>
     },
   },
   {

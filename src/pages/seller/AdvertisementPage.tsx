@@ -116,8 +116,10 @@ function AdvertisementPage() {
               <div>
                 <p className="text-md inline-flex items-start italic">
                   Helps increase product visibility in sections such as
-                  <p className="mr-1 font-medium">Today&apos;s Suggestions, Similar Products and You May Also Like</p>of
-                  BConnect.
+                  <p className="ml-1 mr-1 font-medium">
+                    Today&apos;s Suggestions, Similar Products and You May Also Like
+                  </p>
+                  of BConnect.
                 </p>
                 <Form {...formRelevant}>
                   <form onSubmit={formRelevant.handleSubmit(onSubmitRelevant)}>
@@ -145,7 +147,7 @@ function AdvertisementPage() {
                                 <Button
                                   role="combobox"
                                   className={cn(
-                                    'ml-2 w-48 justify-between bg-white text-gray-400 hover:text-white',
+                                    'ml-2 w-48 justify-between border bg-white text-gray-400 hover:text-white',
                                     !field.value && 'text-muted-foreground',
                                   )}
                                 >
@@ -206,7 +208,7 @@ function AdvertisementPage() {
                         </FormItem>
                       )}
                     />
-                    <Button disabled={checkoutRelevantAds.isLoading} className="my-2" type="submit">
+                    <Button disabled={checkoutRelevantAds.isLoading} className="my-2 ml-[16.8rem]" type="submit">
                       {checkoutRelevantAds.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Checkout
                     </Button>
                   </form>

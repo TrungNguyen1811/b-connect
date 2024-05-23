@@ -120,7 +120,7 @@ export function Menu() {
       <div className="mb-8 flex flex-col">
         <div className="flex flex-row justify-between">
           <p className="text-md mb-4 font-bold">My Tags</p>
-          <Link to={'dashboard/following_tags'}>
+          <Link to={'/blog/dashboard/following_tags'}>
             <SettingsIcon className="mr-4" />
           </Link>
         </div>
@@ -172,7 +172,7 @@ export function Menu() {
                 className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-1 text-sm underline hover:bg-orange-300"
                 key={i.postData.postId}
               >
-                <Link className="p-1 text-base" to={`/blog/${i.postData.postId}`}>
+                <Link className="p-1 text-base" to={`/blog/dashboard/submit-form/${i.postData.postId}`}>
                   {i.postData.title?.slice(0, 20)}...
                 </Link>
               </li>

@@ -77,7 +77,7 @@ export async function getRelevantPosts() {
   })
 }
 export async function getTagPosts(cateName: string) {
-  return authAxiosClient.get(`/Post/tag-list-post?cateName=${cateName}`).then((res) => {
+  return axiosClient.get(`/Post/tag-list-post?cateName=${cateName}`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })

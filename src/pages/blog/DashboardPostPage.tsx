@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 import { deletePost } from 'src/api/blog/delete-blog'
 import { IResponsePostLocked, getLockedPostByUserId, getPostByUserId } from 'src/api/blog/get-blog'
 import { getUserDashboardPost, getUserPostData } from 'src/api/user/get-user'
-import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/check-box'
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
@@ -208,13 +207,15 @@ function DashboardBlog() {
             ) : (
               <div className="flex flex-col items-center">
                 <img
-                  className="w-44 pb-6 pt-16"
-                  src="https://media.dev.to/cdn-cgi/image/width=300,height=,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fi%2Fy5767q6brm62skiyywvc.png"
+                  className="w-72 pb-6 pt-16"
+                  src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1716461941/Books/Image/myxrw6xib3sytqmvnntc.png"
                 />
                 <p className="text-lg">
                   This is where you can manage your posts, but you haven{"'"}t written anything yet.
                 </p>
-                <Button className="text-md mx-8 my-6 p-6">Write your first post now</Button>
+                <Link to={'/blog/create-post'} className="text-md mx-8 my-6 text-orange-500">
+                  Write your first post now
+                </Link>
               </div>
             )}
           </div>

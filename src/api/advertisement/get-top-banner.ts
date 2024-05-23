@@ -1,4 +1,4 @@
-import { authAxiosClient } from 'src/lib/axios'
+import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { IRelevantBooks, IResponseAds } from 'src/types/advertisement'
 import { AxiosResponse } from 'axios'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
@@ -38,3 +38,16 @@ async function getRelevantBooks(bookId: string): Promise<IRelevantBooks[]> {
 }
 
 export { getRelevantBooks }
+
+async function getTopBanner(): Promise<IResponseAds[]> {
+  return axiosClient.get(`ad/get-top-banners`).then((res: AxiosResponse<IResponseAds[]>) => {
+    if (res.status === 200) {
+      const data: IResponseAds[] = res.data
+      return data
+    } else {
+      throw new Error('Error with status code ' + res.status + '(' + res.data + ')')
+    }
+  })
+}
+
+export { getTopBanner }

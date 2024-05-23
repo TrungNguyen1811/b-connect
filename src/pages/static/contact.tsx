@@ -22,7 +22,12 @@ function ContactPage() {
               </Button>
             </p>
           </div>
-          <img className="mt-20" width="150%" src="./public/question.png" alt="image" />
+          <img
+            className="mt-20"
+            width="150%"
+            src="https://res.cloudinary.com/dbpvdxzvi/image/upload/v1716453863/Books/Image/nmidnftjygqntybfb0ci.png"
+            alt="image"
+          />
         </div>
       </div>
     </div>

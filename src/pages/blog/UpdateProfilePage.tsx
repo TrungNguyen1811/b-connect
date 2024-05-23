@@ -157,7 +157,7 @@ function UpdateProfile() {
                   name="fullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>Full Name</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Name" />
                       </FormControl>
@@ -174,7 +174,7 @@ function UpdateProfile() {
                     <FormItem>
                       <FormLabel className=" mb-2">Email</FormLabel>
                       <FormControl>
-                        <Input className=" w-full px-3 py-2 " placeholder="Enter your email" {...field} />
+                        <Input readOnly className=" w-full px-3 py-2 " placeholder="Enter your email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

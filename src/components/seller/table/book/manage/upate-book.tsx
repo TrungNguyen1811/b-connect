@@ -97,6 +97,7 @@ export function UpdateBook() {
         const reset = {
           ...fetchedBook,
           bookImg: bookImgs.split(','),
+          quantity: fetchedBook.stock,
         }
         form.reset(reset)
         setSelected(fetchedBook.category!)

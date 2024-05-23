@@ -82,7 +82,9 @@ function MyPurchase() {
               <div className="my-4 flex flex-row items-stretch justify-start">
                 <img src={order.bookDir} className="w-20 border" />
                 <div className="ml-4 flex flex-col">
-                  <p>{order.bookName}</p>
+                  <Link className="hover:text-orange-500" to={`/books/${order.bookId}`}>
+                    {order.bookName}
+                  </Link>
                   <p className="text-sm text-gray-500">Type: Old</p>
                   {/* <p className="text-sm text-gray-500">{o.type}</p> */}
                   <p className="mt-1 text-sm">x{order.quantity}</p>

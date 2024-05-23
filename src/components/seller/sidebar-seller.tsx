@@ -41,38 +41,38 @@ export default function SidebarSeller({ className }: SidebarProps) {
       title: t('dashboard'),
       icon: LayoutDashboardIcon,
       href: '/seller/dashboard',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
     },
     {
       title: t('manageOrder'),
       icon: PackageIcon,
       href: '/seller/manage/order?type=Done',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
     },
     {
       title: t('manageBook'),
       icon: BookIcon,
       href: '/seller/manage/books',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
       isChildren: true,
       children: [
         {
           title: t('allOfBooks'),
           icon: BookTemplate,
           href: '/seller/manage/books',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
           title: t('addBook'),
           icon: BookPlusIcon,
           href: '/seller/manage/books/new',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
           title: t('allBookGroups'),
           icon: LibraryBigIcon,
           href: '/seller/manage/book-groups',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
       ],
     },
@@ -80,38 +80,38 @@ export default function SidebarSeller({ className }: SidebarProps) {
       title: t('marketingChannel'),
       icon: TagIcon,
       href: '/seller/marketing',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
     },
     {
       title: t('finance'),
       icon: WalletCardsIcon,
       href: '/seller/finance',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
     },
     {
       title: t('manageShop'),
       icon: GanttChartIcon,
       href: '/seller/shop',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
       isChildren: true,
       children: [
         {
           title: t('account'),
           icon: User2Icon,
           href: '/seller/account',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
           title: t('profileShop'),
           icon: StoreIcon,
           href: '/seller/profile',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
           title: t('ratingShop'),
           icon: ListStartIcon,
           href: '/seller/rating',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
       ],
     },
@@ -119,7 +119,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative max-h-max min-h-screen border-r md:block`,
+        `relative max-h-max min-h-screen border-r bg-orange-300 md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,
@@ -135,7 +135,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
       <div className="sticky top-14 space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
-            <p className={cn('px-6 pb-4 text-3xl font-extrabold', !isOpen && 'hidden')}>{t('overview')}</p>
+            <p className={cn('px-6 pb-4 text-3xl font-extrabold text-white', !isOpen && 'hidden')}>{t('overview')}</p>
             <SideNav
               className="text-background opacity-0 transition-all duration-300 group-hover:z-50 group-hover:ml-4 group-hover:rounded group-hover:bg-foreground group-hover:p-2 group-hover:opacity-100"
               items={NavItems}

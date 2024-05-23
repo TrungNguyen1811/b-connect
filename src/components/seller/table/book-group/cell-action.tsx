@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
-import { CopyCheckIcon, CopyIcon, DeleteIcon, Edit, MoreHorizontal, View } from 'lucide-react'
+import { CopyCheckIcon, CopyIcon, DeleteIcon, MoreHorizontal, View } from 'lucide-react'
 import { IResponseBookGroup } from 'src/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'src/components/ui/use-toast'
@@ -78,7 +78,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       .catch(() => setCopyId(false))
   }
   return (
-    <div className="flex w-44 flex-row gap-2">
+    <div className="flex w-32 flex-row gap-2">
       <div className="">
         <UpdateBookGroup bookGroupId={bookGroupId} />
       </div>
@@ -105,10 +105,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem onClick={() => navigate(`/seller/manage/group-of-book/${bookGroupId}`)}>
             <View className="mr-2 h-4 w-4" />
             <div className="flex gap-2 ">View</div>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate(`/seller/manage/group-of-book/add/${bookGroupId}`)}>
-            <Edit className="mr-2 h-4 w-4" />
-            <div className="flex gap-2 ">Edit</div>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <DeleteIcon className="mr-2 h-4 w-4" />

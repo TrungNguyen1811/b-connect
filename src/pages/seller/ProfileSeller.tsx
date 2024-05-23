@@ -34,7 +34,7 @@ function ProfileSeller() {
   const agency = user?.agencies?.[0]
   const [address, setAddress] = useState<IAddress>()
   const getAddress = address
-    ? `${address.city_Province},${address.district},${address.subDistrict},${address.rendezvous}`
+    ? `${address.city_Province}, ${address.district}, ${address.subDistrict}, ${address.rendezvous}`
     : ''
   useEffect(() => {
     const fetchAddress = async () => {
