@@ -46,7 +46,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
     {
       title: t('manageOrder'),
       icon: PackageIcon,
-      href: '/seller/manage/order?type=Done',
+      href: '/seller/manage/order?type=All',
       color: 'text-orange-600',
     },
     {

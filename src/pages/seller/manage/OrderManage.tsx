@@ -15,33 +15,34 @@ function OrderManagerPage() {
       <MetaData title={'Manage Order'} />
       <Tabs defaultValue="All" className="mt-4 w-full">
         <TabsList className="flex w-full  justify-evenly self-center bg-orange-100">
-          <TabsTrigger value="All">
-            <Link to={'?type=All'}>{t('all')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="Unpaid">
-            <Link to={'?type=Unpaid'}>{t('unpaid')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="To ship">
-            <Link to={'?type=To ship'}>{t('toShip')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="Shipping">
-            <Link to={'?type=Shipping'}>{t('shipping')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="Completed">
-            <Link to={'?type=Completed'}>{t('completed')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="Cancellation">
-            <Link to={'?type=Cancellation'}>{t('cancellation')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="Return/Refund">
-            <Link to={'?type=Return/Refund'}>{t('return/Refund')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="Failed">
-            <Link to={'?type=Failed'}>{t('failedDelivery')}</Link>
-          </TabsTrigger>
-          <TabsTrigger value="Other">
-            <Link to={'?type=Other'}>{t('other')}</Link>
-          </TabsTrigger>
+          <Link to={'?type=All'}>
+            <TabsTrigger value="All">{t('all')}</TabsTrigger>
+          </Link>
+          <Link to={'?type=Unpaid'}>
+            {' '}
+            <TabsTrigger value="Unpaid">{t('unpaid')}</TabsTrigger>
+          </Link>
+          <Link to={'?type=To ship'}>
+            <TabsTrigger value="To ship">{t('toShip')}</TabsTrigger>
+          </Link>{' '}
+          <Link to={'?type=Shipping'}>
+            <TabsTrigger value="Shipping">{t('shipping')}</TabsTrigger>
+          </Link>{' '}
+          <Link to={'?type=Completed'}>
+            <TabsTrigger value="Completed">{t('completed')}</TabsTrigger>
+          </Link>{' '}
+          <Link to={'?type=Cancellation'}>
+            <TabsTrigger value="Cancellation">{t('cancellation')}</TabsTrigger>
+          </Link>{' '}
+          <Link to={'?type=Return/Refund'}>
+            <TabsTrigger value="Return/Refund">{t('return/Refund')}</TabsTrigger>
+          </Link>{' '}
+          <Link to={'?type=Failed'}>
+            <TabsTrigger value="Failed">{t('failedDelivery')}</TabsTrigger>
+          </Link>
+          <Link to={'?type=Other'}>
+            <TabsTrigger value="Other">{t('other')}</TabsTrigger>
+          </Link>
         </TabsList>
         <TabsContent value={type as string}>
           <OrderTable />

@@ -20,8 +20,8 @@ export default function CarouselDemo() {
     refetchOnWindowFocus: false,
   })
 
-  const bannerFix = data?.slice(0, 1)
-  const bannerCarousel = data?.slice(2, 10)
+  const bannerFix = Array.isArray(data) ? data.slice(0, 1) : []
+  const bannerCarousel = Array.isArray(data) ? data.slice(2, 10) : []
 
   return (
     <div className="bg-orange-50 md:h-[10rem] lg:h-full">

@@ -452,8 +452,7 @@ function BookDetailPage() {
       <div className="mx-auto my-2 flex max-w-6xl flex-row items-center justify-between  bg-orange-50 p-4 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="flex flex-row">
           <Avatar className="mr-1 h-16 w-16">
-            {/* <AvatarImage src={agency?.logoImg as string} /> */}
-            <AvatarImage src="https://scontent.fdad7-1.fna.fbcdn.net/v/t45.1600-4/408957050_120208360688070402_8892427179558757879_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=ISv-9zSdGvAAb68O3WA&_nc_ht=scontent.fdad7-1.fna&oh=00_AfCrQV1nJeHjnsNTY_l2EJj-N6CEP3RgWlSnj2G6cCTVJw&oe=662C06B3" />
+            <AvatarImage src={agency?.logoUrl as string} />
           </Avatar>
           <div>
             <p className="ml-2 text-base font-semibold">{agency?.agencyName}</p>

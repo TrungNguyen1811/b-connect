@@ -12,7 +12,7 @@ function Publisher({ seller }: Props) {
         <Card className="my-0.5 w-36">
           <CardContent className="aspect-[7/7] flex-col overflow-clip rounded-md border border-gray-400 p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
-              src={seller.logoImg as string}
+              src={seller.logoUrl as string}
               alt={seller.agencyName}
               className="m-5 aspect-[7/7] object-contain transition-all duration-300 hover:scale-105"
               width={100}

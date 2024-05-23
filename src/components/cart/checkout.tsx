@@ -338,8 +338,8 @@ const CheckoutPage = () => {
                       <div className="mb-2 flex w-full flex-row text-center">
                         <p className="flex w-2/5 flex-row items-center justify-start gap-4">
                           <div className="flex flex-row gap-2">
-                            <img src={item.book.bookImg as string} className="h-12 w-12" alt="Book" />
-                            {item.book.name}
+                            <img src={item.book.backgroundImg as string} className="h-12 w-12" alt="Book" />
+                            <p className="w-72 text-left">{item.book.name}</p>
                           </div>
                           <p className="font-light">Type: {item.book.type}</p>
                         </p>

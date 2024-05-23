@@ -17,6 +17,7 @@ import { useCustomQuery } from 'src/hooks/useCustomQuery'
 import { IBook } from 'src/types'
 import { IAgency, IAgencyStat } from 'src/types/agency'
 import BookFilterSeller from 'src/components/book/book-filter-seller'
+import { Separator } from 'src/components/ui/separator'
 
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
@@ -140,8 +141,12 @@ function MyShop() {
               <div className="">
                 <header className="">
                   <img
-                    src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-                    alt={shop?.shop.logoImg as string}
+                    src={
+                      (shop.shop.logoUrl as string)
+                        ? (shop.shop.logoUrl as string)
+                        : 'https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg'
+                    }
+                    alt={shop?.shop.logoUrl as string}
                     className="absolute left-[45rem] top-32 z-10 h-28 w-28 rounded-[50%] p-2"
                   />
                   <div className="absolute left-[16rem] top-48 h-[8rem] w-[63rem] rounded-md border-2 bg-white">
@@ -178,7 +183,8 @@ function MyShop() {
               </ScrollArea>
             </div>
           </div>
-          <div className="mt-8 flex w-full gap-4 px-32 pb-8">
+          <Separator className="mx-auto w-[70%] bg-slate-400" />
+          <div className="mt-12 flex w-full gap-4 px-32 pb-8">
             <section key="main.section.sidebar" className="sticky top-0 h-min w-1/6 rounded-md bg-orange-50">
               <BookFilterSeller
                 onFilterChange={(data) => {

@@ -3,7 +3,8 @@ export interface IAgency {
   ownerId?: string
   agencyName?: string
   GHTKTokenCode?: string
-  logoImg: File | string
+  logoUrl?: File | string
+  logoImg?: File | string
   postAddress?: string
   addressId?: string
   businessType?: 'Individual' | 'Company'

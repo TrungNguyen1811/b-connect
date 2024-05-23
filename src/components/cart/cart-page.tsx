@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { DeleteIcon } from 'lucide-react'
 import { getAgencyByAgencyId } from 'src/api/seller/get-agency'
 import { IAgency } from 'src/types/agency'
+import { formatPrice } from 'src/lib/utils'
 
 function CartPage() {
   const { cartItems, addToCart, decreaseToCart, removeFromCart, clearCart } = useOrderCart()
@@ -224,8 +225,8 @@ function CartPage() {
                           onChange={() => handleItemCheckboxChange(item.book.productId as string)}
                         />
                       </TableCell>
-                      <TableCell>{item.book.name}</TableCell>
-                      <TableCell>${item.book.price}</TableCell>
+                      <TableCell className="w-56">{item.book.name}</TableCell>
+                      <TableCell>{formatPrice(item.book.price)}</TableCell>
                       <TableCell className="flex flex-row">
                         <Button
                           size="sm"
