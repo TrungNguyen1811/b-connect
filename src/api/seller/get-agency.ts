@@ -72,7 +72,7 @@ export { getFinanceForecast }
 
 async function getBestSellerProductIdByNumberOfBookSold(params: Partial<IQueryPagination>) {
   return authAxiosClient
-    .get(`/products/sellerManager/get-best-seller-product-id-by-number-of-book-sold`, { params })
+    .get(`/products/seller-manager/get-best-seller-product-id-by-number-of-book-sold`, { params })
     .then((res) => {
       if (res.status === 200) {
         const data: IBook[] = res.data

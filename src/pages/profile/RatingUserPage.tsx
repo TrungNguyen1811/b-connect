@@ -105,7 +105,7 @@ function RatingUserPage() {
                 <div>
                   <p>{list.username}</p>
                   <Rating style={{ maxWidth: 100 }} value={list.ratingPoint as number} />
-                  <p className="text-gray-600">{format(list.createdDate, 'PPpp')}</p>
+                  <p className="text-gray-600">{format(list.createdDate as string, 'PPpp')}</p>
                   <p>{list.comment}</p>
                 </div>
                 {lists.length - 1 > index ? <Separator /> : ''}

@@ -14,7 +14,7 @@ import { Separator } from 'src/components/ui/separator'
 import { useAuth } from 'src/hooks/useAuth'
 import { IResponseTraderList } from 'src/types/interester'
 import { z } from 'zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'src/components/ui/use-toast'
 import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from 'src/components/ui/command'
 import { Form, FormItem, FormLabel, FormControl, FormMessage, FormField } from 'src/components/ui/form'
@@ -39,16 +39,18 @@ import CardProfile from 'src/components/blog/card-profile'
 import CardInfoTrade from 'src/components/blog/card-info-trade'
 import PaymentMiddleTrade from 'src/components/blog/payment-middle'
 import PaymentTrade from 'src/components/blog/payment'
+import ViewEvidence from 'src/components/blog/view-evidence'
 
 export const ITradeStatus = {
   0: 'Not Submitted',
   1: 'Submitted',
-  2: 'OnDeliveryToMiddle',
-  3: 'MiddleReceived',
-  4: 'WaitFoeCheckListConfirm',
+  2: 'On Delivery To Middle',
+  3: 'Middle Received',
+  4: 'Wait Foe Check List Confirm',
   5: 'Cancel',
-  6: 'OnDeliveryToTrader',
+  6: 'On Delivery To Trader',
   7: 'Successful',
+  8: 'Confirm For Evidence',
 }
 
 const formSchema = z.object({
@@ -80,18 +82,18 @@ export default function SubmitTrade() {
   const [addressId, setAddressId] = useState<string>()
   const [openForm, setOpenForm] = useState<boolean>(false)
 
+  const { data } = useQuery(['tradeDetail', id], () => {
+    return getTradeDetailByPostId(id as string)
+  })
+
   useEffect(() => {
     const fetchTradeDetail = async () => {
-      try {
-        const trade = await getTradeDetailByPostId(id as string)
-        setTradeDetail(trade)
-        console.log('trade', trade)
-      } catch (error) {
-        console.error('Error fetching trade details:', error)
+      if (data) {
+        setTradeDetail(data)
       }
     }
     fetchTradeDetail()
-  }, [id, openForm])
+  }, [data])
 
   useEffect(() => {
     const fetchUsersAndSetAuthorization = async () => {
@@ -205,7 +207,7 @@ export default function SubmitTrade() {
           title: 'Success',
           description: 'Accept Trade Information Success!!!',
         })
-        queryClient.invalidateQueries()
+        queryClient.invalidateQueries(['tradeDetail'])
       } else {
         toast({
           title: 'Failed',
@@ -476,7 +478,7 @@ export default function SubmitTrade() {
 
   const submitTradeMutation = useMutation((formData: ISubmitTrade) => putSubmitTrade(formData), {
     onSuccess: (formData) => {
-      queryClient.invalidateQueries()
+      queryClient.invalidateQueries(['tradeDetail'])
       if (formData) {
         toast({
           title: 'Success',
@@ -533,7 +535,6 @@ export default function SubmitTrade() {
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
             </Button>
-            <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
           </div>
         )
 
@@ -543,7 +544,6 @@ export default function SubmitTrade() {
             <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
               Check List
             </Button>
-            <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
           </div>
         )
 
@@ -551,7 +551,18 @@ export default function SubmitTrade() {
       case 7:
         return (
           <div className="mt-4 flex justify-center gap-2 pb-4">
-            {userTrade?.details.isUsingMiddle == true ? (
+            {userTrade?.details.isUsingMiddle == false ? (
+              <ViewEvidence tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
+          </div>
+        )
+
+      case 8:
+        return (
+          <div className="mt-4 flex justify-center gap-2 pb-4">
+            {userTrade?.details.isUsingMiddle == false ? (
               <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
             ) : (
               ''
@@ -562,9 +573,13 @@ export default function SubmitTrade() {
       case 0:
         return (
           <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
-              Check List
-            </Button>
+            {userTrade?.details.isUsingMiddle == true && userTrade.details.transactionId == null ? (
+              <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+                Check List
+              </Button>
+            ) : (
+              ''
+            )}
             <Button onClick={() => setOpenForm(true)}>Change data</Button>
           </div>
         )
@@ -582,9 +597,18 @@ export default function SubmitTrade() {
             ) : (
               ''
             )}
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
-              Check List
-            </Button>
+            {userTrade?.details.isUsingMiddle == true ? (
+              <Button onClick={() => navigate(`/blog/dashboard/check-list/${userTrade.details.tradeDetailId}`)}>
+                Check List
+              </Button>
+            ) : (
+              ''
+            )}
+            {userTrade?.details.isUsingMiddle == false ? (
+              <Evidence tradeDetailsId={userTrade.details.tradeDetailId} />
+            ) : (
+              ''
+            )}
             <Button onClick={() => setOpenForm(true)}>Change data</Button>
           </div>
         )
@@ -606,38 +630,75 @@ export default function SubmitTrade() {
       case 2:
         return (
           <div className="mt-4 flex flex-row gap-2">
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
-              View Check List
-            </Button>
+            {userTrade?.details.isUsingMiddle == true ? <TargetsTrade tradeDetailsId={tradeDetailId} /> : ''}
+            {/* {userTrade?.details.isUsingMiddle == false ? (
+              <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
+                View Check List
+              </Button>
+            ) : (
+              ''
+            )} */}
           </div>
         )
       case 3:
         return (
           <div className="mt-4 flex flex-row gap-2">
-            <Evidence tradeDetailsId={tradeDetailId} />
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
+            {userTrade?.details.isUsingMiddle == true ? <TargetsTrade tradeDetailsId={tradeDetailId} /> : ''}
+            {/* {userTrade?.details.isUsingMiddle == false ? (
+              <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
+                View Check List
+              </Button>
+            ) : (
+              ''
+            )}
+            {userTrade?.details.isUsingMiddle == false ? <Evidence tradeDetailsId={tradeDetailId} /> : ''} */}
+            {/* <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
               View Check List
-            </Button>
+            </Button> */}
           </div>
         )
 
       case 4:
         return (
           <div className="mt-4 flex flex-row gap-2">
-            <Evidence tradeDetailsId={tradeDetailId} />
-            <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
-              View Check List
-            </Button>
+            {userTrade?.details.isUsingMiddle == true ? <TargetsTrade tradeDetailsId={tradeDetailId} /> : ''}
+            {/* {userTrade?.details.isUsingMiddle == false ? (
+              <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
+                View Check List
+              </Button>
+            ) : (
+              ''
+            )}
+            {userTrade?.details.isUsingMiddle == false ? <Evidence tradeDetailsId={tradeDetailId} /> : ''} */}
           </div>
         )
 
       case 6:
       case 7:
         return (
-          <div className="mt-4 flex justify-end gap-2">
-            {userTrade?.details.isUsingMiddle == true ? <Evidence tradeDetailsId={tradeDetailId} /> : ''}
+          <div className="mb-4 mt-4 flex justify-end gap-2">
+            {userTrade?.details.isUsingMiddle == true ? <TargetsTrade tradeDetailsId={tradeDetailId} /> : ''}
+            {/* {userTrade?.details.isUsingMiddle == false ? (
+              <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
+                View Check List
+              </Button>
+            ) : (
+              ''
+            )}
+            */}
+            {userTrade?.details.isUsingMiddle == false ? <ViewEvidence tradeDetailsId={tradeDetailId} /> : ''}
             <ReviewTrade tradeDetailsId={tradeDetailId} revieweeId={traderId} postId={id as string} />
             <ReportTrade tradeDetailsId={tradeDetailId} postId={id as string} />
+          </div>
+        )
+
+      case 8:
+        return (
+          <div className="mt-4 flex min-w-[33vw] justify-center gap-2 pb-4">
+            <ViewEvidence tradeDetailsId={tradeDetailId} />
+            <Button className="" onClick={() => handlePutStatusTrade(6)}>
+              Confirm Trade Info
+            </Button>
           </div>
         )
 
@@ -646,7 +707,7 @@ export default function SubmitTrade() {
           <div className="mt-4 min-w-[33vw] pb-4">
             <div className="flex flex-col items-end justify-end gap-2">
               <div className="flex flex-row justify-end gap-2">
-                <TargetsTrade tradeDetailsId={tradeDetailId} />
+                {userTrade?.details.isUsingMiddle == true ? <TargetsTrade tradeDetailsId={tradeDetailId} /> : ''}{' '}
                 {/* <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
                   View Check List
                 </Button> */}
@@ -669,8 +730,8 @@ export default function SubmitTrade() {
                 </div>
               </div>
             ) : (
-              <p className="ml-4 flex justify-end">
-                <Button className="" onClick={() => handlePutStatusTrade(6)}>
+              <p className="ml-4 flex justify-end gap-2">
+                <Button className="" onClick={() => handlePutStatusTrade(8)}>
                   Confirm Trade Info
                 </Button>
               </p>

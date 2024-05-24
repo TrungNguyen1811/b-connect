@@ -8,11 +8,11 @@ import { IAddress } from 'src/types/address'
 function CardInfoTrade({ userTrade }: { userTrade: ITradeDetail }) {
   const renderForm = (string: string, name: string) => {
     return (
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row items-start justify-between">
         <div>
           <p className="text-gray-400">{string}</p>
         </div>
-        <p>{name ? name : 'null'}</p>
+        <p className="w-96 text-right">{name ? name : 'null'}</p>
       </div>
     )
   }

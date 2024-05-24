@@ -166,7 +166,7 @@ export interface IRatingOverall {
 export interface IRating {
   ratingPoint: number
   username: string
-  createdDate: Date
+  createdDate: string
   comment: string
   avatarDir: string
 }

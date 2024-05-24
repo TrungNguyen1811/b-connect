@@ -29,7 +29,7 @@ async function postAddBook(data: IBookTest) {
   }
 
   return authAxiosClient
-    .post(`/products/AddBook`, formData, {
+    .post(`/products/add-book`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -56,7 +56,7 @@ async function postAddBookGroup(data: IBookGroup) {
   }
 
   return authAxiosClient
-    .post(`/book-group/AddBookGroup`, formData, {
+    .post(`/book-group/add-book-group`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -81,7 +81,7 @@ export interface IAddBookToBookGroup {
 
 async function addBookToBookGroup(data: IAddBookToBookGroup) {
   return authAxiosClient
-    .post(`/products/book-group/AddBookToBookGroup`, data, {})
+    .post(`/products/book-group/add-book-to-book-group`, data, {})
     .then((res) => {
       if (res.status === 200) {
         return 'Successful'

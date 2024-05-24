@@ -4,7 +4,6 @@ import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponse } from 'src/types/response'
-import { API_GET_ALL_USER_QUERY_KEYS } from 'src/api/user/get-all-user.const'
 import { IPostResponse } from 'src/types/blog'
 import { getAllTradePostForMiddle } from 'src/api/admin/get-all-trade-post'
 
@@ -18,7 +17,7 @@ export function useTradeTable(columns: ColumnDef<IPostResponse>[]) {
   })
 
   const queryController = useQuery<IResponse<IPostResponse[]>, AxiosError>(
-    [...API_GET_ALL_USER_QUERY_KEYS, queries],
+    ['trade', queries],
     () => getAllTradePostForMiddle(queries),
     {
       keepPreviousData: true,

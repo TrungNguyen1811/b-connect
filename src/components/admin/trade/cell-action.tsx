@@ -91,7 +91,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           })
           return updatedTradeDetail
         })
-        queryClient.invalidateQueries()
+        queryClient.invalidateQueries(['trade'])
       } else {
         toast({
           title: 'Failed',

@@ -3,7 +3,7 @@ import { Message, UserChatReply } from 'src/types/chat'
 
 async function postChatMessage(data: UserChatReply) {
   return await authAxiosClient
-    .post(`/chat/PostChatMessage`, data, {})
+    .post(`/chat/post-chat-message`, data, {})
     .then((response) => {
       if (response.status === 200 || response.status === 204) {
         const data: Message = response.data

@@ -97,44 +97,6 @@ async function updateBlogApi(blogData: {
 
 export { updateBlogApi }
 
-async function postDeleteBlogById(blog_id: string) {
-  return await axiosClient
-    .post(`/blog/deletePost/${blog_id}`, {})
-    .then((response) => {
-      if (response.status === 201) {
-        return response.data
-      } else {
-        // Handle other HTTP statuses as needed
-        throw new Error('Request failed with status ' + response.status)
-      }
-    })
-    .catch((error) => {
-      // Handle network errors or other issues
-      throw error
-    })
-}
-
-export { postDeleteBlogById }
-
-async function unFollowingFromInterested(cateId: string) {
-  return await axiosClient
-    .post(`/blog/unFollowingCategory/${cateId}`, {})
-    .then((response) => {
-      if (response.status === 201) {
-        return response.data
-      } else {
-        // Handle other HTTP statuses as needed
-        throw new Error('Request failed with status ' + response.status)
-      }
-    })
-    .catch((error) => {
-      // Handle network errors or other issues
-      throw error
-    })
-}
-
-export { unFollowingFromInterested }
-
 async function addNewSavedPost(postId: string) {
   return await authAxiosClient
     .post(`/post/add-new-user-saved-post?postId=${postId}`, {})

@@ -17,7 +17,7 @@ export async function getAllAddress(userId: string) {
 }
 
 export async function getAddressByAddressId(addressId: string) {
-  return axiosClient.get(`/address/get-address-by-addressId?addressId=${addressId}`).then((res) => {
+  return axiosClient.get(`/address/get-address-by-address-id?addressId=${addressId}`).then((res) => {
     const data: IAddress = res.data
     return data
   })

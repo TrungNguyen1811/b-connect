@@ -104,7 +104,7 @@ function CheckListViewPage() {
   const [targets, setTarget] = useState<string[]>()
   const [selectedMiddleImage, setSelectedMiddleImage] = useState<string>()
   const [selectedPartnerImage, setSelectedPartnerImage] = useState<string>()
-
+  const [status, setStatus] = useState<number>(tradeDetail?.details.status as number)
   useEffect(() => {
     const fetchCheckList = async () => {
       const checkList = await getCheckList(id as string)
@@ -148,7 +148,7 @@ function CheckListViewPage() {
           title: 'Success',
           description: 'Accept Trade Success!!!',
         })
-        queryClient.invalidateQueries()
+        queryClient.invalidateQueries(['tradeDetail'])
         setOpen(false)
       } else {
         toast({
@@ -238,8 +238,8 @@ function CheckListViewPage() {
                 </TableBody>
               </Table>
             </div>
-            {tradeDetail && tradeDetail.details.isUsingMiddle ? (
-              tradeDetail && tradeDetail.details.status < 2 ? (
+            {tradeDetail && !tradeDetail.details.isUsingMiddle ? (
+              tradeDetail && status < 2 ? (
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger>
                     <Button>Accept</Button>
@@ -261,7 +261,7 @@ function CheckListViewPage() {
               ) : (
                 'Accepted'
               )
-            ) : tradeDetail && tradeDetail.details.status < 6 ? (
+            ) : tradeDetail && status < 6 ? (
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger>
                   <Button>Accept</Button>

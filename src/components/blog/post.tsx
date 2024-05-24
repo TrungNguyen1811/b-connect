@@ -4,23 +4,42 @@ import { checkUserLikePost, getPostByIdApi, getUserSavedPosts } from 'src/api/bl
 import { IResponsePost } from 'src/types/blog'
 import { AvatarImage } from '../ui/avatar'
 import { Separator } from '../ui/separator'
-import { BookMarkedIcon, HandshakeIcon, HeartIcon, MessageCircleIcon } from 'lucide-react'
+import { BookMarkedIcon, HandshakeIcon, HeartIcon, Loader2, MessageCircleIcon } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
-import { IResponseInteresterList } from 'src/types/interester'
+import { IResponseInteresterList, ITradeInterested } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
 import { addNewSavedPost, postLikePost } from 'src/api/blog/post-blog'
 import { removeUserSavedPost } from 'src/api/blog/delete-blog'
 import { format } from 'date-fns'
-
+import { useMutation } from '@tanstack/react-query'
+import { toast } from '../ui/use-toast'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '../../components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel } from 'src/components/ui/form'
+import { Input } from 'src/components/ui/input'
+import { z } from 'zod'
+import { Button } from '../ui/button'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 interface PostProps {
   postId: string
 }
 
+const formSchema = z.object({
+  video: z.any(),
+})
+type FormData = z.infer<typeof formSchema>
+
 function Post({ postId }: PostProps) {
   const { user } = useAuth()
   const [blog, setBlog] = useState<IResponsePost>()
-
   const [interesterList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const [isSaved, setIsSaved] = useState<boolean>(false)
   const [isInterested, setIsInterested] = useState<boolean>(false)
@@ -28,7 +47,9 @@ function Post({ postId }: PostProps) {
   const [checkLike, setCheckLike] = useState<boolean>()
   const [likes, setLikes] = useState<number>(0)
   const navigate = useNavigate()
-
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  })
   useEffect(() => {
     const fetchBlogAndUser = async () => {
       const blogData = await getPostByIdApi(postId)
@@ -124,22 +145,59 @@ function Post({ postId }: PostProps) {
     }
   }, [postId, user, isInterested])
 
+  const [open, setOpenDialog] = useState<boolean>(false)
+  const [openTrade, setOpenTradeDialog] = useState<boolean>(false)
+
   const handleInterestClick = async () => {
     try {
-      if (!isInterested) {
-        const data = await postInterestedPost(postId)
-        setPostInterestId(data)
-        setIsInterested(true)
-      } else {
-        if (postInterestId) {
-          await removeInterestedPost(postInterestId)
+      if (user?.isValidated && open == false) {
+        if (!isInterested && openTrade == false) {
+          setOpenTradeDialog(true)
+        } else {
+          if (postInterestId) {
+            await removeInterestedPost(postInterestId)
+          }
+          setIsInterested(false)
+          setPostInterestId(undefined)
         }
-        setIsInterested(false)
-        setPostInterestId(undefined)
+      } else if (!user?.isValidated && open == false) {
+        setOpenDialog(true)
       }
     } catch (error) {
       console.error('Error:', error)
     }
+  }
+
+  const postInterestedTrade = useMutation((data: ITradeInterested) => postInterestedPost(data), {
+    onSuccess: (status) => {
+      if (status) {
+        console.log('Successful!!!')
+        toast({
+          title: 'Successful!!!',
+          description: 'Interested trade post success!',
+        })
+        setIsInterested(true)
+        setOpenTradeDialog(false)
+      } else {
+        toast({
+          title: 'Invalid interested trade response',
+          description: 'Interested trade post false',
+        })
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error Submitting Form',
+        description: error.response.data,
+      })
+    },
+  })
+  const onSubmit = (data: FormData) => {
+    const formData: ITradeInterested = {
+      postId: blog?.postData.postId as string,
+      video: data.video as File,
+    }
+    postInterestedTrade.mutate(formData)
   }
 
   return (
@@ -225,6 +283,59 @@ function Post({ postId }: PostProps) {
             ) : (
               <div className="m-2 my-0 rounded-sm p-1 hover:bg-gray-300" onClick={handleInterestClick}>
                 <HandshakeIcon size={20} className={isInterested ? ' text-orange-400 ' : ''} />
+                <Dialog open={open} onOpenChange={setOpenDialog}>
+                  <DialogContent className="w-[32rem]">
+                    <DialogHeader>
+                      <DialogTitle className="pb-4 text-xl font-bold">
+                        You don&apos;t have permission to do this
+                      </DialogTitle>
+                      <Separator />
+                      <p className="py-2">
+                        You must authenticate your account to be able to perform this action. Do you want to update
+                        national identify card?
+                      </p>
+                      <DialogDescription className="flex flex-row">
+                        <Button className="mr-4 bg-red-600" onClick={() => navigate('/user/account/identify')}>
+                          Yes, I do.
+                        </Button>
+                        <Button>
+                          <DialogClose>No, keep editing.</DialogClose>
+                        </Button>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+                <Dialog open={openTrade} onOpenChange={setOpenTradeDialog}>
+                  <DialogContent className="h-[12rem] w-[36rem]">
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <FormField
+                          control={form.control}
+                          name="video"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Upload Video</FormLabel>
+                              <FormControl>
+                                <Input
+                                  className="py-0"
+                                  type="file"
+                                  accept="video/*"
+                                  onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <div className="flex flex-row justify-between">
+                          <Button disabled={postInterestedTrade.isLoading} type="submit">
+                            {postInterestedTrade.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}
+                            Submit
+                          </Button>
+                        </div>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
               </div>
             )
           ) : (

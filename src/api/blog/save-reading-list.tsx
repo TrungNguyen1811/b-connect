@@ -1,20 +1,4 @@
-import { IReadingList } from 'src/types/blog'
 import { authAxiosClient, axiosClient } from '../../lib/axios'
-import { faker } from '@faker-js/faker'
-
-export function getReadingListFaker(id: string) {
-  // TODO: Replace this with an actual API call
-
-  const readingList: IReadingList[] = Array.from({ length: 10 }, () => ({
-    _id: id,
-    userId: faker.string.uuid(),
-    blog_Id: faker.string.uuid(),
-  }))
-
-  return new Promise<IReadingList[]>((resolve) => {
-    setTimeout(() => resolve(readingList), 1000)
-  })
-}
 
 async function getReadingList(user_id: string) {
   return await axiosClient

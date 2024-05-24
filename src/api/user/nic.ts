@@ -14,7 +14,7 @@ export async function postNICApi<T>(formData: FormData) {
 }
 
 export async function getNICApi() {
-  return authAxiosClient.get('/nicOcr/get-nic-data-by-owner-id').then((res) => {
+  return authAxiosClient.get('/nic-ocr/get-nic-data-by-owner-id').then((res) => {
     if (res.status === 200) {
       const nic: INIC = res.data
       return nic

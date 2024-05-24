@@ -1,7 +1,7 @@
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
 import { ICheckList } from 'src/types/advertisement'
 import { IEvidence, IResponsePost, ISubmitTrade } from 'src/types/blog'
-import { IResponseInteresterList, IResponseTraderList } from 'src/types/interester'
+import { IResponseInteresterList, IResponseTraderList, ITradeInterested } from 'src/types/interester'
 import { IReportUser, IReviewUser } from 'src/types/user'
 
 export async function getAllPosts() {
@@ -28,7 +28,7 @@ export { getPostInterestByPostId }
 
 async function getPostTraderByPostId(postId: string) {
   return authAxiosClient
-    .get(`/trading/get-trader-ids-by-postId?postId=${postId}`, {
+    .get(`/trading/get-trader-ids-by-post-id?postId=${postId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -63,7 +63,7 @@ export interface ITradeDetail {
 }
 
 async function getTradeDetailByPostId(postId: string) {
-  return authAxiosClient.get(`/trading/get-trade-details-by-postId?postId=${postId}`).then((res) => {
+  return authAxiosClient.get(`/trading/get-trade-details-by-post-id?postId=${postId}`).then((res) => {
     const trade: ITradeDetail[] = res.data
     return trade
   })
@@ -94,9 +94,20 @@ async function getIsCheckListExisted(tradeDetailsId: string) {
 }
 export { getIsCheckListExisted }
 
-async function postInterestedPost(data: string) {
+async function getEvidence(tradeDetailsId: string, IsPackingVideo: boolean) {
+  return authAxiosClient
+    .get(`/trading/get-evidence-video?tradeDetailsId=${tradeDetailsId}&IsPackingVideo=${IsPackingVideo}`)
+    .then((res) => {
+      const trade = res.data
+      return trade
+    })
+}
+export { getEvidence }
+
+async function postInterestedPost(data: ITradeInterested) {
   const formData = new FormData()
-  formData.append('PostId', data)
+  formData.append('postId', data.postId)
+  formData.append('video', data.video)
 
   return await authAxiosClient
     .post('/trading/add-post-interester', formData, {

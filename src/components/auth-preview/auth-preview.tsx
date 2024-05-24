@@ -16,7 +16,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { cn, getLabelByFullname } from 'src/lib/utils'
 import { Button } from '../ui/button'
 import { useAuth } from 'src/hooks/useAuth'
-import { ArrowLeftRight, Book, CarFrontIcon, Disc, LayoutDashboardIcon, List, LucideTruck, User } from 'lucide-react'
+import {
+  ArrowLeftRight,
+  Book,
+  CarFrontIcon,
+  Disc,
+  HandCoinsIcon,
+  LayoutDashboardIcon,
+  List,
+  LucideTruck,
+  User,
+} from 'lucide-react'
 
 export const Icons = {
   lucideTruck: LucideTruck,
@@ -133,7 +143,7 @@ function AuthPreview({ className, ...prosp }: Props) {
           </Link>
           <Link to="/user/purchase?type=1" className="hover-underline-animation hover:hover-underline-animation">
             <DropdownMenuItem className="flex flex-row gap-2">
-              <LucideTruck className="mr-2 h-4 w-4" />
+              <LucideTruck className="mr-2 h-4 w-4 hover:animate-bounce hover:text-orange-500" />
               My purchase
             </DropdownMenuItem>
           </Link>
@@ -141,6 +151,12 @@ function AuthPreview({ className, ...prosp }: Props) {
             <DropdownMenuItem className="flex flex-row gap-2">
               <ArrowLeftRight className="mr-2 h-4 w-4" />
               Payment history
+            </DropdownMenuItem>
+          </Link>
+          <Link to="/user/refund" className="hover-underline-animation hover:hover-underline-animation">
+            <DropdownMenuItem className="flex flex-row gap-2">
+              <HandCoinsIcon className="mr-2 h-4 w-4" />
+              Request Refund
             </DropdownMenuItem>
           </Link>
           {AdminSection}

@@ -54,7 +54,7 @@ function AddToCart() {
         </HoverCardTrigger>
 
         <HoverCardContent>
-          <div className="flex h-full w-full flex-col py-2 ">
+          <div className="flex h-full w-[48rem] flex-col py-2 ">
             <div className="px-4 sm:px-6">
               <h2 className="text-lg font-medium text-gray-900">{t('New orders added')}</h2>
             </div>

@@ -26,6 +26,7 @@ function ManagePostInterester() {
   const [interestList, setInteresterList] = useState<IResponseInteresterList[]>([])
   const navigate = useNavigate()
   const [dashboard, setDashboard] = useState<IAnalystPost>()
+  const [open, setOpenDialog] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,7 +68,7 @@ function ManagePostInterester() {
   }
 
   const trader = useCallback(
-    ({ recordId, userId, username, avatarDir, createDate, isChosen }: IResponseInteresterList) => (
+    ({ recordId, userId, username, avatarDir, createDate, isChosen, videoDir }: IResponseInteresterList) => (
       <div className="flex flex-row">
         <div className="ml-8 flex w-full items-center gap-3">
           <Avatar>
@@ -81,7 +82,19 @@ function ManagePostInterester() {
             </div>
           </div>
         </div>
-        <div>
+
+        <div className="flex flex-row gap-2">
+          <Dialog>
+            <DialogTrigger>
+              <Button className="w-20 bg-blue-500">View</Button>
+            </DialogTrigger>
+            <DialogContent className="w-[32rem]">
+              <DialogHeader>
+                <DialogTitle className="pb-4 text-xl font-bold">Video</DialogTitle>
+                <video src={videoDir as string} className="max-h-[24rem] w-full rounded-md" controls></video>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
           <Dialog>
             <DialogTrigger>
               <Button>Accept</Button>
@@ -117,7 +130,7 @@ function ManagePostInterester() {
   )
 
   const trader2 = useCallback(
-    ({ recordId, userId, username, avatarDir, createDate, isChosen }: IResponseInteresterList) => (
+    ({ recordId, userId, username, avatarDir, createDate, isChosen, videoDir }: IResponseInteresterList) => (
       <div className="flex flex-row">
         <div className="ml-2 flex w-full items-center gap-3">
           <Avatar>
@@ -194,7 +207,7 @@ function ManagePostInterester() {
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.postCount}</p>
             </div>
           </Link>
-          <Link to={'/blog/dashboard/following_categories'} className="">
+          <Link to={'/blog/dashboard/following_tags'} className="">
             <div className="flex flex-row items-center rounded-sm px-2 py-1">
               <p className="w-full font-semibold">Following Tags</p>
               <p className="border-1 r-0 m-1 rounded-xl bg-slate-300 px-2">{dashboard?.tagFollowCount}</p>

@@ -26,7 +26,7 @@ function Evidence({ tradeDetailsId }: { tradeDetailsId: string }) {
   })
   const postEvidence = useMutation((formData: IEvidence) => postEvidenceTrade(formData), {
     onSuccess: (status) => {
-      if (status === 200) {
+      if (status) {
         toast({
           title: 'Successful!!!',
           description: 'Update Evidence Success!',

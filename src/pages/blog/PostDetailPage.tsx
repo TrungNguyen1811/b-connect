@@ -2,7 +2,14 @@ import { Avatar } from '@radix-ui/react-avatar'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AvatarImage } from '../../components/ui/avatar'
 import { Separator } from '../../components/ui/separator'
-import { BookMarkedIcon, HandshakeIcon, HeartIcon, MessageCircleHeart, MessageCircleHeartIcon } from 'lucide-react'
+import {
+  BookMarkedIcon,
+  HandshakeIcon,
+  HeartIcon,
+  Loader2,
+  MessageCircleHeart,
+  MessageCircleHeartIcon,
+} from 'lucide-react'
 import { Link, useLoaderData, useNavigate } from 'react-router-dom'
 import { IResponsePost } from 'src/types/blog'
 import { useToast } from '../../components/ui/use-toast'
@@ -16,7 +23,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Textarea } from 'src/components/ui/text-area'
 import { Value } from '@udecode/plate-common'
 import { PlateView } from 'src/components/ui/plate-view'
-import { IResponseInteresterList } from 'src/types/interester'
+import { IResponseInteresterList, ITradeInterested } from 'src/types/interester'
 import { getPostInterestByPostId, postInterestedPost, removeInterestedPost } from 'src/api/blog/interested'
 import { removeUserSavedPost } from 'src/api/blog/delete-blog'
 import { addNewSavedPost, postLikePost } from 'src/api/blog/post-blog'
@@ -30,10 +37,18 @@ import {
   DialogTitle,
 } from '../../components/ui/dialog'
 import { useStatisticContext } from 'src/hooks/useStatistic'
+import { Form, FormControl, FormField, FormItem, FormLabel } from 'src/components/ui/form'
+import { Input } from 'src/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 type FormValue = {
   content: string
 }
+const formSchema = z.object({
+  video: z.any(),
+})
+type FormData = z.infer<typeof formSchema>
 
 function BlogDetail() {
   const data = useLoaderData() as { blog: IResponsePost }
@@ -46,6 +61,9 @@ function BlogDetail() {
   const { user } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  })
 
   useEffect(() => {
     setBlog(data.blog)
@@ -246,6 +264,7 @@ function BlogDetail() {
   const [isInterested, setIsInterested] = useState<boolean>()
   const [postInterestId, setPostInterestId] = useState<string>()
   const [open, setOpenDialog] = useState<boolean>(false)
+  const [openTrade, setOpenTradeDialog] = useState<boolean>(false)
   useEffect(() => {
     const fetchData = async () => {
       const interesterList: IResponseInteresterList[] = await getPostInterestByPostId(blog?.postData.postId as string)
@@ -278,10 +297,8 @@ function BlogDetail() {
   const handleInterestClick = async () => {
     try {
       if (user?.isValidated && open == false) {
-        if (!isInterested) {
-          const data = await postInterestedPost(blog?.postData.postId as string)
-          setPostInterestId(data)
-          setIsInterested(true)
+        if (!isInterested && openTrade == false) {
+          setOpenTradeDialog(true)
         } else {
           if (postInterestId) {
             await removeInterestedPost(postInterestId)
@@ -295,6 +312,38 @@ function BlogDetail() {
     } catch (error) {
       console.error('Error:', error)
     }
+  }
+  // trade post
+  const postInterestedTrade = useMutation((data: ITradeInterested) => postInterestedPost(data), {
+    onSuccess: (status) => {
+      if (status) {
+        console.log('Successful!!!')
+        toast({
+          title: 'Successful!!!',
+          description: 'Interested trade post success!',
+        })
+        setIsInterested(true)
+        setOpenTradeDialog(false)
+      } else {
+        toast({
+          title: 'Invalid interested trade response',
+          description: 'Interested trade post false',
+        })
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error Submitting Form',
+        description: error.response.data,
+      })
+    },
+  })
+  const onSubmit = (data: FormData) => {
+    const formData: ITradeInterested = {
+      postId: blog?.postData.postId as string,
+      video: data.video as File,
+    }
+    postInterestedTrade.mutate(formData)
   }
 
   //count view
@@ -347,7 +396,7 @@ function BlogDetail() {
               ) : (
                 <div className="m-2 rounded-sm p-3 hover:bg-gray-300" onClick={handleInterestClick}>
                   <HandshakeIcon size={24} className={isInterested ? ' text-orange-400 ' : ''} />
-                  {interesterList.length}
+                  <p className="text-center">{interesterList.length}</p>
                   <Dialog open={open} onOpenChange={setOpenDialog}>
                     <DialogContent className="w-[32rem]">
                       <DialogHeader>
@@ -368,6 +417,37 @@ function BlogDetail() {
                           </Button>
                         </DialogDescription>
                       </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
+                  <Dialog open={openTrade} onOpenChange={setOpenTradeDialog}>
+                    <DialogContent className="h-[12rem] w-[36rem]">
+                      <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                          <FormField
+                            control={form.control}
+                            name="video"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Upload Video</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    className="py-0"
+                                    type="file"
+                                    accept="video/*"
+                                    onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex flex-row justify-between">
+                            <Button disabled={postInterestedTrade.isLoading} type="submit">
+                              {postInterestedTrade.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}
+                              Submit
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
                     </DialogContent>
                   </Dialog>
                 </div>
