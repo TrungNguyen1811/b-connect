@@ -29,7 +29,7 @@ async function putUpdateBook(data: IBookTest) {
   }
 
   return authAxiosClient
-    .put(`/products/update-book`, formData, {
+    .put(`/book/update-book`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

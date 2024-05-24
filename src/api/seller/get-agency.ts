@@ -72,7 +72,7 @@ export { getFinanceForecast }
 
 async function getBestSellerProductIdByNumberOfBookSold(params: Partial<IQueryPagination>) {
   return authAxiosClient
-    .get(`/products/seller-manager/get-best-seller-product-id-by-number-of-book-sold`, { params })
+    .get(`/book/seller-manager/get-best-seller-product-id-by-number-of-book-sold`, { params })
     .then((res) => {
       if (res.status === 200) {
         const data: IBook[] = res.data
@@ -83,14 +83,12 @@ async function getBestSellerProductIdByNumberOfBookSold(params: Partial<IQueryPa
 export { getBestSellerProductIdByNumberOfBookSold }
 
 async function getBestSellerProductIdByRevenue(params: Partial<IQueryPagination>) {
-  return authAxiosClient
-    .get(`/products/seller-manager/get-best-seller-product-id-by-revenue`, { params })
-    .then((res) => {
-      if (res.status === 200) {
-        const data: IBook[] = res.data
-        return data
-      } else return null
-    })
+  return authAxiosClient.get(`/book/seller-manager/get-best-seller-product-id-by-revenue`, { params }).then((res) => {
+    if (res.status === 200) {
+      const data: IBook[] = res.data
+      return data
+    } else return null
+  })
 }
 export { getBestSellerProductIdByRevenue }
 
@@ -103,7 +101,7 @@ async function GetListBestSellerProductIdByRevenueAndAgencyId(
     agencyId: agencyId,
   }
   return authAxiosClient
-    .get(`/products/seller-manager/get-list-best-seller-product-id-by-revenue-and-agency-id`, { params: data })
+    .get(`/book/seller-manager/get-list-best-seller-product-id-by-revenue-and-agency-id`, { params: data })
     .then((res) => {
       if (res.status === 200) {
         const data: IBook[] = res.data

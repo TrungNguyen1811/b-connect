@@ -8,7 +8,7 @@ export type IGetBookResponse = IResponse<IBook>
 
 export async function getBookById(book_Id: string) {
   return await axiosClient
-    .get(`/products/get-product-by-id?bookId=${book_Id}`, {
+    .get(`/book/get-product-by-id?bookId=${book_Id}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -21,7 +21,7 @@ export async function getBookById(book_Id: string) {
 
 export async function SearchBookInInventory(params: Partial<IQueryPagination & IQuerySearch>) {
   return await authAxiosClient
-    .get(`/products/seller-manager/search-book-in-inventory`, {
+    .get(`/book/seller-manager/search-book-in-inventory`, {
       params,
     })
     .then((res) => {
@@ -46,7 +46,7 @@ export async function GetAllBookInInventoryByAgencyId(
     agencyId: agencyId,
   }
   return await authAxiosClient
-    .get(`/products/seller-manager/get-all-book-in-inventory-by-agency-id`, { params: data })
+    .get(`/book/seller-manager/get-all-book-in-inventory-by-agency-id`, { params: data })
     .then((res) => {
       const data: IBook[] = res.data
       const pagination = res.headers['x-pagination']
@@ -69,7 +69,7 @@ export async function GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId(
     agencyId: agencyId,
   }
   return await authAxiosClient
-    .get(`/products/seller-manager/get-list-bestS-seller-productI-id-by-number-of-book-sold-and-agency-id`, {
+    .get(`/book/seller-manager/get-list-bestS-seller-productI-id-by-number-of-book-sold-and-agency-id`, {
       params: data,
     })
     .then((res) => {
@@ -86,7 +86,7 @@ export async function GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId(
 }
 export async function GetAllBookInInventory(params: GetManyBooksParams) {
   return await authAxiosClient
-    .get(`/products/seller-manager/get-all-book-in-inventory`, {
+    .get(`/book/seller-manager/get-all-book-in-inventory`, {
       params,
     })
     .then((res) => {
@@ -113,7 +113,7 @@ export type GetManyBooksParams = {
 
 export async function getManyBooks(params: GetManyBooksParams) {
   return axiosClient
-    .get('/products/get-book-by-all', {
+    .get('/book/get-book-by-all', {
       params,
     })
     .then((res) => {
@@ -130,7 +130,7 @@ export async function getManyBooks(params: GetManyBooksParams) {
 }
 
 export async function getAllBooks() {
-  return axiosClient.get('/products/get-all-book').then((res) => {
+  return axiosClient.get('/book/get-all-book').then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const parseJson: IResponsePagination = JSON.parse(pagination)
@@ -144,7 +144,7 @@ export async function getAllBooks() {
 }
 
 export async function getTopBooks(params: GetManyBooksParams) {
-  return axiosClient.get('/products/get-book-by-quantity', { params }).then((res) => {
+  return axiosClient.get('/book/get-book-by-quantity', { params }).then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IBook[]> = {
@@ -157,7 +157,7 @@ export async function getTopBooks(params: GetManyBooksParams) {
 }
 
 export async function getAllBookGroupOfBook(productId: string) {
-  return axiosClient.get(`/products/book-group/get-all-book-group-of-book?productId=${productId}`).then((res) => {
+  return axiosClient.get(`/book/book-group/get-all-book-group-of-book?productId=${productId}`).then((res) => {
     const data: IResponseBookGroup[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IResponseBookGroup[]> = {
@@ -194,7 +194,7 @@ export async function searchBookGroup(params: GetManyBookGroupsParams) {
 
 export type GetManyBooksGroupParams = Partial<IQueryPagination & IQuerySearch & IBookGroupSearch>
 export async function getAllBookOfBookGroup(params: GetManyBooksGroupParams) {
-  return axiosClient.get('/products/book-group/get-all-book-of-book-group', { params }).then((res) => {
+  return axiosClient.get('/book/book-group/get-all-book-of-book-group', { params }).then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IBook[]> = {
@@ -207,7 +207,7 @@ export async function getAllBookOfBookGroup(params: GetManyBooksGroupParams) {
 }
 
 export async function getAllBookOfBookGroupByBookId(bookId: string) {
-  return axiosClient.get(`/products/book-group/get-all-book-of-book-group-by-book-id?bookId=${bookId}`).then((res) => {
+  return axiosClient.get(`/book/book-group/get-all-book-of-book-group-by-book-id?bookId=${bookId}`).then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IBook[]> = {
@@ -222,7 +222,7 @@ export async function getAllBookOfBookGroupByBookId(bookId: string) {
 export type GetParams = Partial<IDefaultQuery>
 
 export async function findAllBookGroupsByAgency(params: GetParams) {
-  return axiosClient.get('/products/book-group/find-all-book-groups-by-agency', { params }).then((res) => {
+  return axiosClient.get('/book/book-group/find-all-book-groups-by-agency', { params }).then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IBook[]> = {
@@ -235,7 +235,7 @@ export async function findAllBookGroupsByAgency(params: GetParams) {
 }
 
 export async function getAllBookGroupsForAgency(params: GetParams) {
-  return authAxiosClient.get('/products/book-group/-get-all-book-groups-for-agency', { params }).then((res) => {
+  return authAxiosClient.get('/book/book-group/-get-all-book-groups-for-agency', { params }).then((res) => {
     const data: IResponseBookGroup[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IResponseBookGroup[]> = {
@@ -248,7 +248,7 @@ export async function getAllBookGroupsForAgency(params: GetParams) {
 }
 
 export async function getAllBookInInventory(params: GetParams) {
-  return axiosClient.get('/products/book-group/get-all-book-groups-for-agency', { params }).then((res) => {
+  return axiosClient.get('/book/book-group/get-all-book-groups-for-agency', { params }).then((res) => {
     const data: IBook[] = res.data
     const pagination = res.headers['x-pagination']
     const dataAll: IResponse<IBook[]> = {
