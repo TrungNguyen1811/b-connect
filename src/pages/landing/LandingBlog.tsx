@@ -1,7 +1,7 @@
 // import Post from 'src/components/blog/post'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { getRelevantPosts, getUserTargetedTags } from 'src/api/blog/get-blog'
+import { getUserTargetedTags } from 'src/api/blog/get-blog'
 import { postAddUserTargetedCategory } from 'src/api/blog/interested'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import PostGridLoading from 'src/components/blog/loading-post'
@@ -17,20 +17,13 @@ import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
 import { ICategory } from 'src/types'
 import ErrorPage from '../static/error-page'
-import { IResponsePost } from 'src/types/blog'
-import { useCustomQueryDetail } from 'src/hooks/useCustomQueryDetail'
-
-// const initPostState: GetManyPostsParams = {
-//   PageNumber: 0,
-//   PageSize: 100,
-//   // category: undefined,
-// }
+import useGetManyPosts from 'src/hooks/useGetManyPosts'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function LandingBlog() {
   const { user } = useAuth()
-  // const [blogs, setBlogs] = useState<GetManyPostsParams>(initPostState)
-  const { data, isLoading, isError } = useCustomQueryDetail<IResponsePost[]>(() => getRelevantPosts())
-  // const { data, isLoading, isError } = useGetManyPosts(blogs)
+  // const { data, isLoading, isError } = useCustomQueryDetail<IResponsePost[]>(() => getRelevantPosts())
+  const { data, isLoading, isError } = useGetManyPosts()
   const [open, setOpen] = useState(false)
   useEffect(() => {
     const fl = async () => {
@@ -45,7 +38,7 @@ export default function LandingBlog() {
   const navigate = useNavigate()
   const [tags, setTags] = useState<ICategory[]>([])
   const [selectedItems, setSelectedItems] = useState<string[]>([])
-
+  const queryClient = useQueryClient()
   useEffect(() => {
     const fetchCategoryNames = async () => {
       const tags = await getAllCategoryNoParam()
@@ -75,12 +68,11 @@ export default function LandingBlog() {
           title: 'Welcome to BConnect!!!',
         })
         setOpen(false)
-        navigate('/blog')
+        queryClient.invalidateQueries(['posts'])
       } else {
         toast({
           title: 'Ops! Add tags failed ',
         })
-        navigate('/blog')
         setOpen(false)
       }
     })

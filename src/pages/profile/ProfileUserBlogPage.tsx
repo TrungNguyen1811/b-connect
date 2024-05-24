@@ -12,6 +12,7 @@ import { getPostByUserId } from 'src/api/blog/get-blog'
 import { IAnalystPost, IRatingOverall, User } from 'src/types/user'
 import { getUserByUserName, getUserPostData } from 'src/api/user/get-user'
 import { getUserRatingInfo } from 'src/api/review/get-all-review-by-bookId'
+import '@smastrom/react-rating/style.css'
 
 function ProfileUser() {
   const { user } = useAuth()
@@ -26,21 +27,19 @@ function ProfileUser() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user) {
-          const getUser = await getUserByUserName(username as string)
-          setUserData(getUser)
-          const analyst = await getUserPostData()
-          setAnalyst(analyst)
-          const rating = await getUserRatingInfo(getUser.userId as string)
-          setRating(rating)
-        }
+        const getUser = await getUserByUserName(username as string)
+        setUserData(getUser)
+        const analyst = await getUserPostData()
+        setAnalyst(analyst)
+        const rating = await getUserRatingInfo(getUser.userId as string)
+        setRating(rating)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
 
     fetchData()
-  }, [username, user])
+  }, [username])
 
   useEffect(() => {
     const fetchData = async () => {

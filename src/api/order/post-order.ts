@@ -43,7 +43,7 @@ interface IPaymentReturn {
   paymentReturnDTO: {
     paymentId: string
     paymentStatus: number
-    paymentMessage: string
+    // paymentMessage: string
     paymentDate: Date
     paymentRefId: string
     amount: 0

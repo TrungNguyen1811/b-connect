@@ -20,7 +20,7 @@ export enum ENUM_DEPOSIT_TYPE {
 
 export interface IPaymentReturnDTO {
   paymentStatus: string
-  paymentMessage: string
+  // paymentMessage: string
   paymentDate: string
   paymentRefId: string
   amount: number

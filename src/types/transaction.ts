@@ -8,7 +8,7 @@ export interface ITransaction {
   paymentStatus: string
   transactionNo: string
   paymentDate: string
-  paymentMessage: string
+  // paymentMessage: string
   amount: number
   signature: string
   isRefunded: string

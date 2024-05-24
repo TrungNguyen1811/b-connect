@@ -374,17 +374,21 @@ export default function CreateBlog() {
                 <PlateEditor setContentValue={setContent} content={content} />
               </div>
             </ScrollArea>
-            <div className="ml-52 flex flex-row gap-1">
-              <input type="checkbox" checked={agree} onChange={handleAgree} />
-              <p>
-                I have read and agree to the website{' '}
-                <Link to={'/policy'} className="text-orange-500">
-                  privacy policy
-                </Link>
-              </p>
-            </div>
+            {isChecked ? (
+              <div className="ml-52 flex flex-row gap-1">
+                <input type="checkbox" checked={agree} onChange={handleAgree} />
+                <p>
+                  I have read and agree to the website{' '}
+                  <Link to={'/policy'} className="text-orange-500">
+                    privacy policy
+                  </Link>
+                </p>
+              </div>
+            ) : (
+              ''
+            )}
             <div className="mx-52 flex flex-row justify-between py-6">
-              <Button disabled={postBlog.isLoading || !agree} type="submit">
+              <Button disabled={postBlog.isLoading || isChecked ? !agree : agree} type="submit">
                 {postBlog.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Publish
               </Button>
             </div>

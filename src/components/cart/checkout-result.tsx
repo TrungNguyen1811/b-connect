@@ -86,7 +86,7 @@ function CheckoutResult() {
   const paymentData: IPaymentReturnDTO = useMemo(() => {
     return {
       paymentStatus: transaction?.paymentStatus || '',
-      paymentMessage: transaction?.paymentMessage || '',
+      // paymentMessage: transaction?.paymentMessage || '',
       paymentDate: transaction?.paymentDate || '',
       paymentRefId: transaction?.transactionId || '',
       amount: transaction?.amount || 0,

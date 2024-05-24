@@ -2,9 +2,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from 'src/componen
 import { Button } from '../ui/button'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '../ui/use-toast'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ReactTags, Tag } from 'react-tag-autocomplete'
-import { postAddBookCheckList } from 'src/api/blog/interested'
+import { getIsCheckListExisted, postAddBookCheckList } from 'src/api/blog/interested'
 
 interface Props {
   tradeDetailsId: string
@@ -17,9 +17,24 @@ interface Options {
 function TargetsTrade({ tradeDetailsId }: Props) {
   const reactTags = useRef(null)
   const [selected, setSelected] = useState<Tag[]>([])
+  const [existed, setIsExisted] = useState<boolean>()
   const [open, setOpen] = useState<boolean>(false)
   const [options, setOptions] = useState<Options[]>([])
   const queryClient = useQueryClient()
+
+  useEffect(() => {
+    const fetchTradeDetail = async () => {
+      try {
+        const trade = await getIsCheckListExisted(tradeDetailsId as string)
+        setIsExisted(trade)
+        console.log('trade', trade)
+      } catch (error) {
+        console.error('Error fetching trade details:', error)
+      }
+    }
+    fetchTradeDetail()
+  }, [tradeDetailsId])
+
   const listTags = useMemo(() => {
     if (!selected) return
     else return selected.map((ct) => ct.label)
@@ -78,28 +93,34 @@ function TargetsTrade({ tradeDetailsId }: Props) {
     postTarget.mutate(data)
   }
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="flex">
-        <Button>Targets</Button>
-      </DialogTrigger>
-      <DialogContent className="h-[12rem] w-[36rem]">
-        <DialogHeader className="font-semibold">Add 3 targets that require book review</DialogHeader>
-        <ReactTags
-          labelText="Add to 3 targets"
-          selected={selected}
-          suggestions={options}
-          onAdd={onAdd}
-          onDelete={onDelete}
-          noOptionsText="No matching target"
-          delimiterKeys={[',', 'Enter']}
-          allowNew={true}
-          ref={reactTags}
-        />
-        <div className="flex flex-row justify-between">
-          <Button onClick={() => onSubmitTarget()}>Submit</Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <div>
+      {!existed ? (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger className="flex">
+            <Button>Targets</Button>
+          </DialogTrigger>
+          <DialogContent className="h-[12rem] w-[36rem]">
+            <DialogHeader className="font-semibold">Add 3 targets that require book review</DialogHeader>
+            <ReactTags
+              labelText="Add to 3 targets"
+              selected={selected}
+              suggestions={options}
+              onAdd={onAdd}
+              onDelete={onDelete}
+              noOptionsText="No matching target"
+              delimiterKeys={[',', 'Enter']}
+              allowNew={true}
+              ref={reactTags}
+            />
+            <div className="flex flex-row justify-between">
+              <Button onClick={() => onSubmitTarget()}>Submit</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        ''
+      )}
+    </div>
   )
 }
 export default TargetsTrade

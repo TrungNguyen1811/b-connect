@@ -1,13 +1,16 @@
-import { MessageCircle, MoreHorizontalIcon, User2 } from 'lucide-react'
+import { MessageCircle, MoreHorizontalIcon, StarIcon, User2 } from 'lucide-react'
 import { Avatar, AvatarImage } from '../ui/avatar'
 import { useEffect, useState } from 'react'
-import { User } from 'src/types/user'
+import { IRatingOverall, User } from 'src/types/user'
 import { getUserById } from 'src/api/user/get-user'
 import { toast } from '../ui/use-toast'
 import { Link } from 'react-router-dom'
+import { getUserRatingInfo } from 'src/api/review/get-all-review-by-bookId'
+import '@smastrom/react-rating/style.css'
 
 function CardProfile({ userId }: { userId: string }) {
   const [userDetail, setUserDetail] = useState<User | undefined>(undefined)
+  const [rating, setRating] = useState<IRatingOverall>()
 
   useEffect(() => {
     const fetchDataAndUpdateForm = async () => {
@@ -30,6 +33,19 @@ function CardProfile({ userId }: { userId: string }) {
     fetchDataAndUpdateForm()
   }, [userId])
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const rating = await getUserRatingInfo(userId as string)
+        setRating(rating)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <div className="relative w-full rounded-xl border">
       <div className="my-2 w-full px-2">
@@ -46,8 +62,12 @@ function CardProfile({ userId }: { userId: string }) {
         </Link>
         <p className="text-center text-lg font-medium">{userDetail?.fullName}</p>
         <div className="my-2 flex flex-row justify-center gap-1">
-          <p className="text-xs text-gray-400">Rating: 5*</p>
-          <p className="text-xs text-gray-400">|</p>
+          <Link
+            to={`/blog/user/rating/${userId}`}
+            className=" flex flex-row items-center gap-1 px-4 text-xs text-gray-400 hover:text-orange-500"
+          >
+            Rating: <StarIcon className="h-3 w-3" /> {rating?.overallRating}
+          </Link>
           <p className=" text-xs text-gray-400">{userDetail?.createdAt as string}</p>
         </div>
         <div className="flex flex-row justify-center gap-2">

@@ -70,8 +70,8 @@ async function getTradeDetailByPostId(postId: string) {
 }
 export { getTradeDetailByPostId }
 
-async function getTradeDetailById(tradeDeatailsId: string) {
-  return authAxiosClient.get(`/trading/get-trade-details-by-id?tradeDeatailsId=${tradeDeatailsId}`).then((res) => {
+async function getTradeDetailById(tradeDetailsId: string) {
+  return authAxiosClient.get(`/trading/get-trade-details-by-id?tradeDetailsId=${tradeDetailsId}`).then((res) => {
     const trade: ITradeDetail = res.data
     return trade
   })
@@ -85,6 +85,14 @@ async function getCheckList(traderId: string) {
   })
 }
 export { getCheckList }
+
+async function getIsCheckListExisted(tradeDetailsId: string) {
+  return authAxiosClient.get(`/trading/is-checklist-existed?tradeDetailsId=${tradeDetailsId}`).then((res) => {
+    const trade = res.data
+    return trade
+  })
+}
+export { getIsCheckListExisted }
 
 async function postInterestedPost(data: string) {
   const formData = new FormData()
