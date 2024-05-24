@@ -59,7 +59,7 @@ export const columns: ColumnDef<IResponseAds>[] = [
   },
   {
     accessorKey: 'agencyId',
-    header: 'Agency Id',
+    header: 'Seller Id',
   },
   {
     accessorKey: 'bannerTitle',

@@ -25,7 +25,6 @@ export default function PostTagPage() {
   const { tag } = useParams()
   const { data, isLoading, isError, refetch } = useCustomQueryDetail<IResponsePost[]>(() => getTagPosts(tag as string))
   const [open, setOpen] = useState(false)
-
   useEffect(() => {
     refetch()
   }, [tag])

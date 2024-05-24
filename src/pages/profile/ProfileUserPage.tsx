@@ -94,6 +94,7 @@ function InfoAccount() {
         title: 'Successful!!',
         description: 'Update User Success',
       })
+      // await updateUserState()
       setUser(updateUser)
       queryClient.invalidateQueries()
     },
@@ -113,6 +114,29 @@ function InfoAccount() {
     }
     updateUser(updatedData)
   }
+
+  // let token: IToken
+  // const updateUserState = async () => {
+  //   const data = await refreshToken()
+  //   token = { accessToken: data.accessToken }
+  //   await profileApi(token.accessToken, (err, user) => {
+  //     if (err) {
+  //       toast({
+  //         title: err.message,
+  //         description: err.cause?.message,
+  //         variant: 'destructive',
+  //       })
+  //     } else {
+  //       if (!user) {
+  //         return
+  //       }
+  //       login({
+  //         user,
+  //         token,
+  //       })
+  //     }
+  //   })
+  // }
 
   const { mutate: updatePhone } = useMutation((phone: string) => postPhoneApi(phone), {
     onSuccess: (data) => {

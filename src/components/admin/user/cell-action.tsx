@@ -22,7 +22,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const navigate = useNavigate()
   // const onConfirm = async () => {}
   return (
-    <div className="flex w-16 flex-row items-center gap-2">
+    <div className="flex w-24 flex-row items-center gap-2">
       {/* <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} /> */}
       <div className="flex gap-2">
         {data.userId && (data.isBanned ? <UpdateBanUser userId={data.userId} /> : <BanUser userId={data.userId} />)}

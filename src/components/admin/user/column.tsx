@@ -39,8 +39,8 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: 'roles',
     header: 'Role',
     cell: ({ getValue }) => {
-      const role = getValue() as string[]
-      return <div className="w-[4rem]">{role}</div>
+      const role = (getValue() as string[]) ?? []
+      return <div className="w-[8rem]">{role.join(', ')}</div>
     },
   },
   {

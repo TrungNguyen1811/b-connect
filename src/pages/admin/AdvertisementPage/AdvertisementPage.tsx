@@ -157,8 +157,8 @@ function AdvertisementAdminPage() {
                         name="agencyId"
                         render={({ field }) => (
                           <FormItem className="flex flex-row items-center justify-start gap-2">
-                            <FormLabel className=" w-24">Agency Id</FormLabel>
-                            <Input className="w-80" placeholder="Agency Id" {...field} />
+                            <FormLabel className=" w-24">Seller Id</FormLabel>
+                            <Input className="w-80" placeholder="Seller Id" {...field} />
                           </FormItem>
                         )}
                       />

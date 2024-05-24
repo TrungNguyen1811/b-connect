@@ -6,7 +6,7 @@ import { IDefaultQuery } from 'src/types/requests'
 import { IResponse, IResponsePagination } from 'src/types/response'
 
 export async function getBlogActive(): Promise<IResponsePost[]> {
-  return axiosClient.get(`/post/most-liked`).then((res) => res.data)
+  return axiosClient.get(`/post/get-most-liked`).then((res) => res.data)
 }
 
 export async function getInterestedByUserId(userId: string): Promise<ICategory[]> {

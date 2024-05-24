@@ -38,6 +38,9 @@ const TradeManagerPage = React.lazy(() => import('src/pages/admin/Trade/TradeMan
 const TransactionManagePage = React.lazy(() => import('src/pages/admin/Transaction/TransactionManagePage'))
 const RefundManagePage = React.lazy(() => import('src/pages/admin/Refund/RefundManagePage'))
 const AdvertisementAdminPage = React.lazy(() => import('src/pages/admin/AdvertisementPage/AdvertisementPage'))
+const CheckoutAdsAdminResultPage = React.lazy(
+  () => import('src/pages/admin/AdvertisementPage/AdvertisementCheckoutPage'),
+)
 
 const SellerLayout = React.lazy(() => import('src/pages/layout/SellerLayout'))
 const MyShop = React.lazy(() => import('src/pages/seller/MyShop'))
@@ -245,6 +248,10 @@ export const ROUTES = createBrowserRouter([
       {
         path: 'admin/manage/advertisement',
         element: <AdvertisementAdminPage />,
+      },
+      {
+        path: 'admin/manage/advertisement/checkout-result',
+        element: <CheckoutAdsAdminResultPage />,
       },
       {
         path: '/admin/manage/trade',

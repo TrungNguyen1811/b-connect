@@ -24,6 +24,7 @@ export default function LandingBlog() {
   const { user } = useAuth()
   // const { data, isLoading, isError } = useCustomQueryDetail<IResponsePost[]>(() => getRelevantPosts())
   const { data, isLoading, isError } = useGetManyPosts()
+  console.log('d0', data)
   const [open, setOpen] = useState(false)
   useEffect(() => {
     const fl = async () => {

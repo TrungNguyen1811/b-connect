@@ -69,7 +69,7 @@ export async function GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId(
     agencyId: agencyId,
   }
   return await authAxiosClient
-    .get(`/book/seller-manager/get-list-bestS-seller-productI-id-by-number-of-book-sold-and-agency-id`, {
+    .get(`/book/seller-manager/get-list-best-seller-product-id-by-number-of-book-sold-and-agency-id`, {
       params: data,
     })
     .then((res) => {

@@ -42,8 +42,8 @@ function UserDetailPage() {
       <Separator className="mt-4" />
       <div className="mt-8 flex flex-row items-center justify-start gap-16">
         <div className="">
-          <Avatar>
-            <AvatarImage src={user?.avatarDir as string} />
+          <Avatar className="h-24 w-24">
+            <AvatarImage className="h-24 w-24" src={user?.avatarDir as string} />
           </Avatar>
           <div>
             <p>UserId: {user?.userId}</p>
@@ -51,7 +51,7 @@ function UserDetailPage() {
             {/* <p>Full Name</p> */}
             <p>Email: {user.email}</p>
             <p>Phone: {user.phone}</p>
-            <p>Role: {user.roles}</p>
+            <p>Role: {user.roles?.join(', ')}</p>
             <p>Address:{user.addressId}</p>
           </div>
           <div>

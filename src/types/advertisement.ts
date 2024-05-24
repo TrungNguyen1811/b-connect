@@ -21,7 +21,7 @@ export interface ICheckoutAds {
   duration: string
   numberOfTargetUser?: number
   ppc_Price?: number
-  bookId?: string
+  bookId?: string | null
   displayBid?: number | null
   agencyId?: string
   bannerTitle?: string
