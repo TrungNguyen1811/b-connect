@@ -26,7 +26,7 @@ async function postBlogApi(blogData: {
   }
 
   return await authAxiosClient
-    .post('/Post/add-new-post', data, {
+    .post('/post/add-new-post', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -75,7 +75,7 @@ async function updateBlogApi(blogData: {
   }
 
   return await authAxiosClient
-    .put('/Post/update-post', data, {
+    .put('/post/update-post', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -137,7 +137,7 @@ export { unFollowingFromInterested }
 
 async function addNewSavedPost(postId: string) {
   return await authAxiosClient
-    .post(`/Post/add-new-user-saved-post?postId=${postId}`, {})
+    .post(`/post/add-new-user-saved-post?postId=${postId}`, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -156,7 +156,7 @@ export { addNewSavedPost }
 
 async function postLikePost(postId: string) {
   return await authAxiosClient
-    .post(`/Post/like-post?postId=${postId}`, {})
+    .post(`/post/like-post?postId=${postId}`, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -175,7 +175,7 @@ export { postLikePost }
 
 async function addSocialTag(data: { tagNames: string[]; postId: string }) {
   return await axiosClient
-    .post(`/SocialMedia/add-social-tag`, data)
+    .post(`/social-media/add-social-tag`, data)
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -194,7 +194,7 @@ export { addSocialTag }
 
 async function postBanPost(postId: string) {
   return await authAxiosClient
-    .put(`/Post/ban-post?postId=${postId}`, {})
+    .put(`/post/ban-post?postId=${postId}`, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -213,7 +213,7 @@ export { postBanPost }
 
 async function postUnbanPost(postId: string) {
   return await authAxiosClient
-    .put(`/Post/un-ban-post?postId=${postId}`, {})
+    .put(`/post/un-ban-post?postId=${postId}`, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data

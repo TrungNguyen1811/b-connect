@@ -6,7 +6,7 @@ import { IDefaultQuery } from 'src/types/requests'
 import { IResponse, IResponsePagination } from 'src/types/response'
 
 export async function getBlogActive(): Promise<IResponsePost[]> {
-  return axiosClient.get(`/Post/mostliked`).then((res) => res.data)
+  return axiosClient.get(`/post/most-liked`).then((res) => res.data)
 }
 
 export async function getInterestedByUserId(userId: string): Promise<ICategory[]> {
@@ -14,28 +14,28 @@ export async function getInterestedByUserId(userId: string): Promise<ICategory[]
 }
 
 export async function getPostByIdApi(id: string) {
-  return axiosClient.get(`/Post/get-post-by-id?postId=${id}`).then((res) => {
+  return axiosClient.get(`/post/get-post-by-id?postId=${id}`).then((res) => {
     const data: IResponsePost = res.data
     return data
   })
 }
 
 export async function getCheckLikePosts(postId: string) {
-  return authAxiosClient.get(`/Post/get-post-likes?postId=${postId}`).then((res) => {
+  return authAxiosClient.get(`/post/get-post-likes?postId=${postId}`).then((res) => {
     const data = res.data
     return data
   })
 }
 
 export async function getUserSavedPosts() {
-  return authAxiosClient.get(`/Post/get-user-saved-posts`).then((res) => {
+  return authAxiosClient.get(`/post/get-user-saved-posts`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })
 }
 
 export async function getUserTargetedTags() {
-  return authAxiosClient.get('/SocialMedia/get-user-targeted-categories').then((res) => {
+  return authAxiosClient.get('/social-media/get-user-targeted-categories').then((res) => {
     const data: IResponseTag[] = res.data
     return data
   })
@@ -47,7 +47,7 @@ export type GetManyPostsParams = {
 
 export async function getAllPosts(params: GetManyPostsParams) {
   return axiosClient
-    .get('/Post/get-all-post', {
+    .get('/post/get-all-post', {
       params,
     })
     .then((res) => {
@@ -64,34 +64,34 @@ export async function getAllPosts(params: GetManyPostsParams) {
 }
 
 export async function getAllPostsByUser() {
-  return axiosClient.get('/Post/get-all-post-user-view').then((res) => {
+  return axiosClient.get('/post/get-all-post-user-view').then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })
 }
 
 export async function getRelevantPosts() {
-  return authAxiosClient.get(`/Post/user-targeted-post`).then((res) => {
+  return authAxiosClient.get(`/post/user-targeted-post`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })
 }
 export async function getTagPosts(cateName: string) {
-  return axiosClient.get(`/Post/tag-list-post?cateName=${cateName}`).then((res) => {
+  return axiosClient.get(`/post/tag-list-post?cateName=${cateName}`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })
 }
 
 export async function getPostByUserId(userId: string) {
-  return axiosClient.get(`/Post/get-post-by-user?userId=${userId}`).then((res) => {
+  return axiosClient.get(`/post/get-post-by-user?userId=${userId}`).then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })
 }
 
 export async function checkUserLikePost(postId: string) {
-  return authAxiosClient.get(`/Post/check-user-like-or-not?postId=${postId}`).then((res) => {
+  return authAxiosClient.get(`/post/check-user-like-or-not?postId=${postId}`).then((res) => {
     const data = res.data
     return data
   })

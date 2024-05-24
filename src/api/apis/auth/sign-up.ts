@@ -6,8 +6,8 @@ import { IErrorResponse } from 'src/types/response'
 type ISignup = z.infer<typeof RegisterSchema>
 async function signUpApi(data: ISignup, callback: (error: AxiosError<IErrorResponse> | null) => void) {
   return await axiosClient
-    // .post('http://bconnect-apis.gvhcdxe3bwcehwgv.southeastasia.azurecontainer.io/api/Account/SignUp', {
-    .post('/Account/SignUp', {
+    // .post('http://bconnect-apis.gvhcdxe3bwcehwgv.southeastasia.azurecontainer.io/api/account/SignUp', {
+    .post('/account/sign-up', {
       ...data,
     })
     .then((err) => {

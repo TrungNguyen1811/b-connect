@@ -1,7 +1,7 @@
 import { axiosClient } from 'src/lib/axios'
 export default async function refreshToken() {
   return axiosClient
-    .get('/Account/RefreshToken', {
+    .get('/account/refresh-token', {
       withCredentials: true,
     })
     .then((res) => {

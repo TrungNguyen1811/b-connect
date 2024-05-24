@@ -9,7 +9,7 @@ async function SetIsAccountValidates(
 ) {
   return await authAxiosClient
     .put(
-      `/Account/set-is-account-validated`,
+      `/account/set-is-account-validated`,
       {
         userId: userId,
         choice: 'true',
@@ -32,7 +32,7 @@ async function registerAccountValidates(
   callback: (error: AxiosError | null, result: IToken | null) => void,
 ) {
   return await axiosClient
-    .put(`/Account/set-is-account-validated`, data)
+    .put(`/account/set-is-account-validated`, data)
     .then((err) => {
       if (err.status === 200) {
         const token: IToken = {
@@ -49,7 +49,7 @@ export { registerAccountValidates }
 
 async function updateNicData(data: IRegisterNIC, callback: (error: AxiosError | null, result: IToken | null) => void) {
   return await axiosClient
-    .put(`/Account/update-nic-data`, data)
+    .put(`/account/update-nic-data`, data)
     .then((err) => {
       if (err.status === 200) {
         const token: IToken = {

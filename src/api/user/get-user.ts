@@ -22,7 +22,7 @@ export async function getTotalSpend(data: { year: string; month: string; custome
     year: parseInt(data.year),
   }
   return authAxiosClient
-    .get(`/Order/total-spend?Year=${setData.year}&Month=${setData.month}&customerId=${setData.customerId}`)
+    .get(`/order/total-spend?Year=${setData.year}&Month=${setData.month}&customerId=${setData.customerId}`)
     .then((res) => {
       const data = res.data
       return data
@@ -30,20 +30,20 @@ export async function getTotalSpend(data: { year: string; month: string; custome
 }
 
 export async function getCompareMonth(customerId: string) {
-  return authAxiosClient.get(`/Order/compare-spend-this-month-to-last-month?customerId=${customerId}`).then((res) => {
+  return authAxiosClient.get(`/order/compare-spend-this-month-to-last-month?customerId=${customerId}`).then((res) => {
     const data = res.data
     return data
   })
 }
 
 export async function getUserPostData() {
-  return authAxiosClient.get(`/Account/user-data`).then((res) => {
+  return authAxiosClient.get(`/account/user-data`).then((res) => {
     return res.data
   })
 }
 
 export async function getUserDashboardPost() {
-  return authAxiosClient.get(`/Account/user-post-data`).then((res) => {
+  return authAxiosClient.get(`/account/user-post-data`).then((res) => {
     return res.data
   })
 }

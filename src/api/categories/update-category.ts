@@ -13,7 +13,7 @@ export async function updateCategoryApi(id: string, data: ICategory) {
   console.log('data.imageDir', data.imageDir)
 
   return await axiosClient
-    .put('/Category/update-category', formData, {
+    .put('/category/update-category', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

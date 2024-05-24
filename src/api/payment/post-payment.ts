@@ -3,7 +3,7 @@ import { IPaymentRefund, IPaymentTrade } from 'src/types/blog'
 
 async function postPaymentTrade(data: IPaymentTrade) {
   return await authAxiosClient
-    .post('/Payment/pre-trade-checkout', {
+    .post('/payment/pre-trade-checkout', {
       tradeDetailsId: data.tradeDetailsId,
       transactionId: data.transactionId,
       isUsingMiddle: data.isUsingMiddle,
@@ -26,7 +26,7 @@ export { postPaymentTrade }
 
 async function postPaymentRefund(data: IPaymentRefund) {
   return await authAxiosClient
-    .post('/Payment/vnpay/create-refund-request', {
+    .post('/payment/vnpay/create-refund-request', {
       transId: data.transId,
       amount: data.amount,
     })

@@ -57,7 +57,7 @@ async function putUpdateBookGroup(data: IBookGroup) {
   }
 
   return authAxiosClient
-    .put(`/BookGroup/UpdateBookGroup`, formData, {
+    .put(`/book-group/UpdateBookGroup`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

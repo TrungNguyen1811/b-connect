@@ -3,7 +3,7 @@ import { DataCart } from 'src/hooks/useOrderCart'
 
 async function postCartApi(dataCart: DataCart[]) {
   return await authAxiosClient
-    .post('/Cart/update-products-to-cart', dataCart, {})
+    .post('/cart/update-products-to-cart', dataCart, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data

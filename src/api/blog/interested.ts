@@ -5,7 +5,7 @@ import { IResponseInteresterList, IResponseTraderList } from 'src/types/interest
 import { IReportUser, IReviewUser } from 'src/types/user'
 
 export async function getAllPosts() {
-  return axiosClient.get('/Post/get-all-post').then((res) => {
+  return axiosClient.get('/post/get-all-post').then((res) => {
     const data: IResponsePost[] = res.data
     return data
   })
@@ -216,7 +216,7 @@ export { postReportUserPostTrade }
 
 async function postAddUserTargetedCategory(tags: string[]) {
   return await authAxiosClient
-    .post('/SocialMedia/add-user-targeted-category', tags)
+    .post('/social-media/add-user-targeted-category', tags)
     .then((response) => {
       if (response.status === 200) {
         return response.data

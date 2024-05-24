@@ -5,7 +5,7 @@ import { User } from 'src/types/user'
 
 export async function getAllUser(params: Partial<IQueryPagination & IQuerySearch>) {
   return authAxiosClient
-    .get('/Admin/get-all-user', {
+    .get('/admin/get-all-user', {
       params,
     })
     .then((res) => {

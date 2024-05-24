@@ -12,7 +12,7 @@ async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null
   formData.append('businessType', data.businessType as string)
 
   return await authAxiosClient
-    .post('/Account/register-agency', formData, {
+    .post('/account/register-agency', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -3,7 +3,7 @@ import { IAddress } from 'src/types/address'
 
 export async function getAllAddress(userId: string) {
   return axiosClient
-    .get('/Address/get-all-user-address', {
+    .get('/address/get-all-user-address', {
       params: {
         PageNumber: 1,
         PageSize: 10,
@@ -17,7 +17,7 @@ export async function getAllAddress(userId: string) {
 }
 
 export async function getAddressByAddressId(addressId: string) {
-  return axiosClient.get(`/Address/get-address-by-addressId?addressId=${addressId}`).then((res) => {
+  return axiosClient.get(`/address/get-address-by-addressId?addressId=${addressId}`).then((res) => {
     const data: IAddress = res.data
     return data
   })

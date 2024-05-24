@@ -647,9 +647,9 @@ export default function SubmitTrade() {
             <div className="flex flex-col items-end justify-end gap-2">
               <div className="flex flex-row justify-end gap-2">
                 <TargetsTrade tradeDetailsId={tradeDetailId} />
-                <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
+                {/* <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}>
                   View Check List
-                </Button>
+                </Button> */}
               </div>
               <div className=" text-red-600">Interested person has not confirmed</div>
             </div>
@@ -663,7 +663,6 @@ export default function SubmitTrade() {
               <div className="flex flex-col items-center justify-center gap-2">
                 <div className="flex flex-row justify-end gap-2">
                   <TargetsTrade tradeDetailsId={tradeDetailId} />
-
                   <Button className="" onClick={() => handlePutStatusTrade(2)}>
                     Confirm Trade Info
                   </Button>

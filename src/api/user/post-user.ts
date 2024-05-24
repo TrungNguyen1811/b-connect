@@ -34,7 +34,7 @@ async function updateUserProfileApi(userData: User) {
   }
 
   return await authAxiosClient
-    .put('/Account/update-user-profile', formData, {
+    .put('/account/update-user-profile', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -56,7 +56,7 @@ async function updateUserProfileApi(userData: User) {
 export { updateUserProfileApi }
 async function postPhoneApi(number: string) {
   return await authAxiosClient
-    .post('/Account/send-sms', number, {})
+    .post('/account/send-sms', number, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -75,7 +75,7 @@ export { postPhoneApi }
 
 async function postVerifyPhoneApi(data: IVerifySMS) {
   return await authAxiosClient
-    .post('/Account/verify-phone', data, {})
+    .post('/account/verify-phone', data, {})
     .then((response) => {
       if (response.status === 200) {
         const data: IResponsePhone = response.data
@@ -95,7 +95,7 @@ export { postVerifyPhoneApi }
 
 async function postChangePasswordApi(data: IChangePassword) {
   return await authAxiosClient
-    .post('/Account/change-password', data, {})
+    .post('/account/change-password', data, {})
     .then((response) => {
       if (response.status === 200) {
         const data = response.data

@@ -107,15 +107,15 @@ function ChangePassword() {
                 <div className="py-2">
                   <FormField
                     control={formPassword.control}
-                    name="confirmPassword"
+                    name="newPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className=" mb-2">Confirm Password</FormLabel>
+                        <FormLabel className=" mb-2">New Password</FormLabel>
                         <FormControl>
                           <Input
                             className=" w-full px-3 py-2"
                             type="password"
-                            placeholder="Enter confirm password"
+                            placeholder="Enter new password"
                             {...field}
                           />
                         </FormControl>
@@ -127,15 +127,15 @@ function ChangePassword() {
                 <div className="py-2">
                   <FormField
                     control={formPassword.control}
-                    name="newPassword"
+                    name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className=" mb-2">New Password</FormLabel>
+                        <FormLabel className=" mb-2">Confirm Password</FormLabel>
                         <FormControl>
                           <Input
                             className=" w-full px-3 py-2"
                             type="password"
-                            placeholder="Enter new password"
+                            placeholder="Enter confirm password"
                             {...field}
                           />
                         </FormControl>

@@ -4,7 +4,7 @@ import { IResponse, IResponsePagination } from 'src/types/response'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
 async function getOrderApi(_id: string) {
-  return await authAxiosClient.get(`/Order/${_id}`, {}).then((response) => {
+  return await authAxiosClient.get(`/order/${_id}`, {}).then((response) => {
     return response.data
   })
 }
@@ -12,7 +12,7 @@ async function getOrderApi(_id: string) {
 export { getOrderApi }
 
 async function getTransaction(_id: string) {
-  return await authAxiosClient.get(`/Order/get-transaction-by-id?refId=${_id}`, {}).then((response) => {
+  return await authAxiosClient.get(`/order/get-transaction-by-id?refId=${_id}`, {}).then((response) => {
     return response.data
   })
 }
@@ -20,7 +20,7 @@ async function getTransaction(_id: string) {
 export { getTransaction }
 
 async function getOrderHistoryApi(type: string, userId: string) {
-  return await axiosClient.get(`/Order/order-history?userId=${userId}&type=${type}`, {}).then((response) => {
+  return await axiosClient.get(`/order/order-history?userId=${userId}&type=${type}`, {}).then((response) => {
     const data: IResponseOrder[] = response.data
     // const pagination = response.headers['x-pagination']
     // const parseJson: IResponsePagination = JSON.parse(pagination)
@@ -46,7 +46,7 @@ export type GetManyOrderParams = {
   PageSize?: number
 } & Partial<IQueryPagination & IQuerySearch>
 async function SearchOrders(params: GetManyOrderParams) {
-  return await authAxiosClient.get(`/Order/SearchOrders`, { params }).then((response) => {
+  return await authAxiosClient.get(`/order/search-orders`, { params }).then((response) => {
     const data: IResponseOrderAgency[] = response.data
     const pagination = response.headers['x-pagination']
     const parseJson: IResponsePagination = JSON.parse(pagination)
@@ -61,7 +61,7 @@ async function SearchOrders(params: GetManyOrderParams) {
 export { SearchOrders }
 
 async function getOrderDetail(orderId: string) {
-  return await authAxiosClient.get(`/Order/GetOrderDetail?id=${orderId}`).then((response) => {
+  return await authAxiosClient.get(`/order/get-order-detail?id=${orderId}`).then((response) => {
     const data: IResponseOrderAgencyDetail = response.data
     return data
   })

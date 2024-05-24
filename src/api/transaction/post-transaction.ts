@@ -3,7 +3,7 @@ import { IRefund } from 'src/types/transaction'
 
 export async function postCreateRefundRequest(data: IRefund) {
   return await authAxiosClient
-    .post(`Transaction/create-refund-request`, {
+    .post(`/transaction/create-refund-request`, {
       transactionId: data.transactionId,
       reason: data.reason,
     })
@@ -23,7 +23,7 @@ export async function postCreateRefundRequest(data: IRefund) {
 
 export async function deleteRefundRequest(refundRequestId: string) {
   return await authAxiosClient
-    .delete(`Transaction/delete-refund-request?refundRequestId=${refundRequestId}`)
+    .delete(`transaction/delete-refund-request?refundRequestId=${refundRequestId}`)
     .then((response) => {
       if (response.status === 200) {
         return response.data

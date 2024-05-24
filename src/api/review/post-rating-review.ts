@@ -9,7 +9,7 @@ async function postRatingComment(data: IReview): Promise<IReviewResponse> {
   formData.append('Comment', data.comment as string)
 
   try {
-    const response = await axiosClient.post('/Account/rate-and-comment', formData, {
+    const response = await axiosClient.post('/account/rate-and-comment', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -34,7 +34,7 @@ export { postRatingComment }
 
 async function replyReview(data: IReply) {
   try {
-    const response = await axiosClient.post('/Account/add-reply', data)
+    const response = await axiosClient.post('/account/add-reply', data)
     return response.data
   } catch (error) {
     throw new Error('Failed to reply review')
@@ -45,7 +45,7 @@ export { replyReview }
 
 async function updateReplyReview(data: IReply) {
   try {
-    const response = await axiosClient.post('/Account/update-reply', data)
+    const response = await axiosClient.post('/account/update-reply', data)
     return response.data
   } catch (error) {
     throw new Error('Failed to reply review')

@@ -5,7 +5,7 @@ import { IRefund, ITransaction } from 'src/types/transaction'
 
 export async function getAllTransaction(params: Partial<IQueryPagination & IQuerySearch>) {
   return await authAxiosClient
-    .get(`/Transaction/get-all-transaction`, {
+    .get(`/transaction/get-all-transaction`, {
       params,
     })
     .then((res) => {
@@ -22,7 +22,7 @@ export async function getAllTransaction(params: Partial<IQueryPagination & IQuer
 }
 export async function getAllTransactionByUser(params: Partial<IQueryPagination & IQuerySearch>) {
   return await authAxiosClient
-    .get(`/Transaction/get-all-user-transaction`, {
+    .get(`/transaction/get-all-user-transaction`, {
       params,
     })
     .then((res) => {
@@ -40,7 +40,7 @@ export async function getAllTransactionByUser(params: Partial<IQueryPagination &
 
 export async function getAllRefund(params: Partial<IQueryPagination & IQuerySearch>) {
   return await authAxiosClient
-    .get(`/Transaction/get-all-refund-request`, {
+    .get(`/transaction/get-all-refund-request`, {
       params,
     })
     .then((res) => {
@@ -58,7 +58,7 @@ export async function getAllRefund(params: Partial<IQueryPagination & IQuerySear
 
 export async function getAllRefundByUser(params: Partial<IQueryPagination & IQuerySearch>) {
   return await authAxiosClient
-    .get(`/Transaction/get-all-refund-request-by-a-user`, {
+    .get(`/transaction/get-all-refund-request-by-a-user`, {
       params,
     })
     .then((res) => {
