@@ -1,5 +1,6 @@
 import { IResponsePhone, IVerifySMS, User } from 'src/types/user'
 import { authAxiosClient } from '../../lib/axios'
+import { IChangePassword } from 'src/pages/profile/ChangePasswordPage'
 
 async function postUserApi(userData: User) {
   return await authAxiosClient
@@ -91,3 +92,23 @@ async function postVerifyPhoneApi(data: IVerifySMS) {
 }
 
 export { postVerifyPhoneApi }
+
+async function postChangePasswordApi(data: IChangePassword) {
+  return await authAxiosClient
+    .post('/Account/change-password', data, {})
+    .then((response) => {
+      if (response.status === 200) {
+        const data = response.data
+        return data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postChangePasswordApi }

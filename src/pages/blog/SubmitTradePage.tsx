@@ -662,11 +662,8 @@ export default function SubmitTrade() {
             {userTrade.details.isUsingMiddle ? (
               <div className="flex flex-col items-center justify-center gap-2">
                 <div className="flex flex-row justify-end gap-2">
-                  <Button
-                    onClick={() => navigate(`/blog/dashboard/check-list/view/${userTrade?.details.tradeDetailId}`)}
-                  >
-                    View Check List
-                  </Button>
+                  <TargetsTrade tradeDetailsId={tradeDetailId} />
+
                   <Button className="" onClick={() => handlePutStatusTrade(2)}>
                     Confirm Trade Info
                   </Button>

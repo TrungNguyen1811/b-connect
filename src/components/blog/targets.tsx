@@ -5,6 +5,7 @@ import { toast } from '../ui/use-toast'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ReactTags, Tag } from 'react-tag-autocomplete'
 import { getIsCheckListExisted, postAddBookCheckList } from 'src/api/blog/interested'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   tradeDetailsId: string
@@ -21,6 +22,7 @@ function TargetsTrade({ tradeDetailsId }: Props) {
   const [open, setOpen] = useState<boolean>(false)
   const [options, setOptions] = useState<Options[]>([])
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchTradeDetail = async () => {
@@ -118,7 +120,7 @@ function TargetsTrade({ tradeDetailsId }: Props) {
           </DialogContent>
         </Dialog>
       ) : (
-        ''
+        <Button onClick={() => navigate(`/blog/dashboard/check-list/view/${tradeDetailsId}`)}>View Check List</Button>
       )}
     </div>
   )

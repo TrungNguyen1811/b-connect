@@ -1,20 +1,26 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { postChangePasswordApi } from 'src/api/user/post-user'
 import { Button } from 'src/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from 'src/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
+import { toast } from 'src/components/ui/use-toast'
+import { useAuth } from 'src/hooks/useAuth'
 import { z } from 'zod'
 
-interface IChangePassword {
-  oldPassword: string
+export interface IChangePassword {
+  email: string
+  currentPassword: string
   confirmPassword: string
   newPassword: string
 }
 
 const formSchemaPassword = z
   .object({
-    oldPassword: z.string(),
+    currentPassword: z.string(),
     newPassword: z.string(),
     confirmPassword: z.string(),
   })
@@ -34,9 +40,36 @@ function ChangePassword() {
   const formPassword = useForm<FormData>({
     resolver: zodResolver(formSchemaPassword),
   })
-
-  const onSubmitPassword = (data: IChangePassword) => {
-    //
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  const changePassword = useMutation((data: IChangePassword) => postChangePasswordApi(data), {
+    onSuccess: (data) => {
+      if (data == 1) {
+        toast({
+          title: 'Change Password Successful',
+        })
+        logout()
+        navigate('/login')
+      } else if (data == 0) {
+        toast({
+          title: 'Change Password Failed',
+        })
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error when handle action change password',
+      })
+    },
+  })
+  const onSubmitPassword = (data: FormData) => {
+    const formData: IChangePassword = {
+      email: user?.email as string,
+      currentPassword: data.currentPassword,
+      confirmPassword: data.confirmPassword,
+      newPassword: data.newPassword,
+    }
+    changePassword.mutate(formData)
   }
   return (
     <Card className="justify-center p-4">
@@ -46,16 +79,15 @@ function ChangePassword() {
       </CardHeader>
       <CardContent className="mx-10 space-y-2">
         <Form {...formPassword}>
-          <form>
+          <form onSubmit={formPassword.handleSubmit(onSubmitPassword)}>
             <div className="ml-4 flex flex-row items-center">
-              <div className="flex w-2/3 flex-col  rounded-md border border-2 bg-white px-4 py-8">
+              <div className="flex w-2/3 flex-col  rounded-md border bg-white px-4 py-8">
                 <p className="text-lg font-semibold">Change Password</p>
 
-                {/* <form onSubmit={formPassword.handleSubmit(onSubmitPassword)}> */}
                 <div className="py-2">
                   <FormField
                     control={formPassword.control}
-                    name="oldPassword"
+                    name="currentPassword"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className=" mb-2">Currently Password</FormLabel>
