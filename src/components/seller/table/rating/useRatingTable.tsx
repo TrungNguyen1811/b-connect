@@ -69,7 +69,7 @@ export function useRatingTable(columns: ColumnDef<IListReplyResponse>[]) {
     const otherFilters = tableStates.columnFilters
     setQueries((prev) => ({
       ...prev,
-      ratingPoint: otherFilters?.[0]?.value,
+      RatingPoint: otherFilters?.[0]?.value,
       PageNumber: tableStates.pagination.pageIndex + 1,
       PageSize: tableStates.pagination.pageSize,
       BookName: tableStates.globalFilter || undefined,

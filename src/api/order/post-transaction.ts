@@ -2,7 +2,7 @@ import { authAxiosClient } from '../../lib/axios'
 
 async function SaveTransaction(transactionId: string) {
   return await authAxiosClient
-    .post(`/Payment/save-transactor?transactionId=${transactionId}`)
+    .post(`/payment/save-transactor?transactionId=${transactionId}`)
     .then((response) => {
       if (response.status === 200) {
         return response.data

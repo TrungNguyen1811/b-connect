@@ -1,13 +1,12 @@
 import { useQueries } from '@tanstack/react-query'
-import React, { useMemo } from 'react'
-import { useLoaderData } from 'react-router-dom'
-import { GetListBestSellerProductIdByRevenueAndAgencyId } from 'src/api/seller/get-agency'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Link, useLoaderData } from 'react-router-dom'
+import { GetListBestSellerProductIdByRevenueAndAgencyId, getAgencyStat } from 'src/api/seller/get-agency'
 import {
   GetAllBookInInventoryByAgencyId,
   GetListBestSellerProductIdByNumberOfBookSoldAndAgencyId,
   GetManyBooksParams,
 } from 'src/api/books/get-book'
-import BookFilterSidebar from 'src/components/book/book-filter-sidebar'
 import BookGridLoading from 'src/components/book/book-grid-loading'
 import Book from 'src/components/landing/card-book'
 import MetaData from 'src/components/metadata'
@@ -16,7 +15,9 @@ import Pagination from 'src/components/ui/pagination'
 import { ScrollArea, ScrollBar } from 'src/components/ui/scroll-area'
 import { useCustomQuery } from 'src/hooks/useCustomQuery'
 import { IBook } from 'src/types'
-import { IAgency } from 'src/types/agency'
+import { IAgency, IAgencyStat } from 'src/types/agency'
+import BookFilterSeller from 'src/components/book/book-filter-seller'
+import { Separator } from 'src/components/ui/separator'
 
 const initBookState: GetManyBooksParams = {
   PageNumber: 1,
@@ -37,6 +38,16 @@ const initParamState = {
 function MyShop() {
   const shop = useLoaderData() as { shop: IAgency }
   const agencyId = shop.shop.agencyId as string
+
+  const [agencyStat, setAgencyStat] = useState<IAgencyStat | null>()
+  useEffect(() => {
+    const fetchData = async () => {
+      const stat = await getAgencyStat(agencyId as string)
+      setAgencyStat(stat)
+    }
+
+    fetchData()
+  }, [agencyId])
 
   const [bookState, setBookState] = React.useState<GetManyBooksParams>(initBookState)
   const { data, isLoading, isError } = useCustomQuery<IBook[]>(
@@ -130,18 +141,24 @@ function MyShop() {
               <div className="">
                 <header className="">
                   <img
-                    src={'https://down-vn.img.susercontent.com/file/sg-11134004-7qvg8-limw3k5iiy5v7e_tn'}
-                    alt={shop?.shop.logoImg as string}
-                    className="absolute left-[45rem] top-28 z-10 h-28 w-28 rounded-[50%] p-2"
+                    src={
+                      (shop.shop.logoUrl as string)
+                        ? (shop.shop.logoUrl as string)
+                        : 'https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg'
+                    }
+                    alt={shop?.shop.logoUrl as string}
+                    className="absolute left-[45rem] top-32 z-10 h-28 w-28 rounded-[50%] p-2"
                   />
-                  <div className="absolute left-[16rem] top-44 h-[8rem] w-[63rem] rounded-md border-2 bg-orange-100">
+                  <div className="absolute left-[16rem] top-48 h-[8rem] w-[63rem] rounded-md border-2 bg-white">
                     <div className="right-0 flex flex-row items-center justify-center pt-8">
                       <p className="ml-8 py-2 text-xl font-semibold">{shop.shop.agencyName}</p>
                     </div>
                     <div className="flex flex-row items-center justify-evenly">
-                      <p className="px-4">Product: {data?.data.length}</p>
-                      <p className="px-4">Joined on: {}</p>
-                      <p className="px-4">Rating: {}</p>
+                      <p className="px-4">Product: {agencyStat?.productCount || 0}</p>
+                      <p className="px-4">Response: {agencyStat?.replyRate || 0}%</p>
+                      <Link to={`/shop/review/${agencyId}`} className="px-4 hover:text-orange-500">
+                        Rating: {agencyStat?.agencyAverageRate || 0}
+                      </Link>
                     </div>
                   </div>
                 </header>
@@ -166,9 +183,10 @@ function MyShop() {
               </ScrollArea>
             </div>
           </div>
-          <div className="mt-8 flex w-full gap-4 px-32 pb-8">
+          <Separator className="mx-auto w-[70%] bg-slate-400" />
+          <div className="mt-12 flex w-full gap-4 px-32 pb-8">
             <section key="main.section.sidebar" className="sticky top-0 h-min w-1/6 rounded-md bg-orange-50">
-              <BookFilterSidebar
+              <BookFilterSeller
                 onFilterChange={(data) => {
                   setBookState((prev) => ({
                     ...prev,

@@ -6,12 +6,13 @@ import { IToken } from 'src/types/token'
 async function RegisterAgency(data: IAgency, callback: (error: AxiosError | null, result: IToken | null) => void) {
   const formData = new FormData()
   formData.append('agencyName', data.agencyName as string)
+  formData.append('GHTKTokenCode', data.GHTKTokenCode as string)
   formData.append('logoImg', data.logoImg as File)
   formData.append('addressId', data.addressId as string)
   formData.append('businessType', data.businessType as string)
 
   return await authAxiosClient
-    .post('/Account/register-agency', formData, {
+    .post('/account/register-agency', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

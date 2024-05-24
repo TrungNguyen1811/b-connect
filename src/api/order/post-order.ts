@@ -4,7 +4,7 @@ import { ICheckout } from 'src/types/order-cart'
 
 async function createOrder(orderData: IOrder) {
   return await authAxiosClient
-    .post('/Order/create-order', orderData, {})
+    .post('/order/create-order', orderData, {})
     .then((response) => {
       if (response.status === 200) {
         return response.status
@@ -23,7 +23,7 @@ export { createOrder }
 
 async function checkout(orderData: ICheckout) {
   return await axiosClient
-    .post('/Order/check-out', orderData, {})
+    .post('/order/check-out', orderData, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -43,7 +43,7 @@ interface IPaymentReturn {
   paymentReturnDTO: {
     paymentId: string
     paymentStatus: number
-    paymentMessage: string
+    // paymentMessage: string
     paymentDate: Date
     paymentRefId: string
     amount: 0

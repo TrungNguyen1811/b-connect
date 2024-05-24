@@ -13,7 +13,7 @@ export async function postCategoryApi(data: { cateName: string; description: str
   console.log('data.imageDir', data.imageDir)
 
   return await axiosClient
-    .post('/Category/add-category', formData, {
+    .post('/category/add-category', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -2,7 +2,9 @@ export interface IAgency {
   agencyId?: string
   ownerId?: string
   agencyName?: string
-  logoImg: File | string
+  GHTKTokenCode?: string
+  logoUrl?: File | string
+  logoImg?: File | string
   postAddress?: string
   addressId?: string
   businessType?: 'Individual' | 'Company'
@@ -47,13 +49,13 @@ export interface IAgencyAnalyst {
       percentage: number
     }
   } //
-  numberOfBookANdUnitSoldByMonth: {
+  numberOfBookAndUnitSoldByMonths: {
     [date: string]: {
       numberOfBookSold: number
       numberOfUnitSold: number
     }
   } //
-  numberOfBookANdUnitSoldByDay: {
+  numberOfBookAndUnitSoldByDays: {
     [day: string]: {
       numberOfBookSold: number
       numberOfUnitSold: number
@@ -75,4 +77,10 @@ export interface ITotalRevenue {
 
 export interface IRevenueByTime {
   [month: string]: number
+}
+
+export interface IAgencyStat {
+  productCount: number
+  agencyAverageRate: number
+  replyRate: number
 }

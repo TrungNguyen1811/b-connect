@@ -1,10 +1,17 @@
 import { authAxiosClient, axiosClient } from 'src/lib/axios'
-import { IAgency, IAgencyAnalyst, IAgencyAnalystByTime } from 'src/types/agency'
+import { IAgency, IAgencyAnalyst, IAgencyAnalystByTime, IAgencyStat } from 'src/types/agency'
 import { IBook } from 'src/types/books'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 
+export async function getAllSeller() {
+  return authAxiosClient.get('/account/get-agency-25').then((res) => {
+    const data: IAgency[] = res.data
+    return data
+  })
+}
+
 async function getAgencyByAgencyId(userId: string) {
-  return axiosClient.get(`/Account/get-agency-by-id?agencyId=${userId}`).then((res) => {
+  return axiosClient.get(`/account/get-agency-by-id?agencyId=${userId}`).then((res) => {
     if (res.status === 200) {
       const agency: IAgency = res.data
       return agency
@@ -15,20 +22,20 @@ async function getAgencyByAgencyId(userId: string) {
 }
 export { getAgencyByAgencyId }
 
-async function getPercentageReplyByAgencyId(agencyId: string) {
-  return axiosClient.get(`/Account/percentage-reply-by-agency?agencyId=${agencyId}`).then((res) => {
+async function getAgencyStat(agencyId: string) {
+  return axiosClient.get(`/account/agency-stat?agencyId=${agencyId}`).then((res) => {
     if (res.status === 200) {
-      const agency = res.data
+      const agency: IAgencyStat = res.data
       return agency
     } else {
       return null
     }
   })
 }
-export { getPercentageReplyByAgencyId }
+export { getAgencyStat }
 
 async function getAgencyAnalyst() {
-  return authAxiosClient.get(`/Account/Get-Agency-Analyst`).then((res) => {
+  return authAxiosClient.get(`/account/get-agency-analyst`).then((res) => {
     if (res.status === 200) {
       const agency: IAgencyAnalyst = res.data
       return agency
@@ -41,7 +48,7 @@ export { getAgencyAnalyst }
 
 async function getAgencyAnalystByTime(startDate: string, endDate: string) {
   return authAxiosClient
-    .get(`/Account/Get-Agency-Analyst-By-Time?startDate=${startDate}&endDate=${endDate}`)
+    .get(`/account/get-agency-analyst-by-time?startDate=${startDate}&endDate=${endDate}`)
     .then((res) => {
       if (res.status === 200) {
         const agency: IAgencyAnalystByTime = res.data
@@ -53,21 +60,19 @@ async function getAgencyAnalystByTime(startDate: string, endDate: string) {
 }
 export { getAgencyAnalystByTime }
 
-// async function getAgencyRevenueByTime(startDate: string, endDate: string) {
-//   return authAxiosClient
-//     .get(`/Account/GetAgencyRevenueByTime?startDate=${startDate}&endDate=${endDate}`)
-//     .then((res) => {
-//       if (res.status === 200) {
-//         const data: IRevenueByTime[] = res.data
-//         return data
-//       } else return res.status
-//     })
-// }
-// export { getAgencyRevenueByTime }
+async function getFinanceForecast() {
+  return authAxiosClient.get(`/get-finance-forecast`).then((res) => {
+    if (res.status === 200) {
+      const data = res.data
+      return data
+    } else return res.status
+  })
+}
+export { getFinanceForecast }
 
 async function getBestSellerProductIdByNumberOfBookSold(params: Partial<IQueryPagination>) {
   return authAxiosClient
-    .get(`/products/SellerManager/GetBestSellerProductIdByNumberOfBookSold`, { params })
+    .get(`/book/seller-manager/get-best-seller-product-id-by-number-of-book-sold`, { params })
     .then((res) => {
       if (res.status === 200) {
         const data: IBook[] = res.data
@@ -78,7 +83,7 @@ async function getBestSellerProductIdByNumberOfBookSold(params: Partial<IQueryPa
 export { getBestSellerProductIdByNumberOfBookSold }
 
 async function getBestSellerProductIdByRevenue(params: Partial<IQueryPagination>) {
-  return authAxiosClient.get(`/products/SellerManager/GetBestSellerProductIdByRevenue`, { params }).then((res) => {
+  return authAxiosClient.get(`/book/seller-manager/get-best-seller-product-id-by-revenue`, { params }).then((res) => {
     if (res.status === 200) {
       const data: IBook[] = res.data
       return data
@@ -96,7 +101,7 @@ async function GetListBestSellerProductIdByRevenueAndAgencyId(
     agencyId: agencyId,
   }
   return authAxiosClient
-    .get(`/products/SellerManager/GetListBestSellerProductIdByRevenueAndAgencyId`, { params: data })
+    .get(`/book/seller-manager/get-list-best-seller-product-id-by-revenue-and-agency-id`, { params: data })
     .then((res) => {
       if (res.status === 200) {
         const data: IBook[] = res.data

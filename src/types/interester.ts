@@ -4,9 +4,14 @@ export interface IResponseInteresterList {
   username: string
   avatarDir: string
   createDate: Date
+  videoDir: string
   isChosen: boolean
 }
 
+export interface ITradeInterested {
+  postId: string
+  video: File
+}
 export interface IResponseTraderList {
   ownerId: string
   interesterId: string

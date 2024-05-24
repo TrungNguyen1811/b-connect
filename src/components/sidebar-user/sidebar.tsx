@@ -4,10 +4,12 @@ import { cn, getLabelByFullname } from 'src/lib/utils'
 import { SideNav } from './side-nav'
 import {
   ArrowLeftIcon,
+  ArrowLeftRightIcon,
   AsteriskIcon,
   BellDotIcon,
   Edit,
   FingerprintIcon,
+  HandCoinsIcon,
   Info,
   ListOrderedIcon,
   MapPinIcon,
@@ -77,6 +79,18 @@ export default function Sidebar({ className }: SidebarProps) {
       color: 'text-orange-500',
     },
     {
+      title: 'My Transaction',
+      icon: ArrowLeftRightIcon,
+      href: '/user/transaction',
+      color: 'text-orange-500',
+    },
+    {
+      title: 'My Request Refund',
+      icon: HandCoinsIcon,
+      href: '/user/refund',
+      color: 'text-orange-500',
+    },
+    {
       title: 'Notifications',
       icon: BellDotIcon,
       href: '/user/notifications',
@@ -101,7 +115,7 @@ export default function Sidebar({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative hidden h-screen border-r md:block`,
+        `relative max-h-max min-h-screen border-r md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,
@@ -114,10 +128,10 @@ export default function Sidebar({ className }: SidebarProps) {
         )}
         onClick={handleToggle}
       />
-      <div className="space-y-4 py-4">
+      <div className="sticky top-14 space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
-            <Link to="/user/profile">
+            <Link to="/user/account/profile">
               <div className="flex flex-row items-center">
                 <Avatar>
                   <AvatarImage
@@ -128,9 +142,9 @@ export default function Sidebar({ className }: SidebarProps) {
                   <AvatarFallback>{getLabelByFullname(user?.fullName)}</AvatarFallback>
                 </Avatar>
                 <div className={cn('ml-2 text-start', !isOpen && 'hidden')}>
-                  <p className="text-md text-accent-foreground">{user?.email}</p>
-                  <p className="flex flex-row items-center text-sm">
-                    <Edit size={12} className="mr-1" /> Edit Profile
+                  <p className="text-md text-accent-foreground">{user?.username}</p>
+                  <p className="flex flex-row items-center text-sm hover:text-orange-500">
+                    <Edit size={12} className="mr-1 " /> Edit Profile
                   </p>
                 </div>
               </div>

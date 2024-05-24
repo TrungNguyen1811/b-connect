@@ -11,7 +11,7 @@ async function putUpdateBook(data: IBookTest) {
   formData.append('PublishDate', data.publishDate?.toDateString() || '')
   formData.append('Type', data.type || '')
   formData.append('Author', data.author || '')
-  formData.append('Quantity', String(data.stock))
+  formData.append('Quantity', String(data.quantity))
   if (data.category?.length && data.category?.length > 1) {
     for (let i = 0; i < data.category?.length; i = i + 1) {
       formData.append('Category', data.category?.[i] || '')
@@ -29,7 +29,7 @@ async function putUpdateBook(data: IBookTest) {
   }
 
   return authAxiosClient
-    .put(`/products/UpdateBook`, formData, {
+    .put(`/book/update-book`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -57,7 +57,7 @@ async function putUpdateBookGroup(data: IBookGroup) {
   }
 
   return authAxiosClient
-    .put(`/BookGroup/UpdateBookGroup`, formData, {
+    .put(`/book-group/update-book-group`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

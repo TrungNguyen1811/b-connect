@@ -26,7 +26,6 @@ function TopBook() {
     refetchInterval: 300000,
   })
   const { t } = useTranslation('translation')
-
   const renderBooks = useMemo(() => {
     if (isLoading)
       return (
@@ -36,7 +35,7 @@ function TopBook() {
       )
 
     return data?.data.map((book, index) => (
-      <div key={index} className={`carousel-item flex-none p-2 px-0.5 hover:scale-105`}>
+      <div key={index} className={`carousel-item hover:scale-102 flex-none p-2 px-0.5`}>
         <Book book={book} />
       </div>
     ))
@@ -44,8 +43,8 @@ function TopBook() {
   // if (isError)
   //   return (
   //     <div>
-  //       <img src="../public/error.png" alt="Something went wrong ;v" />
-  //       <p>Something went wrong ;v</p>
+  //       <img src="../public/error.png" alt="Something went wrong " />
+  //       <p>Something went wrong </p>
   //     </div>
   //   )
 

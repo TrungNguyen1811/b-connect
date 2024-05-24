@@ -9,15 +9,24 @@ async function postRatingComment(data: IReview): Promise<IReviewResponse> {
   formData.append('Comment', data.comment as string)
 
   try {
-    const response = await axiosClient.post('/Account/rate-and-comment', formData, {
+    const response = await axiosClient.post('/account/rate-and-comment', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
 
-    return response.data as IReviewResponse
-  } catch (error) {
-    throw new Error('Failed to post rating comment')
+    if (response.status === 200) {
+      return response.data as IReviewResponse
+    } else {
+      throw new Error(`Error with status code ${response.status}: ${response.data}`)
+    }
+  } catch (error: any) {
+    // If error response is available, throw it for onError to catch
+    if (error.response) {
+      throw error
+    } else {
+      throw new Error('Failed to post rating comment')
+    }
   }
 }
 
@@ -25,7 +34,7 @@ export { postRatingComment }
 
 async function replyReview(data: IReply) {
   try {
-    const response = await axiosClient.post('/Account/add-reply', data)
+    const response = await axiosClient.post('/account/add-reply', data)
     return response.data
   } catch (error) {
     throw new Error('Failed to reply review')
@@ -36,7 +45,7 @@ export { replyReview }
 
 async function updateReplyReview(data: IReply) {
   try {
-    const response = await axiosClient.post('/Account/update-reply', data)
+    const response = await axiosClient.post('/account/update-reply', data)
     return response.data
   } catch (error) {
     throw new Error('Failed to reply review')

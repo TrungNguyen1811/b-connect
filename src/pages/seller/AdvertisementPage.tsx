@@ -2,9 +2,8 @@ import { faker } from '@faker-js/faker'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { getTopBanner } from 'src/api/advertisement/get-top-banner'
 import { postCheckoutAds } from 'src/api/advertisement/post-checkout-ads'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
@@ -12,15 +11,7 @@ import MetaData from 'src/components/metadata'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from 'src/components/ui/accordion'
 import { Button } from 'src/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from 'src/components/ui/dialog'
+
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Heading } from 'src/components/ui/heading'
 import { Input } from 'src/components/ui/input'
@@ -28,17 +19,9 @@ import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popov
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import { cn, formatPrice } from 'src/lib/utils'
-import { Duration, ICheckoutAds, ITopBanner } from 'src/types/advertisement'
+import { cn } from 'src/lib/utils'
+import { Duration, ICheckoutAds } from 'src/types/advertisement'
 import { z } from 'zod'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'src/components/ui/table'
-
-const displaySchema = z.object({
-  bookId: z.string().optional(),
-  displayBid: z.coerce.number().min(0),
-  bannerImg: z.any(),
-  bannerTitle: z.string(),
-})
 
 const relevantSchema = z.object({
   bookId: z.string(),
@@ -51,7 +34,6 @@ const typeDuration = [
   { label: 'Month', value: 'Month' },
   { label: 'Year', value: 'Year' },
 ]
-type FormDisplayData = z.infer<typeof displaySchema>
 type FormRelevantData = z.infer<typeof relevantSchema>
 function AdvertisementPage() {
   const title = `Advertisement`
@@ -72,97 +54,7 @@ function AdvertisementPage() {
     ]
   }, [])
 
-  const [banners, setBanners] = useState<ITopBanner[]>()
-
-  useEffect(() => {
-    const fetchTopBanner = async () => {
-      const banners: ITopBanner[] = (await getTopBanner()) as ITopBanner[]
-      setBanners(banners)
-    }
-    fetchTopBanner()
-  }, [])
-
-  const [bid, setBid] = useState<number>()
-
-  useEffect(() => {
-    form.setValue('displayBid', bid as number)
-  }, [bid])
-
-  const Confirm = ({ displayBid }: { displayBid: number }) => {
-    return (
-      <div className="ml-80 mt-4 px-4">
-        <Dialog>
-          <DialogTrigger className="my-2 flex">
-            <Button>Checkout</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="pb-4 text-xl font-bold">Confirm your bid displayBid for payment</DialogTitle>
-              <Separator />
-              <p className="py-2">Your bid: {displayBid}VND</p>
-              <DialogDescription className="flex flex-row">
-                <Button type="submit" className="mr-4 bg-red-600">
-                  Checkout
-                </Button>
-                <Button>
-                  <DialogClose>No, I have a change</DialogClose>
-                </Button>
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      </div>
-    )
-  }
-  const form = useForm<FormDisplayData>({
-    resolver: zodResolver(displaySchema),
-  })
   const queryClient = useQueryClient()
-
-  const { mutate: checkoutAds } = useMutation({
-    mutationFn: (data: ICheckoutAds) => {
-      return postCheckoutAds(data)
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries()
-      return window.location.replace(data)
-    },
-    onError: () => {
-      toast({
-        title: 'Error Checkout Ads',
-      })
-    },
-  })
-
-  function fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = (error) => reject(error)
-    })
-  }
-
-  const onSubmit = async (data: FormDisplayData) => {
-    const formData: ICheckoutAds = {
-      transactionId: faker.string.uuid(),
-      bannerImg: '',
-      campaignType: 0,
-      duration: 'week',
-      displayBid: data.displayBid,
-      agencyId: user?.agencies?.[0].agencyId as string,
-      bannerTitle: data.bannerTitle,
-      bookId: data.bookId || '',
-    }
-
-    const base64String = await fileToBase64(data.bannerImg)
-    const base64Data = base64String.split(',')[1]
-
-    formData.bannerImg = base64Data
-
-    localStorage.setItem('checkoutAdsData', JSON.stringify(formData))
-    checkoutAds(formData)
-  }
 
   // relevant
   const formRelevant = useForm<FormRelevantData>({
@@ -218,103 +110,16 @@ function AdvertisementPage() {
       <Separator className="mt-4" />
       <div>
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="text-xl">Advertisement Banner</AccordionTrigger>
-            <AccordionContent>
-              <div className="w-full">
-                <p className="text-lg font-semibold">Top 10 stores will have banners displayed next week</p>
-                <p className="text-xs italic">Stores outside the top 10 will receive refunds early next week</p>
-                <div className="flex flex-row items-start justify-between">
-                  <div className="border-1 m-4 w-2/3 border p-4">
-                    <Table className="">
-                      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[100px]">Title Banner</TableHead>
-                          <TableHead className="text-right">Price</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {banners?.map((banner, index) => (
-                          <TableRow key={index}>
-                            <TableCell className="text-md font-semibold">{banner.bannerTitle}</TableCell>
-                            <TableCell className="pl-16 text-center text-red-600">
-                              {formatPrice(banner.price)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                  <div className="mr-24">
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <FormField
-                          control={form.control}
-                          name="bannerTitle"
-                          render={({ field }) => (
-                            <FormItem className="flex flex-row items-center justify-start gap-2">
-                              <FormLabel className=" w-24">Title Banner</FormLabel>
-                              <Input className="w-80" placeholder="Tittle Banner" {...field} />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="bannerImg"
-                          render={({ field }) => (
-                            <FormItem className="flex flex-row items-center justify-start gap-2">
-                              <FormLabel className="w-24">Image Banner</FormLabel>
-                              <Input
-                                className="w-80"
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => field.onChange(e.target.files?.[0] || '')}
-                              />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="bookId"
-                          render={({ field }) => (
-                            <FormItem className="flex flex-row items-center justify-start gap-2">
-                              <FormLabel className=" w-24">BookId</FormLabel>
-                              <Input className="w-80" placeholder="book id" {...field} />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="displayBid"
-                          render={() => (
-                            <FormItem className="flex flex-row items-center justify-start gap-2">
-                              <FormLabel className=" w-24">Bid</FormLabel>
-                              <Input
-                                className="w-80"
-                                placeholder="bid"
-                                value={bid}
-                                onChange={(e) => setBid(Number(e.target.value))}
-                              />
-                            </FormItem>
-                          )}
-                        />
-                        <Confirm displayBid={bid as number} />
-                      </form>
-                    </Form>
-                  </div>
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="text-xl">Advertisement Recommend</AccordionTrigger>
             <AccordionContent>
               <div>
                 <p className="text-md inline-flex items-start italic">
                   Helps increase product visibility in sections such as
-                  <p className="mr-1 font-medium">Today&apos;s Suggestions, Similar Products and You May Also Like</p>of
-                  BConnect.
+                  <p className="ml-1 mr-1 font-medium">
+                    Today&apos;s Suggestions, Similar Products and You May Also Like
+                  </p>
+                  of BConnect.
                 </p>
                 <Form {...formRelevant}>
                   <form onSubmit={formRelevant.handleSubmit(onSubmitRelevant)}>
@@ -342,7 +147,7 @@ function AdvertisementPage() {
                                 <Button
                                   role="combobox"
                                   className={cn(
-                                    'ml-2 w-48 justify-between bg-white',
+                                    'ml-2 w-48 justify-between border bg-white text-gray-400 hover:text-white',
                                     !field.value && 'text-muted-foreground',
                                   )}
                                 >
@@ -403,7 +208,7 @@ function AdvertisementPage() {
                         </FormItem>
                       )}
                     />
-                    <Button disabled={checkoutRelevantAds.isLoading} className="my-2" type="submit">
+                    <Button disabled={checkoutRelevantAds.isLoading} className="my-2 ml-[16.8rem]" type="submit">
                       {checkoutRelevantAds.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Checkout
                     </Button>
                   </form>

@@ -3,7 +3,7 @@ import { IBan } from 'src/types/ban'
 
 async function postBanUser(data: IBan) {
   return authAxiosClient
-    .post(`Admin/set-is-account-banned`, data)
+    .post(`admin/set-is-account-banned`, data)
     .then((res) => {
       if (res.status == 200) {
         return res.data
@@ -19,7 +19,7 @@ export { postBanUser }
 
 async function postUpdateBanUser(data: IBan) {
   return authAxiosClient
-    .put(`/Admin/force-unban-account`, data)
+    .put(`/admin/force-unban-account`, data)
     .then((res) => {
       if (res.status == 200) {
         return res.data

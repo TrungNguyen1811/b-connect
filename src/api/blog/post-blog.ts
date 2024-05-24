@@ -26,7 +26,7 @@ async function postBlogApi(blogData: {
   }
 
   return await authAxiosClient
-    .post('/Post/add-new-post', data, {
+    .post('/post/add-new-post', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -52,8 +52,8 @@ async function updateBlogApi(blogData: {
   postId: string
   // listCate: string
   title: string
-  ProductImages?: File | null
-  ProductVideos?: File | null
+  Image?: File | null
+  Video?: File | null
   content: string
   isLock?: boolean
 }) {
@@ -62,20 +62,20 @@ async function updateBlogApi(blogData: {
   data.append('PostId', blogData.postId)
   data.append('Content', blogData.content)
   data.append('IsLock', blogData.isLock)
-  if (blogData.ProductImages instanceof File) {
-    data.append('Image', blogData.ProductImages)
+  if (blogData.Image instanceof File) {
+    data.append('Image', blogData.Image)
   } else {
-    console.log('blogData.ProductImages is not logic object File')
+    console.log('blogData.Image is not logic object File')
   }
 
-  if (blogData.ProductVideos instanceof File) {
-    data.append('Video', blogData.ProductVideos)
+  if (blogData.Video instanceof File) {
+    data.append('Video', blogData.Video)
   } else {
-    console.log('blogData.ProductVideos is not logic object File')
+    console.log('blogData.Video is not logic object File')
   }
 
   return await authAxiosClient
-    .put('/Post/update-post', data, {
+    .put('/post/update-post', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -97,47 +97,9 @@ async function updateBlogApi(blogData: {
 
 export { updateBlogApi }
 
-async function postDeleteBlogById(blog_id: string) {
-  return await axiosClient
-    .post(`/blog/deletePost/${blog_id}`, {})
-    .then((response) => {
-      if (response.status === 201) {
-        return response.data
-      } else {
-        // Handle other HTTP statuses as needed
-        throw new Error('Request failed with status ' + response.status)
-      }
-    })
-    .catch((error) => {
-      // Handle network errors or other issues
-      throw error
-    })
-}
-
-export { postDeleteBlogById }
-
-async function unFollowingFromInterested(cateId: string) {
-  return await axiosClient
-    .post(`/blog/unFollowingCategory/${cateId}`, {})
-    .then((response) => {
-      if (response.status === 201) {
-        return response.data
-      } else {
-        // Handle other HTTP statuses as needed
-        throw new Error('Request failed with status ' + response.status)
-      }
-    })
-    .catch((error) => {
-      // Handle network errors or other issues
-      throw error
-    })
-}
-
-export { unFollowingFromInterested }
-
 async function addNewSavedPost(postId: string) {
   return await authAxiosClient
-    .post(`/Post/add-new-user-saved-post?postId=${postId}`, {})
+    .post(`/post/add-new-user-saved-post?postId=${postId}`, {})
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -154,9 +116,28 @@ async function addNewSavedPost(postId: string) {
 
 export { addNewSavedPost }
 
+async function postLikePost(postId: string) {
+  return await authAxiosClient
+    .post(`/post/like-post?postId=${postId}`, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postLikePost }
+
 async function addSocialTag(data: { tagNames: string[]; postId: string }) {
   return await axiosClient
-    .post(`/SocialMedia/add-social-tag`, data)
+    .post(`/social-media/add-social-tag`, data)
     .then((response) => {
       if (response.status === 200) {
         return response.data
@@ -172,3 +153,41 @@ async function addSocialTag(data: { tagNames: string[]; postId: string }) {
 }
 
 export { addSocialTag }
+
+async function postBanPost(postId: string) {
+  return await authAxiosClient
+    .put(`/post/ban-post?postId=${postId}`, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postBanPost }
+
+async function postUnbanPost(postId: string) {
+  return await authAxiosClient
+    .put(`/post/un-ban-post?postId=${postId}`, {})
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data
+      } else {
+        // Handle other HTTP statuses as needed
+        throw new Error('Request failed with status ' + response.status)
+      }
+    })
+    .catch((error) => {
+      // Handle network errors or other issues
+      throw error
+    })
+}
+
+export { postUnbanPost }

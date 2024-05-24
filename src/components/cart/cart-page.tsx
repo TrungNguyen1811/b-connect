@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { DeleteIcon } from 'lucide-react'
 import { getAgencyByAgencyId } from 'src/api/seller/get-agency'
 import { IAgency } from 'src/types/agency'
+import { formatPrice } from 'src/lib/utils'
 
 function CartPage() {
   const { cartItems, addToCart, decreaseToCart, removeFromCart, clearCart } = useOrderCart()
@@ -48,7 +49,7 @@ function CartPage() {
   }
 
   const [cartItemsByStore, setCartItemsByStore] = useState<GroupedByStore>({})
-
+  console.log('cartItemsByStore', cartItemsByStore)
   useEffect(() => {
     const groupedByStore: GroupedByStore = {}
 
@@ -186,13 +187,13 @@ function CartPage() {
   }
   return (
     <div className="p-4">
-      <div className="rounded-lg border border-gray-200 p-4">
+      <div className="rounded-lg border border-gray-400 p-4">
         <Table>
           <TableHeader>
             <TableRow>
               <TableCell>
                 <input type="checkbox" checked={selectAll} onChange={handleSelectAllChange} />
-              </TableCell>{' '}
+              </TableCell>
               <TableHead>Product</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Quantity</TableHead>
@@ -224,8 +225,8 @@ function CartPage() {
                           onChange={() => handleItemCheckboxChange(item.book.productId as string)}
                         />
                       </TableCell>
-                      <TableCell>{item.book.name}</TableCell>
-                      <TableCell>${item.book.price}</TableCell>
+                      <TableCell className="w-56">{item.book.name}</TableCell>
+                      <TableCell>{formatPrice(item.book.price)}</TableCell>
                       <TableCell className="flex flex-row">
                         <Button
                           size="sm"

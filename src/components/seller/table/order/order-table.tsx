@@ -5,7 +5,7 @@ import Pagination from 'src/components/ui/pagination'
 import TableSizeSelector from 'src/components/ui/table-size-selector'
 import { Skeleton } from 'src/components/ui/skeleton'
 import { columns } from './column'
-import { RatingTableToolbar } from './toolbar'
+import { OrderTableToolbar } from './toolbar'
 import { useOrderTable } from './useOrderTable'
 
 function OrderTable() {
@@ -49,7 +49,7 @@ function OrderTable() {
   const renderHeader = useMemo(() => {
     return (
       <div>
-        <RatingTableToolbar
+        <OrderTableToolbar
           table={table}
           queries={{
             PageNumber: tableStates.pagination.pageIndex + 1,

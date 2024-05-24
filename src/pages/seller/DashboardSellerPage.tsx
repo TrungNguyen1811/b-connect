@@ -3,7 +3,7 @@ import { Bar, Pie, Chart } from 'react-chartjs-2'
 import { Card, CardContent, CardHeader, CardTitle } from 'src/components/ui/card'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
-import { cn, formatPrice } from 'src/lib/utils'
+import { formatDate, formatPrice } from 'src/lib/utils'
 import { IAgencyAnalyst, IAgencyAnalystByTime } from 'src/types/agency'
 import {
   Chart as ChartJS,
@@ -19,12 +19,10 @@ import {
   ArcElement,
 } from 'chart.js'
 import { getAgencyAnalyst, getAgencyAnalystByTime } from 'src/api/seller/get-agency'
-import { Popover, PopoverTrigger, PopoverContent } from 'src/components/ui/popover'
-import { Button } from 'src/components/ui/button'
-import { Calendar } from 'src/components/ui/calendar'
-import { addDays, format } from 'date-fns'
+import { format, subDays } from 'date-fns'
 import { DateRange } from 'react-day-picker'
-import { CalendarIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { DateRangePicker } from 'src/components/ui/date-range-picker-mf'
 
 ChartJS.register(
   LinearScale,
@@ -59,9 +57,8 @@ interface INumberOfBookANdUnitSoldByMonth {
 }
 
 export default function DashboardSellerPage() {
+  const { t } = useTranslation('translation')
   const [agencyAnalyst, setAgencyAnalyst] = useState<IAgencyAnalyst>()
-  const [agencyAnalystByTime, setAgencyAnalystByTime] = useState<IAgencyAnalystByTime>()
-
   useEffect(() => {
     const fetchData = async () => {
       const data = (await getAgencyAnalyst()) as IAgencyAnalyst
@@ -84,7 +81,7 @@ export default function DashboardSellerPage() {
     labels: revenueByMonths.map((d) => d.label),
     datasets: [
       {
-        label: 'month',
+        label: t('Price'),
         data: revenueByMonths.map((d) => d.value),
         backgroundColor: 'orange',
         borderColor: 'orange',
@@ -108,7 +105,7 @@ export default function DashboardSellerPage() {
     labels: revenueByDays.map((d) => d.label),
     datasets: [
       {
-        label: 'day',
+        label: t('Price'),
         data: revenueByDays.map((d) => d.value),
         backgroundColor: 'orange',
         borderColor: 'orange',
@@ -120,7 +117,7 @@ export default function DashboardSellerPage() {
 
   // type
   const pie = {
-    labels: ['Old', 'New'],
+    labels: [t('OLD'), t('NEW')],
     datasets: [
       {
         label: 'Revenue',
@@ -149,7 +146,7 @@ export default function DashboardSellerPage() {
     labels: revenueByCategory.map((dt) => dt.label),
     datasets: [
       {
-        label: 'percentage',
+        label: t('percentage'),
         data: revenueByCategory.map((dt) => dt.value.percentage),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -159,7 +156,7 @@ export default function DashboardSellerPage() {
         yAxisID: 'percentage',
       },
       {
-        label: 'revenue',
+        label: t('revenue'),
         data: revenueByCategory.map((dt) => dt.value.revenue),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -187,11 +184,11 @@ export default function DashboardSellerPage() {
     },
   }
 
-  //numberOfBookANdUnitSoldByMonth
-  const numberOfBookANdUnitSoldByMonth = useMemo(() => {
-    if (!agencyAnalyst?.numberOfBookANdUnitSoldByMonth) return []
+  //numberOfBookAndUnitSoldByMonths
+  const numberOfBookAndUnitSoldByMonths = useMemo(() => {
+    if (!agencyAnalyst?.numberOfBookAndUnitSoldByMonths) return []
     else {
-      return Object.entries(agencyAnalyst?.numberOfBookANdUnitSoldByMonth).map<INumberOfBookANdUnitSoldByMonth>(
+      return Object.entries(agencyAnalyst?.numberOfBookAndUnitSoldByMonths).map<INumberOfBookANdUnitSoldByMonth>(
         ([date, result]) => ({
           label: date,
           value: {
@@ -201,13 +198,14 @@ export default function DashboardSellerPage() {
         }),
       )
     }
-  }, [agencyAnalyst?.numberOfBookANdUnitSoldByMonth])
+  }, [agencyAnalyst?.numberOfBookAndUnitSoldByMonths])
+
   const dataNumberOfBookANdUnitSoldByMonth = {
-    labels: numberOfBookANdUnitSoldByMonth.map((dt) => dt.label),
+    labels: numberOfBookAndUnitSoldByMonths.map((dt) => dt.label),
     datasets: [
       {
-        label: 'Book Sold',
-        data: numberOfBookANdUnitSoldByMonth.map((dt) => dt.value.numberOfBookSold),
+        label: t('bookSold'),
+        data: numberOfBookAndUnitSoldByMonths.map((dt) => dt.value.numberOfBookSold),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.4,
@@ -215,8 +213,8 @@ export default function DashboardSellerPage() {
         type: 'line' as const,
       },
       {
-        label: 'Unit Sold',
-        data: numberOfBookANdUnitSoldByMonth.map((dt) => dt.value.numberOfUnitSold),
+        label: t('unitSold'),
+        data: numberOfBookAndUnitSoldByMonths.map((dt) => dt.value.numberOfUnitSold),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
@@ -225,13 +223,14 @@ export default function DashboardSellerPage() {
       },
     ],
   }
+
   const numberOfBookANdUnitSoldByMonthOptions = {}
 
-  //numberOfBookANdUnitSoldByDay
-  const numberOfBookANdUnitSoldByDay = useMemo(() => {
-    if (!agencyAnalyst?.numberOfBookANdUnitSoldByDay) return []
+  //numberOfBookAndUnitSoldByDays
+  const numberOfBookAndUnitSoldByDays = useMemo(() => {
+    if (!agencyAnalyst?.numberOfBookAndUnitSoldByDays) return []
     else {
-      return Object.entries(agencyAnalyst?.numberOfBookANdUnitSoldByDay).map<INumberOfBookANdUnitSoldByMonth>(
+      return Object.entries(agencyAnalyst?.numberOfBookAndUnitSoldByDays).map<INumberOfBookANdUnitSoldByMonth>(
         ([date, result]) => ({
           label: date,
           value: {
@@ -241,13 +240,13 @@ export default function DashboardSellerPage() {
         }),
       )
     }
-  }, [agencyAnalyst?.numberOfBookANdUnitSoldByDay])
+  }, [agencyAnalyst?.numberOfBookAndUnitSoldByDays])
   const dataNumberOfBookANdUnitSoldByDay = {
-    labels: numberOfBookANdUnitSoldByDay.map((dt) => dt.label),
+    labels: numberOfBookAndUnitSoldByDays.map((dt) => dt.label),
     datasets: [
       {
-        label: 'Book Sold',
-        data: numberOfBookANdUnitSoldByDay.map((dt) => dt.value.numberOfBookSold),
+        label: t('bookSold'),
+        data: numberOfBookAndUnitSoldByDays.map((dt) => dt.value.numberOfBookSold),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.4,
@@ -255,8 +254,8 @@ export default function DashboardSellerPage() {
         type: 'line' as const,
       },
       {
-        label: 'Unit Sold',
-        data: numberOfBookANdUnitSoldByDay.map((dt) => dt.value.numberOfUnitSold),
+        label: t('unitSold'),
+        data: numberOfBookAndUnitSoldByDays.map((dt) => dt.value.numberOfUnitSold),
         backgroundColor: 'rgba(255, 99, 132, 0.8)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
@@ -269,11 +268,12 @@ export default function DashboardSellerPage() {
 
   //Date
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 20),
+    from: subDays(new Date(), 30),
+    to: new Date(),
   })
-  const [dateFrom, setDateFrom] = useState<string>('')
-  const [dateTo, setDateTo] = useState<string>('')
+
+  const [dateFrom, setDateFrom] = useState<string>(formatDate(date?.from as Date))
+  const [dateTo, setDateTo] = useState<string>(formatDate(date?.to as Date))
 
   useEffect(() => {
     if (date && date.from && date.to) {
@@ -326,52 +326,28 @@ export default function DashboardSellerPage() {
     <ScrollArea className="h-full w-full">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight">Hi, Welcome back 👋</h2>
+          <h2 className="text-3xl font-bold tracking-tight">{t('overview')} 👋</h2>
           <div className="hidden items-center space-x-2 md:flex">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={'outline'}
-                  className={cn('w-[300px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date?.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
-                      </>
-                    ) : (
-                      format(date.from, 'LLL dd, y')
-                    )
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
+            <DateRangePicker
+              onUpdate={(values) => setDate(values.range)}
+              initialDateFrom={date?.from}
+              initialDateTo={date?.to}
+              align="start"
+              locale="en-GB"
+              showCompare={false}
+            />
           </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="overview">{t('overview')}</TabsTrigger>
+            <TabsTrigger value="analytics">{t('analytics')}</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('totalRevenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -388,13 +364,13 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.totalRevenue)}</div>
                   <p className="text-xs text-muted-foreground">
-                    This month: {formatPrice(agencyAnalyst?.thisMonthRevenue)}
+                    {t('thisMonth')}: {formatPrice(agencyAnalyst?.thisMonthRevenue)}
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Book</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('totalBook')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -417,7 +393,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('totalSales')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -434,12 +410,14 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">+{agencyAnalyst?.totalBookSold}</div>
-                  <p className="text-xs text-muted-foreground">Unit Sale: {agencyAnalyst?.totalUnitSold}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('unitSale')}: {agencyAnalyst?.totalUnitSold}
+                  </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('revenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -455,14 +433,16 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.totalRevenue)}</div>
-                  <p className="text-xs text-muted-foreground">High month: {agencyAnalyst?.highestMonthRevenue}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('highMonth')}: {agencyAnalyst?.highestMonthRevenue}
+                  </p>
                 </CardContent>
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>{t('overview')}</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <Bar data={dataRevenueByTime} options={optionRevenueBytime}></Bar>
@@ -470,7 +450,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Revenue by Type Book</CardTitle>
+                  <CardTitle>{t('revenueByTypeBook')}</CardTitle>
                   {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
                 </CardHeader>
                 <CardContent>
@@ -483,7 +463,7 @@ export default function DashboardSellerPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">This Month Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('thisMonthRevenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -500,13 +480,13 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisMonthRevenue)}</div>
                   <p className="text-sm text-muted-foreground">
-                    Average: {formatPrice(agencyAnalyst?.avgMonthRevenue).split('.')}
+                    {t('average')}: {formatPrice(agencyAnalyst?.avgMonthRevenue)}
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">This Day Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('thisDayRevenue')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -525,13 +505,13 @@ export default function DashboardSellerPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatPrice(agencyAnalyst?.thisDayRevenue)}</div>
                   <p className="text-sm text-muted-foreground">
-                    Average: {formatPrice(agencyAnalyst?.avgDayRevenue).split('.')}
-                  </p>{' '}
+                    {t('average')}: {formatPrice(agencyAnalyst?.avgDayRevenue)}
+                  </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Compare This Month</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('compareThisMonth')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -548,16 +528,16 @@ export default function DashboardSellerPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="gap-1 text-2xl font-bold">
-                    Average: {Math.floor(agencyAnalyst?.percentThisMonthToAvgMonth as number)}%
+                    {t('average')}: {Math.floor(agencyAnalyst?.percentThisMonthToAvgMonth as number)}%
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Highest: {agencyAnalyst?.percentThisMonthToHighestMonth}%
+                    {t('highest')}: {Math.floor(agencyAnalyst?.percentThisMonthToHighestMonth as number)}%
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Compare This Day</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('compareThisDay')}</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -572,15 +552,19 @@ export default function DashboardSellerPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Average:{agencyAnalyst?.percentThisDayToAvgDay}%</div>
-                  <p className="text-xs text-muted-foreground">Highest: {agencyAnalyst?.percentThisDayToHighestDay}%</p>
+                  <div className="text-2xl font-bold">
+                    {t('average')}:{agencyAnalyst?.percentThisDayToAvgDay}%
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {t('highest')}: {agencyAnalyst?.percentThisDayToHighestDay}%
+                  </p>
                 </CardContent>
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>{t('overview')}</CardTitle>
                 </CardHeader>
                 <CardContent className="mt-12">
                   <Bar data={dataRevenueByMonths} options={optionRevenueByMonths}></Bar>
@@ -588,7 +572,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Revenue by Category</CardTitle>
+                  <CardTitle>{t('revenueByCategory')}</CardTitle>
                   {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
                 </CardHeader>
                 <CardContent>
@@ -596,23 +580,11 @@ export default function DashboardSellerPage() {
                 </CardContent>
               </Card>
             </div>
-            <Card className="col-span-4 md:col-span-3">
-              <CardHeader>
-                <CardTitle>Number of Book by month</CardTitle>
-                {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
-              </CardHeader>
-              <CardContent>
-                <Chart
-                  type="line"
-                  data={dataNumberOfBookANdUnitSoldByMonth}
-                  options={numberOfBookANdUnitSoldByMonthOptions}
-                />
-              </CardContent>
-            </Card>
+
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Number of Book by day</CardTitle>
+                  <CardTitle>{t('numberBookByDay')}</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <Chart
@@ -624,7 +596,7 @@ export default function DashboardSellerPage() {
               </Card>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Revenue by Day</CardTitle>
+                  <CardTitle>{t('revenueByDay')}</CardTitle>
                   {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
                 </CardHeader>
                 <CardContent className="mt-12">
@@ -632,6 +604,19 @@ export default function DashboardSellerPage() {
                 </CardContent>
               </Card>
             </div>
+            <Card className="col-span-4 md:col-span-3">
+              <CardHeader>
+                <CardTitle>{t('numberBookByMonth')}</CardTitle>
+                {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
+              </CardHeader>
+              <CardContent>
+                <Chart
+                  type="line"
+                  data={dataNumberOfBookANdUnitSoldByMonth}
+                  options={numberOfBookANdUnitSoldByMonthOptions}
+                />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

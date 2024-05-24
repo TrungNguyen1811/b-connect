@@ -18,13 +18,34 @@ function IdentificationProfile() {
     return (
       <div className="flex flex-row">
         <div className="mr-8">
-          <p>ID: {getNic?.id}</p>
-          <p>NAME: {getNic?.name}</p>
-          <p>SEX: {getNic?.sex}</p>
-          <p>DATE OF BIRTH: {getNic?.doB}</p>
-          <p>ADDRESS{getNic?.address}</p>
-          <p>HOME: {getNic?.home}</p>
-          <p>NATIONALITY: {getNic?.nationality}</p>
+          <div className="flex flex-row">
+            <p className="w-36">ID:</p>
+            <p>{getNic?.id}</p>
+          </div>
+          <div className="flex flex-row">
+            <p className="w-36">NAME: </p>
+            <p>{getNic?.name}</p>
+          </div>
+          <div className="flex flex-row">
+            <p className="w-36">SEX: </p>
+            <p>{getNic?.sex}</p>
+          </div>
+          <div className="flex flex-row">
+            <p className="w-36">DATE OF BIRTH: </p>
+            <p>{getNic?.doB}</p>
+          </div>
+          <div className="flex flex-row">
+            <p className="w-36">ADDRESS: </p>
+            <p>{getNic?.address}</p>
+          </div>
+          <div className="flex flex-row">
+            <p className="w-36">HOME: </p>
+            <p>{getNic?.home}</p>
+          </div>
+          <div className="flex flex-row">
+            <p className="w-36">NATIONALITY: </p>
+            <p>{getNic?.nationality}</p>
+          </div>
         </div>
       </div>
     )

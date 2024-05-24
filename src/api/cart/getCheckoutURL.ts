@@ -5,7 +5,7 @@ const RETURN_URL = BASED_URL + 'checkout-result'
 
 export async function getCheckoutUrlApi(amount: number, orderId: string): Promise<string> {
   return axiosClient
-    .post('/transaction/checkoutUrl', {
+    .post('/transaction/checkout-url', {
       amount,
       orderId,
       returnUrl: RETURN_URL,

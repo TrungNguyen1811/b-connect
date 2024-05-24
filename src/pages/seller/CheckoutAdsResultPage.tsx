@@ -7,10 +7,10 @@ import { getTransaction } from 'src/api/order/get-order'
 import { SaveTransaction } from 'src/api/order/post-transaction'
 import { useAuth } from 'src/hooks/useAuth'
 import { ICheckoutAds } from 'src/types/advertisement'
-import { ITransaction } from 'src/types/order'
-import ErrorPage from '../error-page'
+import ErrorPage from '../static/error-page'
 import CheckoutFailed from 'src/components/cart/failed'
 import CheckoutSuccess from 'src/components/cart/success'
+import { ITransaction } from 'src/types/transaction'
 
 function CheckoutAdsResultPage() {
   const [searchParams] = useSearchParams()

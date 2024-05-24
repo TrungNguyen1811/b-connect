@@ -1,4 +1,3 @@
-import { IBlogg } from './blog'
 import { IInterested } from './interested'
 
 export interface User {
@@ -31,10 +30,9 @@ export interface User {
   issueDate?: string
   nicType?: 'old' | 'new' | 'old_back' | 'new_back' | 'cmnd_09_front' | 'cmnd_12_front' | 'cccd_12_front'
   interested?: IInterested['userId']
-  blog?: IBlogg[]
   bio?: string
   url?: string
-  createdAt?: Date
+  createdAt?: Date | string
   updatedAt?: Date
 }
 
@@ -54,7 +52,7 @@ export interface IRegisterNIC {
   nicName: string
   nicDob: Date
   nicHome: string
-  // nicAddress: string
+  nicAddress: string
   nicSex: string
   nicNationality: string
   nicDoe: Date
@@ -139,6 +137,45 @@ export interface IReviewUser {
   tradeDetailsId: string
   comment: string
   ratingPoint: string
-  // video: File
-  // image: File
+}
+
+export interface IReportUser {
+  evidenceId?: string
+  tradeDetailsId: string
+  reason: string
+  video: File
+}
+
+export interface IAnalystPost {
+  postCount: number
+  commentCount: number
+  tagFollowCount: number
+  interestedCount: number
+}
+export interface IDashboardPost {
+  heartCount: number
+  commentCount: number
+  savedPostCount: number
+}
+
+export interface IRatingOverall {
+  overallRating: number
+  totalReviews: number
+}
+
+export interface IRating {
+  ratingPoint: number
+  username: string
+  createdDate: string
+  comment: string
+  avatarDir: string
+}
+
+export interface IVerifySMS {
+  inputOTP: string
+  phone: string
+}
+export interface IResponsePhone {
+  phone: string
+  content: string
 }

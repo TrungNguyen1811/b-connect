@@ -77,7 +77,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       .catch(() => setCopyId(false))
   }
   return (
-    <div className="flex w-44 flex-row gap-2">
+    <div className="flex w-32 flex-row gap-2">
       <div className="">
         <Button onClick={() => navigate(`/seller/manage/books/${bookId}`)}>Update</Button>
       </div>

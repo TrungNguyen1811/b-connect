@@ -3,7 +3,7 @@ import { Plus, Star } from 'lucide-react'
 import '@smastrom/react-rating/style.css'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 // import { useForm } from 'react-hook-form'
-import { Link, useLoaderData, useLocation } from 'react-router-dom'
+import { Link, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
@@ -27,10 +27,14 @@ import BookShouldByWith from './BookShouldByWith'
 import BookRelevant from './BookRelevant'
 import { Carousel, CarouselContent3, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
 import { Card, CardContent } from 'src/components/ui/card'
-import { IAgency } from 'src/types/agency'
-import { getAgencyByAgencyId, getPercentageReplyByAgencyId } from 'src/api/seller/get-agency'
+import { IAgency, IAgencyStat } from 'src/types/agency'
+import { getAgencyByAgencyId, getAgencyStat } from 'src/api/seller/get-agency'
 import { UserChatReply } from 'src/types/chat'
 import { postChatMessage } from 'src/api/chat/post-chat'
+import { useTranslation } from 'react-i18next'
+import { getCartIdApi } from 'src/api/cart/get-cart-id'
+import { ICart } from 'src/types/cart'
+import { useStatisticContext } from 'src/hooks/useStatistic'
 
 type FormValue = {
   comment: string
@@ -47,17 +51,18 @@ function BookDetailPage() {
   }, [data])
 
   const [agency, setAgency] = useState<IAgency>()
+  const [agencyStat, setAgencyStat] = useState<IAgencyStat | null>()
   useEffect(() => {
     const fetchData = async () => {
       const agency = (await getAgencyByAgencyId(book?.agencyId as string)) as IAgency
       setAgency(agency)
+      const stat = await getAgencyStat(book?.agencyId as string)
+      setAgencyStat(stat)
     }
     if (book?.productId) {
       fetchData()
     }
   }, [book?.agencyId])
-
-  const percent = getPercentageReplyByAgencyId(book?.agencyId as string)
 
   const [bookReview, setBookReview] = useState<IReviewResponse[]>([])
   useEffect(() => {
@@ -75,15 +80,43 @@ function BookDetailPage() {
   // const user = useAuth()
   // const navigate = useNavigate()
   const { addToCart, cartItems } = useOrderCart()
-
+  const navigate = useNavigate()
   const handleAddToCart = () => {
-    // if (!user.user) {
-    //   navigate('/login')
-    //   return
-    // }
+    if (!user) {
+      navigate('/login')
+      return
+    }
     if (book) {
       addToCart(book.productId as string)
     }
+  }
+
+  const [cartId, setCartId] = useState<string>()
+  useEffect(() => {
+    const fetchCartId = async () => {
+      try {
+        const fetchedCartId = await getCartIdApi(user?.userId as string)
+        setCartId(fetchedCartId)
+      } catch (error) {
+        console.error('Error retrieving cartId:', error)
+      }
+    }
+
+    if (user?.userId) {
+      fetchCartId()
+    }
+  }, [user?.userId])
+  const handleCheckout = async () => {
+    const selectedCartItems: ICart[] = [
+      {
+        cartId: cartId,
+        productId: book?.productId,
+        quantity: bookInCartAmount > 0 ? bookInCartAmount : 1,
+        stock: book?.stock as number,
+      },
+    ]
+    const selectedCartItemsEncoded = btoa(JSON.stringify(selectedCartItems))
+    navigate(`/checkout/${selectedCartItemsEncoded}`)
   }
 
   const bookInCartAmount = useMemo(() => {
@@ -102,20 +135,21 @@ function BookDetailPage() {
     },
     [bookReview],
   )
+  const { t } = useTranslation('translation')
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     const paths = pathname.split('/')
     const genre = paths[1]
     return [
       {
-        label: 'Home',
+        label: t('home'),
         key: 'home',
         href: '/',
         icon: 'home',
       },
       {
         key: 'books',
-        label: genre,
+        label: t('Books'),
         icon: 'book',
         href: `/books?genre=${genre}`,
       },
@@ -188,11 +222,23 @@ function BookDetailPage() {
     [],
   )
 
-  const { mutateAsync, isLoading: isAddReview } = useMutation<IReviewResponse, Error, IReview>(postRatingComment, {
+  const { mutateAsync, isLoading: isAddReview } = useMutation<IReviewResponse, any, IReview>(postRatingComment, {
     onSuccess: (data: IReviewResponse) => {
       if (!book) return
       queryClient.invalidateQueries()
       addReview(data)
+      toast({
+        type: 'foreground',
+        title: 'Post a review successfully',
+        description: 'Your review have been recorded',
+      })
+    },
+    onError: (error: any) => {
+      toast({
+        type: 'foreground',
+        title: 'Post a review failed',
+        description: error.response?.data || 'An unknown error occurred',
+      })
     },
   })
 
@@ -216,7 +262,6 @@ function BookDetailPage() {
     },
   })
 
-  console.log(book)
   const handleReviewSubmit = useCallback(
     ({ ratingPoint, comment }: FormValue) => {
       const payload = {
@@ -226,21 +271,6 @@ function BookDetailPage() {
         ratingPoint: ratingPoint.toString(),
       }
       mutateAsync(payload)
-        .then(() => {
-          toast({
-            type: 'foreground',
-            title: 'Post a comment successfully',
-            description: 'Your comment have been recorded',
-          })
-          reset()
-        })
-        .catch((e) => {
-          toast({
-            type: 'foreground',
-            title: 'Error',
-            description: JSON.stringify(e),
-          })
-        })
     },
     [book?.productId, reset, toast],
   )
@@ -263,7 +293,6 @@ function BookDetailPage() {
   })
 
   const onSubmit = () => {
-    console.log('bbbok', book?.agencyId)
     const formData: UserChatReply = {
       receiverId: book?.agencyId as string,
       messageText: 'hi',
@@ -271,6 +300,23 @@ function BookDetailPage() {
     postMessage(formData)
   }
 
+  //count view
+  const { postData, updateStatBook } = useStatisticContext()
+  useEffect(() => {
+    const handleViewBook = (bookId: string) => {
+      const stat = postData.find((stat) => stat.bookId === bookId)
+      const currentView = stat?.view || 0
+      updateStatBook(bookId, { view: currentView + 1 })
+    }
+
+    const timer = setTimeout(() => {
+      if (book?.productId) {
+        handleViewBook(book?.productId)
+      }
+    }, 5000)
+
+    return () => clearTimeout(timer)
+  }, [book?.productId])
   return (
     <div className="mx-auto min-h-screen w-full bg-orange-100">
       <MetaData title={book ? book.name.slice(0, 10) + '...' : ''} />
@@ -283,7 +329,9 @@ function BookDetailPage() {
               className="grid w-full grid-cols-1 place-items-start gap-4 py-2 md:grid-cols-3 md:gap-6"
             >
               <article className="ml-7 flex flex-col">
-                <img src={selectedImage} alt="Selected Image" className="h-96 rounded-sm object-cover shadow-md" />
+                <div className="flex h-96 justify-center">
+                  <img src={selectedImage} alt="Selected Image" className="h-full rounded-sm object-cover shadow-md" />
+                </div>
 
                 <div className="flex flex-row">
                   {/* Carousel */}
@@ -299,7 +347,7 @@ function BookDetailPage() {
                                 onClick={() => handleCarouselItemClick(image)}
                                 onMouseEnter={() => handleCarouselItemClick(image)}
                               >
-                                <img className="rounded-sm" src={image} />
+                                <img className="h-[6rem] w-[6rem] rounded-sm" src={image} />
                               </CardContent>
                             </Card>
                           </CarouselItem>
@@ -316,20 +364,26 @@ function BookDetailPage() {
                   <h3 className="text-3xl font-medium tracking-wide">
                     {book.name}
                     <span className="ml-2 text-sm text-gray-500">
-                      <p>{book.type}</p>
+                      <p>{book.type === 'New' ? t('NEW') : t('OLD')}</p>
                     </span>
                   </h3>
                   <div className="flex flex-row justify-between">
                     <div className="flex flex-row">
-                      <p className="nav-link mr-4 pr-2">4.8 *****</p>
-                      <p className="nav-link mr-4 pr-2">1.5 sold</p>
-                      <p className="nav-link mr-4 pr-2">1.2k rating</p>
-                    </div>
-                    <div>
-                      <p className="pr-10">Report</p>
+                      <p className="nav-link mr-4 flex flex-row items-center gap-1 pr-2">
+                        {book.rating}
+                        <Rating className="h-4 w-16" value={book.rating} readOnly />
+                      </p>
+                      <p className="nav-link mr-4 pr-2">
+                        {book.numberOfBookSold} {t('sold')}
+                      </p>
+                      <p className="nav-link mr-4 pr-2">
+                        {book.numberOfRating} {t('rating')}
+                      </p>
                     </div>
                   </div>
-                  <p>By&nbsp;{book.author}</p>
+                  <p>
+                    {t('by')}&nbsp;{book.author}
+                  </p>
                 </div>
 
                 <div className="space-y-6 px-6">
@@ -339,25 +393,27 @@ function BookDetailPage() {
                 </div>
 
                 <div className="space-y-2 px-6">
-                  <span>Shipping</span>
+                  <span className="mr-2">{t('Shipping')}:</span>
+                  <span>{formatPrice(30000)}</span>
                 </div>
                 <div className="space-y-2 px-6">
-                  <span className="mr-2">Type:</span>
+                  <span className="mr-2">{t('Type')}:</span>
                   <span>{book.type}</span>
                 </div>
-                <div className="flex flex-row items-center space-y-2 px-6">
-                  <span className="mr-6 mt-2">Stock:</span>
+                <div className="flex flex-row items-center px-6">
+                  <span className="mr-2">{t('Stock')}:</span>
                   <span className="">{book.stock}</span>
                 </div>
 
                 <div className="flex px-6 pt-8">
                   <Button disabled={book.isAvailable} onClick={handleAddToCart}>
                     <Plus className="mr-2" />
-                    {bookInCartAmount > 0 ? `Add 1 (Have ${bookInCartAmount} in cart)` : 'Add to Cart'}
+                    {bookInCartAmount > 0
+                      ? `${t('add')} 1 (${t('Have')} ${bookInCartAmount} ${t('in-cart')})`
+                      : `${t('add-to-cart')}`}
                   </Button>
-                  <Button className="ml-2" disabled={book.isAvailable}>
-                    Buy now
-                    {/* {bookInCartAmount > 0 ? `Add 1 (Have ${bookInCartAmount} in cart)` : 'Add to Cart'} */}
+                  <Button className="ml-2" disabled={book.isAvailable} onClick={handleCheckout}>
+                    {t('buy-now')}
                   </Button>
                 </div>
               </article>
@@ -371,16 +427,21 @@ function BookDetailPage() {
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <div className="col-span-full space-y-2">
-            <h1 className="text-lg font-bold">About the book</h1>
+            <h1 className="text-lg font-bold">{t('about-book')}</h1>
             <div className="ml-4">
-              <p className="text-md font-bold">Book Specifications:</p>
-              {/* <p className="text-base text-slate-500">{book?.category}</p> */}
-              <p className="text-base text-slate-500">Author: {book?.author}</p>
-              <p className="text-base text-slate-500">Type: {book?.type}</p>
-              <p className="text-base text-slate-500">Category: {book?.category?.join(',')}</p>
+              <p className="text-md font-bold">{t('book-spec')}:</p>
+              <p className="text-base text-slate-500">
+                {t('author')}: {book?.author}
+              </p>
+              <p className="text-base text-slate-500">
+                {t('Type')}: {book?.type}
+              </p>
+              <p className="text-base text-slate-500">
+                {t('Category')}: {book?.category?.join(', ')}
+              </p>
             </div>
             <div className="ml-4">
-              <p className="text-md font-bold">Book Description:</p>
+              <p className="text-md font-bold">{t('book-description')}:</p>
               <p className="text-base text-slate-500">{book?.description}</p>
             </div>
             {/* <ul className="flex gap-1">{renderGenres}</ul> */}
@@ -391,8 +452,7 @@ function BookDetailPage() {
       <div className="mx-auto my-2 flex max-w-6xl flex-row items-center justify-between  bg-orange-50 p-4 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="flex flex-row">
           <Avatar className="mr-1 h-16 w-16">
-            {/* <AvatarImage src={agency?.logoImg as string} /> */}
-            <AvatarImage src="https://scontent.fdad7-1.fna.fbcdn.net/v/t45.1600-4/408957050_120208360688070402_8892427179558757879_n.png?stp=cp0_dst-jpg_p296x100_q90_spS444&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=ISv-9zSdGvAAb68O3WA&_nc_ht=scontent.fdad7-1.fna&oh=00_AfCrQV1nJeHjnsNTY_l2EJj-N6CEP3RgWlSnj2G6cCTVJw&oe=662C06B3" />
+            <AvatarImage src={agency?.logoUrl as string} />
           </Avatar>
           <div>
             <p className="ml-2 text-base font-semibold">{agency?.agencyName}</p>
@@ -413,24 +473,31 @@ function BookDetailPage() {
           </div>
         </div>
         <div className="mx-16 flex flex-row gap-16 text-gray-500">
-          <p>Rating: 5</p>
-          <p>Product: 13</p>
-          <p>Response: 0%</p>
-          <p>Join: 2024/02/22</p>
+          <p>
+            {t('Rating')}: {agencyStat?.agencyAverageRate || 0}
+          </p>
+          <p>
+            {t('Product')}: {agencyStat?.productCount || 0}
+          </p>
+          <p>
+            {t('Response')}: {agencyStat?.replyRate || 0}%
+          </p>
         </div>
       </div>
 
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.reviews'} className="w-full py-10">
-            <h3 className="mb-8 text-3xl font-medium">Reviewers ({book ? bookReview?.length : 0})</h3>
+            <h3 className="mb-8 text-3xl font-medium">
+              {t('Reviewers')} ({book ? bookReview?.length : 0})
+            </h3>
             <div className="my-4 space-y-8">{renderReviews}</div>
           </section>
           <Separator />
           <section key={'main.myurevbiew'} className="w-full py-10">
             <form onSubmit={handleSubmit(handleReviewSubmit)} className="space-y-2">
               <div>
-                <Label>Rating</Label>
+                <Label>{t('Rating')}</Label>
                 <div className="flex items-center gap-2">
                   <Rating
                     style={{ maxWidth: 100 }}
@@ -442,7 +509,7 @@ function BookDetailPage() {
                 </div>
               </div>
               <div>
-                <Label htmlFor="comment">Your review</Label>
+                <Label htmlFor="comment">{t('your-review')}</Label>
                 <Textarea
                   placeholder={''}
                   {...register('comment', {
@@ -452,7 +519,7 @@ function BookDetailPage() {
                   disabled={isAddReview}
                 />
               </div>
-              <Button type="submit">Submit</Button>
+              <Button type="submit">{t('Save')}</Button>
             </form>
           </section>
         </div>
@@ -462,7 +529,7 @@ function BookDetailPage() {
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.buywith'} className="w-full py-10 ">
             <div className="flex items-center justify-between">
-              <h3 className="text-3xl font-medium">Usually buy with</h3>
+              <h3 className="text-3xl font-medium">{t('usually')}</h3>
             </div>
             <div>
               <BookShouldByWith book={book} />
@@ -487,7 +554,7 @@ function BookDetailPage() {
       <div className="mx-auto my-2 max-w-6xl bg-orange-50 px-2 sm:my-4 sm:px-4 lg:my-6 lg:px-6">
         <div className="mx-auto max-w-2xl py-1 sm:py-2 lg:max-w-none lg:py-4">
           <section key={'main.suggest'} className="min-h-[70vh] w-full py-10">
-            <h3 className="text-3xl font-medium">You might also like</h3>
+            <h3 className="text-3xl font-medium">{t('also-like')}</h3>
             <div className="h-30 flex gap-3 py-4">
               <BookRelevant book={book} />
             </div>

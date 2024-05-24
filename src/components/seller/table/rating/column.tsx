@@ -41,7 +41,7 @@ export const columns: ColumnDef<IListReplyResponse>[] = [
   },
   {
     accessorKey: 'ratingPoint',
-    header: 'ratingPoint',
+    header: 'Rating Point',
     cell: ({ getValue }) => {
       const ratingPoint = getValue() as string
       return <p className="w-[8rem]">{ratingPoint}</p>
@@ -49,7 +49,7 @@ export const columns: ColumnDef<IListReplyResponse>[] = [
   },
   {
     accessorKey: 'comment',
-    header: 'comment',
+    header: 'Comment',
     cell: ({ getValue }) => {
       const comment = getValue() as string
       return <p className="w-[8rem]">{comment}</p>
@@ -59,8 +59,11 @@ export const columns: ColumnDef<IListReplyResponse>[] = [
     accessorKey: 'reply',
     header: 'Reply',
     cell: ({ getValue }) => {
-      const reply = getValue() as IReplyResponse
-      return <p className="w-[8rem]">{reply.replyText}</p>
+      const reply = getValue() as IReplyResponse | null
+      if (!reply) {
+        return <p className="w-[8rem]"></p>
+      }
+      return <p className="w-[8rem]">{reply.replyText ?? ''}</p>
     },
   },
   {

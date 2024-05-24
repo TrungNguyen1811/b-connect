@@ -1,7 +1,7 @@
 // import Post from 'src/components/blog/post'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { GetManyPostsParams, getUserTargetedTags } from 'src/api/blog/get-blog'
+import { Link, useNavigate } from 'react-router-dom'
+import { getUserTargetedTags } from 'src/api/blog/get-blog'
 import { postAddUserTargetedCategory } from 'src/api/blog/interested'
 import { getAllCategoryNoParam } from 'src/api/categories/get-category'
 import PostGridLoading from 'src/components/blog/loading-post'
@@ -15,23 +15,17 @@ import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Separator } from 'src/components/ui/separator'
 import { toast } from 'src/components/ui/use-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import useGetManyPosts from 'src/hooks/useGetManyPosts'
 import { ICategory } from 'src/types'
-import ErrorPage from '../error-page'
-
-const initPostState: GetManyPostsParams = {
-  PageNumber: 0,
-  PageSize: 40,
-  category: undefined,
-}
+import ErrorPage from '../static/error-page'
+import useGetManyPosts from 'src/hooks/useGetManyPosts'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function LandingBlog() {
   const { user } = useAuth()
-  const [blogs, setBlogs] = useState<GetManyPostsParams>(initPostState)
-
-  const { data, isLoading, isError } = useGetManyPosts(blogs)
+  // const { data, isLoading, isError } = useCustomQueryDetail<IResponsePost[]>(() => getRelevantPosts())
+  const { data, isLoading, isError } = useGetManyPosts()
+  console.log('d0', data)
   const [open, setOpen] = useState(false)
-
   useEffect(() => {
     const fl = async () => {
       const tag = await getUserTargetedTags()
@@ -45,7 +39,7 @@ export default function LandingBlog() {
   const navigate = useNavigate()
   const [tags, setTags] = useState<ICategory[]>([])
   const [selectedItems, setSelectedItems] = useState<string[]>([])
-
+  const queryClient = useQueryClient()
   useEffect(() => {
     const fetchCategoryNames = async () => {
       const tags = await getAllCategoryNoParam()
@@ -69,17 +63,17 @@ export default function LandingBlog() {
   }
 
   const onSubmit = async () => {
-    await postAddUserTargetedCategory(JSON.stringify(selectedItems)).then((res) => {
+    await postAddUserTargetedCategory(selectedItems).then((res) => {
       if (res) {
         toast({
           title: 'Welcome to BConnect!!!',
         })
-        navigate('/blog')
+        setOpen(false)
+        queryClient.invalidateQueries(['posts'])
       } else {
         toast({
-          title: 'Ops! Add tags failed ;v',
+          title: 'Ops! Add tags failed ',
         })
-        navigate('/blog')
         setOpen(false)
       }
     })
@@ -87,13 +81,13 @@ export default function LandingBlog() {
 
   const renderPosts = useMemo(() => {
     if (isLoading) return <PostGridLoading pageSize={8} className="h-96 " />
-    if (!Array.isArray(data) || data.length === 0)
+    if (!Array.isArray(data) || data?.length === 0)
       return (
         <div className="col-span-full row-span-full h-full w-full">
           <h3 className="text-center text-slate-300">No result found</h3>
         </div>
       )
-    return data.map((post) => {
+    return data?.map((post) => {
       return <Post key={post.postData.postId} postId={post.postData.postId!} />
     })
   }, [data, isLoading])
@@ -124,17 +118,17 @@ export default function LandingBlog() {
   // if (!blogs) {
   //   return <div>Loading...</div>
   // }
-  if (!blogs) return <PostGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
+  // if (!blogs) return <PostGridLoading pageSize={8} className="col-span-full grid grid-cols-4 gap-4" />
 
   return (
-    <div className="mx-24 h-full px-4 py-2">
+    <div className="mx-20 h-full px-4 py-2">
       <div className="grid grid-cols-12 gap-4 pt-2">
-        <div className="col-span-2 bg-orange-50">
+        <div className="col-span-2 w-60 bg-orange-50 pr-8">
           <Menu />
         </div>
-        <div className="col-span-7">
+        <div className="col-span-7 ml-8">
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="h-[90%] ">
+            <DialogContent className="h-[90vh] ">
               <DialogHeader className="mb-2 px-12">
                 <p className="text-4xl font-extrabold">What are you interested in?</p>
                 <p className="text-xl font-semibold">Follow tags to customize your feed</p>
@@ -155,7 +149,7 @@ export default function LandingBlog() {
                   ))}
                 </div>
               </ScrollArea>
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-end">
                 <Separator className="mb-4" />
                 <Button onClick={onSubmit} className="w-full">
                   Add Tags
@@ -163,9 +157,17 @@ export default function LandingBlog() {
               </div>
             </DialogContent>
           </Dialog>
-          {renderPosts}
+          <div className="flex flex-row gap-6 px-3 py-2">
+            <Link to="/blog" className="text-xl font-bold">
+              Relevant
+            </Link>
+            <Link to="/blog/latest" className="text-xl text-gray-500">
+              Latest
+            </Link>
+          </div>
+          <div className="h-full">{renderPosts}</div>
         </div>
-        <div className="col-span-3 bg-orange-50">
+        <div className="col-span-3 w-80 bg-orange-50">
           <Active />
         </div>
       </div>

@@ -21,6 +21,8 @@ export interface IBook {
   numberOfUnitSold?: number
   createdDate?: Date
   publishDate?: Date
+  bookRevenue: 0.0
+  numberOfRating: 0
 }
 
 export interface IResponseBook {

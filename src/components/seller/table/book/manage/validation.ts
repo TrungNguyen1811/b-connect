@@ -22,5 +22,5 @@ export const updateBookSchema = z.object({
   type: z.enum(['New', 'Old']),
   bookImg: z.array(z.any()).max(6),
   backgroundImg: z.any(),
-  stock: z.coerce.number().min(0),
+  quantity: z.coerce.number().min(0),
 })

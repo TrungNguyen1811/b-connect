@@ -9,6 +9,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { IBreadcrumb } from 'src/components/breadcrumb'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import CartPage from 'src/components/cart/cart-page'
+import { useTranslation } from 'react-i18next'
 
 type Props = React.HTMLAttributes<HTMLDivElement>
 
@@ -18,13 +19,14 @@ function ViewCart({ className, ...props }: Props) {
   const { cartItems } = useOrderCart()
 
   const { pathname } = useLocation()
+  const { t } = useTranslation('translation')
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {
     const paths = pathname.split('/')
     const cart = paths[1]
     return [
       {
-        label: 'Home',
+        label: t('home'),
         key: 'home',
         href: '/',
         icon: 'home',
@@ -37,7 +39,7 @@ function ViewCart({ className, ...props }: Props) {
     ]
   }, [pathname])
   return (
-    <div className={cn(className, 'mx-auto my-auto min-h-[600px] bg-orange-100')} {...props}>
+    <div className={cn(className, 'mx-auto  my-auto min-h-[600px] bg-orange-100 pb-10')} {...props}>
       <MetaData title="Cart" />
       {<Breadcrumb items={breadcrumb} className="mx-auto max-w-7xl py-4" />}
 

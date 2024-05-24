@@ -1,18 +1,30 @@
-import { authAxiosClient } from 'src/lib/axios'
-import { IRelevantBooks, ITopBanner } from 'src/types/advertisement'
+import { authAxiosClient, axiosClient } from 'src/lib/axios'
+import { IRelevantBooks, IResponseAds } from 'src/types/advertisement'
+import { AxiosResponse } from 'axios'
+import { IQueryPagination, IQuerySearch } from 'src/types/requests'
+import { IResponse, IResponsePagination } from 'src/types/response'
 
-async function getTopBanner() {
-  return authAxiosClient.get('/ad/get-top-banners').then((res) => {
-    if (res.status === 200) {
-      const data: ITopBanner[] = res.data
-      return data
-    } else {
-      return 'Error with status code' + res.status + '(' + res.data + ')'
+export type GetBannerParams = {
+  agencyId?: string
+  startDate?: string
+  endDate?: string
+  PageNumber?: number
+  PageSize?: number
+} & Partial<IQueryPagination & IQuerySearch>
+async function getAllBannerAds(params: GetBannerParams) {
+  return authAxiosClient.get('/ad/get-all-banner-ads', { params }).then((res) => {
+    const data: IResponseAds[] = res.data
+    const pagination = res.headers['x-pagination']
+    const parseJson: IResponsePagination = JSON.parse(pagination)
+    const dataAll: IResponse<IResponseAds[]> = {
+      data: data,
+      _metadata: data,
+      _pagination: parseJson,
     }
+    return dataAll
   })
 }
-export { getTopBanner }
-import { AxiosResponse } from 'axios' // Assuming you're using axios for HTTP requests
+export { getAllBannerAds }
 
 async function getRelevantBooks(bookId: string): Promise<IRelevantBooks[]> {
   return authAxiosClient.get(`/ad/get-relevant-books?bookId=${bookId}`).then((res: AxiosResponse<IRelevantBooks[]>) => {
@@ -26,3 +38,16 @@ async function getRelevantBooks(bookId: string): Promise<IRelevantBooks[]> {
 }
 
 export { getRelevantBooks }
+
+async function getTopBanner(): Promise<IResponseAds[]> {
+  return axiosClient.get(`ad/get-top-banners`).then((res: AxiosResponse<IResponseAds[]>) => {
+    if (res.status === 200) {
+      const data: IResponseAds[] = res.data
+      return data
+    } else {
+      throw new Error('Error with status code ' + res.status + '(' + res.data + ')')
+    }
+  })
+}
+
+export { getTopBanner }

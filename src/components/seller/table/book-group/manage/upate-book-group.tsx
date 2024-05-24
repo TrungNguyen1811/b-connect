@@ -84,9 +84,9 @@ export function UpdateBookGroup({ bookGroupId }: { bookGroupId: string }) {
       <DialogTrigger asChild>
         <Button variant="outline">Update</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="w-[36rem]">
         <DialogHeader>
-          <DialogTitle>Update Category</DialogTitle>
+          <DialogTitle>Update Book Group</DialogTitle>
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
@@ -116,7 +116,7 @@ export function UpdateBookGroup({ bookGroupId }: { bookGroupId: string }) {
                       name="bookGroupName"
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-center">
-                          <FormLabel className="w-40 pr-2 text-right"> Name bookGroup</FormLabel>
+                          <FormLabel className="w-40 pr-2 text-right"> Name Book Group</FormLabel>
                           <FormControl>
                             <Input placeholder="bookGroup name" {...field} />
                           </FormControl>

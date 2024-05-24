@@ -6,6 +6,7 @@ import {
   BookIcon,
   BookPlusIcon,
   BookTemplate,
+  GanttChartIcon,
   LayoutDashboardIcon,
   LibraryBigIcon,
   ListStartIcon,
@@ -18,6 +19,7 @@ import {
 import { NavItem } from 'src/types/NavItem'
 import { useAuth } from 'src/hooks/useAuth'
 import { SideNav } from '../sidebar-user/side-nav'
+import { useTranslation } from 'react-i18next'
 
 interface SidebarProps {
   className?: string
@@ -26,7 +28,7 @@ interface SidebarProps {
 export default function SidebarSeller({ className }: SidebarProps) {
   const { isOpen, toggle } = useSidebar()
   const [status, setStatus] = useState(false)
-
+  const { t } = useTranslation('translation')
   const { user } = useAuth()
   const handleToggle = () => {
     setStatus(true)
@@ -36,80 +38,80 @@ export default function SidebarSeller({ className }: SidebarProps) {
 
   const NavItems: NavItem[] = [
     {
-      title: 'Dashboard',
+      title: t('dashboard'),
       icon: LayoutDashboardIcon,
       href: '/seller/dashboard',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
     },
     {
-      title: 'Manage Order',
+      title: t('manageOrder'),
       icon: PackageIcon,
-      href: '/seller/manage/order?type=Done',
-      color: 'text-orange-500',
+      href: '/seller/manage/order?type=All',
+      color: 'text-orange-600',
     },
     {
-      title: 'Manage Book',
+      title: t('manageBook'),
       icon: BookIcon,
       href: '/seller/manage/books',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
       isChildren: true,
       children: [
         {
-          title: 'All of Books',
+          title: t('allOfBooks'),
           icon: BookTemplate,
           href: '/seller/manage/books',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
-          title: 'Add book',
+          title: t('addBook'),
           icon: BookPlusIcon,
           href: '/seller/manage/books/new',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
-          title: 'All Book Groups',
+          title: t('allBookGroups'),
           icon: LibraryBigIcon,
           href: '/seller/manage/book-groups',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
       ],
     },
     {
-      title: 'Marketing Channel',
+      title: t('marketingChannel'),
       icon: TagIcon,
       href: '/seller/marketing',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
     },
     {
-      title: 'Finance',
+      title: t('finance'),
       icon: WalletCardsIcon,
       href: '/seller/finance',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
     },
     {
-      title: 'Manage Shop',
-      icon: TagIcon,
+      title: t('manageShop'),
+      icon: GanttChartIcon,
       href: '/seller/shop',
-      color: 'text-orange-500',
+      color: 'text-orange-600',
       isChildren: true,
       children: [
         {
-          title: 'Account',
+          title: t('account'),
           icon: User2Icon,
           href: '/seller/account',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
-          title: 'Profile Shop',
+          title: t('profileShop'),
           icon: StoreIcon,
           href: '/seller/profile',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
         {
-          title: 'Rating Shop',
+          title: t('ratingShop'),
           icon: ListStartIcon,
           href: '/seller/rating',
-          color: 'text-orange-500',
+          color: 'text-red-500',
         },
       ],
     },
@@ -117,7 +119,7 @@ export default function SidebarSeller({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative h-screen border-r md:block`,
+        `relative max-h-max min-h-screen border-r bg-orange-300 md:block`,
         status && 'duration-500',
         isOpen ? 'w-72' : 'w-[78px]',
         className,
@@ -130,10 +132,10 @@ export default function SidebarSeller({ className }: SidebarProps) {
         )}
         onClick={handleToggle}
       />
-      <div className="space-y-4 py-4">
+      <div className="sticky top-14 space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
-            <p className={cn('px-6 pb-4 text-3xl font-extrabold', !isOpen && 'hidden')}>Overview</p>
+            <p className={cn('px-6 pb-4 text-3xl font-extrabold text-white', !isOpen && 'hidden')}>{t('overview')}</p>
             <SideNav
               className="text-background opacity-0 transition-all duration-300 group-hover:z-50 group-hover:ml-4 group-hover:rounded group-hover:bg-foreground group-hover:p-2 group-hover:opacity-100"
               items={NavItems}

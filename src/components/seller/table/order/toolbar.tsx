@@ -5,11 +5,9 @@ import SearchInput from 'src/components/ui/search-input'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IResponseOrderAgency } from 'src/types'
 import { DateRange } from 'react-day-picker'
-import { format, subDays } from 'date-fns'
-import { Popover, PopoverTrigger, PopoverContent } from 'src/components/ui/popover'
+import { subDays } from 'date-fns'
 import { Button } from 'src/components/ui/button'
-import { CalendarIcon, MoreHorizontal } from 'lucide-react'
-import { Calendar } from 'src/components/ui/calendar'
+import { MoreHorizontal } from 'lucide-react'
 import { GetManyOrderParams } from 'src/api/order/get-order'
 import {
   DropdownMenu,
@@ -20,6 +18,7 @@ import {
 } from 'src/components/ui/dropdown-menu'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from 'src/components/ui/command'
 import { useLocation } from 'react-router-dom'
+import { DateRangePicker } from 'src/components/ui/date-range-picker-mf'
 export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>
   queries: Partial<IQueryPagination & IQuerySearch> & Record<string, unknown> & GetManyOrderParams
@@ -33,7 +32,7 @@ export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLD
   type?: (value: string) => void
 }
 
-export function RatingTableToolbar({
+export function OrderTableToolbar({
   table,
   queries,
   setSearchQuery,
@@ -61,23 +60,20 @@ export function RatingTableToolbar({
     onEndDateChange && onEndDateChange(formatDate(date?.to as Date))
   }, [date?.from, date?.to])
 
-  const [label, setLabel] = useState('bookname')
-  const [newLabel, setNewLabel] = useState('BookName')
+  const [label, setLabel] = useState('bookName')
+  const [newLabel, setNewLabel] = useState('bookName')
   const [open, setOpen] = useState(false)
-  const labels = ['BookName', 'CustomerName', 'OrderId', 'Address']
+  const labels = ['bookName', 'customerName', 'address']
 
   useEffect(() => {
     if (label === 'bookname') {
-      setNewLabel('BookName')
+      setNewLabel('bookName')
     }
     if (label === 'customername') {
-      setNewLabel('CustomerName')
-    }
-    if (label === 'orderid') {
-      setNewLabel('OrderId')
+      setNewLabel('customerName')
     }
     if (label === 'address') {
-      setNewLabel('Address')
+      setNewLabel('address')
     }
   }, [label])
 
@@ -89,7 +85,7 @@ export function RatingTableToolbar({
     setSearchQuery &&
       setSearchQuery({
         ...queries,
-        Status: types as string,
+        status: types as string,
       })
     type && type(types as string)
   }, [types])
@@ -124,24 +120,20 @@ export function RatingTableToolbar({
 
         <div className="flex w-96 flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
           <span className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground">{label}</span>
-          {label === 'orderid' && (
-            <SearchInput value={queries.OrderId || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
-          )}
-
           {label === 'customername' && (
             <SearchInput
-              value={queries.CustomerName || ''}
+              value={queries.customerName || ''}
               onChange={handleSearchInputChange}
               className="h-8 max-w-xs"
             />
           )}
 
           {label === 'bookname' && (
-            <SearchInput value={queries.BookName || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
+            <SearchInput value={queries.bookName || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
           )}
 
           {label === 'address' && (
-            <SearchInput value={queries.OrderId || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
+            <SearchInput value={queries.address || ''} onChange={handleSearchInputChange} className="h-8 max-w-xs" />
           )}
 
           <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -178,38 +170,14 @@ export function RatingTableToolbar({
           </DropdownMenu>
         </div>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              id="date"
-              variant={'outline'}
-              className={cn('w-[300px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, 'yyyy, MM, dd')} - {format(date.to, 'yyyy, MM, dd')}
-                  </>
-                ) : (
-                  format(date.from, 'yyyy, MM, dd')
-                )
-              ) : (
-                <span>Pick a date</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={date?.from}
-              selected={date}
-              onSelect={setDate}
-              numberOfMonths={2}
-            />
-          </PopoverContent>
-        </Popover>
+        <DateRangePicker
+          onUpdate={(values) => setDate(values.range)}
+          initialDateFrom={date?.from}
+          initialDateTo={date?.to}
+          align="start"
+          locale="en-GB"
+          showCompare={false}
+        />
       </div>
     </div>
   )

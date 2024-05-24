@@ -1,17 +1,17 @@
 import React from 'react'
+import { columns } from 'src/components/admin/user/column'
+import { useUserTable } from 'src/components/admin/user/useUserTable'
+import UserTable from 'src/components/admin/user/user-table'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
-import { columns } from 'src/components/table/user/column'
-import { useUserTable } from 'src/components/table/user/useUserTable'
-import UserTable from 'src/components/table/user/user-table'
 import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function UserManagerPage() {
   const { data } = useUserTable(columns)
 
-  const title = `Manage User (${data?.data.length})`
+  const title = `Manage User (${data?.data.length ? data?.data.length : 0})`
   const description = 'Manage users (Server side table functionalities.)'
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {

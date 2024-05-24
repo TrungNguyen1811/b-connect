@@ -11,7 +11,7 @@ async function UpdateAgency(data: IAgency) {
   formData.append('businessType', data.businessType as string)
 
   return await authAxiosClient
-    .put('/Account/update-agency', formData, {
+    .put('/account/update-agency', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

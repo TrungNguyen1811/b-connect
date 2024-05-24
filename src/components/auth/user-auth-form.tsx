@@ -38,17 +38,17 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true)
 
     let token: IToken
-    let error: AxiosError | null = null
+    let error: AxiosError<any> | null = null
     await loginApi(data, (err, result) => {
       if (err) {
-        error = err
+        error = err as AxiosError<any>
         return
       } else {
         toast({
           title: 'Login Success',
           variant: 'success',
         })
-        token = result!
+        token = result! as IToken
         console.log(result)
       }
     })
@@ -74,8 +74,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             user,
             token,
           })
-          if (user?.roles?.includes(ROLE.STAFF) === true) {
-            navigate('/staff/trade')
+          if (user?.roles?.includes(ROLE.ADMIN) === true) {
+            navigate('/admin/dashboard')
           } else {
             navigate('/')
           }
@@ -84,9 +84,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       })
     }
     if (error) {
+      const err: AxiosError = error
       toast({
         title: 'Login Failed',
         variant: 'destructive',
+        description: err.response?.data as string,
       })
     }
     setIsLoading(false)

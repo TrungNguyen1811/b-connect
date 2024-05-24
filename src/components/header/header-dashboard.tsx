@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
 import { UserNav } from './nav-dashboard'
 import { useAuth } from 'src/hooks/useAuth'
+import { LanguageSelector } from '../language-selector'
 
 export default function Header() {
   const { user } = useAuth()
   const path = `${user?.roles}`
   const lowercasedPath = path.toLowerCase()
   return (
-    <div className="supports-backdrop-blur:bg-background/60 sticky left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur">
+    <div className="supports-backdrop-blur:bg-background/60 sticky left-0 right-0 top-0 z-20 h-full bg-background/95 bg-orange-600 backdrop-blur">
       <nav className="flex h-14 items-center justify-between px-4">
         <div className="hidden lg:block">
           <Link
@@ -18,6 +19,7 @@ export default function Header() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
+          <LanguageSelector />
           <UserNav />
         </div>
       </nav>

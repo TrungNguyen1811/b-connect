@@ -5,6 +5,7 @@ export interface ITopBanner {
   adId: string
   bannerTitle: string
   price: number
+  isDisplaySelected: boolean
 }
 export interface IRelevantBooks {
   bookId: string
@@ -20,7 +21,7 @@ export interface ICheckoutAds {
   duration: string
   numberOfTargetUser?: number
   ppc_Price?: number
-  bookId?: string
+  bookId?: string | null
   displayBid?: number | null
   agencyId?: string
   bannerTitle?: string
@@ -39,4 +40,24 @@ export interface ICheckList {
   target: string
   bookOwnerUploadDir?: File | string
   middleUploadDir?: File | string
+}
+
+export interface IResponseAds {
+  adId: string
+  campaignType: number
+  bannerTitle: string
+  bannerDir: string
+  bannerFee: number
+  targetUserFee: number
+  ppC_Price: number
+  duration: string
+  subFee: number
+  lastUpdate: string
+  startDate: string
+  endDate: string
+  isDisplaySelected: boolean
+  agencyId: string
+  bookId: string
+  transactionId: string
+  transaction: string
 }

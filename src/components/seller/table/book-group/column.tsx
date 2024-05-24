@@ -31,7 +31,7 @@ export const columns: ColumnDef<IResponseBookGroup>[] = [
       if (name) {
         const truncateName = name.length > 20 ? `${name.substring(0, 20)}...` : name
         return <p className="w-[8rem]">{truncateName}</p>
-      } else return <p className="w-[8rem]">{name}</p>
+      } else return <p className="w-[10rem]">{name}</p>
     },
   },
   {
@@ -40,7 +40,7 @@ export const columns: ColumnDef<IResponseBookGroup>[] = [
     cell: ({ getValue }) => {
       const image = getValue() as string
       return (
-        <div className="w-[4rem]">
+        <div className="w-[6rem]">
           <img src={image} />
         </div>
       )
@@ -51,7 +51,7 @@ export const columns: ColumnDef<IResponseBookGroup>[] = [
     header: 'Description',
     cell: ({ getValue }) => {
       const description = getValue() as string
-      return <p className="w-[8rem]">{description}</p>
+      return <p className="w-[32rem]">{description}</p>
     },
   },
   {

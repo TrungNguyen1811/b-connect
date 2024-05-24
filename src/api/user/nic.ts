@@ -6,7 +6,7 @@ export async function postNICApi<T>(formData: FormData) {
   return axios
     .post<unknown, AxiosResponse<ICTCResponse<T>>>('https://api.fpt.ai/vision/idr/vnm', formData, {
       headers: {
-        api_key: 'wlsxMIUrIdukW23fxAZkWxxYOf78R7BE',
+        api_key: 'DkAFd1jRJbW4YnjvD9ydalJ4ObRtbU11',
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -14,7 +14,7 @@ export async function postNICApi<T>(formData: FormData) {
 }
 
 export async function getNICApi() {
-  return authAxiosClient.get('/NicOcr/get-nic-data-by-owner-id').then((res) => {
+  return authAxiosClient.get('/nic-ocr/get-nic-data-by-owner-id').then((res) => {
     if (res.status === 200) {
       const nic: INIC = res.data
       return nic

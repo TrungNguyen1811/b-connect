@@ -19,7 +19,7 @@ import { ROLE, User } from 'src/types/user'
 import { Carousel, CarouselButtonNext, CarouselButtonPrevious, CarouselContent, CarouselItem } from '../ui/carousel'
 import { Card, CardContent } from '../ui/card'
 import { Separator } from '../ui/separator'
-import IdentificationSeller from '../user/nic'
+import IdentificationSeller from '../seller/nic'
 import { Checkbox } from '../ui/check-box'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from '../ui/command'
@@ -36,6 +36,7 @@ import { profileApi } from 'src/api/apis/auth/profile.api'
 const SubscribeSchema = z.object({
   agencyName: z.string().min(3),
   logoImg: z.any(),
+  GHTKTokenCode: z.string(),
   city_Province: z.string(),
   district: z.string() || null,
   subDistrict: z.string() || null,
@@ -85,6 +86,20 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
   }, [user?.userId])
 
   useEffect(() => {
+    const setAddress = async () => {
+      if (checkbox == true) {
+        form.setValue('city_Province', addressDefault?.city_Province as string)
+        form.setValue('district', addressDefault?.district as string)
+        form.setValue('subDistrict', addressDefault?.subDistrict as string)
+        form.setValue('rendezvous', addressDefault?.rendezvous as string)
+      }
+    }
+
+    console.log('Fetching addresses...')
+    setAddress()
+  }, [addressDefault, checkbox])
+
+  useEffect(() => {
     const isValidated = async () => {
       if (user?.isValidated === true) {
         setShowRegisterSlide(true)
@@ -115,6 +130,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
       businessType: data.businessType,
       addressId: checkbox ? addressDefault?.addressId : newAddress.addressId,
       agencyName: data.agencyName,
+      GHTKTokenCode: data.GHTKTokenCode,
       logoImg: data.logoImg as File,
     }
 
@@ -167,12 +183,12 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
         <h4 className="text-4xl font-extrabold">Welcome to BConnect Seller</h4>
         <p className="opacity-50">Subscribe to manage your store.</p>
       </div>
-      <Carousel className="m-4 min-h-[32rem] w-full" plugins={[]}>
+      <Carousel className="m-4 h-[38rem] min-h-[32rem] w-full" plugins={[]}>
         <CarouselContent>
           {showRegisterSlide === false && (
             <CarouselItem className="mb-8">
               <Card className="">
-                <CardContent className="aspect-square max-h-[28rem] w-full items-center justify-center">
+                <CardContent className="aspect-square max-h-[30rem] w-full items-center justify-center">
                   <IdentificationSeller />
                 </CardContent>
               </Card>
@@ -181,7 +197,7 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
 
           <CarouselItem className="mb-8">
             <Card>
-              <CardContent className=" items-top flex aspect-square max-h-[28rem] w-full justify-center p-6">
+              <CardContent className=" items-top flex aspect-square max-h-[30rem] w-full justify-center p-6">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="flex flex-row gap-2">
@@ -223,11 +239,25 @@ export function SubscribeAgencyForm({ className, ...props }: UserSubscribeFormPr
                         )}
                       />
                     </div>
+                    <FormField
+                      control={form.control}
+                      name="GHTKTokenCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Token Code</FormLabel>
+                          <FormControl>
+                            <Input disabled={isLoading} placeholder="Token code..." {...field} />
+                          </FormControl>
+                          <FormDescription />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <div className="flex flex-row items-center gap-2 pt-2">
                       <p className="">Use Address Default</p>
                       <Checkbox checked={checkbox} onCheckedChange={(checked: boolean) => setCheckbox(checked)} />
                     </div>
-                    {checkbox == true ? (
+                    {addressDefault && checkbox == true ? (
                       <p className="my-2 flex flex-row items-center">
                         <p className="mr-2 text-sm font-semibold">Address Default:</p> {addressDefault?.rendezvous},{' '}
                         {addressDefault?.subDistrict}, {addressDefault?.district}, {addressDefault?.city_Province}

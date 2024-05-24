@@ -9,7 +9,7 @@ const CheckoutFailed = () => {
 
         <div className="text-center">
           <h3 className="text-center text-base font-semibold text-gray-900 md:text-2xl">Payment Failed!</h3>
-          <p className="my-2 text-gray-600">Sorry your payment was not successful ;v</p>
+          <p className="my-2 text-gray-600">Sorry your payment was not successful </p>
           <p> Have a great day! </p>
           <div className="py-10 text-center">
             <Link className="bg-indigo-600 px-12 py-3 font-semibold text-white hover:bg-indigo-500" to={`/`}>

@@ -11,13 +11,13 @@ async function loginApi(
 ) {
   return await axiosClient
     .post(
-      'Account/SignIn',
+      'account/sign-in',
       {
         email: email,
         password: password,
       },
       {
-        withCredentials: false,
+        withCredentials: true,
       },
     )
     .then((err) => {

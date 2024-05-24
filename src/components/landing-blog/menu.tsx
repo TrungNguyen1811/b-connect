@@ -7,14 +7,17 @@ import { useAuth } from 'src/hooks/useAuth'
 import { getUserTargetedTags } from 'src/api/blog/get-blog'
 import { IResponsePost, IResponseTag } from 'src/types/blog'
 import { getPostInterestedByUser } from 'src/api/blog/interested'
+import { useTranslation } from 'react-i18next'
 
 export function Menu() {
+  const { t } = useTranslation('translation')
+
   const menu = React.useMemo<IMenuItem[]>(() => {
     return [
       {
-        title: 'Home',
+        title: t('home'),
         key: 'home',
-        href: '/home',
+        href: '/',
         icon: 'home',
       },
       {
@@ -50,7 +53,7 @@ export function Menu() {
       {
         title: 'Privacy Policy',
         key: 'privacy-policy',
-        href: '/privacy-policy',
+        href: '/policy',
         icon: 'policy',
       },
     ]
@@ -84,9 +87,12 @@ export function Menu() {
         <p className="text-md pb-2 font-bold">Follow us</p>
         <ul className="flex flex-row">
           {items.map((item) => (
-            <li key={item.id} className="rounded-sm p-2 hover:bg-gray-300">
+            <li
+              key={item.id}
+              className="rounded-sm p-2 hover:border hover:border-orange-500 hover:bg-orange-100 hover:text-orange-500"
+            >
               <Link to={item.href}>
-                <item.icon />
+                <item.icon className="" />
               </Link>
             </li>
           ))}
@@ -114,19 +120,19 @@ export function Menu() {
       <div className="mb-8 flex flex-col">
         <div className="flex flex-row justify-between">
           <p className="text-md mb-4 font-bold">My Tags</p>
-          <Link to={'dashboard/following_tags'}>
-            <SettingsIcon />
+          <Link to={'/blog/dashboard/following_tags'}>
+            <SettingsIcon className="mr-4" />
           </Link>
         </div>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
           <ul className="list-none">
             {tags.map((tag) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-orange-500"
+                className="hover-underline-animation w-full rounded-md p-2 text-sm hover:bg-orange-300"
                 key={tag.cateId}
               >
-                <Link to={`c/${tag.cateName}`}>
-                  <p className="text-base">#{tag.cateName}</p>
+                <Link to={`/blog/c/${tag.cateName}`} className="z-10">
+                  <p className="z-10 text-base hover:text-orange-900 hover:underline">#{tag.cateName}</p>
                 </Link>
               </li>
             ))}
@@ -156,17 +162,17 @@ export function Menu() {
         <div className="mb-4 flex flex-row items-center justify-between">
           <p className="text-md font-bold">My Trade</p>
           <Link to={'/blog/dashboard/manage-interested'}>
-            <SettingsIcon />
+            <SettingsIcon className="mr-4" />
           </Link>
         </div>
         <div className="flex max-h-[16rem] flex-col overflow-y-auto">
           <ul className="list-none">
             {interested.map((i) => (
               <li
-                className="hover-underline-animation hover:hover-underline-animation hover:bg-orange-50300 w-full rounded-md p-1 text-sm"
+                className="hover-underline-animation hover:hover-underline-animation w-full rounded-md p-1 text-sm underline hover:bg-orange-300"
                 key={i.postData.postId}
               >
-                <Link className="p-1 text-base" to={`/blog/${i.postData.postId}`}>
+                <Link className="p-1 text-base" to={`/blog/dashboard/submit-form/${i.postData.postId}`}>
                   {i.postData.title?.slice(0, 20)}...
                 </Link>
               </li>

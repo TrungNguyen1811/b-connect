@@ -34,7 +34,7 @@ function ProfileSeller() {
   const agency = user?.agencies?.[0]
   const [address, setAddress] = useState<IAddress>()
   const getAddress = address
-    ? `${address.city_Province},${address.district},${address.subDistrict},${address.rendezvous}`
+    ? `${address.city_Province}, ${address.district}, ${address.subDistrict}, ${address.rendezvous}`
     : ''
   useEffect(() => {
     const fetchAddress = async () => {
@@ -103,7 +103,7 @@ function ProfileSeller() {
   }
 
   return (
-    <div className="mx-24 my-12 ">
+    <div className="mx-20 my-12 ">
       <div className="rounded-md border-2">
         <div className="flex flex-col items-start p-4">
           <p className="text-2xl font-bold">Profile Shop</p>
@@ -138,7 +138,7 @@ function ProfileSeller() {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center">
                         <FormLabel className="w-36 text-right">Name Shop</FormLabel>
-                        <FormControl className="ml-8">
+                        <FormControl className="ml-8 w-64">
                           <Input disabled={isLoading} {...field} />
                         </FormControl>
                       </FormItem>
@@ -149,7 +149,7 @@ function ProfileSeller() {
                     name="logoImg"
                     render={({ field }) => (
                       <FormItem className="my-4 flex flex-row items-center">
-                        <FormLabel className="w-32 text-right">Logo Shop</FormLabel>
+                        <FormLabel className="w-36 text-right">Logo Shop</FormLabel>
                         <FormLabel className="ml-8">
                           <Avatar className="h-36 w-36">
                             <AvatarImage src={agency?.logoUrl} />
@@ -165,7 +165,7 @@ function ProfileSeller() {
                       </FormItem>
                     )}
                   />
-                  <div className="flex flex-row items-center justify-around">
+                  <div className="ml-14 flex flex-row items-center gap-4">
                     <FormField
                       control={form.control}
                       name="city_Province"
@@ -178,7 +178,7 @@ function ProfileSeller() {
                                 <Button
                                   variant="outline"
                                   role="combobox"
-                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                  className={cn('w-64 justify-between', !field.value && 'text-muted-foreground')}
                                 >
                                   {field.value
                                     ? AddressData.find((province) => province.Name === field.value)?.Name
@@ -234,7 +234,7 @@ function ProfileSeller() {
                                 <Button
                                   variant="outline"
                                   role="combobox"
-                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                  className={cn('w-64 justify-between', !field.value && 'text-muted-foreground')}
                                 >
                                   {field.value
                                     ? AddressData.find((province) => province.Name === city) // Find selected province
@@ -292,7 +292,7 @@ function ProfileSeller() {
                                 <Button
                                   variant="outline"
                                   role="combobox"
-                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                  className={cn('w-64 justify-between', !field.value && 'text-muted-foreground')}
                                 >
                                   {field.value
                                     ? AddressData.find((province) => province.Name === city) // Find selected province
@@ -337,25 +337,25 @@ function ProfileSeller() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="rendezvous"
-                      render={({ field }) => (
-                        <FormItem className="mb-2">
-                          <FormLabel>Rendezvous</FormLabel>
-                          <FormControl>
-                            <Input placeholder="ABC..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
+                  <FormField
+                    control={form.control}
+                    name="rendezvous"
+                    render={({ field }) => (
+                      <FormItem className="mt-8 flex flex-row items-center">
+                        <FormLabel className="w-36 text-right">Rendezvous</FormLabel>
+                        <FormControl className="ml-8 w-72">
+                          <Input placeholder="ABC..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="businessType"
                     render={() => (
-                      <FormItem className="flex flex-row items-baseline">
+                      <FormItem className="mt-8 flex flex-row items-baseline">
                         <FormLabel className="w-36 text-right">Business Type Shop</FormLabel>
                         <FormControl className="ml-8">
                           <RadioGroup
@@ -382,11 +382,11 @@ function ProfileSeller() {
                       </FormItem>
                     )}
                   />
-                  <div className="mt-8 flex flex-row">
-                    <Button disabled={updateAgency.isLoading} className="my-2" type="submit">
+                  <div className="ml-44 mt-8 flex flex-row gap-2">
+                    <Button disabled={updateAgency.isLoading} className="my-2 w-20" type="submit">
                       {updateAgency.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''} Save
                     </Button>
-                    <Button onClick={() => setIsEdit(false)} className="w-20">
+                    <Button variant={'destructive'} onClick={() => setIsEdit(false)} className="my-2 w-20">
                       Cancel
                     </Button>
                   </div>

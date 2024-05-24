@@ -2,22 +2,13 @@ import { Link } from 'react-router-dom'
 import { Card, CardContent, CardFooter, CardTitle } from '../ui/card'
 import { IBook } from 'src/types'
 import { formatPrice } from 'src/lib/utils'
-import { Star } from 'lucide-react'
-// import { Star } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Rating } from '@smastrom/react-rating'
+import '@smastrom/react-rating/style.css'
 
 type Props = { book: IBook }
 function Book({ book }: Props) {
-  const renderRatingIcon = () => {
-    if (book.ratingId && book.rating) {
-      const icons = []
-      for (let i = 0; i < book.rating; i++) {
-        icons.push(<Star key={i} size={10} className="mr-1 text-orange-600" />)
-      }
-      return <div className="flex">{icons}</div>
-    }
-
-    return null
-  }
+  const { t } = useTranslation('translation')
 
   return (
     <div className="hover:scale-105">
@@ -25,7 +16,7 @@ function Book({ book }: Props) {
         <Card className="xs:w-[4rem] rounded-sm lg:w-[12rem]">
           <CardTitle className="aspect-[1] flex-col overflow-clip rounded-t-md p-0 shadow-md transition-all duration-300 group-hover:shadow-xl">
             <img
-              src={book.bookDir}
+              src={book.backgroundImg as string}
               alt={book.name}
               className="aspect-[1] object-contain transition-all duration-300"
               style={{ width: '100%' }}
@@ -40,8 +31,12 @@ function Book({ book }: Props) {
             <p className="text-xs text-red-500 lg:text-base">{formatPrice(book.price)}</p>
           </CardFooter>
           <div className="my-1 mr-2 flex flex-row items-center justify-between">
-            <div className="p-0 lg:pl-2">{renderRatingIcon()}</div>
-            <div className="text-xs font-extralight">{book.numberOfBookSold} sold</div>
+            <div className="p-0 lg:pl-2">
+              <Rating style={{ maxWidth: 50 }} value={book.rating} readOnly />
+            </div>
+            <div className="text-xs font-extralight">
+              {book.numberOfBookSold} {t('sold')}
+            </div>
           </div>
         </Card>
       </Link>

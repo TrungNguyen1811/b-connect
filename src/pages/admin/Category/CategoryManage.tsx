@@ -1,31 +1,18 @@
 import React from 'react'
+import CategoryTable from 'src/components/admin/category/category-table'
+import { columns } from 'src/components/admin/category/column'
+import { CreateCategoryForm } from 'src/components/admin/category/manage/create-category'
+import { useCategoryTable } from 'src/components/admin/category/useCategoryTable'
 import Breadcrumb from 'src/components/breadcrumb/breadcrumb'
 import { IBreadcrumb } from 'src/components/breadcrumb/type'
 import MetaData from 'src/components/metadata'
-import CategoryTable from 'src/components/table/category/category-table'
-import { CreateCategoryForm } from 'src/components/table/category/manage/create-category'
 import { Heading } from 'src/components/ui/heading'
 import { Separator } from 'src/components/ui/separator'
 
 function CategoryManagerPage() {
-  // const [categories, setCategories] = useState<ICategory[]>([])
+  const { data } = useCategoryTable(columns)
 
-  // useEffect(() => {
-  //   const getCategories = async () => {
-  //     try {
-  //       const cate = await getAllCategoryNoParam()
-  //       setBlogList(cate.data)
-  //     } catch (error) {
-  //       console.error('Error fetching cate:', error)
-  //     }
-  //   }
-
-  //   getCategories()
-  // }, [])
-
-  // console.log('${data?.data.length', blogList)
-
-  const title = `Manage Category`
+  const title = `Manage Category (${data?.data.length ? data?.data.length : 0})`
   const description = 'Manage Categories (Server side table functionalities.)'
 
   const breadcrumb = React.useMemo<IBreadcrumb[]>(() => {

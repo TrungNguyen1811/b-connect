@@ -216,14 +216,16 @@ export function DataTableGrid<TData extends IBook, TValue>({
               onChange={() => handleItemClick(item.productId as string)}
             />
           </div>
-          <img src={item.bookDir as string} alt={item.name} className="aspect-[1/1] h-44 object-cover" />
+          <div className="h-44">
+            <img src={item.backgroundImg as string} alt={item.name} className="h-full object-cover" />
+          </div>
 
           <div className="w-full px-1">
-            <p className="h-12 text-base font-semibold">{item.name}</p>
+            <p className="h-12 text-sm font-semibold">{item.name}</p>
             <div className="flex flex-grow"></div>
             <div className="mt-4 flex flex-row justify-between">
               <p className="text-red-600">{formatPrice(item.price)}</p>
-              <p className="text-gray-600">Stock: {item.quantity}</p>
+              <p className="text-gray-600">Stock: {item.stock}</p>
             </div>
           </div>
           <div className="mt-1 flex w-full flex-row justify-around border-t-2">

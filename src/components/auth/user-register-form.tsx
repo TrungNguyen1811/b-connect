@@ -29,8 +29,8 @@ function RegisterForm() {
         return
       }
       toast({
-        title: 'Success',
-        description: 'Register successfully',
+        title: 'Register successfully',
+        description: 'Please confirm your email to log in',
         variant: 'success',
       })
     })

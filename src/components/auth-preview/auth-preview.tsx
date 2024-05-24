@@ -16,7 +16,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { cn, getLabelByFullname } from 'src/lib/utils'
 import { Button } from '../ui/button'
 import { useAuth } from 'src/hooks/useAuth'
-import { ArrowLeftRight, Book, CarFrontIcon, Disc, LayoutDashboardIcon, List, LucideTruck, User } from 'lucide-react'
+import {
+  ArrowLeftRight,
+  Book,
+  CarFrontIcon,
+  Disc,
+  HandCoinsIcon,
+  LayoutDashboardIcon,
+  List,
+  LucideTruck,
+  User,
+} from 'lucide-react'
 
 export const Icons = {
   lucideTruck: LucideTruck,
@@ -123,24 +133,30 @@ function AuthPreview({ className, ...prosp }: Props) {
             <p className="text-xs text-accent-foreground">{user.email}</p>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="flex flex-col">
           <DropdownMenuSeparator />
-          <Link to="/user/account/profile">
-            <DropdownMenuItem>
+          <Link to="/user/account/profile" className="hover-underline-animation hover:hover-underline-animation">
+            <DropdownMenuItem className="flex flex-row gap-2">
               <User className="mr-2 h-4 w-4" />
               Profile
             </DropdownMenuItem>
           </Link>
-          <Link to="/profile/orders">
-            <DropdownMenuItem>
-              <LucideTruck className="mr-2 h-4 w-4" />
-              Order history
+          <Link to="/user/purchase?type=1" className="hover-underline-animation hover:hover-underline-animation">
+            <DropdownMenuItem className="flex flex-row gap-2">
+              <LucideTruck className="mr-2 h-4 w-4 hover:animate-bounce hover:text-orange-500" />
+              My purchase
             </DropdownMenuItem>
           </Link>
-          <Link to="/transaction">
-            <DropdownMenuItem>
+          <Link to="/user/transaction" className="hover-underline-animation hover:hover-underline-animation">
+            <DropdownMenuItem className="flex flex-row gap-2">
               <ArrowLeftRight className="mr-2 h-4 w-4" />
               Payment history
+            </DropdownMenuItem>
+          </Link>
+          <Link to="/user/refund" className="hover-underline-animation hover:hover-underline-animation">
+            <DropdownMenuItem className="flex flex-row gap-2">
+              <HandCoinsIcon className="mr-2 h-4 w-4" />
+              Request Refund
             </DropdownMenuItem>
           </Link>
           {AdminSection}
@@ -148,7 +164,7 @@ function AuthPreview({ className, ...prosp }: Props) {
           <DropdownMenuItem
             inset
             onClick={onLogout}
-            className="text-destructive hover:bg-destructive/20 hover:text-destructive"
+            className="hover-underline-animation hover:hover-underline-animation text-destructive hover:bg-destructive/20 hover:text-orange-700"
           >
             Logout
           </DropdownMenuItem>

@@ -1,4 +1,3 @@
-import { Tag } from 'react-tag-autocomplete'
 import { User } from './user'
 
 export interface InitialValueItem {
@@ -23,40 +22,6 @@ export interface IContentBlog {
     url?: string
   }[]
 }
-export interface IBlog {
-  postId?: string
-  userId?: string
-  authorName?: string
-  productImgs?: File | string
-  ProductVideos?: File | string
-  isTradePost: boolean
-  title?: string
-  content?: string
-  listCate?: listCate[]
-  createdAt?: string
-  appUser?: string
-  cateId?: string
-  commentsId?: string
-  likeId?: string
-}
-
-export interface IBlogg {
-  postId?: string
-  userId: string
-  authorName?: string
-  productImgs?: File | string
-  ProductVideos?: File | string
-  isTradePost?: boolean
-  title: string
-  content?: string
-  listCate?: listCate[]
-  createdAt?: string
-  appUser?: string
-  cateId?: string
-  commentsId?: string
-  likeId?: string
-}
-
 export interface IPostResponse {
   postId?: string
   userId: string
@@ -65,25 +30,28 @@ export interface IPostResponse {
   videoDir?: string
   isTradePost?: boolean
   isLock?: boolean
+  isBanned?: boolean
   title?: string
   content?: string
-  listCate?: listCate[]
+  listCate?: IListCate[]
   hearts?: number
   createdAt?: string
   appUser?: string
-  cateId?: string
-  commentsId?: string
-  likeId?: string
 }
 
 export interface IResponsePost {
   postData: IPostResponse
   username: string
   avatarDir: string
-  tags: Tag[]
+  tags: IListCate[]
   readingTime: string
+  totalLikes: number
+  totalComments: number
+  totalFollow: number
+  likesCount: number
 }
-interface listCate {
+
+export interface IListCate {
   cateId: string
   cateName: string
 }
@@ -96,7 +64,7 @@ export interface ILiked {
 export interface IReadingList {
   _id?: string
   userId?: User['userId']
-  blog_Id: IBlogg['postId']
+  blog_Id: IPostResponse['postId']
 }
 
 export interface IResponseTag {
@@ -114,4 +82,21 @@ export interface ISubmitTrade {
   rendezvous: string
   phone: string
   note: string
+}
+
+export interface IEvidence {
+  tradeDetailsId: string
+  deliveryCode: string
+  video: File
+}
+
+export interface IPaymentTrade {
+  transactionId: string
+  tradeDetailsId: string
+  isUsingMiddle: boolean
+  amount?: number
+}
+export interface IPaymentRefund {
+  transId: string
+  amount: number
 }

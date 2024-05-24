@@ -53,7 +53,7 @@ function RatingTable() {
             table.setGlobalFilter(value.BookName),
               table.setColumnFilters(() => [
                 {
-                  id: 'ratingPoint',
+                  id: 'RatingPoint',
                   value: value.RatingPoint,
                 },
               ])

@@ -37,7 +37,7 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate('/user/account/profile')}>
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
@@ -46,8 +46,7 @@ export function UserNav() {
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+            <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>

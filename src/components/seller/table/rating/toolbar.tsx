@@ -4,9 +4,9 @@ import { cn } from 'src/lib/utils'
 import SearchInput from 'src/components/ui/search-input'
 import { IQueryPagination, IQuerySearch } from 'src/types/requests'
 import { IListReplyResponse } from 'src/types'
-import { BOOLEAN_OPTIONS, RATING_OPTIONS, RECENT_DAYS_OPTIONS } from 'src/components/table/user/option'
 import { DataTableRadioFacetedFilter } from 'src/components/ui/data-table-radio-facet'
 import { GetManyReviewParams } from 'src/api/review/get-all-review-by-bookId'
+import { BOOLEAN_OPTIONS, RATING_OPTIONS, RECENT_DAYS_OPTIONS } from 'src/components/admin/user/option'
 export interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>
   queries: Partial<IQueryPagination & IQuerySearch> & Record<string, unknown> & GetManyReviewParams
@@ -42,7 +42,7 @@ export function RatingTableToolbar({
         />
 
         <DataTableRadioFacetedFilter
-          title="ratingPoint"
+          title="RatingPoint"
           onOptionsChange={(options) => {
             const RatingPoint = options.map((option) => option.value).join(',')
             setSearchQuery &&

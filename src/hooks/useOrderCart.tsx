@@ -7,175 +7,14 @@ import { toast } from 'src/components/ui/use-toast'
 import { getCartApi } from 'src/api/cart/get-cart'
 import { getBookById } from 'src/api/books/get-book'
 
-// export interface ContextType {
-//   cartItems: ICart[]
-//   addToCart: (_id: string) => void
-//   decreaseToCart: (_id: string) => void
-//   removeFromCart: (_id: string) => void
-//   clearCart: () => void
-// }
-
-// export interface DataCart {
-//   productId: string
-//   cartId: string
-//   quantity: number
-// }
-
-// export const OrderCartContext = createContext<ContextType | undefined>(undefined)
-
-// export const useOrderCart = (): ContextType => {
-//   const context = useContext(OrderCartContext)
-
-//   if (!context) {
-//     throw new Error('useOrderCart must be used within an OrderCartProvider')
-//   }
-
-//   return context
-// }
-
-// export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
-//   const [cartItems, setCartItems] = useState<ICart[]>([])
-//   const { user, logout } = useAuth()
-//   const userId: string = user?.userId as string
-//   const [cartData, setCartData] = useState<DataCart[]>([])
-//   const [cartId, setCartId] = useState<string>()
-
-//   useEffect(() => {
-//     const storedCartItems = document.cookie.split('; ').find((row) => row.startsWith(`cartItems_${userId}=`))
-
-//     if (storedCartItems) {
-//       try {
-//         const cartItemsArray = JSON.parse(storedCartItems.split('=')[1] || '[]')
-//         setCartItems(cartItemsArray)
-//       } catch (error) {
-//         // console.log('Error parsing stored cart items:', error)
-//       }
-//     } else {
-//       fetchCartDataFromDatabase()
-//     }
-//   }, [userId])
-
-//   useEffect(() => {
-//     document.cookie = `cartItems_${userId}=${JSON.stringify(cartItems)}; path=/`
-//   }, [cartItems, userId])
-
-//   useEffect(() => {
-//     if (user) {
-//       fetchCartDataFromDatabase()
-//     }
-//   }, [user])
-
-//   useEffect(() => {
-//     const fetchCartId = async () => {
-//       try {
-//         const fetchedCartId = await getCartIdApi(userId)
-//         setCartId(fetchedCartId)
-//       } catch (error) {
-//         // console.error('Error retrieving cartId:', error)
-//       }
-//     }
-
-//     fetchCartId()
-//   }, [userId])
-
-//   useEffect(() => {
-//     const updateCartData = () => {
-//       if (cartItems && cartItems.length > 0) {
-//         const updatedCartData = cartItems.map((book) => ({
-//           productId: book.productId,
-//           cartId: cartId || '',
-//           quantity: book.quantity,
-//         }))
-//         setCartData(updatedCartData)
-//       }
-//     }
-
-//     updateCartData()
-//   }, [cartItems, cartId])
-
-//   useEffect(() => {
-//     const handleLogout = async () => {
-//       if (cartData.length > 0) {
-//         await saveCartToDatabase(cartData)
-//       }
-//     }
-
-//     if (!logout) {
-//       toast({
-//         title: 'Not yet saved to the database',
-//       })
-//     } else {
-//       handleLogout()
-//     }
-//   }, [logout, cartData])
-
-//   const saveCartToDatabase = async (cartData: DataCart[]) => {
-//     try {
-//       await postCartApi(cartData)
-//       // console.log('Cart saved to the database:', cartData)
-//     } catch (error) {
-//       // console.error('Error saving cart to the database:', error)
-//       toast({
-//         title: 'Error saving cart to the database',
-//         description: 'An error occurred while saving your cart. Please try again later.',
-//       })
-//     }
-//   }
-
-//   const fetchCartDataFromDatabase = async () => {
-//     try {
-//       const cartDataFromDatabase = await getCartApi(userId)
-//       setCartItems(cartDataFromDatabase)
-//     } catch (error) {
-//       // console.error('Error fetching cart data from database:', error)
-//     }
-//   }
-
-//   const addToCart = (_id: string) => {
-//     const existingItem = cartItems.find((item) => item.productId === _id)
-
-//     if (existingItem) {
-//       setCartItems((prevItems) =>
-//         prevItems.map((item) => (item.productId === _id ? { ...item, quantity: item.quantity + 1 } : item)),
-//       )
-//     } else {
-//       setCartItems((prevItems) => [...prevItems, { productId: _id, quantity: 1 }])
-//     }
-//   }
-
-//   const decreaseToCart = (_id: string) => {
-//     setCartItems((prevItems) =>
-//       prevItems.map((item) =>
-//         item.productId === _id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item,
-//       ),
-//     )
-//   }
-
-//   const removeFromCart = (_id: string) => {
-//     setCartItems((prevItems) => prevItems.filter((item) => item.productId !== _id))
-//   }
-
-//   const clearCart = () => {
-//     setCartItems([])
-//   }
-
-//   const contextValue = {
-//     cartItems,
-//     addToCart,
-//     decreaseToCart,
-//     removeFromCart,
-//     clearCart,
-//   }
-
-//   return <OrderCartContext.Provider value={contextValue}>{children}</OrderCartContext.Provider>
-// }
-
 export interface ContextType {
   cartItems: ICart[]
   addToCart: (_id: string) => void
+  addMultiToCart: (_ids: string[]) => Promise<void>
   decreaseToCart: (_id: string) => void
   removeFromCart: (_id: string) => void
   clearCart: () => void
+  resetCartItems: (cart: ICart[]) => void
 }
 
 export interface DataCart {
@@ -336,7 +175,43 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
       console.error('Error fetching book details:', error)
     }
   }
+  const addMultiToCart = async (_ids: string[]) => {
+    try {
+      const newCartItems = [...cartItems]
 
+      for (const id of _ids) {
+        const book: IBook = await getBookById(id)
+        if (book && book.stock > 0) {
+          const existingItem = newCartItems.find((item) => item.productId === id)
+
+          if (existingItem) {
+            existingItem.quantity = existingItem.quantity + 1 > book.stock ? book.stock : existingItem.quantity + 1
+            existingItem.stock = book.stock
+          } else {
+            newCartItems.push({ productId: id, quantity: 1, stock: book.stock })
+          }
+        } else {
+          console.log('Book not found or out of stock')
+        }
+      }
+
+      setCartItems(newCartItems)
+      saveCartToCookie(newCartItems)
+
+      toast({
+        type: 'foreground',
+        title: 'Add to cart successfully',
+        description: 'Your cart has been updated',
+      })
+    } catch (error) {
+      console.error('Error adding multiple books to cart:', error)
+      toast({
+        type: 'foreground',
+        title: 'Error',
+        description: 'An error occurred while adding books to the cart.',
+      })
+    }
+  }
   // const addToCart = (_id: string) => {
   //   const existingItem = cartItems.find((item) => item.productId === _id)
 
@@ -369,12 +244,18 @@ export const OrderCartProvider = ({ children }: React.PropsWithChildren) => {
     saveCartToCookie(cartItems)
   }
 
+  const resetCartItems = (newCartItems: ICart[]) => {
+    setCartItems(newCartItems)
+  }
+
   const contextValue = {
     cartItems,
     addToCart,
+    addMultiToCart,
     decreaseToCart,
     removeFromCart,
     clearCart,
+    resetCartItems,
   }
 
   return <OrderCartContext.Provider value={contextValue}>{children}</OrderCartContext.Provider>

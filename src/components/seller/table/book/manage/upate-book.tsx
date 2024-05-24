@@ -30,7 +30,6 @@ export function UpdateBook() {
   const { id } = useParams()
   const bookId = id
   const [book, setBook] = useState<IBook | undefined>(undefined)
-  console.log('boook', book?.stock)
   const typeBook = [
     { label: 'NEW', value: 'New' },
     { label: 'OLD', value: 'Old' },
@@ -52,7 +51,6 @@ export function UpdateBook() {
       }))
   }, [categories])
 
-  const bookImageDefault = book?.bookImg as string
   const form = useForm<FormData>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
@@ -60,11 +58,10 @@ export function UpdateBook() {
       author: book?.author,
       description: book?.description,
       price: book?.price,
-      publishDate: book?.publishDate,
+      publishDate: book?.publishDate as Date,
       type: book?.type,
-      bookImg: bookImageDefault.split(','),
       backgroundImg: book?.backgroundImg,
-      stock: book?.stock,
+      quantity: book?.stock,
     },
   })
 
@@ -100,6 +97,7 @@ export function UpdateBook() {
         const reset = {
           ...fetchedBook,
           bookImg: bookImgs.split(','),
+          quantity: fetchedBook.stock,
         }
         form.reset(reset)
         setSelected(fetchedBook.category!)
@@ -123,6 +121,7 @@ export function UpdateBook() {
   const [file, setFile] = useState<File[]>()
   useEffect(() => {
     form.setValue('bookImg', file!)
+    console.log('file', file)
   }, [file])
 
   const onSubmit = (data: FormData) => {
@@ -157,6 +156,7 @@ export function UpdateBook() {
                         }}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -173,6 +173,7 @@ export function UpdateBook() {
                         onChange={(e) => field.onChange(e.target.files?.[0] || null)}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -185,6 +186,7 @@ export function UpdateBook() {
                     <FormControl>
                       <Input placeholder="book name" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -197,6 +199,7 @@ export function UpdateBook() {
                     <FormControl>
                       <Input placeholder="author" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -299,18 +302,20 @@ export function UpdateBook() {
                     <FormControl>
                       <Input placeholder="price" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="stock"
+                name="quantity"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center">
                     <FormLabel className="w-40 pr-2 text-right">Quantity</FormLabel>
                     <FormControl>
                       <Input placeholder="quantity" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -348,9 +353,7 @@ export function UpdateBook() {
           </div>
           <div className="fixed bottom-0 flex-grow border-t-2 bg-orange-50 text-right">
             <div className="w-[90rem]">
-              <Button className="my-2 mr-8 w-32" type="submit">
-                Cancel
-              </Button>
+              <Button className="my-2 mr-8 w-32">Cancel</Button>
               <Button disabled={updateBook.isLoading} className="my-2 mr-96 w-32" type="submit">
                 {updateBook.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : ''}Submit
               </Button>

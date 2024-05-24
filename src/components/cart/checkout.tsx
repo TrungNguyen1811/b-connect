@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { CheckIcon, Loader2, SortAscIcon } from 'lucide-react'
+import { CheckIcon, Loader2, SortAscIcon, StoreIcon } from 'lucide-react'
 import { z } from 'zod'
 import { CartSchema } from './validation-cart'
 import { useForm } from 'react-hook-form'
@@ -11,7 +11,6 @@ import { checkout, createOrder } from 'src/api/order/post-order'
 import { useAuth } from 'src/hooks/useAuth'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { Table, TableBody, TableCell, TableHead, TableRow } from '../ui/table'
 import { Separator } from '../ui/separator'
 import { Button } from '../ui/button'
 import { faker } from '@faker-js/faker'
@@ -23,7 +22,7 @@ import CheckoutFailed from './failed'
 import { IAddress } from 'src/types/address'
 import { getAllAddress } from 'src/api/address/get-address'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { cn } from 'src/lib/utils'
+import { cn, formatPrice } from 'src/lib/utils'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
 import AddressData from './address.json'
 import { ScrollArea } from '../ui/scroll-area'
@@ -59,6 +58,22 @@ const CheckoutPage = () => {
   const [checkbox, setCheckbox] = useState<boolean>(false)
   const [cartData, setCartData] = useState<DataCart[]>([])
   const [cartId, setCartId] = useState<string>()
+  useEffect(() => {
+    const fetchCartId = async () => {
+      try {
+        form.setValue('city_Province', addressDefault?.city_Province as string)
+        form.setValue('district', addressDefault?.district as string)
+        form.setValue('subDistrict', addressDefault?.subDistrict as string)
+        form.setValue('rendezvous', addressDefault?.rendezvous as string)
+      } catch (error) {
+        console.error('Error retrieving cartId:', error)
+      }
+    }
+
+    if (checkbox === true) {
+      fetchCartId()
+    }
+  }, [checkbox])
 
   useEffect(() => {
     const fetchCartId = async () => {
@@ -237,14 +252,13 @@ const CheckoutPage = () => {
     if (dataOrder) {
       const address: IAddress = {
         addressId: faker.string.uuid(),
-        city_Province: dataOrder.city_Province,
-        district: dataOrder.district,
-        subDistrict: dataOrder.subDistrict,
-        rendezvous: dataOrder.rendezvous,
+        city_Province: dataOrder.city_Province as string,
+        district: dataOrder.district as string,
+        subDistrict: dataOrder.subDistrict as string,
+        rendezvous: dataOrder.rendezvous as string,
         default: true,
         userId: user?.userId as string,
       }
-
       if (checkbox == false) {
         await postAddress(address)
       }
@@ -303,42 +317,52 @@ const CheckoutPage = () => {
   return (
     <div className="p-4">
       <MetaData title="Checkout" />
-      <div className="rounded-lg border border-gray-200 p-4">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Product</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Quantity</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+      <div className="mx-24 rounded-lg border border-gray-400 p-4">
+        <div className="w-full">
+          <div className="flex w-full flex-row py-2 text-center font-medium">
+            <p className="w-2/5 pl-8 text-start">Product</p>
+            <p className="w-1/5 ">Unit Price</p>
+            <p className="w-1/5 ">Amount</p>
+            <p className="w-1/5 ">Item Subtotal</p>
+          </div>
+          <div>
             {Object.keys(cartItemsByStore).map((seller, index) => (
               <React.Fragment key={index}>
-                <TableRow>
-                  <TableCell colSpan={4} className="font-bold">
+                <div className="border-1 mb-4 rounded-sm border p-4">
+                  <div className="flex flex-row items-center gap-1 pb-4 pt-0">
+                    <StoreIcon size={20} className="text-orange-600" />
                     {cartItemsByStore[seller][0].book.agencyName}
-                  </TableCell>
-                </TableRow>
-                {cartItemsByStore[seller].map((item, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell>{item.book.name}</TableCell>
-                    <TableCell>${item.book.price}</TableCell>
-                    <TableCell>
-                      <p className="p-2">{item.quantity}</p>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                  </div>
+                  {cartItemsByStore[seller].map((item, idx) => (
+                    <div key={idx}>
+                      <div className="mb-2 flex w-full flex-row text-center">
+                        <p className="flex w-2/5 flex-row items-center justify-start gap-4">
+                          <div className="flex flex-row gap-2">
+                            <img src={item.book.backgroundImg as string} className="h-12 w-12" alt="Book" />
+                            <p className="w-72 text-left">{item.book.name}</p>
+                          </div>
+                          <p className="font-light">Type: {item.book.type}</p>
+                        </p>
+                        <p className="w-1/5">{formatPrice(item.book.price)}</p>
+                        <p className="w-1/5">
+                          <p className="p-2">{item.quantity}</p>
+                        </p>
+                        <p className="w-1/5">{formatPrice(item.book.price * item.quantity)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </React.Fragment>
             ))}
-          </TableBody>
-        </Table>
+          </div>
+        </div>
+
         <Separator />
         <div>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="m-4 mx-auto w-full max-w-sm space-y-4 rounded-lg border border-gray-200 p-4"
+              className="m-4 mx-auto w-full max-w-3xl space-y-4 rounded-lg border border-gray-400 p-4"
             >
               <div className="flex flex-row items-center gap-2">
                 <p>Use Address Default</p>
@@ -346,185 +370,182 @@ const CheckoutPage = () => {
               </div>
               {checkbox == true ? (
                 <p>
-                  Address Default: {addressDefault?.rendezvous}, {addressDefault?.subDistrict},{' '}
+                  <strong>Address Default:</strong> {addressDefault?.rendezvous}, {addressDefault?.subDistrict},{' '}
                   {addressDefault?.district}, {addressDefault?.city_Province}
                 </p>
               ) : (
                 <>
-                  <FormField
-                    control={form.control}
-                    name="city_Province"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>City/Province</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                              >
-                                {field.value
-                                  ? AddressData.find((province) => province.Name === field.value)?.Name
-                                  : 'Select Province'}
-                                <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search city..." className="h-9" />
-                              <CommandEmpty>No city found.</CommandEmpty>
-                              <CommandGroup>
-                                <ScrollArea className="h-48">
-                                  {AddressData.map((province) => (
-                                    <CommandItem
-                                      value={province.Id}
-                                      key={province.Id}
-                                      onSelect={() => {
-                                        form.setValue('city_Province', province.Name)
-                                        const city = form.getValues('city_Province')
-                                        setCity(city as string)
-                                      }}
-                                    >
-                                      {province.Name}
-                                      <CheckIcon
-                                        className={cn(
-                                          'ml-auto h-4 w-4',
-                                          province.Name === field.value ? 'opacity-100' : 'opacity-0',
-                                        )}
-                                      />
-                                    </CommandItem>
-                                  ))}
-                                </ScrollArea>
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                        <FormDescription>This is the province in the selected city.</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="district"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>District</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                              >
-                                {field.value
-                                  ? AddressData.find((province) => province.Name === city) // Find selected province
-                                      ?.district.find((district) => district.Name === field.value)?.Name // Find selected district
-                                  : 'Select District'}
-                                <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search district..." className="h-9" />
-                              <CommandEmpty>No district found.</CommandEmpty>
-                              <CommandGroup>
-                                <ScrollArea className="h-48">
-                                  {AddressData.find((province) => province.Name === form.getValues('city_Province')) // Find selected province
-                                    ?.district.map((district) => (
+                  <div className="flex flex-row justify-start gap-4">
+                    <FormField
+                      control={form.control}
+                      name="city_Province"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>City/Province</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  role="combobox"
+                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                >
+                                  {field.value
+                                    ? AddressData.find((province) => province.Name === field.value)?.Name
+                                    : 'Select Province'}
+                                  <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[200px] p-0">
+                              <Command>
+                                <CommandInput placeholder="Search city..." className="h-9" />
+                                <CommandEmpty>No city found.</CommandEmpty>
+                                <CommandGroup>
+                                  <ScrollArea className="h-48">
+                                    {AddressData.map((province) => (
                                       <CommandItem
-                                        value={district.Id}
-                                        key={district.Id}
+                                        value={province.Id}
+                                        key={province.Id}
                                         onSelect={() => {
-                                          form.setValue('district', district.Name)
-                                          const dis = form.getValues('district')
-                                          setDistrict(dis)
+                                          form.setValue('city_Province', province.Name)
+                                          const city = form.getValues('city_Province')
+                                          setCity(city as string)
                                         }}
                                       >
-                                        {district.Name}
+                                        {province.Name}
                                         <CheckIcon
                                           className={cn(
                                             'ml-auto h-4 w-4',
-                                            district.Id === field.value ? 'opacity-100' : 'opacity-0',
+                                            province.Name === field.value ? 'opacity-100' : 'opacity-0',
                                           )}
                                         />
                                       </CommandItem>
                                     ))}
-                                </ScrollArea>
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                        <FormDescription>This is the district in the selected city.</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="subDistrict"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Wards</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                              >
-                                {field.value
-                                  ? AddressData.find((province) => province.Name === city) // Find selected province
-                                      ?.district.find((district) => district.Name === getDistrict)
-                                      ?.subDistrict.find((subDistrict) => subDistrict.Name === field.value)?.Name // Find selected district
-                                  : 'Select District'}{' '}
-                                <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search district..." className="h-9" />
-                              <CommandEmpty>No district found.</CommandEmpty>
-                              <CommandGroup>
-                                <ScrollArea className="h-48">
-                                  {AddressData.find((province) => province.Name === form.getValues('city_Province'))
-                                    ?.district.find((district) => district.Name === form.getValues('district'))
-                                    ?.subDistrict.map((subDistrict) => (
-                                      <CommandItem
-                                        value={subDistrict.Id}
-                                        key={subDistrict.Id}
-                                        onSelect={() => {
-                                          form.setValue('subDistrict', subDistrict.Name)
-                                        }}
-                                      >
-                                        {subDistrict.Name}
-                                        <CheckIcon
-                                          className={cn(
-                                            'ml-auto h-4 w-4',
-                                            subDistrict.Id === field.value ? 'opacity-100' : 'opacity-0',
-                                          )}
-                                        />
-                                      </CommandItem>
-                                    ))}
-                                </ScrollArea>
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                        <FormDescription>This is the wards in the selected city.</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                                  </ScrollArea>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="district"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>District</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  role="combobox"
+                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                >
+                                  {field.value
+                                    ? AddressData.find((province) => province.Name === city) // Find selected province
+                                        ?.district.find((district) => district.Name === field.value)?.Name // Find selected district
+                                    : 'Select District'}
+                                  <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[200px] p-0">
+                              <Command>
+                                <CommandInput placeholder="Search district..." className="h-9" />
+                                <CommandEmpty>No district found.</CommandEmpty>
+                                <CommandGroup>
+                                  <ScrollArea className="h-48">
+                                    {AddressData.find((province) => province.Name === form.getValues('city_Province')) // Find selected province
+                                      ?.district.map((district) => (
+                                        <CommandItem
+                                          value={district.Id}
+                                          key={district.Id}
+                                          onSelect={() => {
+                                            form.setValue('district', district.Name)
+                                            const dis = form.getValues('district')
+                                            setDistrict(dis as string)
+                                          }}
+                                        >
+                                          {district.Name}
+                                          <CheckIcon
+                                            className={cn(
+                                              'ml-auto h-4 w-4',
+                                              district.Id === field.value ? 'opacity-100' : 'opacity-0',
+                                            )}
+                                          />
+                                        </CommandItem>
+                                      ))}
+                                  </ScrollArea>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="subDistrict"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Wards</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  role="combobox"
+                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                                >
+                                  {field.value
+                                    ? AddressData.find((province) => province.Name === city) // Find selected province
+                                        ?.district.find((district) => district.Name === getDistrict)
+                                        ?.subDistrict.find((subDistrict) => subDistrict.Name === field.value)?.Name // Find selected district
+                                    : 'Select District'}{' '}
+                                  <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[200px] p-0">
+                              <Command>
+                                <CommandInput placeholder="Search district..." className="h-9" />
+                                <CommandEmpty>No district found.</CommandEmpty>
+                                <CommandGroup>
+                                  <ScrollArea className="h-48">
+                                    {AddressData.find((province) => province.Name === form.getValues('city_Province'))
+                                      ?.district.find((district) => district.Name === form.getValues('district'))
+                                      ?.subDistrict.map((subDistrict) => (
+                                        <CommandItem
+                                          value={subDistrict.Id}
+                                          key={subDistrict.Id}
+                                          onSelect={() => {
+                                            form.setValue('subDistrict', subDistrict.Name)
+                                          }}
+                                        >
+                                          {subDistrict.Name}
+                                          <CheckIcon
+                                            className={cn(
+                                              'ml-auto h-4 w-4',
+                                              subDistrict.Id === field.value ? 'opacity-100' : 'opacity-0',
+                                            )}
+                                          />
+                                        </CommandItem>
+                                      ))}
+                                  </ScrollArea>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   <FormField
                     control={form.control}
@@ -535,7 +556,6 @@ const CheckoutPage = () => {
                         <FormControl>
                           <Input placeholder="ABC..." {...field} />
                         </FormControl>
-                        <FormDescription>This is the rendezvous in the selected city.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

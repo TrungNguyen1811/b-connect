@@ -76,7 +76,7 @@ const AddNewAddress = () => {
           <Button>Add New Address</Button>
         </DialogTrigger>
         <DialogContent className="w-[30vw]">
-          <div className="rounded-lg border border-gray-200 p-4">
+          <div className="rounded-lg border border-gray-400 p-4">
             <div>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto w-full max-w-sm ">
