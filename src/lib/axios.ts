@@ -1,7 +1,7 @@
 import axios from 'axios'
 import refreshToken from 'src/api/apis/auth/refresh.api'
 
-const BASED_URL = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:7138/api'
+const BASED_URL = import.meta.env.VITE_REACT_APP_API_URL || 'https://localhost:7138/api'
 
 const axiosClient = axios.create({
   baseURL: BASED_URL,
