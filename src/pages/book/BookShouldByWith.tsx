@@ -24,7 +24,7 @@ function BookShouldByWith({ book }: Props) {
   )
 
   const relatedBooks = React.useMemo(() => {
-    if (isLoadingShouldBuyWithBooks || !book || !shouldByWithBooks) return []
+    if (isLoadingShouldBuyWithBooks || !book || !shouldByWithBooks || !shouldByWithBooks.data) return []
 
     const arr = shouldByWithBooks?.data.filter((b) => b.productId !== book?.productId).slice(0, 3) || []
     arr.unshift(book)
