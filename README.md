@@ -2,6 +2,9 @@
 
 Choosing a technology stack is a very subjective matter, if you happen to like using `Vite`, `Tailwind`, `TS` and `shadcn ui` and more to build React SPA applications, then give it a try.
 
+## Back-end
+Please settup back-end to show information front-end. Link: https://github.com/NamYasuo/BookConnect (branch: Develop)
+
 ## Run
 
 
